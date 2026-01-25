@@ -14,7 +14,6 @@ interface BlockchainInfoResponse {
 
 export interface FetchBlockchainInfoRatesDeps {
     readonly fetch: typeof globalThis.fetch;
-    readonly corsProxy: string;
 }
 
 export const createFetchBlockchainInfoRates =
@@ -22,9 +21,7 @@ export const createFetchBlockchainInfoRates =
     () =>
         tryAsync(
             async () => {
-                const response = await deps.fetch(
-                    `${deps.corsProxy}https://blockchain.info/ticker`,
-                );
+                const response = await deps.fetch('https://blockchain.info/ticker');
                 if (!response.ok) throw new Error('Blockchain.info API failed');
                 const data: BlockchainInfoResponse = await response.json();
 

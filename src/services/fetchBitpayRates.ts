@@ -13,7 +13,6 @@ interface BitpayResponse {
 
 export interface FetchBitpayRatesDeps {
     readonly fetch: typeof globalThis.fetch;
-    readonly corsProxy: string;
 }
 
 export const createFetchBitpayRates =
@@ -21,7 +20,7 @@ export const createFetchBitpayRates =
     () =>
         tryAsync(
             async () => {
-                const response = await deps.fetch(`${deps.corsProxy}https://bitpay.com/rates`);
+                const response = await deps.fetch('https://bitpay.com/rates');
                 if (!response.ok) throw new Error('Bitpay API failed');
                 const data: BitpayResponse = await response.json();
 
