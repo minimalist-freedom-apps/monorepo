@@ -16,7 +16,6 @@ interface CoingeckoResponse {
 
 export interface FetchCoingeckoRatesDeps {
     readonly fetch: typeof globalThis.fetch;
-    readonly corsProxy: string;
 }
 
 export const createFetchCoingeckoRates =
@@ -25,7 +24,7 @@ export const createFetchCoingeckoRates =
         tryAsync(
             async () => {
                 const response = await deps.fetch(
-                    `${deps.corsProxy}https://api.coingecko.com/api/v3/exchange_rates`,
+                    'https://api.coingecko.com/api/v3/exchange_rates',
                 );
                 if (!response.ok) throw new Error('Coingecko API failed');
                 const data: CoingeckoResponse = await response.json();
