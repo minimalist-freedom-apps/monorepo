@@ -7,21 +7,15 @@ import {
 } from "./FetchRates.js";
 
 export interface FetchAverageRatesDeps {
-  readonly fetchCoingeckoRates: FetchRates;
-  readonly fetchBitpayRates: FetchRates;
-  readonly fetchBlockchainInfoRates: FetchRates;
+  readonly fetchRates: readonly FetchRates[];
 }
 
 export const createFetchAverageRates =
   (deps: FetchAverageRatesDeps) =>
   async (): Promise<Result<RatesMap, AllApisFailed>> => {
-    const [coingecko, bitpay, blockchain] = await Promise.all([
-      deps.fetchCoingeckoRates(),
-      deps.fetchBitpayRates(),
-      deps.fetchBlockchainInfoRates(),
-    ]);
+    const results = await Promise.all(deps.fetchRates.map((fetch) => fetch()));
 
-    const sources = [coingecko, bitpay, blockchain]
+    const sources = results
       .filter((result) => result.ok)
       .map((result) => (result.ok ? result.value : ({} as RatesMap)));
 

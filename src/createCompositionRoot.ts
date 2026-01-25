@@ -16,9 +16,11 @@ export const createCompositionRoot = () => {
   const fetchBlockchainInfoRates = createFetchBlockchainInfoRates(fetchDeps);
 
   const fetchAverageRates = createFetchAverageRates({
-    fetchCoingeckoRates,
-    fetchBitpayRates,
-    fetchBlockchainInfoRates,
+    fetchRates: [
+      fetchCoingeckoRates,
+      fetchBitpayRates,
+      fetchBlockchainInfoRates,
+    ],
   });
 
   return {
