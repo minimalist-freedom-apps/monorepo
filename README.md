@@ -3,3 +3,5 @@
 This is rewrite of the original Price Converter into React PWA.
 
 # Price Converter
+
+🚧🚧🚧 Still under development 🚧🚧🚧
