@@ -45,7 +45,9 @@ function CurrencyRow({
                 inputMode="decimal"
             />
             <div className="currency-info">
-                <span className="currency-code">{code}</span>
+                <span className="currency-code">
+                    {code} {name}
+                </span>
             </div>
             <button className="remove-btn" onClick={onRemove} title="Remove currency">
                 ×
