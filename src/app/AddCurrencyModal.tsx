@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import './AddCurrencyModal.css';
-import { RatesMap } from '../services/api';
+import { RatesMap } from '../services/FetchRates';
 
 interface AddCurrencyModalProps {
     rates: RatesMap;

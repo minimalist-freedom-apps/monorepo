@@ -1,6 +1,6 @@
 import CurrencyRow from './CurrencyRow';
 import './CurrencyList.css';
-import { RatesMap } from '../services/api';
+import { RatesMap } from '../services/FetchRates';
 
 interface CurrencyListProps {
     currencies: string[];
