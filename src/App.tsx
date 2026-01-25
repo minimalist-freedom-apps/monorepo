@@ -94,25 +94,29 @@ function App() {
   const fetchRates = async () => {
     setLoading(true);
     setError("");
-    try {
-      const fetchedRates = await fetchAverageRates();
-      setRates(fetchedRates);
-      const now = Date.now();
-      setLastUpdated(now);
 
-      // Save to localStorage
-      saveToLocalStorage(STORAGE_KEYS.RATES, fetchedRates);
-      saveToLocalStorage(STORAGE_KEYS.TIMESTAMP, now);
-
-      // Recalculate values with new rates
-      if (btcValue) {
-        recalculateFromBtc(btcValue, fetchedRates);
-      }
-    } catch (err) {
+    const result = await fetchAverageRates();
+    if (!result.ok) {
       setError("Failed to fetch rates. Please try again.");
-    } finally {
       setLoading(false);
+      return;
     }
+
+    const fetchedRates = result.value;
+    setRates(fetchedRates);
+    const now = Date.now();
+    setLastUpdated(now);
+
+    // Save to localStorage
+    saveToLocalStorage(STORAGE_KEYS.RATES, fetchedRates);
+    saveToLocalStorage(STORAGE_KEYS.TIMESTAMP, now);
+
+    // Recalculate values with new rates
+    if (btcValue) {
+      recalculateFromBtc(btcValue, fetchedRates);
+    }
+
+    setLoading(false);
   };
 
   // Recalculate all values from BTC input
