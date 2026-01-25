@@ -1,5 +1,5 @@
 import { useState, useEffect, useRef } from "react";
-import { fetchAverageRates, RatesMap } from "./services/api";
+import { fetchAverageRates, RatesMap } from "./services/index";
 import {
   formatBtcWithCommas,
   formatFiatWithCommas,
