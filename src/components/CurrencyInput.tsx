@@ -1,8 +1,22 @@
-import { useEffect, useRef } from 'react';
-import './CurrencyInput.css';
+import { useEffect, useRef } from "react";
+import "./CurrencyInput.css";
 
-function CurrencyInput({ label, value, onChange, focused, onFocus }) {
-  const inputRef = useRef(null);
+interface CurrencyInputProps {
+  label: string;
+  value: string;
+  onChange: (value: string) => void;
+  focused: boolean;
+  onFocus: () => void;
+}
+
+function CurrencyInput({
+  label,
+  value,
+  onChange,
+  focused,
+  onFocus,
+}: CurrencyInputProps) {
+  const inputRef = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
     if (focused && inputRef.current) {
@@ -10,7 +24,7 @@ function CurrencyInput({ label, value, onChange, focused, onFocus }) {
     }
   }, [focused]);
 
-  const handleChange = (e) => {
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     onChange(e.target.value);
   };
 

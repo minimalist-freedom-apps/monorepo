@@ -1,5 +1,5 @@
-import { useState, useEffect, useRef } from 'react';
-import { fetchAverageRates } from './services/api';
+import { useState, useEffect, useRef } from "react";
+import { fetchAverageRates, RatesMap } from "./services/api";
 import {
   formatBtcWithCommas,
   formatFiatWithCommas,
@@ -10,46 +10,52 @@ import {
   getTimeAgo,
   isLongerThan1Hour,
   saveToLocalStorage,
-  loadFromLocalStorage
-} from './utils/helpers';
-import Header from './components/Header';
-import CurrencyInput from './components/CurrencyInput';
-import CurrencyList from './components/CurrencyList';
-import AddCurrencyModal from './components/AddCurrencyModal';
-import './App.css';
+  loadFromLocalStorage,
+} from "./utils/helpers";
+import Header from "./components/Header";
+import CurrencyInput from "./components/CurrencyInput";
+import CurrencyList from "./components/CurrencyList";
+import AddCurrencyModal from "./components/AddCurrencyModal";
+import "./App.css";
 
 const STORAGE_KEYS = {
-  RATES: 'rates',
-  TIMESTAMP: 'timestamp',
-  SELECTED_CURRENCIES: 'selectedCurrencies',
-  MODE: 'mode'
-};
+  RATES: "rates",
+  TIMESTAMP: "timestamp",
+  SELECTED_CURRENCIES: "selectedCurrencies",
+  MODE: "mode",
+} as const;
+
+type Mode = "BTC" | "Sats";
 
 function App() {
-  const [rates, setRates] = useState({});
-  const [selectedCurrencies, setSelectedCurrencies] = useState([]);
-  const [btcValue, setBtcValue] = useState('');
-  const [currencyValues, setCurrencyValues] = useState({});
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState('');
-  const [lastUpdated, setLastUpdated] = useState(null);
-  const [timeAgo, setTimeAgo] = useState('');
-  const [mode, setMode] = useState('BTC'); // 'BTC' or 'Sats'
-  const [showModal, setShowModal] = useState(false);
-  const [focusedInput, setFocusedInput] = useState('BTC');
-  const intervalRef = useRef(null);
+  const [rates, setRates] = useState<RatesMap>({});
+  const [selectedCurrencies, setSelectedCurrencies] = useState<string[]>([]);
+  const [btcValue, setBtcValue] = useState<string>("");
+  const [currencyValues, setCurrencyValues] = useState<{
+    [code: string]: string;
+  }>({});
+  const [loading, setLoading] = useState<boolean>(false);
+  const [error, setError] = useState<string>("");
+  const [lastUpdated, setLastUpdated] = useState<number | null>(null);
+  const [timeAgo, setTimeAgo] = useState<string>("");
+  const [mode, setMode] = useState<Mode>("BTC");
+  const [showModal, setShowModal] = useState<boolean>(false);
+  const [focusedInput, setFocusedInput] = useState<string>("BTC");
+  const intervalRef = useRef<number | null>(null);
 
   // Load saved data on mount
   useEffect(() => {
-    const savedRates = loadFromLocalStorage(STORAGE_KEYS.RATES);
-    const savedTimestamp = loadFromLocalStorage(STORAGE_KEYS.TIMESTAMP);
-    const savedCurrencies = loadFromLocalStorage(STORAGE_KEYS.SELECTED_CURRENCIES);
-    const savedMode = loadFromLocalStorage(STORAGE_KEYS.MODE, 'BTC');
+    const savedRates = loadFromLocalStorage<RatesMap>(STORAGE_KEYS.RATES);
+    const savedTimestamp = loadFromLocalStorage<number>(STORAGE_KEYS.TIMESTAMP);
+    const savedCurrencies = loadFromLocalStorage<string[]>(
+      STORAGE_KEYS.SELECTED_CURRENCIES,
+    );
+    const savedMode = loadFromLocalStorage<Mode>(STORAGE_KEYS.MODE, "BTC");
 
     if (savedRates) {
       setRates(savedRates);
     }
-    
+
     if (savedTimestamp) {
       setLastUpdated(savedTimestamp);
     }
@@ -58,10 +64,10 @@ function App() {
       setSelectedCurrencies(savedCurrencies);
     } else {
       // Default to USD
-      setSelectedCurrencies(['USD']);
+      setSelectedCurrencies(["USD"]);
     }
 
-    setMode(savedMode);
+    setMode(savedMode || "BTC");
 
     // Fetch rates on mount
     fetchRates();
@@ -75,7 +81,7 @@ function App() {
       };
       updateTime();
       intervalRef.current = setInterval(updateTime, 1000);
-      
+
       return () => {
         if (intervalRef.current) {
           clearInterval(intervalRef.current);
@@ -87,38 +93,41 @@ function App() {
   // Fetch rates from APIs
   const fetchRates = async () => {
     setLoading(true);
-    setError('');
+    setError("");
     try {
       const fetchedRates = await fetchAverageRates();
       setRates(fetchedRates);
       const now = Date.now();
       setLastUpdated(now);
-      
+
       // Save to localStorage
       saveToLocalStorage(STORAGE_KEYS.RATES, fetchedRates);
       saveToLocalStorage(STORAGE_KEYS.TIMESTAMP, now);
-      
+
       // Recalculate values with new rates
       if (btcValue) {
         recalculateFromBtc(btcValue, fetchedRates);
       }
     } catch (err) {
-      setError('Failed to fetch rates. Please try again.');
+      setError("Failed to fetch rates. Please try again.");
     } finally {
       setLoading(false);
     }
   };
 
   // Recalculate all values from BTC input
-  const recalculateFromBtc = (value, currentRates = rates) => {
+  const recalculateFromBtc = (
+    value: string,
+    currentRates: RatesMap = rates,
+  ) => {
     const btcAmount = parseFormattedNumber(value);
     if (isNaN(btcAmount) || btcAmount === 0) {
       setCurrencyValues({});
       return;
     }
 
-    const newValues = {};
-    selectedCurrencies.forEach(code => {
+    const newValues: { [code: string]: string } = {};
+    selectedCurrencies.forEach((code) => {
       if (currentRates[code]) {
         const fiatAmount = btcAmount / currentRates[code].rate;
         newValues[code] = formatFiatWithCommas(fiatAmount);
@@ -128,23 +137,24 @@ function App() {
   };
 
   // Recalculate all values from a currency input
-  const recalculateFromCurrency = (code, value) => {
+  const recalculateFromCurrency = (code: string, value: string) => {
     const fiatAmount = parseFormattedNumber(value);
     if (isNaN(fiatAmount) || fiatAmount === 0 || !rates[code]) {
-      setBtcValue('');
+      setBtcValue("");
       setCurrencyValues({});
       return;
     }
 
     const btcAmount = fiatAmount * rates[code].rate;
-    const formattedBtc = mode === 'BTC' 
-      ? formatBtcWithCommas(btcAmount)
-      : formatSats(btcToSats(btcAmount));
+    const formattedBtc =
+      mode === "BTC"
+        ? formatBtcWithCommas(btcAmount)
+        : formatSats(btcToSats(btcAmount));
     setBtcValue(formattedBtc);
 
     // Update other currencies
     const newValues = { ...currencyValues, [code]: value };
-    selectedCurrencies.forEach(otherCode => {
+    selectedCurrencies.forEach((otherCode) => {
       if (otherCode !== code && rates[otherCode]) {
         const otherFiatAmount = btcAmount / rates[otherCode].rate;
         newValues[otherCode] = formatFiatWithCommas(otherFiatAmount);
@@ -154,18 +164,18 @@ function App() {
   };
 
   // Handle BTC/Sats input change
-  const handleBtcChange = (value) => {
+  const handleBtcChange = (value: string) => {
     setBtcValue(value);
-    setFocusedInput('BTC');
-    
-    let btcAmount;
-    if (mode === 'Sats') {
+    setFocusedInput("BTC");
+
+    let btcAmount: number;
+    if (mode === "Sats") {
       const sats = parseFormattedNumber(value);
       btcAmount = satsToBtc(sats);
     } else {
       btcAmount = parseFormattedNumber(value);
     }
-    
+
     if (isNaN(btcAmount) || btcAmount === 0) {
       setCurrencyValues({});
       return;
@@ -175,30 +185,31 @@ function App() {
   };
 
   // Handle currency input change
-  const handleCurrencyChange = (code, value) => {
+  const handleCurrencyChange = (code: string, value: string) => {
     setFocusedInput(code);
-    setCurrencyValues(prev => ({ ...prev, [code]: value }));
+    setCurrencyValues((prev) => ({ ...prev, [code]: value }));
     recalculateFromCurrency(code, value);
   };
 
   // Add currency to list
-  const addCurrency = (code) => {
+  const addCurrency = (code: string) => {
     if (!selectedCurrencies.includes(code)) {
       const newCurrencies = [...selectedCurrencies, code];
       setSelectedCurrencies(newCurrencies);
       saveToLocalStorage(STORAGE_KEYS.SELECTED_CURRENCIES, newCurrencies);
-      
+
       // Calculate value for new currency if BTC has a value
       if (btcValue) {
-        const btcAmount = mode === 'Sats' 
-          ? satsToBtc(parseFormattedNumber(btcValue))
-          : parseFormattedNumber(btcValue);
-        
+        const btcAmount =
+          mode === "Sats"
+            ? satsToBtc(parseFormattedNumber(btcValue))
+            : parseFormattedNumber(btcValue);
+
         if (rates[code]) {
           const fiatAmount = btcAmount / rates[code].rate;
-          setCurrencyValues(prev => ({
+          setCurrencyValues((prev) => ({
             ...prev,
-            [code]: formatFiatWithCommas(fiatAmount)
+            [code]: formatFiatWithCommas(fiatAmount),
           }));
         }
       }
@@ -207,11 +218,11 @@ function App() {
   };
 
   // Remove currency from list
-  const removeCurrency = (code) => {
-    const newCurrencies = selectedCurrencies.filter(c => c !== code);
+  const removeCurrency = (code: string) => {
+    const newCurrencies = selectedCurrencies.filter((c) => c !== code);
     setSelectedCurrencies(newCurrencies);
     saveToLocalStorage(STORAGE_KEYS.SELECTED_CURRENCIES, newCurrencies);
-    
+
     const newValues = { ...currencyValues };
     delete newValues[code];
     setCurrencyValues(newValues);
@@ -219,18 +230,20 @@ function App() {
 
   // Toggle between BTC and Sats mode
   const toggleMode = () => {
-    const newMode = mode === 'BTC' ? 'Sats' : 'BTC';
+    const newMode: Mode = mode === "BTC" ? "Sats" : "BTC";
     setMode(newMode);
     saveToLocalStorage(STORAGE_KEYS.MODE, newMode);
-    
+
     // Convert current BTC value
     if (btcValue) {
       const currentValue = parseFormattedNumber(btcValue);
-      if (newMode === 'Sats') {
-        const btcAmount = mode === 'BTC' ? currentValue : satsToBtc(currentValue);
+      if (newMode === "Sats") {
+        const btcAmount =
+          mode === "BTC" ? currentValue : satsToBtc(currentValue);
         setBtcValue(formatSats(btcToSats(btcAmount)));
       } else {
-        const btcAmount = mode === 'Sats' ? satsToBtc(currentValue) : currentValue;
+        const btcAmount =
+          mode === "Sats" ? satsToBtc(currentValue) : currentValue;
         setBtcValue(formatBtcWithCommas(btcAmount));
       }
     }
@@ -238,30 +251,32 @@ function App() {
 
   return (
     <div className="app">
-      <Header 
+      <Header
         onRefresh={fetchRates}
         loading={loading}
         mode={mode}
         onModeToggle={toggleMode}
       />
-      
+
       <div className="container">
         {loading && <div className="loading-bar" />}
-        
+
         {error && <div className="error-message">{error}</div>}
-        
-        <div className={`time-ago ${isLongerThan1Hour(lastUpdated || Date.now()) ? 'warning' : ''}`}>
-          {timeAgo || 'Never updated'}
+
+        <div
+          className={`time-ago ${isLongerThan1Hour(lastUpdated || Date.now()) ? "warning" : ""}`}
+        >
+          {timeAgo || "Never updated"}
         </div>
-        
+
         <CurrencyInput
           label={mode}
           value={btcValue}
           onChange={handleBtcChange}
-          focused={focusedInput === 'BTC'}
-          onFocus={() => setFocusedInput('BTC')}
+          focused={focusedInput === "BTC"}
+          onFocus={() => setFocusedInput("BTC")}
         />
-        
+
         <CurrencyList
           currencies={selectedCurrencies}
           rates={rates}
@@ -271,12 +286,12 @@ function App() {
           focusedInput={focusedInput}
           onFocus={setFocusedInput}
         />
-        
+
         <button className="add-button" onClick={() => setShowModal(true)}>
           + Add Currency
         </button>
       </div>
-      
+
       {showModal && (
         <AddCurrencyModal
           rates={rates}
