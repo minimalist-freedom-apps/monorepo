@@ -13,6 +13,7 @@ function Header({ onRefresh, loading, mode, onModeToggle }: HeaderProps) {
             <h1 className="title">Price Converter</h1>
             <div className="header-actions">
                 <button
+                    type="button"
                     className="mode-toggle-btn"
                     onClick={onModeToggle}
                     title={`Switch to ${mode === 'BTC' ? 'Sats' : 'BTC'}`}
@@ -20,6 +21,7 @@ function Header({ onRefresh, loading, mode, onModeToggle }: HeaderProps) {
                     {mode}
                 </button>
                 <button
+                    type="button"
                     className="refresh-btn"
                     onClick={onRefresh}
                     disabled={loading}

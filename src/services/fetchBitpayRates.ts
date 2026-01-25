@@ -1,5 +1,5 @@
 import { tryAsync } from '@evolu/common';
-import { FetchRates, CurrencyRate } from './FetchRates.js';
+import type { CurrencyRate, FetchRates } from './FetchRates.js';
 
 interface BitpayRateItem {
     readonly code: string;

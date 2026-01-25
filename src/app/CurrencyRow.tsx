@@ -49,7 +49,12 @@ function CurrencyRow({
                     {code} {name}
                 </span>
             </div>
-            <button className="remove-btn" onClick={onRemove} title="Remove currency">
+            <button
+                type="button"
+                className="remove-btn"
+                onClick={onRemove}
+                title="Remove currency"
+            >
                 ×
             </button>
         </div>

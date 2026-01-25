@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import './AddCurrencyModal.css';
-import { RatesMap } from '../services/FetchRates';
+import type { RatesMap } from '../services/FetchRates';
 
 interface AddCurrencyModalProps {
     rates: RatesMap;
@@ -9,7 +9,12 @@ interface AddCurrencyModalProps {
     onClose: () => void;
 }
 
-function AddCurrencyModal({ rates, selectedCurrencies, onAdd, onClose }: AddCurrencyModalProps) {
+function AddCurrencyModal({
+    rates,
+    selectedCurrencies,
+    onAdd,
+    onClose,
+}: AddCurrencyModalProps) {
     const [searchTerm, setSearchTerm] = useState('');
 
     const availableCurrencies = Object.entries(rates)
@@ -20,15 +25,39 @@ function AddCurrencyModal({ rates, selectedCurrencies, onAdd, onClose }: AddCurr
         ? availableCurrencies
         : availableCurrencies.filter(([code, info]) => {
               const term = searchTerm.toLowerCase();
-              return code.toLowerCase().includes(term) || info.name.toLowerCase().includes(term);
+              return (
+                  code.toLowerCase().includes(term) ||
+                  info.name.toLowerCase().includes(term)
+              );
           });
 
+    const handleKeyDown = (e: React.KeyboardEvent) => {
+        if (e.key === 'Escape') {
+            onClose();
+        }
+    };
+
     return (
-        <div className="modal-overlay" onClick={onClose}>
-            <div className="modal-content" onClick={e => e.stopPropagation()}>
+        <div
+            className="modal-overlay"
+            onClick={onClose}
+            onKeyDown={handleKeyDown}
+            role="button"
+            tabIndex={0}
+        >
+            <div
+                className="modal-content"
+                onClick={e => e.stopPropagation()}
+                onKeyDown={e => e.stopPropagation()}
+                role="dialog"
+            >
                 <div className="modal-header">
                     <h2>Add Currency</h2>
-                    <button className="close-btn" onClick={onClose}>
+                    <button
+                        type="button"
+                        className="close-btn"
+                        onClick={onClose}
+                    >
                         ×
                     </button>
                 </div>
@@ -39,7 +68,6 @@ function AddCurrencyModal({ rates, selectedCurrencies, onAdd, onClose }: AddCurr
                     placeholder="Search currencies..."
                     value={searchTerm}
                     onChange={e => setSearchTerm(e.target.value)}
-                    autoFocus
                 />
 
                 <div className="currency-list-modal">
@@ -47,9 +75,24 @@ function AddCurrencyModal({ rates, selectedCurrencies, onAdd, onClose }: AddCurr
                         <div className="no-results">No currencies found</div>
                     ) : (
                         filteredCurrencies.map(([code, info]) => (
-                            <div key={code} className="currency-item" onClick={() => onAdd(code)}>
-                                <span className="currency-code-modal">{code}</span>
-                                <span className="currency-name">{info.name}</span>
+                            <div
+                                key={code}
+                                className="currency-item"
+                                onClick={() => onAdd(code)}
+                                onKeyDown={e => {
+                                    if (e.key === 'Enter' || e.key === ' ') {
+                                        onAdd(code);
+                                    }
+                                }}
+                                role="button"
+                                tabIndex={0}
+                            >
+                                <span className="currency-code-modal">
+                                    {code}
+                                </span>
+                                <span className="currency-name">
+                                    {info.name}
+                                </span>
                             </div>
                         ))
                     )}

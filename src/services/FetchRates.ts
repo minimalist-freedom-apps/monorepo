@@ -1,4 +1,4 @@
-import { Result } from '@evolu/common';
+import type { Result } from '@evolu/common';
 
 export interface CurrencyRate {
     readonly code: string;

@@ -1,5 +1,5 @@
-import { defineConfig } from 'vite';
 import react from '@vitejs/plugin-react';
+import { defineConfig } from 'vite';
 import { VitePWA } from 'vite-plugin-pwa';
 
 export default defineConfig({
@@ -7,7 +7,11 @@ export default defineConfig({
         react(),
         VitePWA({
             registerType: 'autoUpdate',
-            includeAssets: ['favicon.ico', 'robots.txt', 'apple-touch-icon.png'],
+            includeAssets: [
+                'favicon.ico',
+                'robots.txt',
+                'apple-touch-icon.png',
+            ],
             manifest: {
                 name: 'Minimalistic Price Converter',
                 short_name: 'Price Converter',

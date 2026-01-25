@@ -1,13 +1,21 @@
-import { Result, ok, err } from '@evolu/common';
-import { RatesMap, AllApisFailed, FetchRates, CurrencyRate } from './FetchRates.js';
+import { type Result, err, ok } from '@evolu/common';
+import type {
+    AllApisFailed,
+    CurrencyRate,
+    FetchRates,
+    RatesMap,
+} from './FetchRates.js';
 
 export interface FetchAverageRatesDeps {
     readonly fetchRates: readonly FetchRates[];
 }
 
 export const createFetchAverageRates =
-    (deps: FetchAverageRatesDeps) => async (): Promise<Result<RatesMap, AllApisFailed>> => {
-        const results = await Promise.all(deps.fetchRates.map(fetch => fetch()));
+    (deps: FetchAverageRatesDeps) =>
+    async (): Promise<Result<RatesMap, AllApisFailed>> => {
+        const results = await Promise.all(
+            deps.fetchRates.map(fetch => fetch()),
+        );
 
         const sources = results
             .filter(result => result.ok)
@@ -28,10 +36,13 @@ export const createFetchAverageRates =
         });
 
         allCodes.forEach(code => {
-            const rates = sources.filter(source => source[code]).map(source => source[code].rate);
+            const rates = sources
+                .filter(source => source[code])
+                .map(source => source[code].rate);
 
             if (rates.length > 0) {
-                const avgRate = rates.reduce((sum, rate) => sum + rate, 0) / rates.length;
+                const avgRate =
+                    rates.reduce((sum, rate) => sum + rate, 0) / rates.length;
                 const firstSource = sources.find(s => s[code]);
                 if (firstSource) {
                     allRates[code] = {

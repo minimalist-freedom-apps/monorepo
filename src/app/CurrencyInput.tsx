@@ -9,7 +9,13 @@ interface CurrencyInputProps {
     onFocus: () => void;
 }
 
-function CurrencyInput({ label, value, onChange, focused, onFocus }: CurrencyInputProps) {
+function CurrencyInput({
+    label,
+    value,
+    onChange,
+    focused,
+    onFocus,
+}: CurrencyInputProps) {
     const inputRef = useRef<HTMLInputElement>(null);
 
     useEffect(() => {

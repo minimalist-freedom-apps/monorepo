@@ -4,9 +4,9 @@ const SATOSHI = 100000000; // 1 BTC = 100,000,000 sats
 
 // Format number with custom grouping (e.g., 0.00,001,000)
 export const formatBtcWithCommas = (value: string | number): string => {
-    if (!value || isNaN(Number(value))) return '0';
+    if (!value || Number.isNaN(Number(value))) return '0';
 
-    const num = parseFloat(String(value));
+    const num = Number.parseFloat(String(value));
     if (num === 0) return '0';
 
     // Handle scientific notation for very small numbers
@@ -25,13 +25,13 @@ export const formatBtcWithCommas = (value: string | number): string => {
     if (!decPart) return intPart;
 
     // Add commas every 3 digits in decimal part from right to left
-    let formatted = decPart;
+    const formatted = decPart;
     let result = '';
     let count = 0;
 
     for (let i = formatted.length - 1; i >= 0; i--) {
         if (count === 3 && i < formatted.length - 1) {
-            result = ',' + result;
+            result = `,${result}`;
             count = 0;
         }
         result = formatted[i] + result;
@@ -41,14 +41,14 @@ export const formatBtcWithCommas = (value: string | number): string => {
     // Remove trailing zeros
     result = result.replace(/0+$/, '').replace(/,$/, '');
 
-    return intPart + (result ? '.' + result : '');
+    return intPart + (result ? `.${result}` : '');
 };
 
 // Format fiat with 3 decimal places and commas
 export const formatFiatWithCommas = (value: string | number): string => {
-    if (!value || isNaN(Number(value))) return '0';
+    if (!value || Number.isNaN(Number(value))) return '0';
 
-    const num = parseFloat(String(value));
+    const num = Number.parseFloat(String(value));
     if (num === 0) return '0';
 
     const str = num.toFixed(3);
@@ -60,7 +60,7 @@ export const formatFiatWithCommas = (value: string | number): string => {
     // Remove trailing zeros from decimal
     const formattedDec = decPart ? decPart.replace(/0+$/, '') : '';
 
-    return formattedInt + (formattedDec ? '.' + formattedDec : '');
+    return formattedInt + (formattedDec ? `.${formattedDec}` : '');
 };
 
 // Convert BTC to Sats
@@ -75,16 +75,16 @@ export const satsToBtc = (sats: number): number => {
 
 // Format sats with 3 decimal places
 export const formatSats = (sats: string | number): string => {
-    if (!sats || isNaN(Number(sats))) return '0';
+    if (!sats || Number.isNaN(Number(sats))) return '0';
 
-    const num = parseFloat(String(sats));
+    const num = Number.parseFloat(String(sats));
     return num.toFixed(3).replace(/\.?0+$/, '');
 };
 
 // Parse formatted number back to float
 export const parseFormattedNumber = (str: string): number => {
     if (!str) return 0;
-    return parseFloat(str.replace(/,/g, ''));
+    return Number.parseFloat(str.replace(/,/g, ''));
 };
 
 // Calculate time ago
@@ -120,7 +120,10 @@ export const saveToLocalStorage = <T>(key: string, value: T): void => {
 };
 
 // Load from localStorage
-export const loadFromLocalStorage = <T>(key: string, defaultValue: T | null = null): T | null => {
+export const loadFromLocalStorage = <T>(
+    key: string,
+    defaultValue: T | null = null,
+): T | null => {
     try {
         const item = localStorage.getItem(key);
         return item ? JSON.parse(item) : defaultValue;

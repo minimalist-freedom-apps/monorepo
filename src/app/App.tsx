@@ -1,24 +1,24 @@
-import { useState, useEffect, useRef } from 'react';
-import { RatesMap } from '../services/FetchRates';
+import { useEffect, useRef, useState } from 'react';
 import { createCompositionRoot } from '../createCompositionRoot';
+import type { RatesMap } from '../services/FetchRates';
 
 const { fetchAverageRates } = createCompositionRoot();
 import {
+    btcToSats,
     formatBtcWithCommas,
     formatFiatWithCommas,
     formatSats,
-    parseFormattedNumber,
-    btcToSats,
-    satsToBtc,
     getTimeAgo,
     isLongerThan1Hour,
-    saveToLocalStorage,
     loadFromLocalStorage,
+    parseFormattedNumber,
+    satsToBtc,
+    saveToLocalStorage,
 } from '../utils/helpers';
-import Header from './Header';
+import AddCurrencyModal from './AddCurrencyModal';
 import CurrencyInput from './CurrencyInput';
 import CurrencyList from './CurrencyList';
-import AddCurrencyModal from './AddCurrencyModal';
+import Header from './Header';
 import './App.css';
 
 const STORAGE_KEYS = {
@@ -49,8 +49,12 @@ function App() {
     // Load saved data on mount
     useEffect(() => {
         const savedRates = loadFromLocalStorage<RatesMap>(STORAGE_KEYS.RATES);
-        const savedTimestamp = loadFromLocalStorage<number>(STORAGE_KEYS.TIMESTAMP);
-        const savedCurrencies = loadFromLocalStorage<string[]>(STORAGE_KEYS.SELECTED_CURRENCIES);
+        const savedTimestamp = loadFromLocalStorage<number>(
+            STORAGE_KEYS.TIMESTAMP,
+        );
+        const savedCurrencies = loadFromLocalStorage<string[]>(
+            STORAGE_KEYS.SELECTED_CURRENCIES,
+        );
         const savedMode = loadFromLocalStorage<Mode>(STORAGE_KEYS.MODE, 'BTC');
 
         if (savedRates) {
@@ -121,9 +125,12 @@ function App() {
     };
 
     // Recalculate all values from BTC input
-    const recalculateFromBtc = (value: string, currentRates: RatesMap = rates) => {
+    const recalculateFromBtc = (
+        value: string,
+        currentRates: RatesMap = rates,
+    ) => {
         const btcAmount = parseFormattedNumber(value);
-        if (isNaN(btcAmount) || btcAmount === 0) {
+        if (Number.isNaN(btcAmount) || btcAmount === 0) {
             setCurrencyValues({});
             return;
         }
@@ -141,7 +148,7 @@ function App() {
     // Recalculate all values from a currency input
     const recalculateFromCurrency = (code: string, value: string) => {
         const fiatAmount = parseFormattedNumber(value);
-        if (isNaN(fiatAmount) || fiatAmount === 0 || !rates[code]) {
+        if (Number.isNaN(fiatAmount) || fiatAmount === 0 || !rates[code]) {
             setBtcValue('');
             setCurrencyValues({});
             return;
@@ -149,7 +156,9 @@ function App() {
 
         const btcAmount = fiatAmount * rates[code].rate;
         const formattedBtc =
-            mode === 'BTC' ? formatBtcWithCommas(btcAmount) : formatSats(btcToSats(btcAmount));
+            mode === 'BTC'
+                ? formatBtcWithCommas(btcAmount)
+                : formatSats(btcToSats(btcAmount));
         setBtcValue(formattedBtc);
 
         // Update other currencies
@@ -176,7 +185,7 @@ function App() {
             btcAmount = parseFormattedNumber(value);
         }
 
-        if (isNaN(btcAmount) || btcAmount === 0) {
+        if (Number.isNaN(btcAmount) || btcAmount === 0) {
             setCurrencyValues({});
             return;
         }
@@ -238,10 +247,12 @@ function App() {
         if (btcValue) {
             const currentValue = parseFormattedNumber(btcValue);
             if (newMode === 'Sats') {
-                const btcAmount = mode === 'BTC' ? currentValue : satsToBtc(currentValue);
+                const btcAmount =
+                    mode === 'BTC' ? currentValue : satsToBtc(currentValue);
                 setBtcValue(formatSats(btcToSats(btcAmount)));
             } else {
-                const btcAmount = mode === 'Sats' ? satsToBtc(currentValue) : currentValue;
+                const btcAmount =
+                    mode === 'Sats' ? satsToBtc(currentValue) : currentValue;
                 setBtcValue(formatBtcWithCommas(btcAmount));
             }
         }
@@ -285,7 +296,11 @@ function App() {
                     onFocus={setFocusedInput}
                 />
 
-                <button className="add-button" onClick={() => setShowModal(true)}>
+                <button
+                    type="button"
+                    className="add-button"
+                    onClick={() => setShowModal(true)}
+                >
                     + Add Currency
                 </button>
             </div>
