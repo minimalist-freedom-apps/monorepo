@@ -20,6 +20,9 @@
             "complexity": {
                 "noForEach": "off"
             },
+            "suspicious": {
+                "noShadowRestrictedNames": "off"
+            },
             "style": {
                 "noNonNullAssertion": "off"
             },
