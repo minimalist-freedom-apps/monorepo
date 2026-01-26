@@ -1,5 +1,5 @@
 import { tryAsync } from '@evolu/common';
-import type { CurrencyRate, FetchRates } from './FetchRates.js';
+import { CurrencyCode, type CurrencyRate, type FetchRates } from './FetchRates.js';
 
 interface CoingeckoRateInfo {
     readonly name: string;
@@ -32,11 +32,15 @@ export const createFetchCoingeckoRates =
                 const rates: Record<string, CurrencyRate> = {};
                 Object.entries(data.rates).forEach(([code, info]) => {
                     if (info.type === 'fiat') {
-                        rates[code.toUpperCase()] = {
-                            code: code.toUpperCase(),
-                            name: info.name,
-                            rate: 1 / info.value,
-                        };
+                        const upperCode = code.toUpperCase();
+                        const codeResult = CurrencyCode.from(upperCode);
+                        if (codeResult.ok) {
+                            rates[upperCode] = {
+                                code: codeResult.value,
+                                name: info.name,
+                                rate: 1 / info.value,
+                            };
+                        }
                     }
                 });
                 return rates;

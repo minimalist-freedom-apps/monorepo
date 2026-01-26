@@ -1,5 +1,5 @@
 import { tryAsync } from '@evolu/common';
-import type { CurrencyRate, FetchRates } from './FetchRates.js';
+import { CurrencyCode, type CurrencyRate, type FetchRates } from './FetchRates.js';
 
 interface BitpayRateItem {
     readonly code: string;
@@ -27,11 +27,14 @@ export const createFetchBitpayRates =
                 const rates: Record<string, CurrencyRate> = {};
                 data.data.forEach(item => {
                     if (item.code !== 'BTC') {
-                        rates[item.code] = {
-                            code: item.code,
-                            name: item.name,
-                            rate: 1 / item.rate,
-                        };
+                        const codeResult = CurrencyCode.from(item.code);
+                        if (codeResult.ok) {
+                            rates[item.code] = {
+                                code: codeResult.value,
+                                name: item.name,
+                                rate: 1 / item.rate,
+                            };
+                        }
                     }
                 });
                 return rates;
