@@ -21,10 +21,14 @@
                 "noShadowRestrictedNames": "off"
             },
             "style": {
-                "noNonNullAssertion": "off"
+                "noNonNullAssertion": "off",
+                "noDefaultExport": "error"
             },
             "a11y": {
                 "useSemanticElements": "off"
+            },
+            "complexity": {
+                "useArrowFunction": "error"
             }
         }
     },
@@ -33,5 +37,17 @@
             "quoteStyle": "single",
             "arrowParentheses": "asNeeded"
         }
-    }
+    },
+    "overrides": [
+        {
+            "include": ["**/vite.config.ts", "**/vitest.config.ts"],
+            "linter": {
+                "rules": {
+                    "style": {
+                        "noDefaultExport": "off"
+                    }
+                }
+            }
+        }
+    ]
 }

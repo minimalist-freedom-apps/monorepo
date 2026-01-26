@@ -11,7 +11,7 @@ interface CurrencyRowProps {
     onFocus: () => void;
 }
 
-function CurrencyRow({
+export const CurrencyRow = ({
     code,
     name,
     value,
@@ -19,7 +19,7 @@ function CurrencyRow({
     onRemove,
     focused,
     onFocus,
-}: CurrencyRowProps) {
+}: CurrencyRowProps) => {
     const inputRef = useRef<HTMLInputElement>(null);
 
     useEffect(() => {
@@ -59,6 +59,4 @@ function CurrencyRow({
             </button>
         </div>
     );
-}
-
-export default CurrencyRow;
+};

@@ -7,7 +7,12 @@ interface HeaderProps {
     onModeToggle: () => void;
 }
 
-function Header({ onRefresh, loading, mode, onModeToggle }: HeaderProps) {
+export const Header = ({
+    onRefresh,
+    loading,
+    mode,
+    onModeToggle,
+}: HeaderProps) => {
     return (
         <header className="header">
             <h1 className="title">Price Converter</h1>
@@ -32,6 +37,4 @@ function Header({ onRefresh, loading, mode, onModeToggle }: HeaderProps) {
             </div>
         </header>
     );
-}
-
-export default Header;
+};

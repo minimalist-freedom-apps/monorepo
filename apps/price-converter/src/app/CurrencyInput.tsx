@@ -9,13 +9,13 @@ interface CurrencyInputProps {
     onFocus: () => void;
 }
 
-function CurrencyInput({
+export const CurrencyInput = ({
     label,
     value,
     onChange,
     focused,
     onFocus,
-}: CurrencyInputProps) {
+}: CurrencyInputProps) => {
     const inputRef = useRef<HTMLInputElement>(null);
 
     useEffect(() => {
@@ -43,6 +43,4 @@ function CurrencyInput({
             <span className="currency-label">{label}</span>
         </div>
     );
-}
-
-export default CurrencyInput;
+};

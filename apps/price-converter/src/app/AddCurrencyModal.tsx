@@ -13,12 +13,12 @@ interface AddCurrencyModalProps {
     onClose: () => void;
 }
 
-function AddCurrencyModal({
+export const AddCurrencyModal = ({
     rates,
     selectedCurrencies,
     onAdd,
     onClose,
-}: AddCurrencyModalProps) {
+}: AddCurrencyModalProps) => {
     const [searchTerm, setSearchTerm] = useState('');
 
     const availableCurrencies = (
@@ -106,6 +106,4 @@ function AddCurrencyModal({
             </div>
         </div>
     );
-}
-
-export default AddCurrencyModal;
+};

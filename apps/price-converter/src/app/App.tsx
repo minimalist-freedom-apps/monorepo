@@ -17,10 +17,10 @@ import { createCompositionRoot } from '../createCompositionRoot';
 import type { CurrencyCode, RatesMap } from '../services/FetchRates';
 
 const { fetchAverageRates } = createCompositionRoot();
-import AddCurrencyModal from './AddCurrencyModal';
-import CurrencyInput from './CurrencyInput';
-import CurrencyList from './CurrencyList';
-import Header from './Header';
+import { AddCurrencyModal } from './AddCurrencyModal';
+import { CurrencyInput } from './CurrencyInput';
+import { CurrencyList } from './CurrencyList';
+import { Header } from './Header';
 import './App.css';
 
 const STORAGE_KEYS = {
@@ -32,7 +32,7 @@ const STORAGE_KEYS = {
 
 type Mode = 'BTC' | 'Sats';
 
-function App() {
+export const App = () => {
     const [rates, setRates] = useState<RatesMap>({} as RatesMap);
     const [selectedCurrencies, setSelectedCurrencies] = useState<
         CurrencyCode[]
@@ -332,6 +332,4 @@ function App() {
             )}
         </div>
     );
-}
-
-export default App;
+};

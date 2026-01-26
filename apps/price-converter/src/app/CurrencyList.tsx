@@ -1,4 +1,4 @@
-import CurrencyRow from './CurrencyRow';
+import { CurrencyRow } from './CurrencyRow';
 import './CurrencyList.css';
 import type { CurrencyCode, RatesMap } from '../services/FetchRates';
 
@@ -12,7 +12,7 @@ interface CurrencyListProps {
     onFocus: (code: CurrencyCode) => void;
 }
 
-function CurrencyList({
+export const CurrencyList = ({
     currencies,
     rates,
     values,
@@ -20,7 +20,7 @@ function CurrencyList({
     onRemove,
     focusedInput,
     onFocus,
-}: CurrencyListProps) {
+}: CurrencyListProps) => {
     return (
         <div className="currency-list">
             {currencies.map(code => (
@@ -37,6 +37,4 @@ function CurrencyList({
             ))}
         </div>
     );
-}
-
-export default CurrencyList;
+};
