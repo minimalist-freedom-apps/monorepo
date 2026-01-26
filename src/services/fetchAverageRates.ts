@@ -1,7 +1,7 @@
-import { type Result, err, ok } from '@evolu/common';
+import { err, ok } from '@evolu/common';
 import {
     CurrencyCode,
-    type AllApisFailed,
+    FetchRatesError,
     type CurrencyRate,
     type FetchRates,
     type RatesMap,
@@ -12,18 +12,18 @@ export interface FetchAverageRatesDeps {
 }
 
 export const createFetchAverageRates =
-    (deps: FetchAverageRatesDeps) => async (): Promise<Result<RatesMap, AllApisFailed>> => {
-        const results = await Promise.all(deps.fetchRates.map(fetch => fetch()));
+    (deps: FetchAverageRatesDeps): FetchRates =>
+    async () => {
+        const results = await Promise.all(
+            deps.fetchRates.map(fetch => fetch()),
+        );
 
         const sources = results
             .filter(result => result.ok)
             .map(result => (result.ok ? result.value : ({} as RatesMap)));
 
         if (sources.length === 0) {
-            return err({
-                type: 'AllApisFailed',
-                message: 'All APIs failed to fetch rates',
-            });
+            return err(FetchRatesError());
         }
 
         const allRates: Record<string, CurrencyRate> = {};
@@ -43,7 +43,8 @@ export const createFetchAverageRates =
                 .map(source => source[validCode].rate);
 
             if (rates.length > 0) {
-                const avgRate = rates.reduce((sum, rate) => sum + rate, 0) / rates.length;
+                const avgRate =
+                    rates.reduce((sum, rate) => sum + rate, 0) / rates.length;
                 const firstSource = sources.find(s => s[validCode]);
                 if (firstSource) {
                     allRates[code] = {

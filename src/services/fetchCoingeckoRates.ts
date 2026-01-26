@@ -1,5 +1,10 @@
 import { tryAsync } from '@evolu/common';
-import { CurrencyCode, type CurrencyRate, type FetchRates } from './FetchRates.js';
+import {
+    CurrencyCode,
+    FetchRatesError,
+    type CurrencyRate,
+    type FetchRates,
+} from './FetchRates.js';
 
 interface CoingeckoRateInfo {
     readonly name: string;
@@ -45,9 +50,5 @@ export const createFetchCoingeckoRates =
                 });
                 return rates;
             },
-            error => ({
-                type: 'FetchRatesError',
-                source: 'Coingecko',
-                message: String(error),
-            }),
+            _ => FetchRatesError(),
         );

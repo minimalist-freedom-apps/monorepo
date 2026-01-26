@@ -1,5 +1,10 @@
 import { tryAsync } from '@evolu/common';
-import { CurrencyCode, type CurrencyRate, type FetchRates } from './FetchRates.js';
+import {
+    CurrencyCode,
+    FetchRatesError,
+    type CurrencyRate,
+    type FetchRates,
+} from './FetchRates.js';
 
 interface BitpayRateItem {
     readonly code: string;
@@ -39,9 +44,5 @@ export const createFetchBitpayRates =
                 });
                 return rates;
             },
-            error => ({
-                type: 'FetchRatesError',
-                source: 'Bitpay',
-                message: String(error),
-            }),
+            _ => FetchRatesError(),
         );
