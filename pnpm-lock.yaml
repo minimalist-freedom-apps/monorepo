@@ -26,6 +26,9 @@ importers:
       '@minimalistic-apps/bitcoin':
         specifier: workspace:*
         version: link:../../packages/bitcoin
+      '@minimalistic-apps/components':
+        specifier: workspace:*
+        version: link:../../packages/components
       '@minimalistic-apps/utils':
         specifier: workspace:*
         version: link:../../packages/utils
@@ -57,6 +60,19 @@ importers:
 
   packages/bitcoin:
     devDependencies:
+      typescript:
+        specifier: ^5.3.0
+        version: 5.9.3
+
+  packages/components:
+    dependencies:
+      react:
+        specifier: ^18.2.0
+        version: 18.3.1
+    devDependencies:
+      '@types/react':
+        specifier: ^18.2.0
+        version: 18.3.27
       typescript:
         specifier: ^5.3.0
         version: 5.9.3

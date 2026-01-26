@@ -13,6 +13,7 @@
     "dependencies": {
         "@evolu/common": "^7.4.1",
         "@minimalistic-apps/bitcoin": "workspace:*",
+        "@minimalistic-apps/components": "workspace:*",
         "@minimalistic-apps/utils": "workspace:*",
         "react": "^18.2.0",
         "react-dom": "^18.2.0"

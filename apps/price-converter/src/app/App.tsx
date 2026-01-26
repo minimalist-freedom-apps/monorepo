@@ -17,8 +17,8 @@ import { createCompositionRoot } from '../createCompositionRoot';
 import type { CurrencyCode, RatesMap } from '../services/FetchRates';
 
 const { fetchAverageRates } = createCompositionRoot();
+import { CurrencyInput } from '@minimalistic-apps/components';
 import { AddCurrencyModal } from './AddCurrencyModal';
-import { CurrencyInput } from './CurrencyInput';
 import { CurrencyList } from './CurrencyList';
 import { Header } from './Header';
 import './App.css';
