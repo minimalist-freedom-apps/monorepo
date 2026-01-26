@@ -10,11 +10,11 @@ This is rewrite of the original Price Converter into React PWA.
 
 ```bash
 # Dev server
-pnpm --filter @price-converter/app dev
+pnpm --filter @minimalistic-apps/price-converter dev
 
 # Build
-pnpm --filter @price-converter/app build
+pnpm --filter @minimalistic-apps/price-converter build
 
 # Preview production build
-pnpm --filter @price-converter/app preview
+pnpm --filter @minimalistic-apps/price-converter preview
 ```
