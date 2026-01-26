@@ -1,5 +1,10 @@
 import { tryAsync } from '@evolu/common';
-import { CurrencyCode, type CurrencyRate, type FetchRates } from './FetchRates.js';
+import {
+    CurrencyCode,
+    FetchRatesError,
+    type CurrencyRate,
+    type FetchRates,
+} from './FetchRates.js';
 
 interface BlockchainInfoRateInfo {
     readonly last: number;
@@ -21,7 +26,9 @@ export const createFetchBlockchainInfoRates =
     () =>
         tryAsync(
             async () => {
-                const response = await deps.fetch('https://blockchain.info/ticker');
+                const response = await deps.fetch(
+                    'https://blockchain.info/ticker',
+                );
                 if (!response.ok) throw new Error('Blockchain.info API failed');
                 const data: BlockchainInfoResponse = await response.json();
 
@@ -38,9 +45,5 @@ export const createFetchBlockchainInfoRates =
                 });
                 return rates;
             },
-            error => ({
-                type: 'FetchRatesError',
-                source: 'BlockchainInfo',
-                message: String(error),
-            }),
+            _ => FetchRatesError(),
         );

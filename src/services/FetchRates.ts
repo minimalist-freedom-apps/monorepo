@@ -1,9 +1,18 @@
-import { String as EvoluString, type Result, type TypeError, brand, err, ok } from '@evolu/common';
+import {
+    String as EvoluString,
+    type Result,
+    type TypeError,
+    brand,
+    err,
+    ok,
+} from '@evolu/common';
 
 export interface CurrencyCodeError extends TypeError<'CurrencyCode'> {}
 
 export const CurrencyCode = brand('CurrencyCode', EvoluString, value =>
-    /^[A-Z]{3}$/.test(value) ? ok(value) : err<CurrencyCodeError>({ type: 'CurrencyCode', value }),
+    /^[A-Z]{3}$/.test(value)
+        ? ok(value)
+        : err<CurrencyCodeError>({ type: 'CurrencyCode', value }),
 );
 
 export type CurrencyCode = typeof CurrencyCode.Type;
@@ -20,13 +29,10 @@ export interface RatesMap {
 
 export interface FetchRatesError {
     readonly type: 'FetchRatesError';
-    readonly source: string;
-    readonly message: string;
 }
 
-export interface AllApisFailed {
-    readonly type: 'AllApisFailed';
-    readonly message: string;
-}
+export const FetchRatesError = (): FetchRatesError => ({
+    type: 'FetchRatesError' as const,
+});
 
 export type FetchRates = () => Promise<Result<RatesMap, FetchRatesError>>;
