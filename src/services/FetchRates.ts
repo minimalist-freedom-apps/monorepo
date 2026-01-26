@@ -23,9 +23,7 @@ export interface CurrencyRate {
     readonly rate: number;
 }
 
-export interface RatesMap {
-    readonly [code: CurrencyCode]: CurrencyRate;
-}
+export type RatesMap = Readonly<Record<CurrencyCode, CurrencyRate>>;
 
 export interface FetchRatesError {
     readonly type: 'FetchRatesError';

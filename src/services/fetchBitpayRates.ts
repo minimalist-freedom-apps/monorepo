@@ -29,19 +29,22 @@ export const createFetchBitpayRates =
                 if (!response.ok) throw new Error('Bitpay API failed');
                 const data: BitpayResponse = await response.json();
 
-                const rates: Record<string, CurrencyRate> = {};
-                data.data.forEach(item => {
-                    if (item.code !== 'BTC') {
-                        const codeResult = CurrencyCode.from(item.code);
-                        if (codeResult.ok) {
-                            rates[item.code] = {
-                                code: codeResult.value,
-                                name: item.name,
-                                rate: 1 / item.rate,
-                            };
+                const rates = data.data.reduce<Record<string, CurrencyRate>>(
+                    (acc, item) => {
+                        if (item.code !== 'BTC') {
+                            const codeResult = CurrencyCode.from(item.code);
+                            if (codeResult.ok) {
+                                acc[item.code] = {
+                                    code: codeResult.value,
+                                    name: item.name,
+                                    rate: 1 / item.rate,
+                                };
+                            }
                         }
-                    }
-                });
+                        return acc;
+                    },
+                    {},
+                );
                 return rates;
             },
             _ => FetchRatesError(),

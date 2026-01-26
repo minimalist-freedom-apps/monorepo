@@ -34,20 +34,22 @@ export const createFetchCoingeckoRates =
                 if (!response.ok) throw new Error('Coingecko API failed');
                 const data: CoingeckoResponse = await response.json();
 
-                const rates: Record<string, CurrencyRate> = {};
-                Object.entries(data.rates).forEach(([code, info]) => {
+                const rates = Object.entries(data.rates).reduce<
+                    Record<string, CurrencyRate>
+                >((acc, [code, info]) => {
                     if (info.type === 'fiat') {
                         const upperCode = code.toUpperCase();
                         const codeResult = CurrencyCode.from(upperCode);
                         if (codeResult.ok) {
-                            rates[upperCode] = {
+                            acc[upperCode] = {
                                 code: codeResult.value,
                                 name: info.name,
                                 rate: 1 / info.value,
                             };
                         }
                     }
-                });
+                    return acc;
+                }, {});
                 return rates;
             },
             _ => FetchRatesError(),

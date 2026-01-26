@@ -1,15 +1,15 @@
 import CurrencyRow from './CurrencyRow';
 import './CurrencyList.css';
-import type { RatesMap } from '../services/FetchRates';
+import type { CurrencyCode, RatesMap } from '../services/FetchRates';
 
 interface CurrencyListProps {
-    currencies: string[];
+    currencies: CurrencyCode[];
     rates: RatesMap;
-    values: { [code: string]: string };
-    onChange: (code: string, value: string) => void;
-    onRemove: (code: string) => void;
-    focusedInput: string;
-    onFocus: (code: string) => void;
+    values: Record<CurrencyCode, string>;
+    onChange: (code: CurrencyCode, value: string) => void;
+    onRemove: (code: CurrencyCode) => void;
+    focusedInput: CurrencyCode | 'BTC';
+    onFocus: (code: CurrencyCode) => void;
 }
 
 function CurrencyList({

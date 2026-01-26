@@ -1,11 +1,15 @@
 import { useState } from 'react';
 import './AddCurrencyModal.css';
-import type { RatesMap } from '../services/FetchRates';
+import type {
+    CurrencyCode,
+    CurrencyRate,
+    RatesMap,
+} from '../services/FetchRates';
 
 interface AddCurrencyModalProps {
     rates: RatesMap;
-    selectedCurrencies: string[];
-    onAdd: (code: string) => void;
+    selectedCurrencies: CurrencyCode[];
+    onAdd: (code: CurrencyCode) => void;
     onClose: () => void;
 }
 
@@ -17,7 +21,9 @@ function AddCurrencyModal({
 }: AddCurrencyModalProps) {
     const [searchTerm, setSearchTerm] = useState('');
 
-    const availableCurrencies = Object.entries(rates)
+    const availableCurrencies = (
+        Object.entries(rates) as [CurrencyCode, CurrencyRate][]
+    )
         .filter(([code]) => !selectedCurrencies.includes(code))
         .sort((a, b) => a[1].name.localeCompare(b[1].name));
 

@@ -32,17 +32,19 @@ export const createFetchBlockchainInfoRates =
                 if (!response.ok) throw new Error('Blockchain.info API failed');
                 const data: BlockchainInfoResponse = await response.json();
 
-                const rates: Record<string, CurrencyRate> = {};
-                Object.entries(data).forEach(([code, info]) => {
+                const rates = Object.entries(data).reduce<
+                    Record<string, CurrencyRate>
+                >((acc, [code, info]) => {
                     const codeResult = CurrencyCode.from(code);
                     if (codeResult.ok) {
-                        rates[code] = {
+                        acc[code] = {
                             code: codeResult.value,
                             name: code,
                             rate: 1 / info.last,
                         };
                     }
-                });
+                    return acc;
+                }, {});
                 return rates;
             },
             _ => FetchRatesError(),

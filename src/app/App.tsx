@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from 'react';
 import { createCompositionRoot } from '../createCompositionRoot';
-import type { RatesMap } from '../services/FetchRates';
+import type { CurrencyCode, RatesMap } from '../services/FetchRates';
 
 const { fetchAverageRates } = createCompositionRoot();
 import {
@@ -31,19 +31,23 @@ const STORAGE_KEYS = {
 type Mode = 'BTC' | 'Sats';
 
 function App() {
-    const [rates, setRates] = useState<RatesMap>({});
-    const [selectedCurrencies, setSelectedCurrencies] = useState<string[]>([]);
+    const [rates, setRates] = useState<RatesMap>({} as RatesMap);
+    const [selectedCurrencies, setSelectedCurrencies] = useState<
+        CurrencyCode[]
+    >([]);
     const [btcValue, setBtcValue] = useState<string>('');
-    const [currencyValues, setCurrencyValues] = useState<{
-        [code: string]: string;
-    }>({});
+    const [currencyValues, setCurrencyValues] = useState<
+        Record<CurrencyCode, string>
+    >({} as Record<CurrencyCode, string>);
     const [loading, setLoading] = useState<boolean>(false);
     const [error, setError] = useState<string>('');
     const [lastUpdated, setLastUpdated] = useState<number | null>(null);
     const [timeAgo, setTimeAgo] = useState<string>('');
     const [mode, setMode] = useState<Mode>('BTC');
     const [showModal, setShowModal] = useState<boolean>(false);
-    const [focusedInput, setFocusedInput] = useState<string>('BTC');
+    const [focusedInput, setFocusedInput] = useState<CurrencyCode | 'BTC'>(
+        'BTC',
+    );
     const intervalRef = useRef<number | null>(null);
 
     // Load saved data on mount
@@ -52,7 +56,7 @@ function App() {
         const savedTimestamp = loadFromLocalStorage<number>(
             STORAGE_KEYS.TIMESTAMP,
         );
-        const savedCurrencies = loadFromLocalStorage<string[]>(
+        const savedCurrencies = loadFromLocalStorage<CurrencyCode[]>(
             STORAGE_KEYS.SELECTED_CURRENCIES,
         );
         const savedMode = loadFromLocalStorage<Mode>(STORAGE_KEYS.MODE, 'BTC');
@@ -69,7 +73,7 @@ function App() {
             setSelectedCurrencies(savedCurrencies);
         } else {
             // Default to USD
-            setSelectedCurrencies(['USD']);
+            setSelectedCurrencies(['USD' as CurrencyCode]);
         }
 
         setMode(savedMode || 'BTC');
@@ -135,22 +139,27 @@ function App() {
             return;
         }
 
-        const newValues: { [code: string]: string } = {};
-        selectedCurrencies.forEach(code => {
-            if (currentRates[code]) {
-                const fiatAmount = btcAmount / currentRates[code].rate;
-                newValues[code] = formatFiatWithCommas(fiatAmount);
-            }
-        });
+        const newValues = selectedCurrencies.reduce<
+            Record<CurrencyCode, string>
+        >(
+            (acc, code) => {
+                if (currentRates[code]) {
+                    const fiatAmount = btcAmount / currentRates[code].rate;
+                    acc[code] = formatFiatWithCommas(fiatAmount);
+                }
+                return acc;
+            },
+            {} as Record<CurrencyCode, string>,
+        );
         setCurrencyValues(newValues);
     };
 
     // Recalculate all values from a currency input
-    const recalculateFromCurrency = (code: string, value: string) => {
+    const recalculateFromCurrency = (code: CurrencyCode, value: string) => {
         const fiatAmount = parseFormattedNumber(value);
         if (Number.isNaN(fiatAmount) || fiatAmount === 0 || !rates[code]) {
             setBtcValue('');
-            setCurrencyValues({});
+            setCurrencyValues({} as Record<CurrencyCode, string>);
             return;
         }
 
@@ -162,13 +171,20 @@ function App() {
         setBtcValue(formattedBtc);
 
         // Update other currencies
-        const newValues = { ...currencyValues, [code]: value };
-        selectedCurrencies.forEach(otherCode => {
-            if (otherCode !== code && rates[otherCode]) {
-                const otherFiatAmount = btcAmount / rates[otherCode].rate;
-                newValues[otherCode] = formatFiatWithCommas(otherFiatAmount);
-            }
-        });
+        const newValues = selectedCurrencies.reduce<
+            Record<CurrencyCode, string>
+        >(
+            (acc, otherCode) => {
+                if (otherCode !== code && rates[otherCode]) {
+                    const otherFiatAmount = btcAmount / rates[otherCode].rate;
+                    acc[otherCode] = formatFiatWithCommas(otherFiatAmount);
+                } else if (otherCode === code) {
+                    acc[otherCode] = value;
+                }
+                return acc;
+            },
+            {} as Record<CurrencyCode, string>,
+        );
         setCurrencyValues(newValues);
     };
 
@@ -194,14 +210,14 @@ function App() {
     };
 
     // Handle currency input change
-    const handleCurrencyChange = (code: string, value: string) => {
+    const handleCurrencyChange = (code: CurrencyCode, value: string) => {
         setFocusedInput(code);
         setCurrencyValues(prev => ({ ...prev, [code]: value }));
         recalculateFromCurrency(code, value);
     };
 
     // Add currency to list
-    const addCurrency = (code: string) => {
+    const addCurrency = (code: CurrencyCode) => {
         if (!selectedCurrencies.includes(code)) {
             const newCurrencies = [...selectedCurrencies, code];
             setSelectedCurrencies(newCurrencies);
@@ -227,14 +243,13 @@ function App() {
     };
 
     // Remove currency from list
-    const removeCurrency = (code: string) => {
+    const removeCurrency = (code: CurrencyCode) => {
         const newCurrencies = selectedCurrencies.filter(c => c !== code);
         setSelectedCurrencies(newCurrencies);
         saveToLocalStorage(STORAGE_KEYS.SELECTED_CURRENCIES, newCurrencies);
 
-        const newValues = { ...currencyValues };
-        delete newValues[code];
-        setCurrencyValues(newValues);
+        const { [code]: _, ...newValues } = currencyValues;
+        setCurrencyValues(newValues as Record<CurrencyCode, string>);
     };
 
     // Toggle between BTC and Sats mode

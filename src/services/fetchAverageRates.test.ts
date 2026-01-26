@@ -1,36 +1,39 @@
-import { err, ok } from '@evolu/common';
+import { err, getOrThrow, ok } from '@evolu/common';
 import { describe, expect, test } from 'vitest';
-import type { FetchRates, FetchRatesError, RatesMap } from './FetchRates.js';
+import {
+    CurrencyCode,
+    type FetchRates,
+    FetchRatesError,
+    type RatesMap,
+} from './FetchRates.js';
 import { createFetchAverageRates } from './fetchAverageRates.js';
+
+const USD = getOrThrow(CurrencyCode.from('USD'));
+const EUR = getOrThrow(CurrencyCode.from('EUR'));
+const GBP = getOrThrow(CurrencyCode.from('GBP'));
 
 const createMockFetchRates =
     (rates: RatesMap): FetchRates =>
     async () =>
         ok(rates);
 
-const createFailingFetchRates =
-    (source: string): FetchRates =>
-    async () =>
-        err<FetchRatesError>({
-            type: 'FetchRatesError',
-            source,
-            message: 'Failed',
-        });
+const createFailingFetchRates = (): FetchRates => async () =>
+    err(FetchRatesError());
 
 describe(createFetchAverageRates, () => {
     test('calculates average rate from multiple sources', async () => {
-        const source1: RatesMap = {
-            USD: { code: 'USD', name: 'US Dollar', rate: 100 },
-            EUR: { code: 'EUR', name: 'Euro', rate: 90 },
-        };
-        const source2: RatesMap = {
-            USD: { code: 'USD', name: 'US Dollar', rate: 110 },
-            EUR: { code: 'EUR', name: 'Euro', rate: 100 },
-        };
-        const source3: RatesMap = {
-            USD: { code: 'USD', name: 'US Dollar', rate: 105 },
-            EUR: { code: 'EUR', name: 'Euro', rate: 95 },
-        };
+        const source1 = {
+            [USD]: { code: USD, name: 'US Dollar', rate: 100 },
+            [EUR]: { code: EUR, name: 'Euro', rate: 90 },
+        } as RatesMap;
+        const source2 = {
+            [USD]: { code: USD, name: 'US Dollar', rate: 110 },
+            [EUR]: { code: EUR, name: 'Euro', rate: 100 },
+        } as RatesMap;
+        const source3 = {
+            [USD]: { code: USD, name: 'US Dollar', rate: 105 },
+            [EUR]: { code: EUR, name: 'Euro', rate: 95 },
+        } as RatesMap;
 
         const fetchAverageRates = createFetchAverageRates({
             fetchRates: [
@@ -45,18 +48,18 @@ describe(createFetchAverageRates, () => {
         expect(result.ok).toBe(true);
         if (!result.ok) return;
 
-        expect(result.value.USD.rate).toBe(105); // (100 + 110 + 105) / 3
-        expect(result.value.EUR.rate).toBe(95); // (90 + 100 + 95) / 3
+        expect(result.value[USD].rate).toBe(105); // (100 + 110 + 105) / 3
+        expect(result.value[EUR].rate).toBe(95); // (90 + 100 + 95) / 3
     });
 
     test('calculates average when sources have different currencies', async () => {
-        const source1: RatesMap = {
-            USD: { code: 'USD', name: 'US Dollar', rate: 100 },
-        };
-        const source2: RatesMap = {
-            USD: { code: 'USD', name: 'US Dollar', rate: 200 },
-            GBP: { code: 'GBP', name: 'British Pound', rate: 80 },
-        };
+        const source1 = {
+            [USD]: { code: USD, name: 'US Dollar', rate: 100 },
+        } as RatesMap;
+        const source2 = {
+            [USD]: { code: USD, name: 'US Dollar', rate: 200 },
+            [GBP]: { code: GBP, name: 'British Pound', rate: 80 },
+        } as RatesMap;
 
         const fetchAverageRates = createFetchAverageRates({
             fetchRates: [
@@ -70,20 +73,20 @@ describe(createFetchAverageRates, () => {
         expect(result.ok).toBe(true);
         if (!result.ok) return;
 
-        expect(result.value.USD.rate).toBe(150); // (100 + 200) / 2
-        expect(result.value.GBP.rate).toBe(80); // only one source
+        expect(result.value[USD].rate).toBe(150); // (100 + 200) / 2
+        expect(result.value[GBP].rate).toBe(80); // only one source
     });
 
     test('returns single source rates when only one source succeeds', async () => {
-        const source1: RatesMap = {
-            USD: { code: 'USD', name: 'US Dollar', rate: 42000 },
-        };
+        const source1 = {
+            [USD]: { code: USD, name: 'US Dollar', rate: 42000 },
+        } as RatesMap;
 
         const fetchAverageRates = createFetchAverageRates({
             fetchRates: [
                 createMockFetchRates(source1),
-                createFailingFetchRates('api2'),
-                createFailingFetchRates('api3'),
+                createFailingFetchRates(),
+                createFailingFetchRates(),
             ],
         });
 
@@ -92,15 +95,12 @@ describe(createFetchAverageRates, () => {
         expect(result.ok).toBe(true);
         if (!result.ok) return;
 
-        expect(result.value.USD.rate).toBe(42000);
+        expect(result.value[USD].rate).toBe(42000);
     });
 
     test('returns AllApisFailed error when all sources fail', async () => {
         const fetchAverageRates = createFetchAverageRates({
-            fetchRates: [
-                createFailingFetchRates('api1'),
-                createFailingFetchRates('api2'),
-            ],
+            fetchRates: [createFailingFetchRates(), createFailingFetchRates()],
         });
 
         const result = await fetchAverageRates();
@@ -108,16 +108,20 @@ describe(createFetchAverageRates, () => {
         expect(result.ok).toBe(false);
         if (result.ok) return;
 
-        expect(result.error.type).toBe('AllApisFailed');
+        expect(result.error.type).toBe('FetchRatesError');
     });
 
     test('preserves currency name from first available source', async () => {
-        const source1: RatesMap = {
-            USD: { code: 'USD', name: 'US Dollar', rate: 100 },
-        };
-        const source2: RatesMap = {
-            USD: { code: 'USD', name: 'United States Dollar', rate: 200 },
-        };
+        const source1 = {
+            [USD]: { code: USD, name: 'US Dollar', rate: 100 },
+        } as RatesMap;
+        const source2 = {
+            [USD]: {
+                code: USD,
+                name: 'United States Dollar',
+                rate: 200,
+            },
+        } as RatesMap;
 
         const fetchAverageRates = createFetchAverageRates({
             fetchRates: [
@@ -131,6 +135,6 @@ describe(createFetchAverageRates, () => {
         expect(result.ok).toBe(true);
         if (!result.ok) return;
 
-        expect(result.value.USD.name).toBe('US Dollar');
+        expect(result.value[USD].name).toBe('US Dollar');
     });
 });
