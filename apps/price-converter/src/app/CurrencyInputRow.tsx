@@ -1,5 +1,4 @@
 import {
-    BRAND_COLORS,
     Button,
     DeleteOutlined,
     Input,
@@ -37,7 +36,7 @@ export const CurrencyInputRow = ({
     }, [focused]);
 
     return (
-        <Row gap={12} style={{ marginBottom: 12 }}>
+        <Row gap={12}>
             <Input
                 inputRef={inputRef}
                 value={value}
@@ -47,14 +46,7 @@ export const CurrencyInputRow = ({
                 inputMode="decimal"
                 monospace
             />
-            <Text
-                style={{
-                    fontSize: '1.125rem',
-                    fontWeight: 600,
-                    minWidth: 60,
-                    color: BRAND_COLORS.primary,
-                }}
-            >
+            <Text>
                 {code} {name && name !== code ? name : ''}
             </Text>
             {onRemove && (

@@ -7,7 +7,6 @@ import {
 import {
     formatFiatWithCommas,
     getTimeAgo,
-    isLongerThan1Hour,
     loadFromLocalStorage,
     parseFormattedNumber,
     saveToLocalStorage,
@@ -301,7 +300,6 @@ export const App = () => {
                 loading={loading}
                 error={error}
                 timeAgo={timeAgo || 'Never updated'}
-                isWarning={isLongerThan1Hour(lastUpdated || Date.now())}
             />
 
             <CurrencyInput
@@ -312,7 +310,7 @@ export const App = () => {
                 onFocus={() => setFocusedInput('BTC')}
             />
 
-            <div style={{ marginBottom: 32 }}>
+            <div>
                 {selectedCurrencies.map(code => (
                     <CurrencyInputRow
                         key={code}

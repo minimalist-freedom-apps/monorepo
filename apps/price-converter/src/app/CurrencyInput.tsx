@@ -1,10 +1,4 @@
-import {
-    BRAND_COLORS,
-    Input,
-    type InputRef,
-    Row,
-    Text,
-} from '@minimalistic-apps/components';
+import { Input, type InputRef, Row, Text } from '@minimalistic-apps/components';
 import { useEffect, useRef } from 'react';
 
 interface CurrencyInputProps {
@@ -31,7 +25,7 @@ export const CurrencyInput = ({
     }, [focused]);
 
     return (
-        <Row gap={16} style={{ marginBottom: 24, padding: '0 8px' }}>
+        <Row gap={16}>
             <Input
                 inputRef={inputRef}
                 value={value}
@@ -42,16 +36,7 @@ export const CurrencyInput = ({
                 monospace
                 large
             />
-            <Text
-                style={{
-                    fontSize: '1.125rem',
-                    fontWeight: 600,
-                    minWidth: 60,
-                    color: BRAND_COLORS.primary,
-                }}
-            >
-                {label}
-            </Text>
+            <Text>{label}</Text>
         </Row>
     );
 };
