@@ -1,14 +1,22 @@
+import { Flex, Input, Typography } from 'antd';
+import type { InputRef } from 'antd';
+import type { ChangeEvent } from 'react';
 import { useEffect, useRef } from 'react';
-import './CurrencyInput.css';
+import { BRAND_COLORS } from './theme';
+
+const { Text } = Typography;
 
 interface CurrencyInputProps {
-    label: string;
-    value: string;
-    onChange: (value: string) => void;
-    focused: boolean;
-    onFocus: () => void;
+    readonly label: string;
+    readonly value: string;
+    readonly onChange: (value: string) => void;
+    readonly focused: boolean;
+    readonly onFocus: () => void;
 }
 
+/**
+ * Primary currency input component using Ant Design Input.
+ */
 export const CurrencyInput = ({
     label,
     value,
@@ -16,7 +24,7 @@ export const CurrencyInput = ({
     focused,
     onFocus,
 }: CurrencyInputProps) => {
-    const inputRef = useRef<HTMLInputElement>(null);
+    const inputRef = useRef<InputRef>(null);
 
     useEffect(() => {
         if (focused && inputRef.current) {
@@ -24,23 +32,43 @@ export const CurrencyInput = ({
         }
     }, [focused]);
 
-    const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
         onChange(e.target.value);
     };
 
     return (
-        <div className="currency-input-container">
-            <input
+        <Flex
+            gap={16}
+            align="center"
+            style={{ marginBottom: 24, padding: '0 8px' }}
+        >
+            <Input
                 ref={inputRef}
-                type="text"
-                className="currency-input btc-input"
                 value={value}
                 onChange={handleChange}
                 onFocus={onFocus}
                 placeholder="0"
                 inputMode="decimal"
+                style={{
+                    flex: 1,
+                    fontFamily: 'monospace',
+                    fontSize: '1.25rem',
+                    fontWeight: 600,
+                    background: '#1e1e1e',
+                    borderColor: '#333',
+                    color: '#fff',
+                }}
             />
-            <span className="currency-label">{label}</span>
-        </div>
+            <Text
+                style={{
+                    fontSize: '1.125rem',
+                    fontWeight: 600,
+                    minWidth: 60,
+                    color: BRAND_COLORS.primary,
+                }}
+            >
+                {label}
+            </Text>
+        </Flex>
     );
 };

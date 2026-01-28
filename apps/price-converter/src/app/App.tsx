@@ -5,6 +5,15 @@ import {
     satsToBtc,
 } from '@minimalistic-apps/bitcoin';
 import {
+    AddCurrencyButton,
+    AddCurrencyModal,
+    AppHeader,
+    AppLayout,
+    CurrencyInput,
+    CurrencyInputRow,
+    StatusDisplay,
+} from '@minimalistic-apps/components';
+import {
     formatFiatWithCommas,
     getTimeAgo,
     isLongerThan1Hour,
@@ -14,14 +23,9 @@ import {
 } from '@minimalistic-apps/utils';
 import { useEffect, useRef, useState } from 'react';
 import { createCompositionRoot } from '../createCompositionRoot';
-import type { CurrencyCode, RatesMap } from '../rates/FetchRates';
+import type { CurrencyCode, CurrencyRate, RatesMap } from '../rates/FetchRates';
 
 const { fetchAverageRates } = createCompositionRoot();
-import { CurrencyInput } from '@minimalistic-apps/components';
-import { AddCurrencyModal } from './AddCurrencyModal';
-import { CurrencyList } from './CurrencyList';
-import { Header } from './Header';
-import './App.css';
 
 const STORAGE_KEYS = {
     RATES: 'rates',
@@ -275,61 +279,64 @@ export const App = () => {
         }
     };
 
+    // Prepare available currencies for modal
+    const availableCurrencies = (
+        Object.entries(rates) as [CurrencyCode, CurrencyRate][]
+    )
+        .filter(([code]) => !selectedCurrencies.includes(code))
+        .sort((a, b) => a[1].name.localeCompare(b[1].name))
+        .map(([code, info]) => ({ code, name: info.name }));
+
     return (
-        <div className="app">
-            <Header
-                onRefresh={fetchRates}
+        <AppLayout
+            header={
+                <AppHeader
+                    title="Price Converter"
+                    onRefresh={fetchRates}
+                    loading={loading}
+                    mode={mode}
+                    onModeToggle={toggleMode}
+                />
+            }
+        >
+            <StatusDisplay
                 loading={loading}
-                mode={mode}
-                onModeToggle={toggleMode}
+                error={error}
+                timeAgo={timeAgo || 'Never updated'}
+                isWarning={isLongerThan1Hour(lastUpdated || Date.now())}
             />
 
-            <div className="container">
-                {loading && <div className="loading-bar" />}
+            <CurrencyInput
+                label={mode}
+                value={btcValue}
+                onChange={handleBtcChange}
+                focused={focusedInput === 'BTC'}
+                onFocus={() => setFocusedInput('BTC')}
+            />
 
-                {error && <div className="error-message">{error}</div>}
-
-                <div
-                    className={`time-ago ${isLongerThan1Hour(lastUpdated || Date.now()) ? 'warning' : ''}`}
-                >
-                    {timeAgo || 'Never updated'}
-                </div>
-
-                <CurrencyInput
-                    label={mode}
-                    value={btcValue}
-                    onChange={handleBtcChange}
-                    focused={focusedInput === 'BTC'}
-                    onFocus={() => setFocusedInput('BTC')}
-                />
-
-                <CurrencyList
-                    currencies={selectedCurrencies}
-                    rates={rates}
-                    values={currencyValues}
-                    onChange={handleCurrencyChange}
-                    onRemove={removeCurrency}
-                    focusedInput={focusedInput}
-                    onFocus={setFocusedInput}
-                />
-
-                <button
-                    type="button"
-                    className="add-button"
-                    onClick={() => setShowModal(true)}
-                >
-                    + Add Currency
-                </button>
+            <div style={{ marginBottom: 32 }}>
+                {selectedCurrencies.map(code => (
+                    <CurrencyInputRow
+                        key={code}
+                        code={code}
+                        name={rates[code]?.name}
+                        value={currencyValues[code] || ''}
+                        onChange={value => handleCurrencyChange(code, value)}
+                        onRemove={() => removeCurrency(code)}
+                        focused={focusedInput === code}
+                        onFocus={() => setFocusedInput(code)}
+                    />
+                ))}
             </div>
 
-            {showModal && (
-                <AddCurrencyModal
-                    rates={rates}
-                    selectedCurrencies={selectedCurrencies}
-                    onAdd={addCurrency}
-                    onClose={() => setShowModal(false)}
-                />
-            )}
-        </div>
+            <AddCurrencyButton onClick={() => setShowModal(true)} />
+
+            <AddCurrencyModal
+                open={showModal}
+                currencies={availableCurrencies}
+                onAdd={code => addCurrency(code as CurrencyCode)}
+                onClose={() => setShowModal(false)}
+            />
+        </AppLayout>
     );
 };
