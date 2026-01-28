@@ -13,9 +13,6 @@ interface ButtonProps {
     readonly style?: React.CSSProperties;
 }
 
-/**
- * Styled button component.
- */
 export const Button = ({
     children,
     onClick,

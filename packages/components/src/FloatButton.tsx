@@ -8,9 +8,6 @@ interface FloatButtonProps {
     readonly tooltip?: string;
 }
 
-/**
- * Floating action button component.
- */
 export const FloatButton = ({ onClick, icon, tooltip }: FloatButtonProps) => (
     <AntFloatButton
         icon={icon}

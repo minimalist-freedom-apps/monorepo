@@ -7,9 +7,6 @@ interface AlertProps {
     readonly style?: React.CSSProperties;
 }
 
-/**
- * Alert component for displaying messages.
- */
 export const Alert = ({
     message,
     type = 'info',

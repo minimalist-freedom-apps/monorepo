@@ -48,9 +48,6 @@ interface ThemeProviderProps {
     readonly children: ReactNode;
 }
 
-/**
- * Theme provider wrapping the underlying design system with Minimalistic Apps dark theme.
- */
 export const ThemeProvider = ({ children }: ThemeProviderProps) => (
     <ConfigProvider theme={darkTheme}>{children}</ConfigProvider>
 );

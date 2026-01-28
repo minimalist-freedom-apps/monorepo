@@ -9,9 +9,6 @@ interface TextProps {
     readonly style?: React.CSSProperties;
 }
 
-/**
- * Styled text component.
- */
 export const Text = ({ children, strong = false, style }: TextProps) => (
     <AntText strong={strong} style={style}>
         {children}
@@ -24,9 +21,6 @@ interface TitleProps {
     readonly style?: React.CSSProperties;
 }
 
-/**
- * Styled title component.
- */
 export const Title = ({ children, level = 4, style }: TitleProps) => (
     <AntTitle level={level} style={style}>
         {children}

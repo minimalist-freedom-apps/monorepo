@@ -9,9 +9,6 @@ interface ModalProps {
     readonly children: ReactNode;
 }
 
-/**
- * Styled modal component.
- */
 export const Modal = ({ open, title, onClose, children }: ModalProps) => (
     <AntModal
         title={title}

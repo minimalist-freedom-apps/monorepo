@@ -15,9 +15,6 @@ interface FlexProps {
     readonly style?: React.CSSProperties;
 }
 
-/**
- * Flex layout component.
- */
 export const Flex = ({
     children,
     gap = 0,

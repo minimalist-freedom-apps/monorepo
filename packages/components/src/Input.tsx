@@ -16,9 +16,6 @@ interface InputProps {
     readonly large?: boolean;
 }
 
-/**
- * Styled input component.
- */
 export const Input = ({
     value,
     onChange,

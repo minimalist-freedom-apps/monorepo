@@ -8,9 +8,6 @@ interface LayoutProps {
     readonly children: ReactNode;
 }
 
-/**
- * Main layout wrapper component.
- */
 export const Layout = ({ children }: LayoutProps) => (
     <AntLayout
         style={{ minHeight: '100vh', background: BRAND_COLORS.backgroundBase }}
@@ -24,9 +21,6 @@ interface HeaderProps {
     readonly style?: React.CSSProperties;
 }
 
-/**
- * Header component for the layout.
- */
 export const Header = ({ children, style }: HeaderProps) => (
     <AntHeader
         style={{
@@ -48,9 +42,6 @@ interface ContentProps {
     readonly style?: React.CSSProperties;
 }
 
-/**
- * Content area component for the layout.
- */
 export const Content = ({ children, maxWidth = 600, style }: ContentProps) => (
     <AntContent
         style={{

@@ -11,9 +11,6 @@ interface SearchInputProps {
     readonly style?: React.CSSProperties;
 }
 
-/**
- * Search input component with clear button.
- */
 export const SearchInput = ({
     value,
     onChange,

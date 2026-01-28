@@ -12,9 +12,6 @@ interface ListProps<T extends ListItem> {
     readonly onItemClick?: (item: T) => void;
 }
 
-/**
- * List component for displaying items.
- */
 export const List = <T extends ListItem>({
     items,
     renderItem,
