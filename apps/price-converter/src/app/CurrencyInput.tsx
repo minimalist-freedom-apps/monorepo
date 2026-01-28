@@ -1,8 +1,8 @@
 import {
     BRAND_COLORS,
-    Flex,
     Input,
     type InputRef,
+    Row,
     Text,
 } from '@minimalistic-apps/components';
 import { useEffect, useRef } from 'react';
@@ -31,11 +31,7 @@ export const CurrencyInput = ({
     }, [focused]);
 
     return (
-        <Flex
-            gap={16}
-            align="center"
-            style={{ marginBottom: 24, padding: '0 8px' }}
-        >
+        <Row gap={16} style={{ marginBottom: 24, padding: '0 8px' }}>
             <Input
                 inputRef={inputRef}
                 value={value}
@@ -56,6 +52,6 @@ export const CurrencyInput = ({
             >
                 {label}
             </Text>
-        </Flex>
+        </Row>
     );
 };

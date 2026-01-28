@@ -1,8 +1,8 @@
 import {
     Button,
-    Flex,
     Header,
     ReloadOutlined,
+    Row,
     Title,
 } from '@minimalistic-apps/components';
 
@@ -25,7 +25,7 @@ export const AppHeader = ({
         <Title level={4} style={{ margin: 0, color: '#fff' }}>
             {title}
         </Title>
-        <Flex gap={8}>
+        <Row gap={8}>
             <Button
                 variant="text"
                 onClick={onModeToggle}
@@ -48,6 +48,6 @@ export const AppHeader = ({
                     backgroundColor: 'rgba(255, 255, 255, 0.2)',
                 }}
             />
-        </Flex>
+        </Row>
     </Header>
 );

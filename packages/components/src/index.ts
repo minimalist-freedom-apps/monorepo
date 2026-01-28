@@ -5,7 +5,7 @@ export { ThemeProvider } from './ThemeProvider';
 // Basic components
 export { Alert } from './Alert';
 export { Button } from './Button';
-export { Flex } from './Flex';
+export { Column, Flex, Row } from './Flex';
 export { FloatButton } from './FloatButton';
 export { Input } from './Input';
 export type { InputRef } from './Input';
