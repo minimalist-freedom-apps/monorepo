@@ -22,20 +22,9 @@ export const AppHeader = ({
     onModeToggle,
 }: AppHeaderProps) => (
     <Header>
-        <Title level={4} style={{ margin: 0, color: '#fff' }}>
-            {title}
-        </Title>
+        <Title level={4}>{title}</Title>
         <Row gap={8}>
-            <Button
-                variant="text"
-                onClick={onModeToggle}
-                style={{
-                    color: '#fff',
-                    backgroundColor: 'rgba(255, 255, 255, 0.2)',
-                    fontWeight: 600,
-                    minWidth: 60,
-                }}
-            >
+            <Button variant="text" onClick={onModeToggle}>
                 {mode}
             </Button>
             <Button
@@ -43,10 +32,6 @@ export const AppHeader = ({
                 icon={<ReloadOutlined />}
                 onClick={onRefresh}
                 loading={loading}
-                style={{
-                    color: '#fff',
-                    backgroundColor: 'rgba(255, 255, 255, 0.2)',
-                }}
             />
         </Row>
     </Header>

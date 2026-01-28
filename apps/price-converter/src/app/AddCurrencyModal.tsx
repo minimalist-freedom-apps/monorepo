@@ -1,10 +1,4 @@
-import {
-    BRAND_COLORS,
-    List,
-    Modal,
-    SearchInput,
-    Text,
-} from '@minimalistic-apps/components';
+import { List, Modal, SearchInput, Text } from '@minimalistic-apps/components';
 import { useState } from 'react';
 
 interface CurrencyItem {
@@ -58,7 +52,6 @@ export const AddCurrencyModal = ({
                 value={searchTerm}
                 onChange={setSearchTerm}
                 placeholder="Search currencies..."
-                style={{ marginBottom: 16 }}
             />
             <div style={{ maxHeight: 400, overflow: 'auto' }}>
                 <List
@@ -67,23 +60,8 @@ export const AddCurrencyModal = ({
                     onItemClick={item => handleSelect(item.code)}
                     renderItem={item => (
                         <>
-                            <Text
-                                strong
-                                style={{
-                                    color: BRAND_COLORS.primary,
-                                    minWidth: 50,
-                                }}
-                            >
-                                {item.code}
-                            </Text>
-                            <Text
-                                style={{
-                                    color: BRAND_COLORS.textSecondary,
-                                    marginLeft: 16,
-                                }}
-                            >
-                                {item.name}
-                            </Text>
+                            <Text strong>{item.code}</Text>
+                            <Text>{item.name}</Text>
                         </>
                     )}
                 />
