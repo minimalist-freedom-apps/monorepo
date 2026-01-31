@@ -1,8 +1,6 @@
 import type { CurrencyCode } from '@evolu/common';
-import {
-    formatFiatWithCommas,
-    parseFormattedNumber,
-} from '@minimalistic-apps/utils';
+import { formatFiatWithCommas } from '@minimalistic-apps/fiat';
+import { parseFormattedNumber } from '@minimalistic-apps/utils';
 import type { RatesMap } from '../rates/FetchRates';
 import type { StoreDep } from '../state/createStore';
 

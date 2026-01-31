@@ -4,10 +4,8 @@ import {
     formatBtcWithCommas,
     formatSats,
 } from '@minimalistic-apps/bitcoin';
-import {
-    formatFiatWithCommas,
-    parseFormattedNumber,
-} from '@minimalistic-apps/utils';
+import { formatFiatWithCommas } from '@minimalistic-apps/fiat';
+import { parseFormattedNumber } from '@minimalistic-apps/utils';
 import type { CurrencyValues } from '../state/State';
 import type { StoreDep } from '../state/createStore';
 

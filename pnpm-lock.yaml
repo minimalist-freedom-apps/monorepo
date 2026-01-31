@@ -53,6 +53,9 @@ importers:
       '@minimalistic-apps/datetime':
         specifier: workspace:*
         version: link:../../packages/datetime
+      '@minimalistic-apps/fiat':
+        specifier: workspace:*
+        version: link:../../packages/fiat
       '@minimalistic-apps/local-storage':
         specifier: workspace:*
         version: link:../../packages/local-storage
@@ -127,6 +130,16 @@ importers:
         version: 5.9.3
 
   packages/datetime: {}
+
+  packages/fiat:
+    dependencies:
+      '@evolu/common':
+        specifier: ^7.4.1
+        version: 7.4.1
+    devDependencies:
+      typescript:
+        specifier: ^5.3.0
+        version: 5.9.3
 
   packages/local-storage:
     dependencies:
