@@ -30,6 +30,7 @@ export const AddCurrencyScreen = () => {
         ? availableCurrencies
         : availableCurrencies.filter(({ code, name }) => {
               const term = searchTerm.toLowerCase();
+
               return (
                   code.toLowerCase().includes(term) ||
                   name.toLowerCase().includes(term)

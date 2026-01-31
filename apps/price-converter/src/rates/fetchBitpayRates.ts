@@ -40,10 +40,12 @@ export const createFetchBitpayRates =
                                 };
                             }
                         }
+
                         return acc;
                     },
                     {},
                 );
+
                 return rates;
             },
             _ => FetchRatesError(),

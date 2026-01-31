@@ -52,6 +52,7 @@ export const createRecalculateFromCurrency =
                 } else if (otherCode === code) {
                     acc[otherCode] = value;
                 }
+
                 return acc;
             },
             {},

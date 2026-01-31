@@ -56,6 +56,7 @@ export const createFetchAverageRates =
                         };
                     }
                 }
+
                 return acc;
             },
             {},

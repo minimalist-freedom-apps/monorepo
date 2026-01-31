@@ -23,5 +23,6 @@ export const useServices = (): Services => {
     if (!services) {
         throw new Error('useServices must be used within ServicesProvider');
     }
+
     return services;
 };

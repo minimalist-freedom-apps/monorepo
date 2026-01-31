@@ -26,6 +26,7 @@ export const createAddCurrency =
 
         if (selectedCurrencies.includes(code)) {
             deps.store.setState({ showModal: false });
+
             return;
         }
 

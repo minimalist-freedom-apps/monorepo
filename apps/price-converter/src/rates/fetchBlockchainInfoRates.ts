@@ -43,8 +43,10 @@ export const createFetchBlockchainInfoRates =
                             rate: 1 / info.last,
                         };
                     }
+
                     return acc;
                 }, {});
+
                 return rates;
             },
             _ => FetchRatesError(),

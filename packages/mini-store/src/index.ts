@@ -26,6 +26,7 @@ export const createStore = <State>(initialState: State): Store<State> => {
 
     const subscribe = (listener: Listener) => {
         listeners.add(listener);
+
         return () => {
             listeners.delete(listener);
         };

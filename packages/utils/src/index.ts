@@ -18,5 +18,6 @@ export const formatFiatWithCommas = (value: string | number): string => {
 
 export const parseFormattedNumber = (str: string): number => {
     if (!str) return 0;
+
     return Number.parseFloat(str.replace(/,/g, ''));
 };

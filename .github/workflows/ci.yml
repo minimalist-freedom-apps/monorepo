@@ -31,6 +31,9 @@ jobs:
       - name: Check (format, lint, organize imports)
         run: pnpm check
 
+      - name: ESLint check
+        run: pnpm lint:eslint
+
       - name: TypeScript check
         run: pnpm typecheck
 

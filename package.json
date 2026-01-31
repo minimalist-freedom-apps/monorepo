@@ -3,19 +3,28 @@
     "version": "1.0.0",
     "description": "Price Converter Monorepo",
     "private": true,
+    "type": "module",
     "scripts": {
         "check": "biome check .",
         "check:fix": "biome check --write .",
         "format": "biome format --write .",
         "lint": "biome lint .",
+        "lint:eslint": "eslint .",
+        "lint:eslint:fix": "eslint --fix .",
         "typecheck": "pnpm -r typecheck",
         "test": "vitest run",
         "prepare": "husky"
     },
     "devDependencies": {
         "@biomejs/biome": "^1.9.4",
+        "@eslint/js": "^9.39.2",
+        "@stylistic/eslint-plugin": "^5.7.1",
+        "@typescript-eslint/eslint-plugin": "^8.54.0",
+        "@typescript-eslint/parser": "^8.54.0",
+        "eslint": "^9.39.2",
         "husky": "^9.1.7",
         "typescript": "^5.3.0",
+        "typescript-eslint": "^8.54.0",
         "vitest": "^2.0.0"
     }
 }

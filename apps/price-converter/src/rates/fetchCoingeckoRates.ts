@@ -48,8 +48,10 @@ export const createFetchCoingeckoRates =
                             };
                         }
                     }
+
                     return acc;
                 }, {});
+
                 return rates;
             },
             _ => FetchRatesError(),

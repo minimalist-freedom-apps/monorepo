@@ -27,6 +27,7 @@ export const createFetchAndStoreRates =
                 error: 'Failed to fetch rates. Please try again.',
                 loading: false,
             });
+
             return;
         }
 

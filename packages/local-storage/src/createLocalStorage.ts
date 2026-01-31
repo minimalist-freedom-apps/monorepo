@@ -18,6 +18,7 @@ export const createLocalStorage = (): LocalStorage => {
     const save = <T>(key: string, value: T): Result<void, StorageError> => {
         try {
             globalThis.localStorage.setItem(key, JSON.stringify(value));
+
             return ok();
         } catch (error) {
             return err({ type: 'StorageError', caused: error });
@@ -27,6 +28,7 @@ export const createLocalStorage = (): LocalStorage => {
     const load = <T>(key: string): Result<T | null, StorageError> => {
         try {
             const item = globalThis.localStorage.getItem(key);
+
             return ok(item ? JSON.parse(item) : null);
         } catch (error) {
             return err({ type: 'StorageError', caused: error });

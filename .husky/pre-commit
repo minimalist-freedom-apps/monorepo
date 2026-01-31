@@ -1,3 +1,4 @@
 pnpm format
 pnpm check:fix
+pnpm lint:eslint:fix
 git add -u

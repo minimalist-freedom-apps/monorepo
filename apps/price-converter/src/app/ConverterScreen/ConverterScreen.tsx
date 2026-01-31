@@ -41,6 +41,7 @@ export const ConverterScreen = () => {
             services.store.setState({
                 currencyValues: {} as Record<CurrencyCode, string>,
             });
+
             return;
         }
 

@@ -20,6 +20,7 @@ const getTimeAgo = (timestamp: number): string => {
     if (days > 0) return `${days}d ago`;
     if (hours > 0) return `${hours}h ago`;
     if (minutes > 0) return `${minutes}m ago`;
+
     return `${seconds}s ago`;
 };
 

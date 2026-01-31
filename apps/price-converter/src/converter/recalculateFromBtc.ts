@@ -30,6 +30,7 @@ export const createRecalculateFromBtc =
             deps.store.setState({
                 currencyValues: {} as Record<CurrencyCode, string>,
             });
+
             return;
         }
 
@@ -41,6 +42,7 @@ export const createRecalculateFromBtc =
                     const fiatAmount = btcAmount / usedRates[code].rate;
                     acc[code] = formatFiatWithCommas(fiatAmount);
                 }
+
                 return acc;
             },
             {} as Record<CurrencyCode, string>,
