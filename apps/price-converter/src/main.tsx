@@ -3,7 +3,7 @@ import React from 'react';
 import ReactDOM from 'react-dom/client';
 import { App } from './app/App';
 import './index.css';
-import { ServicesProvider } from './app/state/ServicesProvider';
+import { ServicesProvider } from './ServicesProvider';
 import { createStoreCompositionRoot } from './compositionRoot';
 
 const main = () => {

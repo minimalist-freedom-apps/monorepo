@@ -1,19 +1,13 @@
 import { getOrThrow } from '@evolu/common';
+import type { Selector, Store } from '@minimalistic-apps/mini-store';
+import { createStore as createMiniStore } from '@minimalistic-apps/mini-store';
 import { useSyncExternalStore } from 'react';
+import { useServices } from '../../ServicesProvider';
 import { CurrencyCode } from '../../rates/FetchRates';
-import { useServices } from './ServicesProvider';
 import type { State } from './State';
 
-type Listener = () => void;
-
-export interface Store {
-    readonly getState: () => State;
-    readonly subscribe: (listener: Listener) => () => void;
-    readonly setState: (partial: Partial<State>) => void;
-}
-
-export const createStore = (): Store => {
-    let state: State = {
+export const createStore = (): Store<State> => {
+    const initialState: State = {
         rates: {} as never,
         selectedCurrencies: [getOrThrow(CurrencyCode.from('USD'))],
         btcValue: '',
@@ -26,38 +20,10 @@ export const createStore = (): Store => {
         focusedInput: 'BTC',
     };
 
-    const listeners = new Set<Listener>();
-
-    const notify = () => {
-        for (const listener of listeners) {
-            listener();
-        }
-    };
-
-    const setState = (partial: Partial<State>) => {
-        state = { ...state, ...partial };
-        notify();
-    };
-
-    const getState = () => state;
-
-    const subscribe = (listener: Listener) => {
-        listeners.add(listener);
-        return () => {
-            listeners.delete(listener);
-        };
-    };
-
-    return {
-        getState,
-        subscribe,
-        setState,
-    };
+    return createMiniStore(initialState);
 };
 
-type Selector<T> = (state: State) => T;
-
-export const useStore = <T>(selector: Selector<T>): T => {
+export const useStore = <T>(selector: Selector<State, T>): T => {
     const { store } = useServices();
 
     return useSyncExternalStore(

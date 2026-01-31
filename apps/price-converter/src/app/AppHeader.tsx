@@ -5,7 +5,7 @@ import {
     Row,
     Title,
 } from '@minimalistic-apps/components';
-import { useServices } from './state/ServicesProvider';
+import { useServices } from '../ServicesProvider';
 import { selectLoading, selectMode, useStore } from './state/createStore';
 
 export const AppHeader = () => {

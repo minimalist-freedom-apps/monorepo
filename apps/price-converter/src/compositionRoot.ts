@@ -14,11 +14,11 @@ import {
     type RecalculateFromCurrencyDep,
     createRecalculateFromCurrency,
 } from './app/converter/recalculateFromCurrency';
+import type { State } from './app/state/State';
 import {
     type AddCurrencyDep,
     createAddCurrency,
 } from './app/state/addCurrency';
-import { type Store, createStore } from './app/state/createStore';
 import {
     type LoadInitialStateDep,
     createLoadInitialState,
@@ -33,9 +33,11 @@ import { createFetchAverageRates } from './rates/fetchAverageRates';
 import { createFetchBitpayRates } from './rates/fetchBitpayRates';
 import { createFetchBlockchainInfoRates } from './rates/fetchBlockchainInfoRates';
 import { createFetchCoingeckoRates } from './rates/fetchCoingeckoRates';
+import { createStore } from './app/state/createStore';
+import type { Store } from '@minimalistic-apps/mini-store';
 
 export interface StoreDep {
-    readonly store: Store;
+    readonly store: Store<State>;
 }
 
 export type Services = StoreDep &

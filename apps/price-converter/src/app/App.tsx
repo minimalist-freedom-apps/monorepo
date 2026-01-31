@@ -1,21 +1,17 @@
 import { formatBtcWithCommas, satsToBtc } from '@minimalistic-apps/bitcoin';
-import { getTimeAgo, parseFormattedNumber } from '@minimalistic-apps/utils';
-import { useEffect, useRef, useState } from 'react';
+import { parseFormattedNumber } from '@minimalistic-apps/utils';
+import { useServices } from '../ServicesProvider';
 import type { CurrencyCode, CurrencyRate } from '../rates/FetchRates';
 import { AddCurrencyButton } from './AddCurrencyButton';
 import { AddCurrencyModal } from './AddCurrencyModal';
 import { AppLayout } from './AppLayout';
 import { CurrencyInput } from './CurrencyInput';
 import { CurrencyInputRow } from './CurrencyInputRow';
-import { StatusDisplay } from './StatusDisplay';
-import { useServices } from './state/ServicesProvider';
+import { RatesLoading } from './RatesLoading';
 import {
     selectBtcValue,
     selectCurrencyValues,
-    selectError,
     selectFocusedInput,
-    selectLastUpdated,
-    selectLoading,
     selectMode,
     selectRates,
     selectSelectedCurrencies,
@@ -29,37 +25,9 @@ export const App = () => {
     const selectedCurrencies = useStore(selectSelectedCurrencies);
     const btcValue = useStore(selectBtcValue);
     const currencyValues = useStore(selectCurrencyValues);
-    const loading = useStore(selectLoading);
-    const error = useStore(selectError);
-    const lastUpdated = useStore(selectLastUpdated);
     const mode = useStore(selectMode);
     const showModal = useStore(selectShowModal);
     const focusedInput = useStore(selectFocusedInput);
-
-    // Local state for time ago (updates every second)
-    const [timeAgo, setTimeAgo] = useState<string>('');
-    const intervalRef = useRef<number | null>(null);
-
-    useEffect(() => {
-        services.fetchAndStoreRates();
-    }, [services]);
-
-    // Update time ago every second
-    useEffect(() => {
-        if (lastUpdated) {
-            const updateTime = () => {
-                setTimeAgo(getTimeAgo(lastUpdated));
-            };
-            updateTime();
-            intervalRef.current = setInterval(updateTime, 1000);
-
-            return () => {
-                if (intervalRef.current) {
-                    clearInterval(intervalRef.current);
-                }
-            };
-        }
-    }, [lastUpdated]);
 
     // Handle BTC/Sats input change
     const handleBtcChange = (value: string) => {
@@ -103,11 +71,7 @@ export const App = () => {
 
     return (
         <AppLayout>
-            <StatusDisplay
-                loading={loading}
-                error={error}
-                timeAgo={timeAgo || 'Never updated'}
-            />
+            <RatesLoading />
 
             <CurrencyInput
                 label={mode}
