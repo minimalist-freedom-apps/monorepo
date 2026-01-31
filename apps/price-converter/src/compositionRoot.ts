@@ -1,3 +1,4 @@
+import { createCurrentDateTime } from '@minimalistic-apps/datetime';
 import { loadFromLocalStorage } from '@minimalistic-apps/utils';
 import {
     type FetchAndStoreRatesDep,
@@ -51,6 +52,8 @@ export const createCompositionRoot = (): Services => {
     const fetchBitpayRates = createFetchBitpayRates(fetchDeps);
     const fetchBlockchainInfoRates = createFetchBlockchainInfoRates(fetchDeps);
 
+    const currentDateTime = createCurrentDateTime();
+
     const fetchAverageRates = createFetchAverageRates({
         fetchRates: [
             fetchCoingeckoRates,
@@ -77,6 +80,7 @@ export const createCompositionRoot = (): Services => {
         fetchAverageRates,
         setRates,
         recalculateFromBtc,
+        currentDateTime,
     });
 
     const persistStore = createPersistStore({ store });
