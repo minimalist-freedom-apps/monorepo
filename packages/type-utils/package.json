@@ -1,5 +1,5 @@
 {
-    "name": "@minimalistic-apps/mini-store",
+    "name": "@minimalistic-apps/type-utils",
     "version": "1.0.0",
     "private": true,
     "type": "module",

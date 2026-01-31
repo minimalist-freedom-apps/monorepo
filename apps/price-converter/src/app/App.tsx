@@ -1,3 +1,4 @@
+import { exhaustive } from '@minimalistic-apps/type-utils';
 import { selectCurrentScreen, useStore } from '../state/createStore';
 import { AddCurrencyScreen } from './AddCurrencyScreen/AddCurrencyScreen';
 import { AppLayout } from './AppLayout';
@@ -6,10 +7,16 @@ import { ConverterScreen } from './ConverterScreen/ConverterScreen';
 export const App = () => {
     const currentScreen = useStore(selectCurrentScreen);
 
-    return (
-        <AppLayout>
-            {currentScreen === 'Converter' && <ConverterScreen />}
-            {currentScreen === 'AddCurrency' && <AddCurrencyScreen />}
-        </AppLayout>
-    );
+    const renderScreen = () => {
+        switch (currentScreen) {
+            case 'Converter':
+                return <ConverterScreen />;
+            case 'AddCurrency':
+                return <AddCurrencyScreen />;
+            default:
+                exhaustive(currentScreen);
+        }
+    };
+
+    return <AppLayout>{renderScreen()}</AppLayout>;
 };

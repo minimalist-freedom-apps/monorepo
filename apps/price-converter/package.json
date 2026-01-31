@@ -15,6 +15,7 @@
         "@minimalistic-apps/bitcoin": "workspace:*",
         "@minimalistic-apps/components": "workspace:*",
         "@minimalistic-apps/mini-store": "workspace:*",
+        "@minimalistic-apps/type-utils": "workspace:*",
         "@minimalistic-apps/utils": "workspace:*",
         "react": "^18.2.0",
         "react-dom": "^18.2.0"
