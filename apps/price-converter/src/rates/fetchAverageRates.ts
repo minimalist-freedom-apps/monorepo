@@ -35,7 +35,10 @@ export const createFetchAverageRates =
 
         const allRates = uniqueCodes.reduce<CurrencyMap>((acc, code) => {
             const codeResult = CurrencyCode.from(code);
-            if (!codeResult.ok) return acc;
+
+            if (!codeResult.ok) {
+                return acc;
+            }
 
             const validCode = codeResult.value;
             const rates = sources
@@ -47,6 +50,7 @@ export const createFetchAverageRates =
                     rates.reduce((sum, rate) => sum + (rate ?? 0), 0) /
                     rates.length;
                 const firstSource = sources.find(s => s[validCode]);
+
                 if (firstSource) {
                     acc[code] = {
                         code: validCode,

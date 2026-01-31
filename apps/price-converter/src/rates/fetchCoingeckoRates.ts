@@ -32,7 +32,10 @@ export const createFetchCoingeckoRates =
                 const response = await deps.fetch(
                     'https://api.coingecko.com/api/v3/exchange_rates',
                 );
-                if (!response.ok) throw new Error('Coingecko API failed');
+
+                if (!response.ok) {
+                    throw new Error('Coingecko API failed');
+                }
                 const data: CoingeckoResponse = await response.json();
 
                 const rates = typedObjectEntries(
@@ -41,6 +44,7 @@ export const createFetchCoingeckoRates =
                     if (info.type === 'fiat') {
                         const upperCode = String(code).toUpperCase();
                         const codeResult = CurrencyCode.from(upperCode);
+
                         if (codeResult.ok) {
                             acc[codeResult.value] = {
                                 code: codeResult.value,

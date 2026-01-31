@@ -23,7 +23,8 @@
             },
             "style": {
                 "noNonNullAssertion": "off",
-                "noDefaultExport": "error"
+                "noDefaultExport": "error",
+                "useBlockStatements": "error"
             },
             "a11y": {
                 "useSemanticElements": "off"
