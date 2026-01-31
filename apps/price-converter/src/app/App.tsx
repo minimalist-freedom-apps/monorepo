@@ -14,7 +14,7 @@ export const App = () => {
             case 'AddCurrency':
                 return <AddCurrencyScreen />;
             default:
-                exhaustive(currentScreen);
+                return exhaustive(currentScreen);
         }
     };
 
