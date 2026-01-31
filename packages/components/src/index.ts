@@ -6,6 +6,7 @@ export { ThemeProvider } from './ThemeProvider';
 export { Alert } from './Alert';
 export { Button } from './Button';
 export { Column, Flex, Row } from './Flex';
+export type { FlexProps } from './Flex';
 export { FloatButton } from './FloatButton';
 export { Input } from './Input';
 export type { InputRef } from './Input';
