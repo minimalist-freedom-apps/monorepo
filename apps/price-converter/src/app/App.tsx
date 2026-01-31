@@ -1,7 +1,6 @@
 import { formatBtcWithCommas, satsToBtc } from '@minimalistic-apps/bitcoin';
 import { getTimeAgo, parseFormattedNumber } from '@minimalistic-apps/utils';
 import { useEffect, useRef, useState } from 'react';
-import { createCompositionRoot } from '../createCompositionRoot';
 import type { CurrencyCode, CurrencyRate } from '../rates/FetchRates';
 import { AddCurrencyButton } from './AddCurrencyButton';
 import { AddCurrencyModal } from './AddCurrencyModal';
@@ -24,8 +23,6 @@ import {
     useStore,
 } from './state/createStore';
 
-const { fetchAverageRates } = createCompositionRoot();
-
 export const App = () => {
     const services = useServices();
     const rates = useStore(selectRates);
@@ -44,8 +41,8 @@ export const App = () => {
     const intervalRef = useRef<number | null>(null);
 
     useEffect(() => {
-        fetchRates();
-    }, []);
+        services.fetchAndStoreRates();
+    }, [services]);
 
     // Update time ago every second
     useEffect(() => {
@@ -63,35 +60,6 @@ export const App = () => {
             };
         }
     }, [lastUpdated]);
-
-    // Fetch rates from APIs
-    const fetchRates = async () => {
-        services.store.setState({ loading: true });
-        services.store.setState({ error: '' });
-
-        const result = await fetchAverageRates();
-        if (!result.ok) {
-            services.store.setState({
-                error: 'Failed to fetch rates. Please try again.',
-            });
-            services.store.setState({ loading: false });
-            return;
-        }
-
-        const fetchedRates = result.value;
-        const now = Date.now();
-        services.setRates({ rates: fetchedRates, timestamp: now });
-
-        // Recalculate values with new rates
-        if (btcValue) {
-            services.recalculateFromBtc({
-                value: btcValue,
-                rates: fetchedRates,
-            });
-        }
-
-        services.store.setState({ loading: false });
-    };
 
     // Handle BTC/Sats input change
     const handleBtcChange = (value: string) => {

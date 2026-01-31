@@ -1,6 +1,6 @@
 import { createContext, useContext } from 'react';
 import type { ReactNode } from 'react';
-import type { Services } from './compositionRoot';
+import type { Services } from '../../compositionRoot';
 
 const ServicesContext = createContext<Services | null>(null);
 

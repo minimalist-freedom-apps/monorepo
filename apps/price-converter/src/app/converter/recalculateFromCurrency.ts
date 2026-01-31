@@ -8,7 +8,7 @@ import {
     parseFormattedNumber,
 } from '@minimalistic-apps/utils';
 import type { CurrencyCode } from '../../rates/FetchRates';
-import type { CurrencyValues, State } from './State';
+import type { CurrencyValues, State } from '../state/State';
 
 export interface RecalculateFromCurrencyParams {
     readonly code: CurrencyCode;

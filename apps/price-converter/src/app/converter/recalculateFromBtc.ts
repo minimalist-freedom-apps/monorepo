@@ -3,7 +3,7 @@ import {
     parseFormattedNumber,
 } from '@minimalistic-apps/utils';
 import type { CurrencyCode, RatesMap } from '../../rates/FetchRates';
-import type { State } from './State';
+import type { State } from '../state/State';
 
 export interface RecalculateFromBtcParams {
     readonly value: string;

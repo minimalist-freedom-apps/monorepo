@@ -1,8 +1,8 @@
+import { getOrThrow } from '@evolu/common';
 import { useSyncExternalStore } from 'react';
 import { CurrencyCode } from '../../rates/FetchRates';
-import type { State } from './State';
 import { useServices } from './ServicesProvider';
-import { getOrThrow } from '@evolu/common';
+import type { State } from './State';
 
 type Listener = () => void;
 
