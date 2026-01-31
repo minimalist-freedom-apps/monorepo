@@ -10,12 +10,23 @@ import {
 import type { CurrencyCode } from '../../rates/FetchRates';
 import type { State } from './State';
 
-export const recalculateFromCurrency =
-    (deps: {
-        readonly setState: (partial: Partial<State>) => void;
-        readonly getState: () => State;
-    }) =>
-    (code: CurrencyCode, value: string) => {
+export interface RecalculateFromCurrencyParams {
+    readonly code: CurrencyCode;
+    readonly value: string;
+}
+
+export type RecalculateFromCurrency = (
+    params: RecalculateFromCurrencyParams,
+) => void;
+
+export interface RecalculateFromCurrencyDeps {
+    readonly setState: (partial: Partial<State>) => void;
+    readonly getState: () => State;
+}
+
+export const createRecalculateFromCurrency =
+    (deps: RecalculateFromCurrencyDeps): RecalculateFromCurrency =>
+    ({ code, value }) => {
         const { rates, selectedCurrencies, mode } = deps.getState();
         const fiatAmount = parseFormattedNumber(value);
 

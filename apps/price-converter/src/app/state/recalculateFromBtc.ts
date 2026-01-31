@@ -5,12 +5,21 @@ import {
 import type { CurrencyCode, RatesMap } from '../../rates/FetchRates';
 import type { State } from './State';
 
-export const recalculateFromBtc =
-    (deps: {
-        readonly setState: (partial: Partial<State>) => void;
-        readonly getState: () => State;
-    }) =>
-    (value: string, currentRates?: RatesMap) => {
+export interface RecalculateFromBtcParams {
+    readonly value: string;
+    readonly rates?: RatesMap;
+}
+
+export type RecalculateFromBtc = (params: RecalculateFromBtcParams) => void;
+
+export interface RecalculateFromBtcDeps {
+    readonly setState: (partial: Partial<State>) => void;
+    readonly getState: () => State;
+}
+
+export const createRecalculateFromBtc =
+    (deps: RecalculateFromBtcDeps): RecalculateFromBtc =>
+    ({ value, rates: currentRates }) => {
         const { rates, selectedCurrencies } = deps.getState();
         const usedRates = currentRates ?? rates;
         const btcAmount = parseFormattedNumber(value);

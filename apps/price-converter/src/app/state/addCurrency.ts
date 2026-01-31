@@ -7,13 +7,21 @@ import type { CurrencyCode } from '../../rates/FetchRates';
 import type { State } from './State';
 import { STORAGE_KEYS } from './storageKeys';
 
-export const addCurrency =
-    (deps: {
-        readonly setState: (partial: Partial<State>) => void;
-        readonly getState: () => State;
-        readonly saveToLocalStorage: <T>(key: string, value: T) => void;
-    }) =>
-    (code: CurrencyCode) => {
+export interface AddCurrencyParams {
+    readonly code: CurrencyCode;
+}
+
+export type AddCurrency = (params: AddCurrencyParams) => void;
+
+export interface AddCurrencyDeps {
+    readonly setState: (partial: Partial<State>) => void;
+    readonly getState: () => State;
+    readonly saveToLocalStorage: <T>(key: string, value: T) => void;
+}
+
+export const createAddCurrency =
+    (deps: AddCurrencyDeps): AddCurrency =>
+    ({ code }) => {
         const { selectedCurrencies, btcValue, mode, rates, currencyValues } =
             deps.getState();
 

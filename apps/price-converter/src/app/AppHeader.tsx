@@ -35,11 +35,14 @@ export const AppHeader = () => {
 
         const fetchedRates = result.value;
         const now = Date.now();
-        actions.setRates(fetchedRates, now);
+        actions.setRates({ rates: fetchedRates, timestamp: now });
 
         // Recalculate values with new rates
         if (btcValue) {
-            actions.recalculateFromBtc(btcValue, fetchedRates);
+            actions.recalculateFromBtc({
+                value: btcValue,
+                rates: fetchedRates,
+            });
         }
 
         actions.setLoading(false);

@@ -79,11 +79,14 @@ export const App = () => {
 
         const fetchedRates = result.value;
         const now = Date.now();
-        actions.setRates(fetchedRates, now);
+        actions.setRates({ rates: fetchedRates, timestamp: now });
 
         // Recalculate values with new rates
         if (btcValue) {
-            actions.recalculateFromBtc(btcValue, fetchedRates);
+            actions.recalculateFromBtc({
+                value: btcValue,
+                rates: fetchedRates,
+            });
         }
 
         actions.setLoading(false);
@@ -107,14 +110,14 @@ export const App = () => {
             return;
         }
 
-        actions.recalculateFromBtc(formatBtcWithCommas(btcAmount));
+        actions.recalculateFromBtc({ value: formatBtcWithCommas(btcAmount) });
     };
 
     // Handle currency input change
     const handleCurrencyChange = (code: CurrencyCode, value: string) => {
         actions.setFocusedInput(code);
         actions.setCurrencyValues({ ...currencyValues, [code]: value });
-        actions.recalculateFromCurrency(code, value);
+        actions.recalculateFromCurrency({ code, value });
     };
 
     // Prepare available currencies for modal
@@ -149,7 +152,7 @@ export const App = () => {
                         name={rates[code]?.name}
                         value={currencyValues[code] || ''}
                         onChange={value => handleCurrencyChange(code, value)}
-                        onRemove={() => actions.removeCurrency(code)}
+                        onRemove={() => actions.removeCurrency({ code })}
                         focused={focusedInput === code}
                         onFocus={() => actions.setFocusedInput(code)}
                     />
@@ -161,7 +164,9 @@ export const App = () => {
             <AddCurrencyModal
                 open={showModal}
                 currencies={availableCurrencies}
-                onAdd={code => actions.addCurrency(code as CurrencyCode)}
+                onAdd={code =>
+                    actions.addCurrency({ code: code as CurrencyCode })
+                }
                 onClose={() => actions.setShowModal(false)}
             />
         </AppLayout>

@@ -1,11 +1,14 @@
-import {
-    loadFromLocalStorage,
-    saveToLocalStorage,
-} from '@minimalistic-apps/utils';
+import { loadFromLocalStorage } from '@minimalistic-apps/utils';
 import { useSyncExternalStore } from 'react';
 import type { CurrencyCode, RatesMap } from '../../rates/FetchRates';
 import type { Mode, State } from './State';
+import type { AddCurrency } from './addCurrency';
+import type { RecalculateFromBtc } from './recalculateFromBtc';
+import type { RecalculateFromCurrency } from './recalculateFromCurrency';
+import type { RemoveCurrency } from './removeCurrency';
+import type { SetRates } from './setRates';
 import { STORAGE_KEYS } from './storageKeys';
+import type { ToggleMode } from './toggleMode';
 
 type Listener = () => void;
 
@@ -21,46 +24,24 @@ export interface Store {
     ) => void;
     readonly setFocusedInput: (input: CurrencyCode | 'BTC') => void;
     readonly setShowModal: (show: boolean) => void;
-    readonly setRates: (rates: RatesMap, timestamp: number) => void;
-    readonly addCurrency: (code: CurrencyCode) => void;
-    readonly removeCurrency: (code: CurrencyCode) => void;
-    readonly toggleMode: () => void;
-    readonly recalculateFromBtc: (value: string, rates?: RatesMap) => void;
-    readonly recalculateFromCurrency: (
-        code: CurrencyCode,
-        value: string,
-    ) => void;
+    readonly setRates: SetRates;
+    readonly addCurrency: AddCurrency;
+    readonly removeCurrency: RemoveCurrency;
+    readonly toggleMode: ToggleMode;
+    readonly recalculateFromBtc: RecalculateFromBtc;
+    readonly recalculateFromCurrency: RecalculateFromCurrency;
 }
 
-export const createStore = (actions: {
-    readonly setRates: (deps: {
-        readonly setState: (partial: Partial<State>) => void;
-        readonly saveToLocalStorage: <T>(key: string, value: T) => void;
-    }) => (rates: RatesMap, timestamp: number) => void;
-    readonly addCurrency: (deps: {
-        readonly setState: (partial: Partial<State>) => void;
-        readonly getState: () => State;
-        readonly saveToLocalStorage: <T>(key: string, value: T) => void;
-    }) => (code: CurrencyCode) => void;
-    readonly removeCurrency: (deps: {
-        readonly setState: (partial: Partial<State>) => void;
-        readonly getState: () => State;
-        readonly saveToLocalStorage: <T>(key: string, value: T) => void;
-    }) => (code: CurrencyCode) => void;
-    readonly toggleMode: (deps: {
-        readonly setState: (partial: Partial<State>) => void;
-        readonly getState: () => State;
-        readonly saveToLocalStorage: <T>(key: string, value: T) => void;
-    }) => () => void;
-    readonly recalculateFromBtc: (deps: {
-        readonly setState: (partial: Partial<State>) => void;
-        readonly getState: () => State;
-    }) => (value: string, rates?: RatesMap) => void;
-    readonly recalculateFromCurrency: (deps: {
-        readonly setState: (partial: Partial<State>) => void;
-        readonly getState: () => State;
-    }) => (code: CurrencyCode, value: string) => void;
-}): Store => {
+export interface StoreActions {
+    readonly setRates: SetRates;
+    readonly addCurrency: AddCurrency;
+    readonly removeCurrency: RemoveCurrency;
+    readonly toggleMode: ToggleMode;
+    readonly recalculateFromBtc: RecalculateFromBtc;
+    readonly recalculateFromCurrency: RecalculateFromCurrency;
+}
+
+export const createStore = (actions: StoreActions): Store => {
     const savedRates = loadFromLocalStorage<RatesMap>(STORAGE_KEYS.RATES);
     const savedTimestamp = loadFromLocalStorage<number>(STORAGE_KEYS.TIMESTAMP);
     const savedCurrencies = loadFromLocalStorage<CurrencyCode[]>(
@@ -142,27 +123,12 @@ export const createStore = (actions: {
         setCurrencyValues,
         setFocusedInput,
         setShowModal,
-        setRates: actions.setRates({ setState, saveToLocalStorage }),
-        addCurrency: actions.addCurrency({
-            setState,
-            getState,
-            saveToLocalStorage,
-        }),
-        removeCurrency: actions.removeCurrency({
-            setState,
-            getState,
-            saveToLocalStorage,
-        }),
-        toggleMode: actions.toggleMode({
-            setState,
-            getState,
-            saveToLocalStorage,
-        }),
-        recalculateFromBtc: actions.recalculateFromBtc({ setState, getState }),
-        recalculateFromCurrency: actions.recalculateFromCurrency({
-            setState,
-            getState,
-        }),
+        setRates: actions.setRates,
+        addCurrency: actions.addCurrency,
+        removeCurrency: actions.removeCurrency,
+        toggleMode: actions.toggleMode,
+        recalculateFromBtc: actions.recalculateFromBtc,
+        recalculateFromCurrency: actions.recalculateFromCurrency,
     };
 };
 
