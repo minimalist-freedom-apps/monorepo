@@ -5,6 +5,7 @@ import {
     Row,
     Text,
 } from '@minimalistic-apps/components';
+import { selectMode, useStore } from '../../state/createStore';
 import { CurrencyInput } from './CurrencyInput';
 
 interface CurrencyInputRowProps {
@@ -20,10 +21,12 @@ export const CurrencyRow = ({
     onChange,
     onRemove,
 }: CurrencyInputRowProps) => {
+    const mode = useStore(selectMode);
+
     return (
         <Row gap={12}>
             <CurrencyInput value={value} onChange={onChange} code={code} />
-            <Text>{code}</Text>
+            <Text>{code === 'BTC' && mode === 'Sats' ? 'Sats' : code}</Text>
             {onRemove && (
                 <Button
                     variant="primary"

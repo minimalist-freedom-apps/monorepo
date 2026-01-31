@@ -4,6 +4,8 @@ import {
     Header,
     ReloadOutlined,
     Row,
+    SettingOutlined,
+    Switch,
     Title,
 } from '@minimalistic-apps/components';
 import { useServices } from '../ServicesProvider';
@@ -15,8 +17,12 @@ export const AppHeader = () => {
     const loading = useStore(selectLoading);
     const mode = useStore(selectMode);
 
-    const handleToggle = () => {
-        store.setState({ mode: mode === 'BTC' ? 'Sats' : 'BTC' });
+    const handleToggle = (checked: boolean) => {
+        store.setState({ mode: checked ? 'Sats' : 'BTC' });
+    };
+
+    const handleSettings = () => {
+        store.setState({ currentScreen: 'Settings' });
     };
 
     return (
@@ -24,14 +30,20 @@ export const AppHeader = () => {
             <Header>
                 <Title level={4}>Price Converter</Title>
                 <Row gap={8}>
-                    <Button variant="text" onClick={handleToggle}>
-                        {mode}
-                    </Button>
+                    <strong>₿</strong>
+                    <Switch checked={mode === 'Sats'} onChange={handleToggle} />
+                    <strong>丰</strong>
                     <Button
                         variant="text"
                         icon={<ReloadOutlined />}
                         onClick={fetchAndStoreRates}
                         loading={loading}
+                    />
+                    <Button
+                        variant="text"
+                        icon={<SettingOutlined />}
+                        onClick={handleSettings}
+                        aria-label="Settings"
                     />
                 </Row>
             </Header>

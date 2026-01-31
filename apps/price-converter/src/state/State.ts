@@ -9,7 +9,7 @@ export type CurrencyValues = {
     [K in CurrencyCode]?: FiatAmount<K>;
 };
 
-export type Screen = 'Converter' | 'AddCurrency';
+export type Screen = 'Converter' | 'AddCurrency' | 'Settings';
 
 export interface State {
     readonly rates: CurrencyMap;
