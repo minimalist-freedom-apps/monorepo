@@ -5,9 +5,10 @@ import {
     SearchInput,
     Text,
 } from '@minimalistic-apps/components';
+import { typedObjectEntries } from '@minimalistic-apps/type-utils';
 import { useState } from 'react';
 import { useServices } from '../../ServicesProvider';
-import type { CurrencyCode, CurrencyRate } from '../../rates/FetchRates';
+import type { CurrencyCode } from '../../rates/FetchRates';
 import {
     selectRates,
     selectSelectedCurrencies,
@@ -20,9 +21,7 @@ export const AddCurrencyScreen = () => {
     const selectedCurrencies = useStore(selectSelectedCurrencies);
     const [searchTerm, setSearchTerm] = useState('');
 
-    const availableCurrencies = (
-        Object.entries(rates) as [CurrencyCode, CurrencyRate][]
-    )
+    const availableCurrencies = typedObjectEntries(rates)
         .filter(([code]) => !selectedCurrencies.includes(code))
         .sort((a, b) => a[1].name.localeCompare(b[1].name))
         .map(([code, info]) => ({ code, name: info.name }));
@@ -53,33 +52,29 @@ export const AddCurrencyScreen = () => {
 
     return (
         <Screen>
-            <div style={{ padding: '16px' }}>
-                <Button onClick={handleBack} style={{ marginBottom: '16px' }}>
-                    ← Back
-                </Button>
-                <SearchInput
-                    value={searchTerm}
-                    onChange={setSearchTerm}
-                    placeholder="Search currencies..."
+            <Button onClick={handleBack}>← Back</Button>
+            <SearchInput
+                value={searchTerm}
+                onChange={setSearchTerm}
+                placeholder="Search currencies..."
+            />
+            <div
+                style={{
+                    maxHeight: 'calc(100vh - 200px)',
+                    overflow: 'auto',
+                }}
+            >
+                <List
+                    items={listItems}
+                    emptyText="No currencies found"
+                    onItemClick={item => handleSelect(item.code)}
+                    renderItem={item => (
+                        <>
+                            <Text strong>{item.code}</Text>
+                            <Text>{item.name}</Text>
+                        </>
+                    )}
                 />
-                <div
-                    style={{
-                        maxHeight: 'calc(100vh - 200px)',
-                        overflow: 'auto',
-                    }}
-                >
-                    <List
-                        items={listItems}
-                        emptyText="No currencies found"
-                        onItemClick={item => handleSelect(item.code)}
-                        renderItem={item => (
-                            <>
-                                <Text strong>{item.code}</Text>
-                                <Text>{item.name}</Text>
-                            </>
-                        )}
-                    />
-                </div>
             </div>
         </Screen>
     );

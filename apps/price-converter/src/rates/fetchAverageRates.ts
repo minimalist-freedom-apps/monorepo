@@ -1,4 +1,5 @@
 import { err, ok } from '@evolu/common';
+import { typedObjectKeys } from '@minimalistic-apps/type-utils';
 import {
     CurrencyCode,
     type CurrencyRate,
@@ -30,7 +31,7 @@ export const createFetchAverageRates =
             return err(FetchRatesError());
         }
 
-        const allCodes = sources.flatMap(source => Object.keys(source));
+        const allCodes = sources.flatMap(source => typedObjectKeys(source));
         const uniqueCodes = [...new Set(allCodes)];
 
         const allRates = uniqueCodes.reduce<Record<string, CurrencyRate>>(

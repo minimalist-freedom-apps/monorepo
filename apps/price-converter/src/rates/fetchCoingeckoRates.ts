@@ -1,4 +1,5 @@
 import { tryAsync } from '@evolu/common';
+import { typedObjectEntries } from '@minimalistic-apps/type-utils';
 import {
     CurrencyCode,
     type CurrencyRate,
@@ -34,7 +35,7 @@ export const createFetchCoingeckoRates =
                 if (!response.ok) throw new Error('Coingecko API failed');
                 const data: CoingeckoResponse = await response.json();
 
-                const rates = Object.entries(data.rates).reduce<
+                const rates = typedObjectEntries(data.rates).reduce<
                     Record<string, CurrencyRate>
                 >((acc, [code, info]) => {
                     if (info.type === 'fiat') {

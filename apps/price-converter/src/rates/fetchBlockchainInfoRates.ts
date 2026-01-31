@@ -1,4 +1,5 @@
 import { tryAsync } from '@evolu/common';
+import { typedObjectEntries } from '@minimalistic-apps/type-utils';
 import {
     CurrencyCode,
     type CurrencyRate,
@@ -32,7 +33,7 @@ export const createFetchBlockchainInfoRates =
                 if (!response.ok) throw new Error('Blockchain.info API failed');
                 const data: BlockchainInfoResponse = await response.json();
 
-                const rates = Object.entries(data).reduce<
+                const rates = typedObjectEntries(data).reduce<
                     Record<string, CurrencyRate>
                 >((acc, [code, info]) => {
                     const codeResult = CurrencyCode.from(code);

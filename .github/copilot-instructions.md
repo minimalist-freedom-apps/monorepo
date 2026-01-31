@@ -403,3 +403,6 @@ pnpm test --filter @evolu/common -- Task
 # Run a single test by name (-t flag)
 pnpm test --filter @evolu/common -- -t "yields and returns ok"
 ```
+
+## Styles
+Never use `style` directly in the app, always tweak the components in the `@minimalistic-apps/components` package to support your use case.
