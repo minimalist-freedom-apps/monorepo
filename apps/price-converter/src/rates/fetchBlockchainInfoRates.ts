@@ -30,12 +30,16 @@ export const createFetchBlockchainInfoRates =
                 const response = await deps.fetch(
                     'https://blockchain.info/ticker',
                 );
-                if (!response.ok) throw new Error('Blockchain.info API failed');
+
+                if (!response.ok) {
+                    throw new Error('Blockchain.info API failed');
+                }
                 const data: BlockchainInfoResponse = await response.json();
 
                 const rates = typedObjectEntries(data).reduce<CurrencyMap>(
                     (acc, [code, info]) => {
                         const codeResult = CurrencyCode.from(String(code));
+
                         if (codeResult.ok) {
                             acc[codeResult.value] = {
                                 code: codeResult.value,

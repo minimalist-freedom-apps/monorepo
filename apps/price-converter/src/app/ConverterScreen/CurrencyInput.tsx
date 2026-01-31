@@ -30,6 +30,10 @@ const formatInputValue = (
     currencyCode: CurrencyCode | 'BTC',
     displayMode: Mode,
 ): string => {
+    if (value === 0) {
+        return '';
+    }
+
     if (currencyCode === 'BTC') {
         return displayMode === 'BTC'
             ? formatBtcWithCommas(satsToBtc(value as AmountSats))
@@ -54,7 +58,10 @@ export const CurrencyInput = ({
 
     useEffect(() => {
         // Prevent overwriting input while user is typing
-        if (focusedCurrency === code) return;
+
+        if (focusedCurrency === code) {
+            return;
+        }
 
         setInputValue(formatInputValue(value, code, mode));
     }, [value, code, mode, focusedCurrency]);

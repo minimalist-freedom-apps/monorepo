@@ -20,6 +20,7 @@ export const ServicesProvider = ({
 
 export const useServices = (): Services => {
     const services = useContext(ServicesContext);
+
     if (!services) {
         throw new Error('useServices must be used within ServicesProvider');
     }

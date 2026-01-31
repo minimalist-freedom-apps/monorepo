@@ -26,11 +26,15 @@ export const createFetchBitpayRates =
         tryAsync(
             async () => {
                 const response = await deps.fetch('https://bitpay.com/rates');
-                if (!response.ok) throw new Error('Bitpay API failed');
+
+                if (!response.ok) {
+                    throw new Error('Bitpay API failed');
+                }
                 const data: BitpayResponse = await response.json();
 
                 const rates = data.data.reduce<CurrencyMap>((acc, item) => {
                     const code = CurrencyCode.from(item.code);
+
                     if (code.ok && code.value !== 'BTC') {
                         acc[code.value] = {
                             code: code.value,

@@ -45,7 +45,10 @@ describe(createFetchAverageRates, () => {
         const result = await fetchAverageRates();
 
         expect(result.ok).toBe(true);
-        if (!result.ok) return;
+
+        if (!result.ok) {
+            return;
+        }
 
         expect(result.value[USD]?.rate).toBe(105); // (100 + 110 + 105) / 3
         expect(result.value[EUR]?.rate).toBe(95); // (90 + 100 + 95) / 3
@@ -70,7 +73,10 @@ describe(createFetchAverageRates, () => {
         const result = await fetchAverageRates();
 
         expect(result.ok).toBe(true);
-        if (!result.ok) return;
+
+        if (!result.ok) {
+            return;
+        }
 
         expect(result.value[USD]?.rate).toBe(150); // (100 + 200) / 2
         expect(result.value[GBP]?.rate).toBe(80); // only one source
@@ -92,7 +98,10 @@ describe(createFetchAverageRates, () => {
         const result = await fetchAverageRates();
 
         expect(result.ok).toBe(true);
-        if (!result.ok) return;
+
+        if (!result.ok) {
+            return;
+        }
 
         expect(result.value[USD]?.rate).toBe(42000);
     });
@@ -105,7 +114,10 @@ describe(createFetchAverageRates, () => {
         const result = await fetchAverageRates();
 
         expect(result.ok).toBe(false);
-        if (result.ok) return;
+
+        if (result.ok) {
+            return;
+        }
 
         expect(result.error.type).toBe('FetchRatesError');
     });
@@ -132,7 +144,10 @@ describe(createFetchAverageRates, () => {
         const result = await fetchAverageRates();
 
         expect(result.ok).toBe(true);
-        if (!result.ok) return;
+
+        if (!result.ok) {
+            return;
+        }
 
         expect(result.value[USD]?.name).toBe('US Dollar');
     });

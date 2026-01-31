@@ -20,6 +20,7 @@ export const createFetchAndStoreRates =
         deps.store.setState({ loading: true, error: '' });
 
         const result = await deps.fetchAverageRates();
+
         if (!result.ok) {
             deps.store.setState({
                 error: 'Failed to fetch rates. Please try again.',
