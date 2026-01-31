@@ -1,0 +1,38 @@
+import {
+    formatFiatWithCommas,
+    parseFormattedNumber,
+} from '@minimalistic-apps/utils';
+import type { CurrencyCode, RatesMap } from '../../rates/FetchRates';
+import type { State } from './State';
+
+export const recalculateFromBtc =
+    (deps: {
+        readonly setState: (partial: Partial<State>) => void;
+        readonly getState: () => State;
+    }) =>
+    (value: string, currentRates?: RatesMap) => {
+        const { rates, selectedCurrencies } = deps.getState();
+        const usedRates = currentRates ?? rates;
+        const btcAmount = parseFormattedNumber(value);
+
+        if (Number.isNaN(btcAmount) || btcAmount === 0) {
+            deps.setState({
+                currencyValues: {} as Record<CurrencyCode, string>,
+            });
+            return;
+        }
+
+        const newValues = selectedCurrencies.reduce<
+            Record<CurrencyCode, string>
+        >(
+            (acc, code) => {
+                if (usedRates[code]) {
+                    const fiatAmount = btcAmount / usedRates[code].rate;
+                    acc[code] = formatFiatWithCommas(fiatAmount);
+                }
+                return acc;
+            },
+            {} as Record<CurrencyCode, string>,
+        );
+        deps.setState({ currencyValues: newValues });
+    };

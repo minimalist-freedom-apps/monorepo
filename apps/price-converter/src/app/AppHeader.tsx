@@ -12,7 +12,7 @@ import {
     selectMode,
     useStore,
     useStoreActions,
-} from './createStore';
+} from './state';
 
 const { fetchAverageRates } = createCompositionRoot();
 
