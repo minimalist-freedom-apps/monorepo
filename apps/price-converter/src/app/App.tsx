@@ -5,7 +5,6 @@ import { createCompositionRoot } from '../createCompositionRoot';
 import type { CurrencyCode, CurrencyRate } from '../rates/FetchRates';
 import { AddCurrencyButton } from './AddCurrencyButton';
 import { AddCurrencyModal } from './AddCurrencyModal';
-import { AppHeader } from './AppHeader';
 import { AppLayout } from './AppLayout';
 import { CurrencyInput } from './CurrencyInput';
 import { CurrencyInputRow } from './CurrencyInputRow';
@@ -127,17 +126,7 @@ export const App = () => {
         .map(([code, info]) => ({ code, name: info.name }));
 
     return (
-        <AppLayout
-            header={
-                <AppHeader
-                    title="Price Converter"
-                    onRefresh={fetchRates}
-                    loading={loading}
-                    mode={mode}
-                    onModeToggle={actions.toggleMode}
-                />
-            }
-        >
+        <AppLayout>
             <StatusDisplay
                 loading={loading}
                 error={error}
