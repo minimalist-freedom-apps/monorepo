@@ -8,6 +8,10 @@ export interface RemoveCurrencyParams {
 
 export type RemoveCurrency = (params: RemoveCurrencyParams) => void;
 
+export interface RemoveCurrencyDep {
+    readonly removeCurrency: RemoveCurrency;
+}
+
 export interface RemoveCurrencyDeps {
     readonly setState: (partial: Partial<State>) => void;
     readonly getState: () => State;
@@ -18,6 +22,7 @@ export const createRemoveCurrency =
     (deps: RemoveCurrencyDeps): RemoveCurrency =>
     ({ code }) => {
         const { selectedCurrencies, currencyValues } = deps.getState();
+
         const newCurrencies = selectedCurrencies.filter(c => c !== code);
         deps.saveToLocalStorage(
             STORAGE_KEYS.SELECTED_CURRENCIES,

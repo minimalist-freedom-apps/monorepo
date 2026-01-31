@@ -9,23 +9,25 @@ import { AppLayout } from './AppLayout';
 import { CurrencyInput } from './CurrencyInput';
 import { CurrencyInputRow } from './CurrencyInputRow';
 import { StatusDisplay } from './StatusDisplay';
+import { useServices } from './state/ServicesProvider';
 import {
-    useStore,
-    selectRates,
-    selectSelectedCurrencies,
     selectBtcValue,
     selectCurrencyValues,
-    selectLoading,
     selectError,
-    selectLastUpdated,
-    selectMode,
-    selectShowModal,
     selectFocusedInput,
+    selectLastUpdated,
+    selectLoading,
+    selectMode,
+    selectRates,
+    selectSelectedCurrencies,
+    selectShowModal,
+    useStore,
 } from './state/createStore';
 
 const { fetchAverageRates } = createCompositionRoot();
 
 export const App = () => {
+    const services = useServices();
     const rates = useStore(selectRates);
     const selectedCurrencies = useStore(selectSelectedCurrencies);
     const btcValue = useStore(selectBtcValue);
@@ -64,35 +66,37 @@ export const App = () => {
 
     // Fetch rates from APIs
     const fetchRates = async () => {
-        actions.setLoading(true);
-        actions.setError('');
+        services.store.setState({ loading: true });
+        services.store.setState({ error: '' });
 
         const result = await fetchAverageRates();
         if (!result.ok) {
-            actions.setError('Failed to fetch rates. Please try again.');
-            actions.setLoading(false);
+            services.store.setState({
+                error: 'Failed to fetch rates. Please try again.',
+            });
+            services.store.setState({ loading: false });
             return;
         }
 
         const fetchedRates = result.value;
         const now = Date.now();
-        actions.setRates({ rates: fetchedRates, timestamp: now });
+        services.setRates({ rates: fetchedRates, timestamp: now });
 
         // Recalculate values with new rates
         if (btcValue) {
-            actions.recalculateFromBtc({
+            services.recalculateFromBtc({
                 value: btcValue,
                 rates: fetchedRates,
             });
         }
 
-        actions.setLoading(false);
+        services.store.setState({ loading: false });
     };
 
     // Handle BTC/Sats input change
     const handleBtcChange = (value: string) => {
-        actions.setBtcValue(value);
-        actions.setFocusedInput('BTC');
+        services.store.setState({ btcValue: value });
+        services.store.setState({ focusedInput: 'BTC' });
 
         let btcAmount: number;
         if (mode === 'Sats') {
@@ -103,18 +107,22 @@ export const App = () => {
         }
 
         if (Number.isNaN(btcAmount) || btcAmount === 0) {
-            actions.setCurrencyValues({} as Record<CurrencyCode, string>);
+            services.store.setState({
+                currencyValues: {} as Record<CurrencyCode, string>,
+            });
             return;
         }
 
-        actions.recalculateFromBtc({ value: formatBtcWithCommas(btcAmount) });
+        services.recalculateFromBtc({ value: formatBtcWithCommas(btcAmount) });
     };
 
     // Handle currency input change
     const handleCurrencyChange = (code: CurrencyCode, value: string) => {
-        actions.setFocusedInput(code);
-        actions.setCurrencyValues({ ...currencyValues, [code]: value });
-        actions.recalculateFromCurrency({ code, value });
+        services.store.setState({ focusedInput: code });
+        services.store.setState({
+            currencyValues: { ...currencyValues, [code]: value },
+        });
+        services.recalculateFromCurrency({ code, value });
     };
 
     // Prepare available currencies for modal
@@ -138,7 +146,7 @@ export const App = () => {
                 value={btcValue}
                 onChange={handleBtcChange}
                 focused={focusedInput === 'BTC'}
-                onFocus={() => actions.setFocusedInput('BTC')}
+                onFocus={() => services.store.setState({ focusedInput: 'BTC' })}
             />
 
             <div>
@@ -149,22 +157,26 @@ export const App = () => {
                         name={rates[code]?.name}
                         value={currencyValues[code] || ''}
                         onChange={value => handleCurrencyChange(code, value)}
-                        onRemove={() => actions.removeCurrency({ code })}
+                        onRemove={() => services.removeCurrency({ code })}
                         focused={focusedInput === code}
-                        onFocus={() => actions.setFocusedInput(code)}
+                        onFocus={() =>
+                            services.store.setState({ focusedInput: code })
+                        }
                     />
                 ))}
             </div>
 
-            <AddCurrencyButton onClick={() => actions.setShowModal(true)} />
+            <AddCurrencyButton
+                onClick={() => services.store.setState({ showModal: true })}
+            />
 
             <AddCurrencyModal
                 open={showModal}
                 currencies={availableCurrencies}
                 onAdd={code =>
-                    actions.addCurrency({ code: code as CurrencyCode })
+                    services.addCurrency({ code: code as CurrencyCode })
                 }
-                onClose={() => actions.setShowModal(false)}
+                onClose={() => services.store.setState({ showModal: false })}
             />
         </AppLayout>
     );

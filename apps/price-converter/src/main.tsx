@@ -3,6 +3,7 @@ import React from 'react';
 import ReactDOM from 'react-dom/client';
 import { App } from './app/App';
 import './index.css';
+import { ServicesProvider } from './app/state/ServicesProvider';
 import { createStoreCompositionRoot } from './app/state/compositionRoot';
 
 const main = () => {
@@ -11,9 +12,11 @@ const main = () => {
 
     ReactDOM.createRoot(document.getElementById('root')!).render(
         <React.StrictMode>
-            <ThemeProvider>
-                <App />
-            </ThemeProvider>
+            <ServicesProvider services={services}>
+                <ThemeProvider>
+                    <App />
+                </ThemeProvider>
+            </ServicesProvider>
         </React.StrictMode>,
     );
 };

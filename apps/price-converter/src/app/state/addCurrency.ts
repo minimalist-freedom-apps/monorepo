@@ -13,6 +13,10 @@ export interface AddCurrencyParams {
 
 export type AddCurrency = (params: AddCurrencyParams) => void;
 
+export interface AddCurrencyDep {
+    readonly addCurrency: AddCurrency;
+}
+
 export interface AddCurrencyDeps {
     readonly setState: (partial: Partial<State>) => void;
     readonly getState: () => State;

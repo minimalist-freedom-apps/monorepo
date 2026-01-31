@@ -12,6 +12,10 @@ export interface RecalculateFromBtcParams {
 
 export type RecalculateFromBtc = (params: RecalculateFromBtcParams) => void;
 
+export interface RecalculateFromBtcDep {
+    readonly recalculateFromBtc: RecalculateFromBtc;
+}
+
 export interface RecalculateFromBtcDeps {
     readonly setState: (partial: Partial<State>) => void;
     readonly getState: () => State;

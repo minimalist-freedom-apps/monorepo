@@ -6,53 +6,55 @@ import {
     Title,
 } from '@minimalistic-apps/components';
 import { createCompositionRoot } from '../createCompositionRoot';
+import { useServices } from './state/ServicesProvider';
 import {
     selectBtcValue,
     selectLoading,
     selectMode,
     useStore,
-    useStoreActions,
-} from './state';
+} from './state/createStore';
 
 const { fetchAverageRates } = createCompositionRoot();
 
 export const AppHeader = () => {
+    const services = useServices();
     const loading = useStore(selectLoading);
     const mode = useStore(selectMode);
     const btcValue = useStore(selectBtcValue);
-    const actions = useStoreActions();
 
     const fetchRates = async () => {
-        actions.setLoading(true);
-        actions.setError('');
+        services.store.setState({ loading: true });
+        services.store.setState({ error: '' });
 
         const result = await fetchAverageRates();
         if (!result.ok) {
-            actions.setError('Failed to fetch rates. Please try again.');
-            actions.setLoading(false);
+            services.store.setState({
+                error: 'Failed to fetch rates. Please try again.',
+            });
+            services.store.setState({ loading: false });
             return;
         }
 
         const fetchedRates = result.value;
         const now = Date.now();
-        actions.setRates({ rates: fetchedRates, timestamp: now });
+        services.setRates({ rates: fetchedRates, timestamp: now });
 
         // Recalculate values with new rates
         if (btcValue) {
-            actions.recalculateFromBtc({
+            services.recalculateFromBtc({
                 value: btcValue,
                 rates: fetchedRates,
             });
         }
 
-        actions.setLoading(false);
+        services.store.setState({ loading: false });
     };
 
     return (
         <Header>
             <Title level={4}>Price Converter</Title>
             <Row gap={8}>
-                <Button variant="text" onClick={actions.toggleMode}>
+                <Button variant="text" onClick={services.toggleMode}>
                     {mode}
                 </Button>
                 <Button

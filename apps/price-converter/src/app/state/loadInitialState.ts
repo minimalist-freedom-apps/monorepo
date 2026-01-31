@@ -4,6 +4,10 @@ import { STORAGE_KEYS } from './storageKeys';
 
 export type LoadInitialState = () => void;
 
+export interface LoadInitialStateDep {
+    readonly loadInitialState: LoadInitialState;
+}
+
 export interface LoadInitialStateDeps {
     readonly setState: (partial: Partial<State>) => void;
     readonly loadFromLocalStorage: <T>(

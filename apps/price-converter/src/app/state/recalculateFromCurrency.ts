@@ -8,7 +8,7 @@ import {
     parseFormattedNumber,
 } from '@minimalistic-apps/utils';
 import type { CurrencyCode } from '../../rates/FetchRates';
-import type { State } from './State';
+import type { CurrencyValues, State } from './State';
 
 export interface RecalculateFromCurrencyParams {
     readonly code: CurrencyCode;
@@ -18,6 +18,10 @@ export interface RecalculateFromCurrencyParams {
 export type RecalculateFromCurrency = (
     params: RecalculateFromCurrencyParams,
 ) => void;
+
+export interface RecalculateFromCurrencyDep {
+    readonly recalculateFromCurrency: RecalculateFromCurrency;
+}
 
 export interface RecalculateFromCurrencyDeps {
     readonly setState: (partial: Partial<State>) => void;
@@ -31,10 +35,8 @@ export const createRecalculateFromCurrency =
         const fiatAmount = parseFormattedNumber(value);
 
         if (Number.isNaN(fiatAmount) || fiatAmount === 0 || !rates[code]) {
-            deps.setState({
-                btcValue: '',
-                currencyValues: {} as Record<CurrencyCode, string>,
-            });
+            deps.setState({ btcValue: '', currencyValues: {} });
+
             return;
         }
 
@@ -44,9 +46,7 @@ export const createRecalculateFromCurrency =
                 ? formatBtcWithCommas(btcAmount)
                 : formatSats(btcToSats(btcAmount));
 
-        const newValues = selectedCurrencies.reduce<
-            Record<CurrencyCode, string>
-        >(
+        const newValues = selectedCurrencies.reduce<CurrencyValues>(
             (acc, otherCode) => {
                 if (otherCode !== code && rates[otherCode]) {
                     const otherFiatAmount = btcAmount / rates[otherCode].rate;
@@ -56,7 +56,7 @@ export const createRecalculateFromCurrency =
                 }
                 return acc;
             },
-            {} as Record<CurrencyCode, string>,
+            {},
         );
 
         deps.setState({ btcValue: formattedBtc, currencyValues: newValues });

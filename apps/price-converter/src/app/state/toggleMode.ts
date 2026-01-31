@@ -10,6 +10,10 @@ import { STORAGE_KEYS } from './storageKeys';
 
 export type ToggleMode = () => void;
 
+export interface ToggleModeDep {
+    readonly toggleMode: ToggleMode;
+}
+
 export interface ToggleModeDeps {
     readonly setState: (partial: Partial<State>) => void;
     readonly getState: () => State;

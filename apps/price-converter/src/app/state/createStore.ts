@@ -1,6 +1,8 @@
 import { useSyncExternalStore } from 'react';
-import type { CurrencyCode } from '../../rates/FetchRates';
+import { CurrencyCode } from '../../rates/FetchRates';
 import type { State } from './State';
+import { useServices } from './ServicesProvider';
+import { getOrThrow } from '@evolu/common';
 
 type Listener = () => void;
 
@@ -13,11 +15,9 @@ export interface Store {
 export const createStore = (): Store => {
     let state: State = {
         rates: {} as never,
-        selectedCurrencies: [
-            'USD' as CurrencyCode,
-        ] as ReadonlyArray<CurrencyCode>,
+        selectedCurrencies: [getOrThrow(CurrencyCode.from('USD'))],
         btcValue: '',
-        currencyValues: {} as Record<CurrencyCode, string>,
+        currencyValues: {},
         loading: false,
         error: '',
         lastUpdated: null,
@@ -58,7 +58,8 @@ export const createStore = (): Store => {
 type Selector<T> = (state: State) => T;
 
 export const useStore = <T>(selector: Selector<T>): T => {
-    const store = getStore();
+    const { store } = useServices();
+
     return useSyncExternalStore(
         store.subscribe,
         () => selector(store.getState()),

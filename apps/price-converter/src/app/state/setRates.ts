@@ -9,6 +9,10 @@ export interface SetRatesParams {
 
 export type SetRates = (params: SetRatesParams) => void;
 
+export interface SetRatesDep {
+    readonly setRates: SetRates;
+}
+
 export interface SetRatesDeps {
     readonly setState: (partial: Partial<State>) => void;
     readonly saveToLocalStorage: <T>(key: string, value: T) => void;

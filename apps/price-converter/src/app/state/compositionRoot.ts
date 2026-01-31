@@ -2,16 +2,38 @@ import {
     loadFromLocalStorage,
     saveToLocalStorage,
 } from '@minimalistic-apps/utils';
-import { createAddCurrency } from './addCurrency';
-import { createStore, initializeStore } from './createStore';
-import { createLoadInitialState } from './loadInitialState';
-import { createRecalculateFromBtc } from './recalculateFromBtc';
-import { createRecalculateFromCurrency } from './recalculateFromCurrency';
-import { createRemoveCurrency } from './removeCurrency';
-import { createSetRates } from './setRates';
-import { createToggleMode } from './toggleMode';
+import { type AddCurrencyDep, createAddCurrency } from './addCurrency';
+import { type Store, createStore } from './createStore';
+import {
+    type LoadInitialStateDep,
+    createLoadInitialState,
+} from './loadInitialState';
+import {
+    type RecalculateFromBtcDep,
+    createRecalculateFromBtc,
+} from './recalculateFromBtc';
+import {
+    type RecalculateFromCurrencyDep,
+    createRecalculateFromCurrency,
+} from './recalculateFromCurrency';
+import { type RemoveCurrencyDep, createRemoveCurrency } from './removeCurrency';
+import { type SetRatesDep, createSetRates } from './setRates';
+import { type ToggleModeDep, createToggleMode } from './toggleMode';
 
-export const createStoreCompositionRoot = () => {
+export interface StoreDep {
+    readonly store: Store;
+}
+
+export type Services = StoreDep &
+    SetRatesDep &
+    AddCurrencyDep &
+    RemoveCurrencyDep &
+    ToggleModeDep &
+    RecalculateFromBtcDep &
+    RecalculateFromCurrencyDep &
+    LoadInitialStateDep;
+
+export const createStoreCompositionRoot = (): Services => {
     const store = createStore();
 
     const setRates = createSetRates({
