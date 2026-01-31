@@ -1,13 +1,21 @@
-import type { CurrencyCode } from '@evolu/common';
-import { formatBtcWithCommas, satsToBtc } from '@minimalistic-apps/bitcoin';
+import { type CurrencyCode, getOrThrow } from '@evolu/common';
+import {
+    AmountBtc,
+    AmountSats,
+    btcToSats,
+    formatBtcWithCommas,
+    formatSats,
+    satsToBtc,
+} from '@minimalistic-apps/bitcoin';
 import { Screen } from '@minimalistic-apps/components';
+import { FiatAmount, formatFiatWithCommas } from '@minimalistic-apps/fiat';
 import { parseFormattedNumber } from '@minimalistic-apps/utils';
 import { useServices } from '../../ServicesProvider';
 import {
-    selectBtcValue,
     selectFocusedInput,
     selectMode,
     selectRates,
+    selectSatsValue,
     selectSelectedFiatCurrencies,
     selectSelectedFiatCurrenciesAmounts,
     useStore,
@@ -20,53 +28,53 @@ export const ConverterScreen = () => {
     const services = useServices();
     const rates = useStore(selectRates);
     const selectedCurrencies = useStore(selectSelectedFiatCurrencies);
-    const btcValue = useStore(selectBtcValue);
+    const satsValue = useStore(selectSatsValue);
     const currencyValues = useStore(selectSelectedFiatCurrenciesAmounts);
     const mode = useStore(selectMode);
     const focusedInput = useStore(selectFocusedInput);
 
     const handleBtcChange = (value: string) => {
-        services.store.setState({ satsAmount: value });
-        services.store.setState({ focusedInput: 'BTC' });
+        const numberValue = parseFormattedNumber(value);
 
-        let btcAmount: number;
-        if (mode === 'Sats') {
-            const sats = parseFormattedNumber(value);
-            btcAmount = satsToBtc(sats);
-        } else {
-            btcAmount = parseFormattedNumber(value);
-        }
-
-        if (Number.isNaN(btcAmount) || btcAmount === 0) {
-            services.store.setState({
-                selectedFiatCurrenciesInputAmounts: {} as Record<
-                    CurrencyCode,
-                    string
-                >,
-            });
-
+        if (Number.isNaN(numberValue)) {
             return;
         }
 
-        services.recalculateFromBtc({ value: formatBtcWithCommas(btcAmount) });
+        const satsValue =
+            mode === 'Sats'
+                ? getOrThrow(AmountSats.from(numberValue))
+                : btcToSats(getOrThrow(AmountBtc.from(numberValue)));
+
+        services.store.setState({ satsAmount: satsValue });
+        services.store.setState({ focusedInput: 'BTC' });
+
+        services.recalculateFromBtc();
     };
 
     const handleCurrencyChange = (code: CurrencyCode, value: string) => {
+        const fiatAmountNumber = parseFormattedNumber(value);
+        const fiatAmount = FiatAmount(code).from(fiatAmountNumber);
+
         services.store.setState({ focusedInput: code });
         services.store.setState({
-            selectedFiatCurrenciesInputAmounts: {
+            selectedFiatCurrenciesAmounts: {
                 ...currencyValues,
                 [code]: value,
             },
         });
-        services.recalculateFromCurrency({ code, value });
+        services.recalculateFromCurrency({ code, value: fiatAmount });
     };
+
+    const bitcoinFormatted =
+        mode === 'BTC'
+            ? formatBtcWithCommas(satsToBtc(satsValue))
+            : formatSats(satsValue);
 
     return (
         <Screen>
             <CurrencyInput
                 label={mode}
-                value={btcValue}
+                value={bitcoinFormatted}
                 onChange={handleBtcChange}
                 focused={focusedInput === 'BTC'}
                 onFocus={() => services.store.setState({ focusedInput: 'BTC' })}
@@ -78,7 +86,7 @@ export const ConverterScreen = () => {
                         key={code}
                         code={code}
                         name={rates[code]?.name}
-                        value={currencyValues[code] || ''}
+                        value={formatFiatWithCommas(currencyValues[code]) || ''}
                         onChange={value => handleCurrencyChange(code, value)}
                         onRemove={() => services.removeCurrency({ code })}
                         focused={focusedInput === code}

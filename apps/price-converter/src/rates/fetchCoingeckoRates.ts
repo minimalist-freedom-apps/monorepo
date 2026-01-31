@@ -1,7 +1,8 @@
 import { CurrencyCode, tryAsync } from '@evolu/common';
 import { typedObjectEntries } from '@minimalistic-apps/type-utils';
+import { RateBtcPerFiat } from '../converter/rate.js';
 import {
-    type CurrencyEntity,
+    type CurrencyMap,
     type FetchRates,
     FetchRatesError,
 } from './FetchRates.js';
@@ -34,17 +35,19 @@ export const createFetchCoingeckoRates =
                 if (!response.ok) throw new Error('Coingecko API failed');
                 const data: CoingeckoResponse = await response.json();
 
-                const rates = typedObjectEntries(data.rates).reduce<
-                    Record<string, CurrencyEntity>
-                >((acc, [code, info]) => {
+                const rates = typedObjectEntries(
+                    data.rates,
+                ).reduce<CurrencyMap>((acc, [code, info]) => {
                     if (info.type === 'fiat') {
                         const upperCode = String(code).toUpperCase();
                         const codeResult = CurrencyCode.from(upperCode);
                         if (codeResult.ok) {
-                            acc[upperCode] = {
+                            acc[codeResult.value] = {
                                 code: codeResult.value,
                                 name: info.name,
-                                rate: 1 / info.value,
+                                rate: RateBtcPerFiat(codeResult.value).from(
+                                    1 / info.value,
+                                ),
                             };
                         }
                     }

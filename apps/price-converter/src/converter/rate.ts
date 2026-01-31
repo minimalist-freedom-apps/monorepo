@@ -1,6 +1,3 @@
-import type { AmountBtc } from '@minimalistic-apps/bitcoin';
-import type { FiatAmount } from '@minimalistic-apps/fiat';
-
 import type { Brand, CurrencyCode } from '@evolu/common';
 
 /**
@@ -15,7 +12,9 @@ export const asRateBtcPerFiat = <Currency extends CurrencyCode>(
     value: number,
 ): RateBtcPerFiat<Currency> => value as RateBtcPerFiat<Currency>;
 
-export const createRateBtcPerFiat = <Currency extends CurrencyCode>(): {
+export const RateBtcPerFiat = <Currency extends CurrencyCode>(
+    _: Currency,
+): {
     readonly from: (value: number) => RateBtcPerFiat<Currency>;
 } => ({
     from: value => asRateBtcPerFiat<Currency>(value),

@@ -1,6 +1,7 @@
 import { CurrencyCode, tryAsync } from '@evolu/common';
+import { RateBtcPerFiat } from '../converter/rate.js';
 import {
-    type CurrencyEntity,
+    type CurrencyMap,
     type FetchRates,
     FetchRatesError,
 } from './FetchRates.js';
@@ -28,23 +29,20 @@ export const createFetchBitpayRates =
                 if (!response.ok) throw new Error('Bitpay API failed');
                 const data: BitpayResponse = await response.json();
 
-                const rates = data.data.reduce<Record<string, CurrencyEntity>>(
-                    (acc, item) => {
-                        if (item.code !== 'BTC') {
-                            const codeResult = CurrencyCode.from(item.code);
-                            if (codeResult.ok) {
-                                acc[item.code] = {
-                                    code: codeResult.value,
-                                    name: item.name,
-                                    rate: 1 / item.rate,
-                                };
-                            }
-                        }
+                const rates = data.data.reduce<CurrencyMap>((acc, item) => {
+                    const code = CurrencyCode.from(item.code);
+                    if (code.ok && code.value !== 'BTC') {
+                        acc[code.value] = {
+                            code: code.value,
+                            name: item.name,
+                            rate: RateBtcPerFiat(code.value).from(
+                                1 / item.rate,
+                            ),
+                        };
+                    }
 
-                        return acc;
-                    },
-                    {},
-                );
+                    return acc;
+                }, {});
 
                 return rates;
             },

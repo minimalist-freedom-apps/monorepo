@@ -3,15 +3,15 @@ import type { RateBtcPerFiat } from '../converter/rate';
 
 export interface CurrencyCodeError extends TypeError<'CurrencyCode'> {}
 
-export interface CurrencyEntity<T extends CurrencyCode> {
+export interface CurrencyEntity<T extends CurrencyCode = CurrencyCode> {
     readonly code: T;
     readonly name: string;
     readonly rate: RateBtcPerFiat;
 }
 
-export type CurrencyMap = Readonly<{
+export type CurrencyMap = {
     [K in CurrencyCode]?: CurrencyEntity<K>;
-}>;
+};
 
 export interface FetchRatesError {
     readonly type: 'FetchRatesError';

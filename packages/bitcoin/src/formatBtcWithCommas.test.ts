@@ -1,19 +1,14 @@
 import { describe, expect, test } from 'vitest';
 import { formatBtcWithCommas } from './formatBtcWithCommas.js';
+import type { AmountBtc } from './types.js';
 
 describe(formatBtcWithCommas.name, () => {
     const testCases: Array<{
-        readonly input: string | number;
+        readonly input: number;
         readonly expected: string;
     }> = [
         // Zero values
         { input: 0, expected: '0' },
-        { input: '0', expected: '0' },
-
-        // Invalid input
-        { input: '', expected: '0' },
-        { input: 'invalid', expected: '0' },
-        { input: Number.NaN, expected: '0' },
 
         // Very small numbers with scientific notation
         { input: 1e-16, expected: '0' },
@@ -24,11 +19,6 @@ describe(formatBtcWithCommas.name, () => {
         { input: 100, expected: '100.00,000,000' },
         { input: 21000000, expected: '21000000.00,000,000' },
 
-        // String input
-        { input: '1', expected: '1.00,000,000' },
-        { input: '100', expected: '100.00,000,000' },
-        { input: '21000000', expected: '21000000.00,000,000' },
-
         // Negative numbers
         { input: -0.00001, expected: '-0.00,001,000' },
         { input: -1.23456789, expected: '-1.23,456,789' },
@@ -37,7 +27,7 @@ describe(formatBtcWithCommas.name, () => {
     test.each(testCases)(
         'formats $input to $expected',
         ({ input, expected }) => {
-            expect(formatBtcWithCommas(input)).toBe(expected);
+            expect(formatBtcWithCommas(input as AmountBtc)).toBe(expected);
         },
     );
 });

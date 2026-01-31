@@ -1,7 +1,7 @@
 import { CurrencyCode, err, ok } from '@evolu/common';
 import { typedObjectKeys } from '@minimalistic-apps/type-utils';
+import { RateBtcPerFiat } from '../converter/rate.js';
 import {
-    type CurrencyEntity,
     type CurrencyMap,
     type FetchRates,
     FetchRatesError,
@@ -33,34 +33,31 @@ export const createFetchAverageRates =
         const allCodes = sources.flatMap(source => typedObjectKeys(source));
         const uniqueCodes = [...new Set(allCodes)];
 
-        const allRates = uniqueCodes.reduce<Record<string, CurrencyEntity>>(
-            (acc, code) => {
-                const codeResult = CurrencyCode.from(code);
-                if (!codeResult.ok) return acc;
+        const allRates = uniqueCodes.reduce<CurrencyMap>((acc, code) => {
+            const codeResult = CurrencyCode.from(code);
+            if (!codeResult.ok) return acc;
 
-                const validCode = codeResult.value;
-                const rates = sources
-                    .filter(source => source[validCode])
-                    .map(source => source[validCode].rate);
+            const validCode = codeResult.value;
+            const rates = sources
+                .filter(source => source[validCode])
+                .map(source => source[validCode]?.rate);
 
-                if (rates.length > 0) {
-                    const avgRate =
-                        rates.reduce((sum, rate) => sum + rate, 0) /
-                        rates.length;
-                    const firstSource = sources.find(s => s[validCode]);
-                    if (firstSource) {
-                        acc[code] = {
-                            code: validCode,
-                            name: firstSource[validCode].name,
-                            rate: avgRate,
-                        };
-                    }
+            if (rates.length > 0) {
+                const avgRate =
+                    rates.reduce((sum, rate) => sum + (rate ?? 0), 0) /
+                    rates.length;
+                const firstSource = sources.find(s => s[validCode]);
+                if (firstSource) {
+                    acc[code] = {
+                        code: validCode,
+                        name: firstSource[validCode]?.name ?? validCode,
+                        rate: RateBtcPerFiat(validCode).from(avgRate),
+                    };
                 }
+            }
 
-                return acc;
-            },
-            {},
-        );
+            return acc;
+        }, {});
 
         return ok(allRates);
     };

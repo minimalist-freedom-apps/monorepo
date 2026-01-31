@@ -5,9 +5,9 @@ import type { CurrencyMap } from '../rates/FetchRates';
 
 export type Mode = 'BTC' | 'Sats';
 
-export type CurrencyValues = Readonly<{
+export type CurrencyValues = {
     [K in CurrencyCode]?: FiatAmount<K>;
-}>;
+};
 
 export type Screen = 'Converter' | 'AddCurrency';
 

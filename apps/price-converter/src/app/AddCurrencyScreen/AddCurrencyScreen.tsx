@@ -6,9 +6,10 @@ import {
     SearchInput,
     Text,
 } from '@minimalistic-apps/components';
-import { typedObjectEntries } from '@minimalistic-apps/type-utils';
+import { typedObjectValues } from '@minimalistic-apps/type-utils';
 import { useState } from 'react';
 import { useServices } from '../../ServicesProvider';
+import type { CurrencyEntity } from '../../rates/FetchRates';
 import {
     selectRates,
     selectSelectedFiatCurrencies,
@@ -21,10 +22,13 @@ export const AddCurrencyScreen = () => {
     const selectedCurrencies = useStore(selectSelectedFiatCurrencies);
     const [searchTerm, setSearchTerm] = useState('');
 
-    const availableCurrencies = typedObjectEntries(rates)
-        .filter(([code]) => !selectedCurrencies.includes(code))
-        .sort((a, b) => a[1].name.localeCompare(b[1].name))
-        .map(([code, info]) => ({ code, name: info.name }));
+    const availableCurrencies = typedObjectValues(rates)
+        .filter(
+            (it): it is CurrencyEntity =>
+                it !== undefined && selectedCurrencies.includes(it.code),
+        )
+        .sort((a, b) => a.name.localeCompare(b.name))
+        .map(it => ({ code: it.code, name: it.name }));
 
     const filteredCurrencies = !searchTerm
         ? availableCurrencies

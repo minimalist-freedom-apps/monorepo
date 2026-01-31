@@ -47,8 +47,8 @@ describe(createFetchAverageRates, () => {
         expect(result.ok).toBe(true);
         if (!result.ok) return;
 
-        expect(result.value[USD].rate).toBe(105); // (100 + 110 + 105) / 3
-        expect(result.value[EUR].rate).toBe(95); // (90 + 100 + 95) / 3
+        expect(result.value[USD]?.rate).toBe(105); // (100 + 110 + 105) / 3
+        expect(result.value[EUR]?.rate).toBe(95); // (90 + 100 + 95) / 3
     });
 
     test('calculates average when sources have different currencies', async () => {
@@ -72,8 +72,8 @@ describe(createFetchAverageRates, () => {
         expect(result.ok).toBe(true);
         if (!result.ok) return;
 
-        expect(result.value[USD].rate).toBe(150); // (100 + 200) / 2
-        expect(result.value[GBP].rate).toBe(80); // only one source
+        expect(result.value[USD]?.rate).toBe(150); // (100 + 200) / 2
+        expect(result.value[GBP]?.rate).toBe(80); // only one source
     });
 
     test('returns single source rates when only one source succeeds', async () => {
@@ -94,7 +94,7 @@ describe(createFetchAverageRates, () => {
         expect(result.ok).toBe(true);
         if (!result.ok) return;
 
-        expect(result.value[USD].rate).toBe(42000);
+        expect(result.value[USD]?.rate).toBe(42000);
     });
 
     test('returns AllApisFailed error when all sources fail', async () => {
@@ -134,6 +134,6 @@ describe(createFetchAverageRates, () => {
         expect(result.ok).toBe(true);
         if (!result.ok) return;
 
-        expect(result.value[USD].name).toBe('US Dollar');
+        expect(result.value[USD]?.name).toBe('US Dollar');
     });
 });

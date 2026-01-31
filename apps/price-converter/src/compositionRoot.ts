@@ -30,14 +30,10 @@ import {
     type RemoveCurrencyDep,
     createRemoveCurrency,
 } from './state/removeCurrency';
-import { type SetRatesDep, createSetRates } from './state/setRates';
-import { type ToggleModeDep, createToggleMode } from './state/toggleMode';
 
 export type Services = StoreDep &
-    SetRatesDep &
     AddCurrencyDep &
     RemoveCurrencyDep &
-    ToggleModeDep &
     RecalculateFromBtcDep &
     RecalculateFromCurrencyDep &
     LoadInitialStateDep &
@@ -67,12 +63,13 @@ export const createCompositionRoot = (): Services => {
     });
 
     const store = createStore();
-    const setRates = createSetRates({ store });
     const addCurrency = createAddCurrency({ store });
     const removeCurrency = createRemoveCurrency({ store });
-    const toggleMode = createToggleMode({ store });
     const recalculateFromBtc = createRecalculateFromBtc({ store });
-    const recalculateFromCurrency = createRecalculateFromCurrency({ store });
+    const recalculateFromCurrency = createRecalculateFromCurrency({
+        store,
+        recalculateFromBtc,
+    });
 
     const loadInitialState = createLoadInitialState({
         store,
@@ -82,7 +79,6 @@ export const createCompositionRoot = (): Services => {
     const fetchAndStoreRates = createFetchAndStoreRates({
         store,
         fetchAverageRates,
-        setRates,
         recalculateFromBtc,
         currentDateTime,
     });
@@ -91,10 +87,8 @@ export const createCompositionRoot = (): Services => {
 
     return {
         store,
-        setRates,
         addCurrency,
         removeCurrency,
-        toggleMode,
         recalculateFromBtc,
         recalculateFromCurrency,
         loadInitialState,

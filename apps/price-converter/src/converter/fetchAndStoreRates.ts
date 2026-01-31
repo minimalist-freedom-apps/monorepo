@@ -1,7 +1,6 @@
 import type { CurrentDateTimeDep } from '@minimalistic-apps/datetime';
 import type { FetchAverageRatesDep } from '../rates/fetchAverageRates';
 import type { StoreDep } from '../state/createStore';
-import type { SetRatesDep } from '../state/setRates';
 import type { RecalculateFromBtcDep } from './recalculateFromBtc';
 
 export type FetchAndStoreRates = () => Promise<void>;
@@ -12,7 +11,6 @@ export interface FetchAndStoreRatesDep {
 
 type FetchAndStoreRatesDeps = StoreDep &
     FetchAverageRatesDep &
-    SetRatesDep &
     RecalculateFromBtcDep &
     CurrentDateTimeDep;
 
@@ -31,18 +29,11 @@ export const createFetchAndStoreRates =
             return;
         }
 
-        const fetchedRates = result.value;
-        const now = deps.currentDateTime();
-        deps.setRates({ rates: fetchedRates, timestamp: now });
-
-        // Recalculate values with new rates
-        const btcValue = deps.store.getState().satsAmount;
-        if (btcValue) {
-            deps.recalculateFromBtc({
-                value: btcValue,
-                rates: fetchedRates,
-            });
-        }
+        deps.store.setState({
+            rates: result.value,
+            lastUpdated: deps.currentDateTime(),
+        });
+        deps.recalculateFromBtc();
 
         deps.store.setState({ loading: false });
     };
