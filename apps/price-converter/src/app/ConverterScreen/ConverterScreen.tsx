@@ -11,7 +11,7 @@ import {
     useStore,
 } from '../../state/createStore';
 import { AddCurrencyButton } from '../AddCurrencyScreen/AddCurrencyButton';
-import { CurrencyFiatRow } from './CurrencyFiatRow';
+import { CurrencyRow } from './CurrencyFiatRow';
 import { CurrencyInput } from './CurrencyInput';
 
 export const ConverterScreen = () => {
@@ -39,25 +39,23 @@ export const ConverterScreen = () => {
     };
 
     return (
-        <Screen>
-            <CurrencyInput
+        <Screen gap={12}>
+            <CurrencyRow
+                key={'BTC'}
+                code={'BTC'}
                 value={satsAmount}
                 onChange={value => handleBtcChange(value as AmountSats)}
-                code="BTC"
             />
 
-            <div>
-                {selectedCurrencies.map(code => (
-                    <CurrencyFiatRow
-                        key={code}
-                        code={code}
-                        name={rates[code]?.name}
-                        value={currencyValues[code] ?? 0}
-                        onChange={value => handleCurrencyChange(code, value)}
-                        onRemove={() => services.removeCurrency({ code })}
-                    />
-                ))}
-            </div>
+            {selectedCurrencies.map(code => (
+                <CurrencyRow
+                    key={code}
+                    code={code}
+                    value={currencyValues[code] ?? 0}
+                    onChange={value => handleCurrencyChange(code, value)}
+                    onRemove={() => services.removeCurrency({ code })}
+                />
+            ))}
 
             <AddCurrencyButton />
         </Screen>

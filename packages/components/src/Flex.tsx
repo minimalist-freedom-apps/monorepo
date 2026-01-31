@@ -1,7 +1,7 @@
 import { Flex as AntFlex } from 'antd';
 import type { ReactNode } from 'react';
 
-interface FlexProps {
+export interface FlexProps {
     readonly children: ReactNode;
     readonly gap?: number;
     readonly align?: 'start' | 'center' | 'end' | 'stretch';

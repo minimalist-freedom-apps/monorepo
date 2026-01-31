@@ -8,14 +8,14 @@ import {
 import { CurrencyInput } from './CurrencyInput';
 
 interface CurrencyInputRowProps {
-    readonly code: CurrencyCode;
+    readonly code: CurrencyCode | 'BTC';
     readonly name?: string;
     readonly value: number;
     readonly onChange: (value: number) => void;
     readonly onRemove?: () => void;
 }
 
-export const CurrencyFiatRow = ({
+export const CurrencyRow = ({
     code,
     value,
     onChange,

@@ -1,7 +1,10 @@
 import type { ReactNode } from 'react';
+import { Column, type FlexProps } from './Flex';
 
-interface ScreenProps {
+type ScreenProps = {
     readonly children: ReactNode;
-}
+} & FlexProps;
 
-export const Screen = ({ children }: ScreenProps) => <div>{children}</div>;
+export const Screen = ({ children, ...props }: ScreenProps) => (
+    <Column {...props}>{children}</Column>
+);
