@@ -1,13 +1,16 @@
 import { FloatButton, PlusOutlined } from '@minimalistic-apps/components';
+import { useServices } from '../../ServicesProvider';
 
-interface AddCurrencyButtonProps {
-    readonly onClick: () => void;
-}
+export const AddCurrencyButton = () => {
+    const { store } = useServices();
 
-export const AddCurrencyButton = ({ onClick }: AddCurrencyButtonProps) => (
-    <FloatButton
-        icon={<PlusOutlined />}
-        onClick={onClick}
-        tooltip="Add Currency"
-    />
-);
+    const onClick = () => store.setState({ currentScreen: 'AddCurrency' });
+
+    return (
+        <FloatButton
+            icon={<PlusOutlined />}
+            onClick={onClick}
+            tooltip="Add Currency"
+        />
+    );
+};

@@ -1,5 +1,6 @@
 import {
     Button,
+    Column,
     Header,
     ReloadOutlined,
     Row,
@@ -7,6 +8,7 @@ import {
 } from '@minimalistic-apps/components';
 import { useServices } from '../ServicesProvider';
 import { selectLoading, selectMode, useStore } from '../state/createStore';
+import { RatesLoading } from './RatesLoading';
 
 export const AppHeader = () => {
     const services = useServices();
@@ -14,19 +16,22 @@ export const AppHeader = () => {
     const mode = useStore(selectMode);
 
     return (
-        <Header>
-            <Title level={4}>Price Converter</Title>
-            <Row gap={8}>
-                <Button variant="text" onClick={services.toggleMode}>
-                    {mode}
-                </Button>
-                <Button
-                    variant="text"
-                    icon={<ReloadOutlined />}
-                    onClick={services.fetchAndStoreRates}
-                    loading={loading}
-                />
-            </Row>
-        </Header>
+        <Column>
+            <Header>
+                <Title level={4}>Price Converter</Title>
+                <Row gap={8}>
+                    <Button variant="text" onClick={services.toggleMode}>
+                        {mode}
+                    </Button>
+                    <Button
+                        variant="text"
+                        icon={<ReloadOutlined />}
+                        onClick={services.fetchAndStoreRates}
+                        loading={loading}
+                    />
+                </Row>
+            </Header>
+            <RatesLoading />
+        </Column>
     );
 };

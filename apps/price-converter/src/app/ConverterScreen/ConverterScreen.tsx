@@ -13,7 +13,6 @@ import {
     useStore,
 } from '../../state/createStore';
 import { AddCurrencyButton } from '../AddCurrencyScreen/AddCurrencyButton';
-import { RatesLoading } from '../RatesLoading';
 import { CurrencyInput } from './CurrencyInput';
 import { CurrencyInputRow } from './CurrencyInputRow';
 
@@ -58,8 +57,6 @@ export const ConverterScreen = () => {
 
     return (
         <Screen>
-            <RatesLoading />
-
             <CurrencyInput
                 label={mode}
                 value={btcValue}
@@ -85,11 +82,7 @@ export const ConverterScreen = () => {
                 ))}
             </div>
 
-            <AddCurrencyButton
-                onClick={() =>
-                    services.store.setState({ currentScreen: 'AddCurrency' })
-                }
-            />
+            <AddCurrencyButton />
         </Screen>
     );
 };
