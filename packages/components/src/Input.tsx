@@ -1,7 +1,6 @@
 import { Input as AntInput } from 'antd';
 import type { InputRef as AntInputRef } from 'antd';
 import type { ChangeEvent, RefObject } from 'react';
-import { BRAND_COLORS } from './colors';
 
 export type InputRef = AntInputRef;
 
@@ -14,6 +13,7 @@ interface InputProps {
     readonly inputRef?: RefObject<InputRef>;
     readonly monospace?: boolean;
     readonly large?: boolean;
+    readonly className?: string;
 }
 
 export const Input = ({
@@ -25,6 +25,7 @@ export const Input = ({
     inputRef,
     monospace = false,
     large = false,
+    className,
 }: InputProps) => {
     const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
         onChange(e.target.value);
@@ -38,14 +39,12 @@ export const Input = ({
             onFocus={onFocus}
             placeholder={placeholder}
             inputMode={inputMode}
+            className={className}
             style={{
                 flex: 1,
                 fontFamily: monospace ? 'monospace' : 'inherit',
                 fontSize: large ? '1.25rem' : '1.125rem',
                 fontWeight: 600,
-                background: BRAND_COLORS.backgroundDark,
-                borderColor: BRAND_COLORS.border,
-                color: BRAND_COLORS.textPrimary,
             }}
         />
     );

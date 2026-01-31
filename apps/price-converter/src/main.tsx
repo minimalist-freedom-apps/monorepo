@@ -1,9 +1,8 @@
 import { ThemeProvider } from '@minimalistic-apps/components';
 import React from 'react';
 import ReactDOM from 'react-dom/client';
-import { App } from './app/App';
-import './index.css';
 import { ServicesProvider } from './ServicesProvider';
+import { App } from './app/App';
 import { createCompositionRoot } from './compositionRoot';
 
 const main = () => {

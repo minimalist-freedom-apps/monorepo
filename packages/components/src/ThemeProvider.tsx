@@ -1,53 +1,94 @@
 import { ConfigProvider } from 'antd';
 import type { ThemeConfig } from 'antd';
 import type { ReactNode } from 'react';
-import { BRAND_COLORS } from './colors';
+import { COLORS } from './colors';
 
-/**
- * Dark theme configuration for Ant Design based on Minimalistic Apps style guidelines.
- */
 const darkTheme: ThemeConfig = {
     token: {
-        colorPrimary: BRAND_COLORS.primary,
-        colorBgContainer: BRAND_COLORS.backgroundDark,
-        colorBgElevated: BRAND_COLORS.elevated,
-        colorBgLayout: BRAND_COLORS.backgroundBase,
-        colorText: BRAND_COLORS.textPrimary,
-        colorTextSecondary: BRAND_COLORS.textSecondary,
-        colorBorder: BRAND_COLORS.border,
+        colorPrimary: COLORS.DARK.primary,
+        colorBgContainer: COLORS.DARK.background,
+        colorBgElevated: COLORS.DARK.elevated,
+        colorBgLayout: COLORS.DARK.backgroundBase,
+        colorText: COLORS.DARK.textPrimary,
+        colorTextSecondary: COLORS.DARK.textSecondary,
+        colorBorder: COLORS.DARK.border,
         borderRadius: 4,
         fontFamily:
             '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif',
     },
     components: {
         Button: {
-            colorPrimary: BRAND_COLORS.primary,
+            colorPrimary: COLORS.DARK.primary,
             algorithm: true,
         },
         Input: {
-            colorBgContainer: BRAND_COLORS.backgroundDark,
-            colorBorder: BRAND_COLORS.border,
-            activeBorderColor: BRAND_COLORS.primary,
-            hoverBorderColor: BRAND_COLORS.primary,
+            colorBgContainer: COLORS.DARK.background,
+            colorBorder: COLORS.DARK.border,
+            activeBorderColor: COLORS.DARK.primary,
+            hoverBorderColor: COLORS.DARK.primary,
         },
         Modal: {
-            contentBg: BRAND_COLORS.backgroundDark,
-            headerBg: BRAND_COLORS.backgroundDark,
+            contentBg: COLORS.DARK.background,
+            headerBg: COLORS.DARK.background,
         },
         Layout: {
-            headerBg: BRAND_COLORS.primary,
-            bodyBg: BRAND_COLORS.backgroundBase,
+            headerBg: COLORS.DARK.primary,
+            bodyBg: COLORS.DARK.backgroundBase,
         },
         List: {
-            colorBgContainer: BRAND_COLORS.backgroundDark,
+            colorBgContainer: COLORS.DARK.background,
+        },
+    },
+};
+
+const lightTheme: ThemeConfig = {
+    token: {
+        colorPrimary: COLORS.LIGHT.primary,
+        colorBgContainer: COLORS.LIGHT.background,
+        colorBgElevated: COLORS.LIGHT.elevated,
+        colorBgLayout: COLORS.LIGHT.backgroundBase,
+        colorText: COLORS.LIGHT.textPrimary,
+        colorTextSecondary: COLORS.LIGHT.textSecondary,
+        colorBorder: COLORS.LIGHT.border,
+        borderRadius: 4,
+        fontFamily:
+            '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif',
+    },
+    components: {
+        Button: {
+            colorPrimary: COLORS.LIGHT.primary,
+            algorithm: true,
+        },
+        Input: {
+            colorBgContainer: COLORS.LIGHT.background,
+            colorBorder: COLORS.LIGHT.border,
+            activeBorderColor: COLORS.LIGHT.primary,
+            hoverBorderColor: COLORS.LIGHT.primary,
+        },
+        Modal: {
+            contentBg: COLORS.LIGHT.background,
+            headerBg: COLORS.LIGHT.background,
+        },
+        Layout: {
+            headerBg: COLORS.LIGHT.primary,
+            bodyBg: COLORS.LIGHT.backgroundBase,
+        },
+        List: {
+            colorBgContainer: COLORS.LIGHT.background,
         },
     },
 };
 
 interface ThemeProviderProps {
     readonly children: ReactNode;
+    readonly mode?: 'dark' | 'light';
 }
 
-export const ThemeProvider = ({ children }: ThemeProviderProps) => (
-    <ConfigProvider theme={darkTheme}>{children}</ConfigProvider>
+export const ThemeProvider = ({
+    children,
+    mode = 'dark',
+}: ThemeProviderProps) => (
+    <ConfigProvider theme={mode === 'dark' ? darkTheme : lightTheme}>
+        {children}
+    </ConfigProvider>
 );

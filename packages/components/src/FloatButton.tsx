@@ -1,6 +1,5 @@
 import { FloatButton as AntFloatButton } from 'antd';
 import type { ReactNode } from 'react';
-import { BRAND_COLORS } from './colors';
 
 interface FloatButtonProps {
     readonly onClick: () => void;
@@ -14,7 +13,6 @@ export const FloatButton = ({ onClick, icon, tooltip }: FloatButtonProps) => (
         type="primary"
         onClick={onClick}
         style={{
-            backgroundColor: BRAND_COLORS.primary,
             width: 56,
             height: 56,
         }}

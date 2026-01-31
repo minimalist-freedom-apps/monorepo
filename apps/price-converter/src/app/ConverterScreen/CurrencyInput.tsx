@@ -90,9 +90,10 @@ export const CurrencyInput = ({
             value={inputValue}
             onChange={handleChange}
             onFocus={handleFocus}
-            placeholder=""
+            placeholder={`Type in the ${code} amount`}
             monospace
             large
+            className="minimalistic-input-with-small-placeholder"
         />
     );
 };

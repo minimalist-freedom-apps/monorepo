@@ -1,6 +1,5 @@
 import { Layout as AntLayout } from 'antd';
 import type { ReactNode } from 'react';
-import { BRAND_COLORS } from './colors';
 
 const { Header: AntHeader, Content: AntContent } = AntLayout;
 
@@ -9,11 +8,7 @@ interface LayoutProps {
 }
 
 export const Layout = ({ children }: LayoutProps) => (
-    <AntLayout
-        style={{ minHeight: '100vh', background: BRAND_COLORS.backgroundBase }}
-    >
-        {children}
-    </AntLayout>
+    <AntLayout style={{ minHeight: '100vh' }}>{children}</AntLayout>
 );
 
 interface HeaderProps {
@@ -28,7 +23,6 @@ export const Header = ({ children, style }: HeaderProps) => (
             alignItems: 'center',
             justifyContent: 'space-between',
             padding: '0 16px',
-            background: BRAND_COLORS.primary,
             ...style,
         }}
     >

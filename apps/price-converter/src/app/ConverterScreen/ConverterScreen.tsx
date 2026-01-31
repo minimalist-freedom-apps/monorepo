@@ -4,7 +4,6 @@ import { Screen } from '@minimalistic-apps/components';
 import { FiatAmount } from '@minimalistic-apps/fiat';
 import { useServices } from '../../ServicesProvider';
 import {
-    selectRates,
     selectSatsAmount,
     selectSelectedFiatCurrencies,
     selectSelectedFiatCurrenciesAmounts,
@@ -12,11 +11,9 @@ import {
 } from '../../state/createStore';
 import { AddCurrencyButton } from '../AddCurrencyScreen/AddCurrencyButton';
 import { CurrencyRow } from './CurrencyFiatRow';
-import { CurrencyInput } from './CurrencyInput';
 
 export const ConverterScreen = () => {
     const services = useServices();
-    const rates = useStore(selectRates);
     const selectedCurrencies = useStore(selectSelectedFiatCurrencies);
     const satsAmount = useStore(selectSatsAmount);
     const currencyValues = useStore(selectSelectedFiatCurrenciesAmounts);

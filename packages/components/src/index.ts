@@ -1,5 +1,5 @@
-// Colors and theme
-export { BRAND_COLORS } from './colors';
+import 'antd/dist/reset.css';
+
 export { ThemeProvider } from './ThemeProvider';
 
 // Basic components
@@ -15,6 +15,4 @@ export { List } from './List';
 export { Screen } from './Screen';
 export { SearchInput } from './SearchInput';
 export { Text, Title } from './Typography';
-
-// Icons
 export { DeleteOutlined, PlusOutlined, ReloadOutlined } from './Icons';

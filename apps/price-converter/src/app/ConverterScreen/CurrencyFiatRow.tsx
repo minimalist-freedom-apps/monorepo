@@ -9,7 +9,6 @@ import { CurrencyInput } from './CurrencyInput';
 
 interface CurrencyInputRowProps {
     readonly code: CurrencyCode | 'BTC';
-    readonly name?: string;
     readonly value: number;
     readonly onChange: (value: number) => void;
     readonly onRemove?: () => void;

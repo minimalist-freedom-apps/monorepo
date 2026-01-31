@@ -1,0 +1,15 @@
+/* Chrome, Edge, Safari */
+.ant-input::placeholder {
+    color: #999;
+}
+
+/* Firefox */
+.ant-input::-moz-placeholder {
+    color: #999;
+    font-style: italic;
+}
+
+/* IE (if you still care) */
+.ant-input:-ms-input-placeholder {
+    color: #999;
+}
