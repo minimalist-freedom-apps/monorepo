@@ -3,9 +3,8 @@ import {
     formatFiatWithCommas,
     parseFormattedNumber,
 } from '@minimalistic-apps/utils';
+import type { StoreDep } from '../../compositionRoot';
 import type { CurrencyCode } from '../../rates/FetchRates';
-import type { State } from './State';
-import { STORAGE_KEYS } from './storageKeys';
 
 export interface AddCurrencyParams {
     readonly code: CurrencyCode;
@@ -17,28 +16,20 @@ export interface AddCurrencyDep {
     readonly addCurrency: AddCurrency;
 }
 
-export interface AddCurrencyDeps {
-    readonly setState: (partial: Partial<State>) => void;
-    readonly getState: () => State;
-    readonly saveToLocalStorage: <T>(key: string, value: T) => void;
-}
+type AddCurrencyDeps = StoreDep;
 
 export const createAddCurrency =
     (deps: AddCurrencyDeps): AddCurrency =>
     ({ code }) => {
         const { selectedCurrencies, btcValue, mode, rates, currencyValues } =
-            deps.getState();
+            deps.store.getState();
 
         if (selectedCurrencies.includes(code)) {
-            deps.setState({ showModal: false });
+            deps.store.setState({ showModal: false });
             return;
         }
 
         const newCurrencies = [...selectedCurrencies, code];
-        deps.saveToLocalStorage(
-            STORAGE_KEYS.SELECTED_CURRENCIES,
-            newCurrencies,
-        );
 
         let newCurrencyValues = { ...currencyValues };
 
@@ -55,7 +46,7 @@ export const createAddCurrency =
             };
         }
 
-        deps.setState({
+        deps.store.setState({
             selectedCurrencies: newCurrencies,
             currencyValues: newCurrencyValues,
             showModal: false,

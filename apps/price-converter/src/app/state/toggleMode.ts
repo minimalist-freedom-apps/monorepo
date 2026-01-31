@@ -5,8 +5,8 @@ import {
     satsToBtc,
 } from '@minimalistic-apps/bitcoin';
 import { parseFormattedNumber } from '@minimalistic-apps/utils';
-import type { Mode, State } from './State';
-import { STORAGE_KEYS } from './storageKeys';
+import type { StoreDep } from '../../compositionRoot';
+import type { Mode } from './State';
 
 export type ToggleMode = () => void;
 
@@ -14,18 +14,13 @@ export interface ToggleModeDep {
     readonly toggleMode: ToggleMode;
 }
 
-export interface ToggleModeDeps {
-    readonly setState: (partial: Partial<State>) => void;
-    readonly getState: () => State;
-    readonly saveToLocalStorage: <T>(key: string, value: T) => void;
-}
+type ToggleModeDeps = StoreDep;
 
 export const createToggleMode =
     (deps: ToggleModeDeps): ToggleMode =>
     () => {
-        const { mode, btcValue } = deps.getState();
+        const { mode, btcValue } = deps.store.getState();
         const newMode: Mode = mode === 'BTC' ? 'Sats' : 'BTC';
-        deps.saveToLocalStorage(STORAGE_KEYS.MODE, newMode);
 
         let newBtcValue = btcValue;
         if (btcValue) {
@@ -41,5 +36,5 @@ export const createToggleMode =
             }
         }
 
-        deps.setState({ mode: newMode, btcValue: newBtcValue });
+        deps.store.setState({ mode: newMode, btcValue: newBtcValue });
     };

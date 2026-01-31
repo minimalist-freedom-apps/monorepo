@@ -6,6 +6,8 @@ import { useServices } from '../../ServicesProvider';
 import { CurrencyCode } from '../../rates/FetchRates';
 import type { State } from './State';
 
+export type StoreDep = Store<State>;
+
 export const createStore = (): Store<State> => {
     const initialState: State = {
         rates: {} as never,

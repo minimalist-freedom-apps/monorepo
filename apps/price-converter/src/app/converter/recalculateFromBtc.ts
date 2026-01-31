@@ -2,8 +2,8 @@ import {
     formatFiatWithCommas,
     parseFormattedNumber,
 } from '@minimalistic-apps/utils';
+import type { StoreDep } from '../../compositionRoot';
 import type { CurrencyCode, RatesMap } from '../../rates/FetchRates';
-import type { State } from '../state/State';
 
 export interface RecalculateFromBtcParams {
     readonly value: string;
@@ -16,20 +16,17 @@ export interface RecalculateFromBtcDep {
     readonly recalculateFromBtc: RecalculateFromBtc;
 }
 
-export interface RecalculateFromBtcDeps {
-    readonly setState: (partial: Partial<State>) => void;
-    readonly getState: () => State;
-}
+type RecalculateFromBtcDeps = StoreDep;
 
 export const createRecalculateFromBtc =
     (deps: RecalculateFromBtcDeps): RecalculateFromBtc =>
     ({ value, rates: currentRates }) => {
-        const { rates, selectedCurrencies } = deps.getState();
+        const { rates, selectedCurrencies } = deps.store.getState();
         const usedRates = currentRates ?? rates;
         const btcAmount = parseFormattedNumber(value);
 
         if (Number.isNaN(btcAmount) || btcAmount === 0) {
-            deps.setState({
+            deps.store.setState({
                 currencyValues: {} as Record<CurrencyCode, string>,
             });
             return;
@@ -47,5 +44,5 @@ export const createRecalculateFromBtc =
             },
             {} as Record<CurrencyCode, string>,
         );
-        deps.setState({ currencyValues: newValues });
+        deps.store.setState({ currencyValues: newValues });
     };

@@ -7,8 +7,9 @@ import {
     formatFiatWithCommas,
     parseFormattedNumber,
 } from '@minimalistic-apps/utils';
+import type { StoreDep } from '../../compositionRoot';
 import type { CurrencyCode } from '../../rates/FetchRates';
-import type { CurrencyValues, State } from '../state/State';
+import type { CurrencyValues } from '../state/State';
 
 export interface RecalculateFromCurrencyParams {
     readonly code: CurrencyCode;
@@ -23,19 +24,16 @@ export interface RecalculateFromCurrencyDep {
     readonly recalculateFromCurrency: RecalculateFromCurrency;
 }
 
-export interface RecalculateFromCurrencyDeps {
-    readonly setState: (partial: Partial<State>) => void;
-    readonly getState: () => State;
-}
+type RecalculateFromCurrencyDeps = StoreDep;
 
 export const createRecalculateFromCurrency =
     (deps: RecalculateFromCurrencyDeps): RecalculateFromCurrency =>
     ({ code, value }) => {
-        const { rates, selectedCurrencies, mode } = deps.getState();
+        const { rates, selectedCurrencies, mode } = deps.store.getState();
         const fiatAmount = parseFormattedNumber(value);
 
         if (Number.isNaN(fiatAmount) || fiatAmount === 0 || !rates[code]) {
-            deps.setState({ btcValue: '', currencyValues: {} });
+            deps.store.setState({ btcValue: '', currencyValues: {} });
 
             return;
         }
@@ -59,5 +57,8 @@ export const createRecalculateFromCurrency =
             {},
         );
 
-        deps.setState({ btcValue: formattedBtc, currencyValues: newValues });
+        deps.store.setState({
+            btcValue: formattedBtc,
+            currencyValues: newValues,
+        });
     };

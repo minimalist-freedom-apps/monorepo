@@ -1,5 +1,6 @@
+import type { StoreDep } from '../../compositionRoot';
 import type { CurrencyCode, RatesMap } from '../../rates/FetchRates';
-import type { Mode, State } from './State';
+import type { Mode } from './State';
 import { STORAGE_KEYS } from './storageKeys';
 
 export type LoadInitialState = () => void;
@@ -8,8 +9,7 @@ export interface LoadInitialStateDep {
     readonly loadInitialState: LoadInitialState;
 }
 
-export interface LoadInitialStateDeps {
-    readonly setState: (partial: Partial<State>) => void;
+export interface LoadInitialStateDeps extends StoreDep {
     readonly loadFromLocalStorage: <T>(
         key: string,
         defaultValue?: T | null,
@@ -33,7 +33,7 @@ export const createLoadInitialState =
             'BTC',
         );
 
-        deps.setState({
+        deps.store.setState({
             ...(savedRates && { rates: savedRates }),
             ...(savedTimestamp && { lastUpdated: savedTimestamp }),
             ...(savedCurrencies &&
