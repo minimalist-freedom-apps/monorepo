@@ -15,6 +15,7 @@
         "@minimalistic-apps/bitcoin": "workspace:*",
         "@minimalistic-apps/components": "workspace:*",
         "@minimalistic-apps/datetime": "workspace:*",
+        "@minimalistic-apps/local-storage": "workspace:*",
         "@minimalistic-apps/mini-store": "workspace:*",
         "@minimalistic-apps/type-utils": "workspace:*",
         "@minimalistic-apps/utils": "workspace:*",

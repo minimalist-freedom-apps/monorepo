@@ -1,5 +1,13 @@
 import { createCurrentDateTime } from '@minimalistic-apps/datetime';
-import { loadFromLocalStorage } from '@minimalistic-apps/utils';
+import { createLocalStorage } from '@minimalistic-apps/local-storage';
+import {
+    type LoadInitialStateDep,
+    createLoadInitialState,
+} from './app/localStorage/loadInitialState';
+import {
+    type PersistStoreDep,
+    createPersistStore,
+} from './app/localStorage/persistStore';
 import {
     type FetchAndStoreRatesDep,
     createFetchAndStoreRates,
@@ -18,11 +26,6 @@ import { createFetchBlockchainInfoRates } from './rates/fetchBlockchainInfoRates
 import { createFetchCoingeckoRates } from './rates/fetchCoingeckoRates';
 import { type AddCurrencyDep, createAddCurrency } from './state/addCurrency';
 import { type StoreDep, createStore } from './state/createStore';
-import {
-    type LoadInitialStateDep,
-    createLoadInitialState,
-} from './state/loadInitialState';
-import { type PersistStoreDep, createPersistStore } from './state/persistStore';
 import {
     type RemoveCurrencyDep,
     createRemoveCurrency,
@@ -53,6 +56,7 @@ export const createCompositionRoot = (): Services => {
     const fetchBlockchainInfoRates = createFetchBlockchainInfoRates(fetchDeps);
 
     const currentDateTime = createCurrentDateTime();
+    const localStorage = createLocalStorage();
 
     const fetchAverageRates = createFetchAverageRates({
         fetchRates: [
@@ -72,7 +76,7 @@ export const createCompositionRoot = (): Services => {
 
     const loadInitialState = createLoadInitialState({
         store,
-        loadFromLocalStorage,
+        localStorage,
     });
 
     const fetchAndStoreRates = createFetchAndStoreRates({
@@ -83,7 +87,7 @@ export const createCompositionRoot = (): Services => {
         currentDateTime,
     });
 
-    const persistStore = createPersistStore({ store });
+    const persistStore = createPersistStore({ store, localStorage });
 
     return {
         store,

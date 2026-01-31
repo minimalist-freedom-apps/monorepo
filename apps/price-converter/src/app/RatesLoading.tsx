@@ -1,5 +1,4 @@
 import { Alert, Text } from '@minimalistic-apps/components';
-import { getTimeAgo } from '@minimalistic-apps/utils';
 import { useEffect, useRef, useState } from 'react';
 import { useServices } from '../ServicesProvider';
 import {
@@ -8,6 +7,21 @@ import {
     selectLoading,
     useStore,
 } from '../state/createStore';
+
+const getTimeAgo = (timestamp: number): string => {
+    const now = Date.now();
+    const diff = now - timestamp;
+
+    const seconds = Math.floor(diff / 1000);
+    const minutes = Math.floor(seconds / 60);
+    const hours = Math.floor(minutes / 60);
+    const days = Math.floor(hours / 24);
+
+    if (days > 0) return `${days}d ago`;
+    if (hours > 0) return `${hours}h ago`;
+    if (minutes > 0) return `${minutes}m ago`;
+    return `${seconds}s ago`;
+};
 
 export const RatesLoading = () => {
     const { fetchAndStoreRates } = useServices();

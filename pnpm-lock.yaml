@@ -35,6 +35,9 @@ importers:
       '@minimalistic-apps/datetime':
         specifier: workspace:*
         version: link:../../packages/datetime
+      '@minimalistic-apps/local-storage':
+        specifier: workspace:*
+        version: link:../../packages/local-storage
       '@minimalistic-apps/mini-store':
         specifier: workspace:*
         version: link:../../packages/mini-store
@@ -102,6 +105,12 @@ importers:
         version: 5.9.3
 
   packages/datetime: {}
+
+  packages/local-storage:
+    dependencies:
+      '@evolu/common':
+        specifier: ^7.4.1
+        version: 7.4.1
 
   packages/mini-store:
     devDependencies:
