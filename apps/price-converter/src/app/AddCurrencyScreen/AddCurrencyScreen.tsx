@@ -11,14 +11,14 @@ import { useState } from 'react';
 import { useServices } from '../../ServicesProvider';
 import {
     selectRates,
-    selectSelectedCurrencies,
+    selectSelectedFiatCurrencies,
     useStore,
 } from '../../state/createStore';
 
 export const AddCurrencyScreen = () => {
     const services = useServices();
     const rates = useStore(selectRates);
-    const selectedCurrencies = useStore(selectSelectedCurrencies);
+    const selectedCurrencies = useStore(selectSelectedFiatCurrencies);
     const [searchTerm, setSearchTerm] = useState('');
 
     const availableCurrencies = typedObjectEntries(rates)

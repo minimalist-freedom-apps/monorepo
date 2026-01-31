@@ -36,7 +36,7 @@ export const createFetchAndStoreRates =
         deps.setRates({ rates: fetchedRates, timestamp: now });
 
         // Recalculate values with new rates
-        const btcValue = deps.store.getState().btcValue;
+        const btcValue = deps.store.getState().satsAmount;
         if (btcValue) {
             deps.recalculateFromBtc({
                 value: btcValue,

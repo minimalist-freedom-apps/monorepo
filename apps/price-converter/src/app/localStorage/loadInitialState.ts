@@ -1,6 +1,6 @@
 import type { CurrencyCode } from '@evolu/common';
 import type { LocalStorageDep } from '@minimalistic-apps/local-storage';
-import type { RatesMap } from '../../rates/FetchRates';
+import type { CurrencyMap } from '../../rates/FetchRates';
 import type { Mode } from '../../state/State';
 import type { StoreDep } from '../../state/createStore';
 import { STORAGE_KEYS } from './storageKeys';
@@ -16,7 +16,7 @@ type LoadInitialStateDeps = StoreDep & LocalStorageDep;
 export const createLoadInitialState =
     (deps: LoadInitialStateDeps): LoadInitialState =>
     () => {
-        const savedRatesResult = deps.localStorage.load<RatesMap>(
+        const savedRatesResult = deps.localStorage.load<CurrencyMap>(
             STORAGE_KEYS.RATES,
         );
         const savedTimestampResult = deps.localStorage.load<number>(
@@ -41,7 +41,7 @@ export const createLoadInitialState =
             ...(savedTimestamp && { lastUpdated: savedTimestamp }),
             ...(savedCurrencies &&
                 savedCurrencies.length > 0 && {
-                    selectedCurrencies: savedCurrencies,
+                    selectedFiatCurrencies: savedCurrencies,
                 }),
             ...(savedMode && { mode: savedMode }),
         });

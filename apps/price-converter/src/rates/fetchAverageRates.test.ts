@@ -1,9 +1,9 @@
 import { CurrencyCode, err, getOrThrow, ok } from '@evolu/common';
 import { describe, expect, test } from 'vitest';
 import {
+    type CurrencyMap,
     type FetchRates,
     FetchRatesError,
-    type RatesMap,
 } from './FetchRates.js';
 import { createFetchAverageRates } from './fetchAverageRates.js';
 
@@ -12,7 +12,7 @@ const EUR = getOrThrow(CurrencyCode.from('EUR'));
 const GBP = getOrThrow(CurrencyCode.from('GBP'));
 
 const createMockFetchRates =
-    (rates: RatesMap): FetchRates =>
+    (rates: CurrencyMap): FetchRates =>
     async () =>
         ok(rates);
 
@@ -24,15 +24,15 @@ describe(createFetchAverageRates, () => {
         const source1 = {
             [USD]: { code: USD, name: 'US Dollar', rate: 100 },
             [EUR]: { code: EUR, name: 'Euro', rate: 90 },
-        } as RatesMap;
+        } as CurrencyMap;
         const source2 = {
             [USD]: { code: USD, name: 'US Dollar', rate: 110 },
             [EUR]: { code: EUR, name: 'Euro', rate: 100 },
-        } as RatesMap;
+        } as CurrencyMap;
         const source3 = {
             [USD]: { code: USD, name: 'US Dollar', rate: 105 },
             [EUR]: { code: EUR, name: 'Euro', rate: 95 },
-        } as RatesMap;
+        } as CurrencyMap;
 
         const fetchAverageRates = createFetchAverageRates({
             fetchRates: [
@@ -54,11 +54,11 @@ describe(createFetchAverageRates, () => {
     test('calculates average when sources have different currencies', async () => {
         const source1 = {
             [USD]: { code: USD, name: 'US Dollar', rate: 100 },
-        } as RatesMap;
+        } as CurrencyMap;
         const source2 = {
             [USD]: { code: USD, name: 'US Dollar', rate: 200 },
             [GBP]: { code: GBP, name: 'British Pound', rate: 80 },
-        } as RatesMap;
+        } as CurrencyMap;
 
         const fetchAverageRates = createFetchAverageRates({
             fetchRates: [
@@ -79,7 +79,7 @@ describe(createFetchAverageRates, () => {
     test('returns single source rates when only one source succeeds', async () => {
         const source1 = {
             [USD]: { code: USD, name: 'US Dollar', rate: 42000 },
-        } as RatesMap;
+        } as CurrencyMap;
 
         const fetchAverageRates = createFetchAverageRates({
             fetchRates: [
@@ -113,14 +113,14 @@ describe(createFetchAverageRates, () => {
     test('preserves currency name from first available source', async () => {
         const source1 = {
             [USD]: { code: USD, name: 'US Dollar', rate: 100 },
-        } as RatesMap;
+        } as CurrencyMap;
         const source2 = {
             [USD]: {
                 code: USD,
                 name: 'United States Dollar',
                 rate: 200,
             },
-        } as RatesMap;
+        } as CurrencyMap;
 
         const fetchAverageRates = createFetchAverageRates({
             fetchRates: [

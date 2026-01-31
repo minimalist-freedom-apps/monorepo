@@ -1,6 +1,6 @@
 import { CurrencyCode, tryAsync } from '@evolu/common';
 import {
-    type CurrencyRate,
+    type CurrencyEntity,
     type FetchRates,
     FetchRatesError,
 } from './FetchRates.js';
@@ -28,7 +28,7 @@ export const createFetchBitpayRates =
                 if (!response.ok) throw new Error('Bitpay API failed');
                 const data: BitpayResponse = await response.json();
 
-                const rates = data.data.reduce<Record<string, CurrencyRate>>(
+                const rates = data.data.reduce<Record<string, CurrencyEntity>>(
                     (acc, item) => {
                         if (item.code !== 'BTC') {
                             const codeResult = CurrencyCode.from(item.code);

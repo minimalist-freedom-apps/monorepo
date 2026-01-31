@@ -1,10 +1,10 @@
 import { CurrencyCode, err, ok } from '@evolu/common';
 import { typedObjectKeys } from '@minimalistic-apps/type-utils';
 import {
-    type CurrencyRate,
+    type CurrencyEntity,
+    type CurrencyMap,
     type FetchRates,
     FetchRatesError,
-    type RatesMap,
 } from './FetchRates.js';
 
 export interface FetchAverageRatesDep {
@@ -24,7 +24,7 @@ export const createFetchAverageRates =
 
         const sources = results
             .filter(result => result.ok)
-            .map(result => (result.ok ? result.value : ({} as RatesMap)));
+            .map(result => (result.ok ? result.value : ({} as CurrencyMap)));
 
         if (sources.length === 0) {
             return err(FetchRatesError());
@@ -33,7 +33,7 @@ export const createFetchAverageRates =
         const allCodes = sources.flatMap(source => typedObjectKeys(source));
         const uniqueCodes = [...new Set(allCodes)];
 
-        const allRates = uniqueCodes.reduce<Record<string, CurrencyRate>>(
+        const allRates = uniqueCodes.reduce<Record<string, CurrencyEntity>>(
             (acc, code) => {
                 const codeResult = CurrencyCode.from(code);
                 if (!codeResult.ok) return acc;

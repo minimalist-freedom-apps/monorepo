@@ -16,14 +16,16 @@ type RemoveCurrencyDeps = StoreDep;
 export const createRemoveCurrency =
     (deps: RemoveCurrencyDeps): RemoveCurrency =>
     ({ code }) => {
-        const { selectedCurrencies, currencyValues } = deps.store.getState();
+        const { selectedFiatCurrencies, selectedFiatCurrenciesAmounts } =
+            deps.store.getState();
 
-        const newCurrencies = selectedCurrencies.filter(c => c !== code);
-
-        const { [code]: _, ...newValues } = currencyValues;
+        // Drop [code] from selectedFiatCurrenciesAmounts
+        const { [code]: _, ...newValues } = selectedFiatCurrenciesAmounts;
 
         deps.store.setState({
-            selectedCurrencies: newCurrencies,
-            currencyValues: newValues,
+            selectedFiatCurrencies: selectedFiatCurrencies.filter(
+                it => it !== code,
+            ),
+            selectedFiatCurrenciesAmounts: newValues,
         });
     };

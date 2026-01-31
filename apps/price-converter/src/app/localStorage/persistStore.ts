@@ -23,7 +23,7 @@ export const createPersistStore = (deps: PersistStoreDeps): PersistStore => {
             deps.localStorage.save(STORAGE_KEYS.TIMESTAMP, state.lastUpdated);
             deps.localStorage.save(
                 STORAGE_KEYS.SELECTED_CURRENCIES,
-                state.selectedCurrencies,
+                state.selectedFiatCurrencies,
             );
             deps.localStorage.save(STORAGE_KEYS.MODE, state.mode);
         });

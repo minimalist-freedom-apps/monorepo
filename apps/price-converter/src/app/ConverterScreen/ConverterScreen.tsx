@@ -5,11 +5,11 @@ import { parseFormattedNumber } from '@minimalistic-apps/utils';
 import { useServices } from '../../ServicesProvider';
 import {
     selectBtcValue,
-    selectCurrencyValues,
     selectFocusedInput,
     selectMode,
     selectRates,
-    selectSelectedCurrencies,
+    selectSelectedFiatCurrencies,
+    selectSelectedFiatCurrenciesAmounts,
     useStore,
 } from '../../state/createStore';
 import { AddCurrencyButton } from '../AddCurrencyScreen/AddCurrencyButton';
@@ -19,14 +19,14 @@ import { CurrencyInputRow } from './CurrencyInputRow';
 export const ConverterScreen = () => {
     const services = useServices();
     const rates = useStore(selectRates);
-    const selectedCurrencies = useStore(selectSelectedCurrencies);
+    const selectedCurrencies = useStore(selectSelectedFiatCurrencies);
     const btcValue = useStore(selectBtcValue);
-    const currencyValues = useStore(selectCurrencyValues);
+    const currencyValues = useStore(selectSelectedFiatCurrenciesAmounts);
     const mode = useStore(selectMode);
     const focusedInput = useStore(selectFocusedInput);
 
     const handleBtcChange = (value: string) => {
-        services.store.setState({ btcValue: value });
+        services.store.setState({ satsAmount: value });
         services.store.setState({ focusedInput: 'BTC' });
 
         let btcAmount: number;
@@ -39,7 +39,10 @@ export const ConverterScreen = () => {
 
         if (Number.isNaN(btcAmount) || btcAmount === 0) {
             services.store.setState({
-                currencyValues: {} as Record<CurrencyCode, string>,
+                selectedFiatCurrenciesInputAmounts: {} as Record<
+                    CurrencyCode,
+                    string
+                >,
             });
 
             return;
@@ -51,7 +54,10 @@ export const ConverterScreen = () => {
     const handleCurrencyChange = (code: CurrencyCode, value: string) => {
         services.store.setState({ focusedInput: code });
         services.store.setState({
-            currencyValues: { ...currencyValues, [code]: value },
+            selectedFiatCurrenciesInputAmounts: {
+                ...currencyValues,
+                [code]: value,
+            },
         });
         services.recalculateFromCurrency({ code, value });
     };

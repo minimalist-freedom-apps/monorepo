@@ -1,4 +1,5 @@
 import { CurrencyCode, getOrThrow } from '@evolu/common';
+import type { AmountSats } from '@minimalistic-apps/bitcoin';
 import type { Selector, Store } from '@minimalistic-apps/mini-store';
 import { createStore as createMiniStore } from '@minimalistic-apps/mini-store';
 import { useSyncExternalStore } from 'react';
@@ -10,14 +11,13 @@ export type StoreDep = { store: Store<State> };
 export const createStore = (): Store<State> => {
     const initialState: State = {
         rates: {} as never,
-        selectedCurrencies: [getOrThrow(CurrencyCode.from('USD'))],
-        btcValue: '',
-        currencyValues: {},
+        selectedFiatCurrencies: [getOrThrow(CurrencyCode.from('USD'))],
+        satsAmount: 0 as AmountSats,
+        selectedFiatCurrenciesAmounts: {},
         loading: false,
         error: '',
         lastUpdated: null,
         mode: 'BTC',
-        showModal: false,
         focusedInput: 'BTC',
         currentScreen: 'Converter',
     };
@@ -36,14 +36,14 @@ export const useStore = <T>(selector: Selector<State, T>): T => {
 };
 
 export const selectRates = (state: State) => state.rates;
-export const selectSelectedCurrencies = (state: State) =>
-    state.selectedCurrencies;
-export const selectBtcValue = (state: State) => state.btcValue;
-export const selectCurrencyValues = (state: State) => state.currencyValues;
+export const selectSelectedFiatCurrencies = (state: State) =>
+    state.selectedFiatCurrencies;
+export const selectBtcValue = (state: State) => state.satsAmount;
+export const selectSelectedFiatCurrenciesAmounts = (state: State) =>
+    state.selectedFiatCurrenciesAmounts;
 export const selectLoading = (state: State) => state.loading;
 export const selectError = (state: State) => state.error;
 export const selectLastUpdated = (state: State) => state.lastUpdated;
 export const selectMode = (state: State) => state.mode;
-export const selectShowModal = (state: State) => state.showModal;
 export const selectFocusedInput = (state: State) => state.focusedInput;
 export const selectCurrentScreen = (state: State) => state.currentScreen;

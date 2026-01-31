@@ -1,7 +1,6 @@
 import type { CurrencyCode } from '@evolu/common';
 import { satsToBtc } from '@minimalistic-apps/bitcoin';
-import { formatFiatWithCommas } from '@minimalistic-apps/fiat';
-import { parseFormattedNumber } from '@minimalistic-apps/utils';
+import { bitcoinToFiat } from '../converter/bitcoinToFiat';
 import type { StoreDep } from './createStore';
 
 export interface AddCurrencyParams {
@@ -19,35 +18,24 @@ type AddCurrencyDeps = StoreDep;
 export const createAddCurrency =
     (deps: AddCurrencyDeps): AddCurrency =>
     ({ code }) => {
-        const { selectedCurrencies, btcValue, mode, rates, currencyValues } =
-            deps.store.getState();
+        const {
+            selectedFiatCurrencies,
+            selectedFiatCurrenciesAmounts,
+            satsAmount,
+            rates,
+        } = deps.store.getState();
 
-        if (selectedCurrencies.includes(code)) {
-            deps.store.setState({ showModal: false });
-
+        if (rates[code] === undefined) {
             return;
         }
 
-        const newCurrencies = [...selectedCurrencies, code];
-
-        let newCurrencyValues = { ...currencyValues };
-
-        if (btcValue && rates[code]) {
-            const btcAmount =
-                mode === 'Sats'
-                    ? satsToBtc(parseFormattedNumber(btcValue))
-                    : parseFormattedNumber(btcValue);
-
-            const fiatAmount = btcAmount / rates[code].rate;
-            newCurrencyValues = {
-                ...newCurrencyValues,
-                [code]: formatFiatWithCommas(fiatAmount),
-            };
-        }
+        const btcAmount = satsToBtc(satsAmount);
 
         deps.store.setState({
-            selectedCurrencies: newCurrencies,
-            currencyValues: newCurrencyValues,
-            showModal: false,
+            selectedFiatCurrencies: [...selectedFiatCurrencies, code],
+            selectedFiatCurrenciesAmounts: {
+                ...selectedFiatCurrenciesAmounts,
+                [code]: bitcoinToFiat(btcAmount, rates[code].rate),
+            },
         });
     };

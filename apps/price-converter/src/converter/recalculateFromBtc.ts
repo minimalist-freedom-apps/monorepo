@@ -2,13 +2,13 @@ import { type CurrencyCode, getOrThrow } from '@evolu/common';
 import { AmountBtc } from '@minimalistic-apps/bitcoin';
 import { formatFiatWithCommas } from '@minimalistic-apps/fiat';
 import { parseFormattedNumber } from '@minimalistic-apps/utils';
-import type { RatesMap } from '../rates/FetchRates';
+import type { CurrencyMap } from '../rates/FetchRates';
 import type { StoreDep } from '../state/createStore';
 import { bitcoinToFiat } from './bitcoinToFiat';
 
 export interface RecalculateFromBtcParams {
     readonly value: string;
-    readonly rates?: RatesMap;
+    readonly rates?: CurrencyMap;
 }
 
 export type RecalculateFromBtc = (params: RecalculateFromBtcParams) => void;
@@ -22,7 +22,8 @@ type RecalculateFromBtcDeps = StoreDep;
 export const createRecalculateFromBtc =
     (deps: RecalculateFromBtcDeps): RecalculateFromBtc =>
     ({ value, rates: currentRates }) => {
-        const { rates, selectedCurrencies } = deps.store.getState();
+        const { rates, selectedFiatCurrencies: selectedCurrencies } =
+            deps.store.getState();
         const usedRates = currentRates ?? rates;
         const btcAmount = getOrThrow(
             AmountBtc.from(parseFormattedNumber(value)),
@@ -30,7 +31,10 @@ export const createRecalculateFromBtc =
 
         if (Number.isNaN(btcAmount) || btcAmount === 0) {
             deps.store.setState({
-                currencyValues: {} as Record<CurrencyCode, string>,
+                selectedFiatCurrenciesInputAmounts: {} as Record<
+                    CurrencyCode,
+                    string
+                >,
             });
 
             return;
@@ -52,5 +56,5 @@ export const createRecalculateFromBtc =
             },
             {} as Record<CurrencyCode, string>,
         );
-        deps.store.setState({ currencyValues: newValues });
+        deps.store.setState({ selectedFiatCurrenciesInputAmounts: newValues });
     };

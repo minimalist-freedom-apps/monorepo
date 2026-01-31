@@ -19,7 +19,7 @@ type ToggleModeDeps = StoreDep;
 export const createToggleMode =
     (deps: ToggleModeDeps): ToggleMode =>
     () => {
-        const { mode, btcValue } = deps.store.getState();
+        const { mode, satsAmount: btcValue } = deps.store.getState();
         const newMode: Mode = mode === 'BTC' ? 'Sats' : 'BTC';
 
         let newBtcValue = btcValue;
@@ -36,5 +36,5 @@ export const createToggleMode =
             }
         }
 
-        deps.store.setState({ mode: newMode, btcValue: newBtcValue });
+        deps.store.setState({ mode: newMode, satsAmount: newBtcValue });
     };
