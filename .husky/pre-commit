@@ -1,0 +1,3 @@
+pnpm format
+pnpm check:fix
+git add -u
