@@ -1,20 +1,11 @@
-import { type CurrencyCode, getOrThrow } from '@evolu/common';
-import {
-    AmountBtc,
-    AmountSats,
-    btcToSats,
-    formatBtcWithCommas,
-    formatSats,
-    satsToBtc,
-} from '@minimalistic-apps/bitcoin';
+import type { CurrencyCode } from '@evolu/common';
+import type { AmountSats } from '@minimalistic-apps/bitcoin';
 import { Screen } from '@minimalistic-apps/components';
-import { FiatAmount, formatFiatWithCommas } from '@minimalistic-apps/fiat';
-import { parseFormattedNumber } from '@minimalistic-apps/utils';
+import { FiatAmount } from '@minimalistic-apps/fiat';
 import { useServices } from '../../ServicesProvider';
 import {
-    selectMode,
     selectRates,
-    selectSatsValue,
+    selectSatsAmount,
     selectSelectedFiatCurrencies,
     selectSelectedFiatCurrenciesAmounts,
     useStore,
@@ -27,30 +18,16 @@ export const ConverterScreen = () => {
     const services = useServices();
     const rates = useStore(selectRates);
     const selectedCurrencies = useStore(selectSelectedFiatCurrencies);
-    const satsValue = useStore(selectSatsValue);
+    const satsAmount = useStore(selectSatsAmount);
     const currencyValues = useStore(selectSelectedFiatCurrenciesAmounts);
-    const mode = useStore(selectMode);
 
-    const handleBtcChange = (value: string) => {
-        const numberValue = parseFormattedNumber(value);
-
-        if (Number.isNaN(numberValue)) {
-            return;
-        }
-
-        const satsValue =
-            mode === 'Sats'
-                ? getOrThrow(AmountSats.from(numberValue))
-                : btcToSats(getOrThrow(AmountBtc.from(numberValue)));
-
-        services.store.setState({ satsAmount: satsValue });
-
+    const handleBtcChange = (value: AmountSats) => {
+        services.store.setState({ satsAmount: value });
         services.recalculateFromBtc();
     };
 
-    const handleCurrencyChange = (code: CurrencyCode, value: string) => {
-        const fiatAmountNumber = parseFormattedNumber(value);
-        const fiatAmount = FiatAmount(code).from(fiatAmountNumber);
+    const handleCurrencyChange = (code: CurrencyCode, value: number) => {
+        const fiatAmount = FiatAmount(code).from(value);
 
         services.store.setState({
             selectedFiatCurrenciesAmounts: {
@@ -61,16 +38,12 @@ export const ConverterScreen = () => {
         services.recalculateFromCurrency({ code, value: fiatAmount });
     };
 
-    const bitcoinFormatted =
-        mode === 'BTC'
-            ? formatBtcWithCommas(satsToBtc(satsValue))
-            : formatSats(satsValue);
-
     return (
         <Screen>
             <CurrencyInput
-                value={bitcoinFormatted}
-                onChange={handleBtcChange}
+                value={satsAmount}
+                onChange={value => handleBtcChange(value as AmountSats)}
+                code="BTC"
             />
 
             <div>
@@ -79,7 +52,7 @@ export const ConverterScreen = () => {
                         key={code}
                         code={code}
                         name={rates[code]?.name}
-                        value={formatFiatWithCommas(currencyValues[code]) || ''}
+                        value={currencyValues[code] ?? 0}
                         onChange={value => handleCurrencyChange(code, value)}
                         onRemove={() => services.removeCurrency({ code })}
                     />

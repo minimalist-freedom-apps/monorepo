@@ -1,3 +1,4 @@
+import type { CurrencyCode } from '@evolu/common';
 import {
     Button,
     DeleteOutlined,
@@ -7,10 +8,10 @@ import {
 import { CurrencyInput } from './CurrencyInput';
 
 interface CurrencyInputRowProps {
-    readonly code: string;
+    readonly code: CurrencyCode;
     readonly name?: string;
-    readonly value: string;
-    readonly onChange: (value: string) => void;
+    readonly value: number;
+    readonly onChange: (value: number) => void;
     readonly onRemove?: () => void;
 }
 
@@ -22,7 +23,7 @@ export const CurrencyFiatRow = ({
 }: CurrencyInputRowProps) => {
     return (
         <Row gap={12}>
-            <CurrencyInput value={value} onChange={onChange} />
+            <CurrencyInput value={value} onChange={onChange} code={code} />
             <Text>{code}</Text>
             {onRemove && (
                 <Button

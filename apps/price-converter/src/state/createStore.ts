@@ -37,7 +37,7 @@ export const useStore = <T>(selector: Selector<State, T>): T => {
 export const selectRates = (state: State) => state.rates;
 export const selectSelectedFiatCurrencies = (state: State) =>
     state.selectedFiatCurrencies;
-export const selectSatsValue = (state: State) => state.satsAmount;
+export const selectSatsAmount = (state: State) => state.satsAmount;
 export const selectSelectedFiatCurrenciesAmounts = (state: State) =>
     state.selectedFiatCurrenciesAmounts;
 export const selectLoading = (state: State) => state.loading;
