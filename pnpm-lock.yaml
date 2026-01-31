@@ -32,6 +32,9 @@ importers:
       '@minimalistic-apps/components':
         specifier: workspace:*
         version: link:../../packages/components
+      '@minimalistic-apps/datetime':
+        specifier: workspace:*
+        version: link:../../packages/datetime
       '@minimalistic-apps/mini-store':
         specifier: workspace:*
         version: link:../../packages/mini-store
@@ -97,6 +100,8 @@ importers:
       typescript:
         specifier: ^5.3.0
         version: 5.9.3
+
+  packages/datetime: {}
 
   packages/mini-store:
     devDependencies:
