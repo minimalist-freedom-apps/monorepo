@@ -13,7 +13,11 @@ import { parseFormattedNumber } from '@minimalistic-apps/utils';
 import { useEffect, useState } from 'react';
 import { useServices } from '../../ServicesProvider';
 import type { Mode } from '../../state/State';
-import { selectMode, useStore } from '../../state/createStore';
+import {
+    selectFocusedCurrency,
+    selectMode,
+    useStore,
+} from '../../state/createStore';
 
 interface CurrencyInputProps {
     readonly value: number;
@@ -41,6 +45,7 @@ export const CurrencyInput = ({
     onChange,
 }: CurrencyInputProps) => {
     const mode = useStore(selectMode);
+    const focusedCurrency = useStore(selectFocusedCurrency);
     const { store } = useServices();
 
     const [inputValue, setInputValue] = useState(() =>
@@ -48,8 +53,11 @@ export const CurrencyInput = ({
     );
 
     useEffect(() => {
+        // Prevent overwriting input while user is typing
+        if (focusedCurrency === code) return;
+
         setInputValue(formatInputValue(value, code, mode));
-    }, [value, code, mode]);
+    }, [value, code, mode, focusedCurrency]);
 
     const handleChange = (newValue: string) => {
         setInputValue(newValue);
