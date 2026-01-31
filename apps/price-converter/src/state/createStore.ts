@@ -18,7 +18,6 @@ export const createStore = (): Store<State> => {
         error: '',
         lastUpdated: null,
         mode: 'BTC',
-        focusedInput: 'BTC',
         currentScreen: 'Converter',
     };
 
@@ -45,5 +44,4 @@ export const selectLoading = (state: State) => state.loading;
 export const selectError = (state: State) => state.error;
 export const selectLastUpdated = (state: State) => state.lastUpdated;
 export const selectMode = (state: State) => state.mode;
-export const selectFocusedInput = (state: State) => state.focusedInput;
 export const selectCurrentScreen = (state: State) => state.currentScreen;

@@ -20,6 +20,5 @@ export interface State {
     readonly error: string;
     readonly lastUpdated: number | null;
     readonly mode: Mode;
-    readonly focusedInput: CurrencyCode | 'BTC';
     readonly currentScreen: Screen;
 }

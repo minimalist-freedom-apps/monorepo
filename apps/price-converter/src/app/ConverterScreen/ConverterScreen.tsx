@@ -12,7 +12,6 @@ import { FiatAmount, formatFiatWithCommas } from '@minimalistic-apps/fiat';
 import { parseFormattedNumber } from '@minimalistic-apps/utils';
 import { useServices } from '../../ServicesProvider';
 import {
-    selectFocusedInput,
     selectMode,
     selectRates,
     selectSatsValue,
@@ -21,8 +20,8 @@ import {
     useStore,
 } from '../../state/createStore';
 import { AddCurrencyButton } from '../AddCurrencyScreen/AddCurrencyButton';
+import { CurrencyFiatRow } from './CurrencyFiatRow';
 import { CurrencyInput } from './CurrencyInput';
-import { CurrencyInputRow } from './CurrencyInputRow';
 
 export const ConverterScreen = () => {
     const services = useServices();
@@ -31,7 +30,6 @@ export const ConverterScreen = () => {
     const satsValue = useStore(selectSatsValue);
     const currencyValues = useStore(selectSelectedFiatCurrenciesAmounts);
     const mode = useStore(selectMode);
-    const focusedInput = useStore(selectFocusedInput);
 
     const handleBtcChange = (value: string) => {
         const numberValue = parseFormattedNumber(value);
@@ -46,7 +44,6 @@ export const ConverterScreen = () => {
                 : btcToSats(getOrThrow(AmountBtc.from(numberValue)));
 
         services.store.setState({ satsAmount: satsValue });
-        services.store.setState({ focusedInput: 'BTC' });
 
         services.recalculateFromBtc();
     };
@@ -55,7 +52,6 @@ export const ConverterScreen = () => {
         const fiatAmountNumber = parseFormattedNumber(value);
         const fiatAmount = FiatAmount(code).from(fiatAmountNumber);
 
-        services.store.setState({ focusedInput: code });
         services.store.setState({
             selectedFiatCurrenciesAmounts: {
                 ...currencyValues,
@@ -73,26 +69,19 @@ export const ConverterScreen = () => {
     return (
         <Screen>
             <CurrencyInput
-                label={mode}
                 value={bitcoinFormatted}
                 onChange={handleBtcChange}
-                focused={focusedInput === 'BTC'}
-                onFocus={() => services.store.setState({ focusedInput: 'BTC' })}
             />
 
             <div>
                 {selectedCurrencies.map(code => (
-                    <CurrencyInputRow
+                    <CurrencyFiatRow
                         key={code}
                         code={code}
                         name={rates[code]?.name}
                         value={formatFiatWithCommas(currencyValues[code]) || ''}
                         onChange={value => handleCurrencyChange(code, value)}
                         onRemove={() => services.removeCurrency({ code })}
-                        focused={focusedInput === code}
-                        onFocus={() =>
-                            services.store.setState({ focusedInput: code })
-                        }
                     />
                 ))}
             </div>
