@@ -7,7 +7,7 @@ import {
     selectLastUpdated,
     selectLoading,
     useStore,
-} from './state/createStore';
+} from '../state/createStore';
 
 export const RatesLoading = () => {
     const { fetchAndStoreRates } = useServices();

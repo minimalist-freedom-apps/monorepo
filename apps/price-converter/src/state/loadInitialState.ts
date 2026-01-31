@@ -1,6 +1,7 @@
-import type { StoreDep } from '../../compositionRoot';
-import type { CurrencyCode, RatesMap } from '../../rates/FetchRates';
+import type { CurrencyCode } from '@evolu/common';
+import type { RatesMap } from '../rates/FetchRates';
 import type { Mode } from './State';
+import type { StoreDep } from './createStore';
 import { STORAGE_KEYS } from './storageKeys';
 
 export type LoadInitialState = () => void;

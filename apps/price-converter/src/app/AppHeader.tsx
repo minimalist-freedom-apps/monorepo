@@ -6,7 +6,7 @@ import {
     Title,
 } from '@minimalistic-apps/components';
 import { useServices } from '../ServicesProvider';
-import { selectLoading, selectMode, useStore } from './state/createStore';
+import { selectLoading, selectMode, useStore } from '../state/createStore';
 
 export const AppHeader = () => {
     const services = useServices();

@@ -1,5 +1,5 @@
-import type { StoreDep } from '../../compositionRoot';
-import type { CurrencyCode } from '../../rates/FetchRates';
+import type { CurrencyCode } from '../rates/FetchRates';
+import type { StoreDep } from './createStore';
 
 export interface RemoveCurrencyParams {
     readonly code: CurrencyCode;

@@ -1,9 +1,10 @@
+import type { CurrencyCode } from '@evolu/common';
 import {
     formatFiatWithCommas,
     parseFormattedNumber,
 } from '@minimalistic-apps/utils';
-import type { StoreDep } from '../../compositionRoot';
-import type { CurrencyCode, RatesMap } from '../../rates/FetchRates';
+import type { RatesMap } from '../rates/FetchRates';
+import type { StoreDep } from '../state/createStore';
 
 export interface RecalculateFromBtcParams {
     readonly value: string;

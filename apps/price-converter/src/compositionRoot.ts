@@ -1,45 +1,33 @@
-import type { Store } from '@minimalistic-apps/mini-store';
 import { loadFromLocalStorage } from '@minimalistic-apps/utils';
 import {
     type FetchAndStoreRatesDep,
     createFetchAndStoreRates,
-} from './app/converter/fetchAndStoreRates';
+} from './converter/fetchAndStoreRates';
 import {
     type RecalculateFromBtcDep,
     createRecalculateFromBtc,
-} from './app/converter/recalculateFromBtc';
+} from './converter/recalculateFromBtc';
 import {
     type RecalculateFromCurrencyDep,
     createRecalculateFromCurrency,
-} from './app/converter/recalculateFromCurrency';
-import type { State } from './app/state/State';
-import {
-    type AddCurrencyDep,
-    createAddCurrency,
-} from './app/state/addCurrency';
-import { createStore } from './app/state/createStore';
-import {
-    type LoadInitialStateDep,
-    createLoadInitialState,
-} from './app/state/loadInitialState';
-import {
-    type PersistStoreDep,
-    createPersistStore,
-} from './app/state/persistStore';
-import {
-    type RemoveCurrencyDep,
-    createRemoveCurrency,
-} from './app/state/removeCurrency';
-import { type SetRatesDep, createSetRates } from './app/state/setRates';
-import { type ToggleModeDep, createToggleMode } from './app/state/toggleMode';
+} from './converter/recalculateFromCurrency';
 import { createFetchAverageRates } from './rates/fetchAverageRates';
 import { createFetchBitpayRates } from './rates/fetchBitpayRates';
 import { createFetchBlockchainInfoRates } from './rates/fetchBlockchainInfoRates';
 import { createFetchCoingeckoRates } from './rates/fetchCoingeckoRates';
-
-export interface StoreDep {
-    readonly store: Store<State>;
-}
+import { type AddCurrencyDep, createAddCurrency } from './state/addCurrency';
+import { type StoreDep, createStore } from './state/createStore';
+import {
+    type LoadInitialStateDep,
+    createLoadInitialState,
+} from './state/loadInitialState';
+import { type PersistStoreDep, createPersistStore } from './state/persistStore';
+import {
+    type RemoveCurrencyDep,
+    createRemoveCurrency,
+} from './state/removeCurrency';
+import { type SetRatesDep, createSetRates } from './state/setRates';
+import { type ToggleModeDep, createToggleMode } from './state/toggleMode';
 
 export type Services = StoreDep &
     SetRatesDep &

@@ -1,5 +1,5 @@
-import type { StoreDep } from '../../compositionRoot';
-import type { RatesMap } from '../../rates/FetchRates';
+import type { RatesMap } from '../rates/FetchRates';
+import type { StoreDep } from './createStore';
 
 export interface SetRatesParams {
     readonly rates: RatesMap;

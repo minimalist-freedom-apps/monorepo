@@ -1,10 +1,10 @@
+import type { CurrencyCode } from '@evolu/common';
 import { satsToBtc } from '@minimalistic-apps/bitcoin';
 import {
     formatFiatWithCommas,
     parseFormattedNumber,
 } from '@minimalistic-apps/utils';
-import type { StoreDep } from '../../compositionRoot';
-import type { CurrencyCode } from '../../rates/FetchRates';
+import type { StoreDep } from './createStore';
 
 export interface AddCurrencyParams {
     readonly code: CurrencyCode;

@@ -12,6 +12,7 @@ export type { InputRef } from './Input';
 export { Content, Header, Layout } from './Layout';
 export { List } from './List';
 export { Modal } from './Modal';
+export { Screen } from './Screen';
 export { SearchInput } from './SearchInput';
 export { Text, Title } from './Typography';
 

@@ -2,11 +2,11 @@ import { getOrThrow } from '@evolu/common';
 import type { Selector, Store } from '@minimalistic-apps/mini-store';
 import { createStore as createMiniStore } from '@minimalistic-apps/mini-store';
 import { useSyncExternalStore } from 'react';
-import { useServices } from '../../ServicesProvider';
-import { CurrencyCode } from '../../rates/FetchRates';
+import { useServices } from '../ServicesProvider';
+import { CurrencyCode } from '../rates/FetchRates';
 import type { State } from './State';
 
-export type StoreDep = Store<State>;
+export type StoreDep = { store: Store<State> };
 
 export const createStore = (): Store<State> => {
     const initialState: State = {
@@ -20,6 +20,7 @@ export const createStore = (): Store<State> => {
         mode: 'BTC',
         showModal: false,
         focusedInput: 'BTC',
+        currentScreen: 'Converter',
     };
 
     return createMiniStore(initialState);
@@ -46,3 +47,4 @@ export const selectLastUpdated = (state: State) => state.lastUpdated;
 export const selectMode = (state: State) => state.mode;
 export const selectShowModal = (state: State) => state.showModal;
 export const selectFocusedInput = (state: State) => state.focusedInput;
+export const selectCurrentScreen = (state: State) => state.currentScreen;

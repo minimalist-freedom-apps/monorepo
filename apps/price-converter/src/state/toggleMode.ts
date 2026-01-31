@@ -5,8 +5,8 @@ import {
     satsToBtc,
 } from '@minimalistic-apps/bitcoin';
 import { parseFormattedNumber } from '@minimalistic-apps/utils';
-import type { StoreDep } from '../../compositionRoot';
 import type { Mode } from './State';
+import type { StoreDep } from './createStore';
 
 export type ToggleMode = () => void;
 

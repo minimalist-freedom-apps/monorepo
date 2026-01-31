@@ -7,9 +7,9 @@ import {
     formatFiatWithCommas,
     parseFormattedNumber,
 } from '@minimalistic-apps/utils';
-import type { StoreDep } from '../../compositionRoot';
-import type { CurrencyCode } from '../../rates/FetchRates';
+import type { CurrencyCode } from '../rates/FetchRates';
 import type { CurrencyValues } from '../state/State';
+import type { StoreDep } from '../state/createStore';
 
 export interface RecalculateFromCurrencyParams {
     readonly code: CurrencyCode;

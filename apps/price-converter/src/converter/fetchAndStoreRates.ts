@@ -1,5 +1,5 @@
-import type { StoreDep } from '../../compositionRoot';
-import type { FetchAverageRatesDep } from '../../rates/fetchAverageRates';
+import type { FetchAverageRatesDep } from '../rates/fetchAverageRates';
+import type { StoreDep } from '../state/createStore';
 import type { SetRatesDep } from '../state/setRates';
 import type { RecalculateFromBtcDep } from './recalculateFromBtc';
 

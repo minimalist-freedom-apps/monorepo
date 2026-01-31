@@ -1,8 +1,11 @@
-import type { CurrencyCode, RatesMap } from '../../rates/FetchRates';
+import type { CurrencyCode } from '@evolu/common';
+import type { RatesMap } from '../rates/FetchRates';
 
 export type Mode = 'BTC' | 'Sats';
 
 export type CurrencyValues = Record<CurrencyCode, string>;
+
+export type Screen = 'Converter' | 'AddCurrency';
 
 export interface State {
     readonly rates: RatesMap;
@@ -15,4 +18,5 @@ export interface State {
     readonly mode: Mode;
     readonly showModal: boolean;
     readonly focusedInput: CurrencyCode | 'BTC';
+    readonly currentScreen: Screen;
 }
