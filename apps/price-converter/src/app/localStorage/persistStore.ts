@@ -19,16 +19,13 @@ export const createPersistStore = (deps: PersistStoreDeps): PersistStore => {
 
             // Best effort persistence - errors are silently ignored
             // since there's no user-facing action to take on storage failure
-            void deps.localStorage.save(STORAGE_KEYS.RATES, state.rates);
-            void deps.localStorage.save(
-                STORAGE_KEYS.TIMESTAMP,
-                state.lastUpdated,
-            );
-            void deps.localStorage.save(
+            deps.localStorage.save(STORAGE_KEYS.RATES, state.rates);
+            deps.localStorage.save(STORAGE_KEYS.TIMESTAMP, state.lastUpdated);
+            deps.localStorage.save(
                 STORAGE_KEYS.SELECTED_CURRENCIES,
                 state.selectedCurrencies,
             );
-            void deps.localStorage.save(STORAGE_KEYS.MODE, state.mode);
+            deps.localStorage.save(STORAGE_KEYS.MODE, state.mode);
         });
 
         return unsubscribe;
