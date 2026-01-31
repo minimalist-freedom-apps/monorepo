@@ -1,14 +1,17 @@
 import type { CurrencyCode, Result, TypeError } from '@evolu/common';
+import type { RateBtcPerFiat } from '../converter/rate';
 
 export interface CurrencyCodeError extends TypeError<'CurrencyCode'> {}
 
-export interface CurrencyRate {
-    readonly code: CurrencyCode;
+export interface CurrencyRate<T extends CurrencyCode> {
+    readonly code: T;
     readonly name: string;
-    readonly rate: number;
+    readonly rate: RateBtcPerFiat;
 }
 
-export type RatesMap = Readonly<Record<CurrencyCode, CurrencyRate>>;
+export type RatesMap = Readonly<
+    Record<CurrencyCode, CurrencyRate<CurrencyCode>>
+>;
 
 export interface FetchRatesError {
     readonly type: 'FetchRatesError';

@@ -1,6 +1,9 @@
+import type { CurrencyCode } from '@evolu/common';
 import type { FiatAmount } from './types';
 
-export const formatFiatWithCommas = (value: FiatAmount): string => {
+export const formatFiatWithCommas = (
+    value: FiatAmount<CurrencyCode>,
+): string => {
     if (!value || Number.isNaN(Number(value))) return '0';
 
     const num = Number.parseFloat(String(value));

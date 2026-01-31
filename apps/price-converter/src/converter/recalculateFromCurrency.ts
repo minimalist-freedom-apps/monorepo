@@ -8,6 +8,7 @@ import { formatFiatWithCommas } from '@minimalistic-apps/fiat';
 import { parseFormattedNumber } from '@minimalistic-apps/utils';
 import type { CurrencyValues } from '../state/State';
 import type { StoreDep } from '../state/createStore';
+import { bitcoinToFiat } from './bitcoinToFiat';
 
 export interface RecalculateFromCurrencyParams {
     readonly code: CurrencyCode;
@@ -45,7 +46,10 @@ export const createRecalculateFromCurrency =
         const newValues = selectedCurrencies.reduce<CurrencyValues>(
             (acc, otherCode) => {
                 if (otherCode !== code && rates[otherCode]) {
-                    const otherFiatAmount = btcAmount / rates[otherCode].rate;
+                    const otherFiatAmount = bitcoinToFiat(
+                        btcAmount,
+                        rates[otherCode].rate,
+                    );
                     acc[otherCode] = formatFiatWithCommas(otherFiatAmount);
                 } else if (otherCode === code) {
                     acc[otherCode] = value;

@@ -1,8 +1,10 @@
-import type { CurrencyCode } from '@evolu/common';
+import { type CurrencyCode, getOrThrow } from '@evolu/common';
+import { AmountBtc } from '@minimalistic-apps/bitcoin';
 import { formatFiatWithCommas } from '@minimalistic-apps/fiat';
 import { parseFormattedNumber } from '@minimalistic-apps/utils';
 import type { RatesMap } from '../rates/FetchRates';
 import type { StoreDep } from '../state/createStore';
+import { bitcoinToFiat } from './bitcoinToFiat';
 
 export interface RecalculateFromBtcParams {
     readonly value: string;
@@ -22,7 +24,9 @@ export const createRecalculateFromBtc =
     ({ value, rates: currentRates }) => {
         const { rates, selectedCurrencies } = deps.store.getState();
         const usedRates = currentRates ?? rates;
-        const btcAmount = parseFormattedNumber(value);
+        const btcAmount = getOrThrow(
+            AmountBtc.from(parseFormattedNumber(value)),
+        );
 
         if (Number.isNaN(btcAmount) || btcAmount === 0) {
             deps.store.setState({
@@ -37,7 +41,10 @@ export const createRecalculateFromBtc =
         >(
             (acc, code) => {
                 if (usedRates[code]) {
-                    const fiatAmount = btcAmount / usedRates[code].rate;
+                    const fiatAmount = bitcoinToFiat(
+                        btcAmount,
+                        usedRates[code].rate,
+                    );
                     acc[code] = formatFiatWithCommas(fiatAmount);
                 }
 
