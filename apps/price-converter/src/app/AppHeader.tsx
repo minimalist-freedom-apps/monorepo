@@ -25,10 +25,20 @@ export const AppHeader = () => {
         store.setState({ currentScreen: 'Settings' });
     };
 
+    const handleHome = () => {
+        store.setState({ currentScreen: 'Converter' });
+    };
+
     return (
         <Column>
             <Header>
-                <Title level={4}>Price Converter</Title>
+                <Title
+                    level={4}
+                    style={{ cursor: 'pointer' }}
+                    onClick={handleHome}
+                >
+                    Price Converter
+                </Title>
                 <Row gap={8}>
                     <strong>₿</strong>
                     <Switch checked={mode === 'Sats'} onChange={handleToggle} />

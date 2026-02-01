@@ -76,6 +76,7 @@ const lightTheme: ThemeConfig = {
         List: {
             colorBgContainer: COLORS.LIGHT.background,
         },
+        Switch: {},
     },
 };
 

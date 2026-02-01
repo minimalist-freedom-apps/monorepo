@@ -19,10 +19,11 @@ interface TitleProps {
     readonly children: ReactNode;
     readonly level?: 1 | 2 | 3 | 4 | 5;
     readonly style?: React.CSSProperties;
+    readonly onClick?: () => void;
 }
 
-export const Title = ({ children, level = 4, style }: TitleProps) => (
-    <AntTitle level={level} style={style}>
+export const Title = ({ children, level = 4, style, onClick }: TitleProps) => (
+    <AntTitle level={level} style={style} onClick={onClick}>
         {children}
     </AntTitle>
 );

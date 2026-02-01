@@ -22,4 +22,5 @@ export interface State {
     readonly mode: Mode;
     readonly currentScreen: Screen;
     readonly focusedCurrency: CurrencyCode | 'BTC' | null;
+    readonly themeMode: 'dark' | 'light';
 }
