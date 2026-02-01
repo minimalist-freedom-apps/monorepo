@@ -1,6 +1,10 @@
 import { createCurrentDateTime } from '@minimalistic-apps/datetime';
 import { createLocalStorage } from '@minimalistic-apps/local-storage';
 import {
+    createEnsureEvolu,
+    type EnsureEvoluDep,
+} from './app/evolu/createEvolu';
+import {
     createLoadInitialState,
     type LoadInitialStateDep,
 } from './app/localStorage/loadInitialState';
@@ -38,7 +42,8 @@ export type Services = StoreDep &
     RecalculateFromCurrencyDep &
     LoadInitialStateDep &
     FetchAndStoreRatesDep &
-    PersistStoreDep;
+    PersistStoreDep &
+    EnsureEvoluDep;
 
 export const createCompositionRoot = (): Services => {
     const fetchDeps = {
@@ -85,6 +90,8 @@ export const createCompositionRoot = (): Services => {
 
     const persistStore = createPersistStore({ store, localStorage });
 
+    const ensureEvolu = createEnsureEvolu({ store, localStorage });
+
     return {
         store,
         addCurrency,
@@ -94,5 +101,6 @@ export const createCompositionRoot = (): Services => {
         loadInitialState,
         fetchAndStoreRates,
         persistStore,
+        ensureEvolu,
     };
 };

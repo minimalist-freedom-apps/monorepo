@@ -21,6 +21,7 @@ export const createStore = (): Store<State> => {
         currentScreen: 'Converter',
         focusedCurrency: null,
         theme: 'dark',
+        evoluMnemonic: null,
     };
 
     return createMiniStore(initialState);

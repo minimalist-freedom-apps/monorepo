@@ -26,6 +26,13 @@ export const createPersistStore = (deps: PersistStoreDeps): PersistStore => {
                 state.selectedFiatCurrencies,
             );
             deps.localStorage.save(STORAGE_KEYS.MODE, state.mode);
+
+            if (state.evoluMnemonic) {
+                deps.localStorage.save(
+                    STORAGE_KEYS.EVOLU_MNEMONIC,
+                    state.evoluMnemonic,
+                );
+            }
         });
 
         return unsubscribe;

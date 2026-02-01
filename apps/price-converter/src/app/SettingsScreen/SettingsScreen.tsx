@@ -28,10 +28,8 @@ export const SettingsScreen = () => {
                 }}
             >
                 <Column gap={4}>
-                    <Text style={{ fontSize: 16, fontWeight: 500 }}>
-                        Theme Mode
-                    </Text>
-                    <Text style={{ fontSize: 14, opacity: 0.7 }}>
+                    <Text>Theme Mode</Text>
+                    <Text>
                         {themeMode === 'dark' ? 'Dark Mode' : 'Light Mode'}
                     </Text>
                 </Column>

@@ -1,4 +1,4 @@
-import type { CurrencyCode } from '@evolu/common';
+import type { CurrencyCode, Mnemonic } from '@evolu/common';
 import type { AmountSats } from '@minimalistic-apps/bitcoin';
 import type { Theme } from '@minimalistic-apps/components';
 import type { FiatAmount } from '@minimalistic-apps/fiat';
@@ -24,4 +24,5 @@ export interface State {
     readonly currentScreen: Screen;
     readonly focusedCurrency: CurrencyCode | 'BTC' | null;
     readonly theme: Theme;
+    readonly evoluMnemonic: Mnemonic | null;
 }

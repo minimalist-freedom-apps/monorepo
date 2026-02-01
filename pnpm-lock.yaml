@@ -44,6 +44,9 @@ importers:
       '@evolu/common':
         specifier: ^7.4.1
         version: 7.4.1
+      '@evolu/react-web':
+        specifier: ^2.4.0
+        version: 2.4.0(@evolu/common@7.4.1)(@evolu/web@2.4.0(@evolu/common@7.4.1))(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
       '@minimalistic-apps/bitcoin':
         specifier: workspace:*
         version: link:../../packages/bitcoin
@@ -1109,6 +1112,25 @@ packages:
     resolution: {integrity: sha512-aTSJN9GXvoN5FXo8DRiYdbMVFvBUG6N7Ygu7n5viyauPKBwylyAazZuDcBlQg5MxVv6YrF5c6w2LRG/OR2UIHA==}
     engines: {node: '>=22.0.0'}
 
+  '@evolu/react-web@2.4.0':
+    resolution: {integrity: sha512-8zf/qQM+JZWykh0eGIAhE3CRFptGB0FwyQa4jp5Ce7yyOkekRMRs5WMZQA9QbRoY/OBRyOcwIP4aUk/tj49VwQ==}
+    engines: {node: '>=22.0.0'}
+    peerDependencies:
+      '@evolu/common': ^7.4.0
+      '@evolu/web': ^2.4.0
+      react: '>=19'
+      react-dom: '>=19'
+
+  '@evolu/sqlite-wasm@2.2.4':
+    resolution: {integrity: sha512-/JOYGFN93QspD2C8HVxVgBUlFWqJ1IpaVuIhEB53u4+ZvE+D3LjpNHDYiwZgf0n7VaH2U85OY5eV3wUrWc3scg==}
+    hasBin: true
+
+  '@evolu/web@2.4.0':
+    resolution: {integrity: sha512-yba/zpcsf5qu4NEup/rx8j+M/7DmF53/EZXKe8NRJefPJxrCxjzteOgUqUMkHQwYDRdH3u81KMoPlhvdBgSFuQ==}
+    engines: {node: '>=22.0.0'}
+    peerDependencies:
+      '@evolu/common': ^7.4.0
+
   '@humanfs/core@0.19.1':
     resolution: {integrity: sha512-5DyQ4+1JEUzejeK1JGICcideyfUbGixgS9jNgex5nqkW+cY7WZhxBigmieN5Qnw9ZosSNVC9KQKyb+GUaGyKUA==}
     engines: {node: '>=18.18.0'}
@@ -2122,6 +2144,9 @@ packages:
     resolution: {integrity: sha512-5gs5ytaNjBrh5Ow3zrvdUUY+0VxIuWVL4i9irt6friV+BqdCfmV11CQTWMiBYWHbXhco+J1kHfTOUkePhCDvMA==}
     engines: {node: '>=18'}
     hasBin: true
+
+  idb-keyval@6.2.2:
+    resolution: {integrity: sha512-yjD9nARJ/jb1g+CvD0tlhUHOrJ9Sy0P8T9MF3YaLlHnSRpwPfpTX0XIvpmw3gAJUmEu3FiICLBDPXVwyEvrleg==}
 
   idb@7.1.1:
     resolution: {integrity: sha512-gchesWBzyvGHRO9W8tzUWFDycow5gwjvFKfyV9FF32Y7F50yZMp7mP+T2mJIWFx49zicqyC4uefHM17o6xKIVQ==}
@@ -4364,6 +4389,21 @@ snapshots:
       msgpackr: 1.11.8
       random: 5.4.1
 
+  '@evolu/react-web@2.4.0(@evolu/common@7.4.1)(@evolu/web@2.4.0(@evolu/common@7.4.1))(react-dom@18.3.1(react@18.3.1))(react@18.3.1)':
+    dependencies:
+      '@evolu/common': 7.4.1
+      '@evolu/web': 2.4.0(@evolu/common@7.4.1)
+      react: 18.3.1
+      react-dom: 18.3.1(react@18.3.1)
+
+  '@evolu/sqlite-wasm@2.2.4': {}
+
+  '@evolu/web@2.4.0(@evolu/common@7.4.1)':
+    dependencies:
+      '@evolu/common': 7.4.1
+      '@evolu/sqlite-wasm': 2.2.4
+      idb-keyval: 6.2.2
+
   '@humanfs/core@0.19.1': {}
 
   '@humanfs/node@0.16.7':
@@ -5546,6 +5586,8 @@ snapshots:
       function-bind: 1.1.2
 
   husky@9.1.7: {}
+
+  idb-keyval@6.2.2: {}
 
   idb@7.1.1: {}
 
