@@ -1,6 +1,7 @@
 import { Column, SettingsRow, Switch } from '@minimalistic-apps/components';
 import { useServices } from '../../ServicesProvider';
 import { selectThemeMode, useStore } from '../../state/createStore';
+import { EvoluMnemonicSettings } from './EvoluMnemonicSettingsSection';
 
 export const SettingsScreen = () => {
     const { store } = useServices();
@@ -18,6 +19,7 @@ export const SettingsScreen = () => {
                     onChange={handleThemeToggle}
                 />
             </SettingsRow>
+            <EvoluMnemonicSettings />
         </Column>
     );
 };

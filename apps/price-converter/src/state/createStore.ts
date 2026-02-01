@@ -50,3 +50,4 @@ export const selectMode = (state: State) => state.mode;
 export const selectCurrentScreen = (state: State) => state.currentScreen;
 export const selectFocusedCurrency = (state: State) => state.focusedCurrency;
 export const selectThemeMode = (state: State) => state.theme;
+export const selectEvoluMnemonic = (state: State) => state.evoluMnemonic;

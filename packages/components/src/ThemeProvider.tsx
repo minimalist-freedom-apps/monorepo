@@ -1,15 +1,22 @@
 import type { ThemeConfig } from 'antd';
 import { ConfigProvider } from 'antd';
-import { type ReactNode, useEffect } from 'react';
+import { createContext, type ReactNode, useContext, useEffect } from 'react';
 import { COLORS, injectColorVariables, type Theme } from './colors';
+
+const ThemeContext = createContext<Theme>('dark');
+
+export const useTheme = (): Theme => useContext(ThemeContext);
 
 const darkTheme: ThemeConfig = {
     token: {
+        // background
+        colorBgLayout: COLORS.dark.elevation0,
+        colorBgContainer: COLORS.dark.elevation1,
+        colorBgElevated: COLORS.dark.elevation2,
+
+        // rest
         colorPrimary: COLORS.dark.primary,
-        colorBgContainer: COLORS.dark.background,
         colorText: COLORS.dark.textPrimary,
-        colorBgElevated: COLORS.dark.elevated,
-        colorBgLayout: COLORS.dark.backgroundBase,
         colorTextSecondary: COLORS.dark.textSecondary,
         colorBorder: COLORS.dark.border,
         borderRadius: 4,
@@ -19,7 +26,7 @@ const darkTheme: ThemeConfig = {
     components: {
         Layout: {
             headerBg: COLORS.dark.primary,
-            bodyBg: COLORS.dark.backgroundBase,
+            bodyBg: COLORS.dark.elevation0,
             headerPadding: '0 16px',
         },
         Card: {
@@ -30,11 +37,13 @@ const darkTheme: ThemeConfig = {
 
 const lightTheme: ThemeConfig = {
     token: {
+        // background
+        colorBgLayout: COLORS.light.elevation0,
+        colorBgContainer: COLORS.light.elevation1,
+        colorBgElevated: COLORS.light.elevation2,
+
         colorPrimary: COLORS.light.primary,
         colorText: COLORS.light.textPrimary,
-        colorBgContainer: COLORS.light.background,
-        colorBgElevated: COLORS.light.elevated,
-        colorBgLayout: COLORS.light.backgroundBase,
         colorTextSecondary: COLORS.light.textSecondary,
         colorBorder: COLORS.light.border,
         borderRadius: 4,
@@ -44,7 +53,7 @@ const lightTheme: ThemeConfig = {
     components: {
         Layout: {
             headerBg: COLORS.light.primary,
-            bodyBg: COLORS.light.backgroundBase,
+            bodyBg: COLORS.light.elevation0,
             headerPadding: '0 16px',
         },
         Card: {
@@ -67,8 +76,10 @@ export const ThemeProvider = ({
     }, [mode]);
 
     return (
-        <ConfigProvider theme={mode === 'dark' ? darkTheme : lightTheme}>
-            {children}
-        </ConfigProvider>
+        <ThemeContext.Provider value={mode}>
+            <ConfigProvider theme={mode === 'dark' ? darkTheme : lightTheme}>
+                {children}
+            </ConfigProvider>
+        </ThemeContext.Provider>
     );
 };

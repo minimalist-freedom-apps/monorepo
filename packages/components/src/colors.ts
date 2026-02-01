@@ -2,9 +2,9 @@ export type Theme = 'dark' | 'light';
 
 interface ColorScheme {
     readonly primary: string;
-    readonly background: string;
-    readonly backgroundBase: string;
-    readonly elevated: string;
+    readonly elevation1: string;
+    readonly elevation0: string;
+    readonly elevation2: string;
     readonly textPrimary: string;
     readonly textSecondary: string;
     readonly border: string;
@@ -22,9 +22,12 @@ interface ColorScheme {
 export const COLORS: Record<Theme, ColorScheme> = {
     dark: {
         primary: '#087d89',
-        background: '#1e1e1e',
-        backgroundBase: '#121212',
-        elevated: '#2a2a2a',
+
+        // background elevations
+        elevation0: '#121212',
+        elevation1: '#1e1e1e',
+        elevation2: '#2a2a2a',
+
         textPrimary: '#ffffff',
         textSecondary: '#999999',
         border: '#333333',
@@ -36,9 +39,12 @@ export const COLORS: Record<Theme, ColorScheme> = {
     },
     light: {
         primary: '#087d89',
-        background: '#ffffff',
-        backgroundBase: '#f5f5f5',
-        elevated: '#ffffff',
+
+        // background elevations
+        elevation0: '#f5f5f5',
+        elevation1: '#ffffff',
+        elevation2: '#f5f5f5',
+
         textPrimary: '#1e1e1e',
         textSecondary: '#666666',
         border: '#e0e0e0',
