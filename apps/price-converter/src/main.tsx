@@ -1,9 +1,9 @@
 import React from 'react';
 import ReactDOM from 'react-dom/client';
-import { ServicesProvider } from './ServicesProvider';
 import { App } from './app/App';
 import { ThemeWrapper } from './app/ThemeWrapper';
 import { createCompositionRoot } from './compositionRoot';
+import { ServicesProvider } from './ServicesProvider';
 
 const main = () => {
     const services = createCompositionRoot();

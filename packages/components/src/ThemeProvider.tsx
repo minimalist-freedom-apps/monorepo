@@ -1,7 +1,7 @@
-import { ConfigProvider } from 'antd';
 import type { ThemeConfig } from 'antd';
+import { ConfigProvider } from 'antd';
 import { type ReactNode, useEffect } from 'react';
-import { COLORS, type Theme, injectColorVariables } from './colors';
+import { COLORS, injectColorVariables, type Theme } from './colors';
 
 const darkTheme: ThemeConfig = {
     token: {

@@ -1,34 +1,34 @@
 import { createCurrentDateTime } from '@minimalistic-apps/datetime';
 import { createLocalStorage } from '@minimalistic-apps/local-storage';
 import {
-    type LoadInitialStateDep,
     createLoadInitialState,
+    type LoadInitialStateDep,
 } from './app/localStorage/loadInitialState';
 import {
-    type PersistStoreDep,
     createPersistStore,
+    type PersistStoreDep,
 } from './app/localStorage/persistStore';
 import {
-    type FetchAndStoreRatesDep,
     createFetchAndStoreRates,
+    type FetchAndStoreRatesDep,
 } from './converter/fetchAndStoreRates';
 import {
-    type RecalculateFromBtcDep,
     createRecalculateFromBtc,
+    type RecalculateFromBtcDep,
 } from './converter/recalculateFromBtc';
 import {
-    type RecalculateFromCurrencyDep,
     createRecalculateFromCurrency,
+    type RecalculateFromCurrencyDep,
 } from './converter/recalculateFromCurrency';
 import { createFetchAverageRates } from './rates/fetchAverageRates';
 import { createFetchBitpayRates } from './rates/fetchBitpayRates';
 import { createFetchBlockchainInfoRates } from './rates/fetchBlockchainInfoRates';
 import { createFetchCoingeckoRates } from './rates/fetchCoingeckoRates';
 import { type AddCurrencyDep, createAddCurrency } from './state/addCurrency';
-import { type StoreDep, createStore } from './state/createStore';
+import { createStore, type StoreDep } from './state/createStore';
 import {
-    type RemoveCurrencyDep,
     createRemoveCurrency,
+    type RemoveCurrencyDep,
 } from './state/removeCurrency';
 
 export type Services = StoreDep &

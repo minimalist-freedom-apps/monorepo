@@ -1,5 +1,5 @@
-import { Input as AntInput } from 'antd';
 import type { InputRef as AntInputRef } from 'antd';
+import { Input as AntInput } from 'antd';
 import type { ChangeEvent, RefObject } from 'react';
 
 export type InputRef = AntInputRef;

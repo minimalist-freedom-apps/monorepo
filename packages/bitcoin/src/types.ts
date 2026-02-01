@@ -1,4 +1,4 @@
-import { Number as NumberType, brand } from '@evolu/common';
+import { brand, Number as NumberType } from '@evolu/common';
 
 export const AmountBtc = brand('AmountBtc', NumberType);
 export type AmountBtc = typeof AmountBtc.Type;

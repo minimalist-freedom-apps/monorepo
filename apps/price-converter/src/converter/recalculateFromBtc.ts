@@ -1,6 +1,6 @@
 import { satsToBtc } from '@minimalistic-apps/bitcoin';
-import type { CurrencyValues } from '../state/State';
 import type { StoreDep } from '../state/createStore';
+import type { CurrencyValues } from '../state/State';
 import { bitcoinToFiat } from './bitcoinToFiat';
 
 export type RecalculateFromBtc = () => void;
