@@ -8,8 +8,8 @@ import {
 } from '@minimalistic-apps/components';
 import { typedObjectValues } from '@minimalistic-apps/type-utils';
 import { useState } from 'react';
-import { useServices } from '../../ServicesProvider';
 import type { CurrencyEntity } from '../../rates/FetchRates';
+import { useServices } from '../../ServicesProvider';
 import {
     selectRates,
     selectSelectedFiatCurrencies,

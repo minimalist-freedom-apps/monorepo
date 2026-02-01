@@ -1,8 +1,10 @@
 .antd-no-color-switch {
+    /* biome-ignore lint/complexity/noImportantStyles: antd has no API to style this  */
     background-color: var(--color-transparent) !important;
 }
 
 .antd-no-color-switch.ant-switch-checked {
+    /* biome-ignore lint/complexity/noImportantStyles: antd has no API to style this */
     background-color: var(--color-transparent) !important;
 }
 

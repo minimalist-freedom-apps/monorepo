@@ -38,8 +38,8 @@ export const ConverterScreen = () => {
     return (
         <Screen gap={12}>
             <CurrencyRow
-                key={'BTC'}
-                code={'BTC'}
+                key="BTC"
+                code="BTC"
                 value={satsAmount}
                 onChange={value => handleBtcChange(value as AmountSats)}
             />

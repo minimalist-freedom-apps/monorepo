@@ -8,7 +8,7 @@
         "check": "biome check .",
         "check:fix": "biome check --write .",
         "format": "biome format --write .",
-        "lint": "biome lint .",
+        "lint": "biome lint --error-on-warnings .",
         "lint:eslint": "eslint .",
         "lint:eslint:fix": "eslint --fix .",
         "typecheck": "pnpm -r typecheck",
@@ -16,7 +16,7 @@
         "prepare": "husky"
     },
     "devDependencies": {
-        "@biomejs/biome": "^1.9.4",
+        "@biomejs/biome": "^2.3.13",
         "@eslint/js": "^9.39.2",
         "@stylistic/eslint-plugin": "^5.7.1",
         "@typescript-eslint/eslint-plugin": "^8.54.0",

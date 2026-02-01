@@ -12,12 +12,12 @@ import { type FiatAmount, formatFiatWithCommas } from '@minimalistic-apps/fiat';
 import { parseFormattedNumber } from '@minimalistic-apps/utils';
 import { useEffect, useState } from 'react';
 import { useServices } from '../../ServicesProvider';
-import type { Mode } from '../../state/State';
 import {
     selectFocusedCurrency,
     selectMode,
     useStore,
 } from '../../state/createStore';
+import type { Mode } from '../../state/State';
 
 interface CurrencyInputProps {
     readonly value: number;

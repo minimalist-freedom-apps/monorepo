@@ -1,4 +1,4 @@
-import { type Result, err, ok } from '@evolu/common';
+import { err, ok, type Result } from '@evolu/common';
 
 export interface StorageError {
     readonly type: 'StorageError';

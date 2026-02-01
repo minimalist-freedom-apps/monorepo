@@ -1,8 +1,8 @@
 import type { CurrencyCode } from '@evolu/common';
 import type { LocalStorageDep } from '@minimalistic-apps/local-storage';
 import type { CurrencyMap } from '../../rates/FetchRates';
-import type { Mode } from '../../state/State';
 import type { StoreDep } from '../../state/createStore';
+import type { Mode } from '../../state/State';
 import { STORAGE_KEYS } from './storageKeys';
 
 export type LoadInitialState = () => void;
