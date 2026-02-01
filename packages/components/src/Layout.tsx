@@ -13,21 +13,10 @@ export const Layout = ({ children }: LayoutProps) => (
 
 interface HeaderProps {
     readonly children: ReactNode;
-    readonly style?: React.CSSProperties;
 }
 
-export const Header = ({ children, style }: HeaderProps) => (
-    <AntHeader
-        style={{
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'space-between',
-            padding: '0 16px',
-            ...style,
-        }}
-    >
-        {children}
-    </AntHeader>
+export const Header = ({ children }: HeaderProps) => (
+    <AntHeader style={{ padding: '0 16px' }}>{children}</AntHeader>
 );
 
 interface ContentProps {

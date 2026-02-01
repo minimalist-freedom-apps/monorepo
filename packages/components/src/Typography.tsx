@@ -6,11 +6,11 @@ const { Text: AntText, Title: AntTitle } = Typography;
 interface TextProps {
     readonly children: ReactNode;
     readonly strong?: boolean;
-    readonly style?: React.CSSProperties;
+    readonly onClick?: () => void;
 }
 
-export const Text = ({ children, strong = false, style }: TextProps) => (
-    <AntText strong={strong} style={style}>
+export const Text = ({ children, strong = false, onClick }: TextProps) => (
+    <AntText strong={strong} onClick={onClick}>
         {children}
     </AntText>
 );
@@ -22,8 +22,8 @@ interface TitleProps {
     readonly onClick?: () => void;
 }
 
-export const Title = ({ children, level = 4, style, onClick }: TitleProps) => (
-    <AntTitle level={level} style={style} onClick={onClick}>
+export const Title = ({ children, level = 4, onClick }: TitleProps) => (
+    <AntTitle level={level} style={{ margin: 0, padding: 0 }} onClick={onClick}>
         {children}
     </AntTitle>
 );

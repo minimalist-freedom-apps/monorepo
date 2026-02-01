@@ -34,33 +34,29 @@ export const AppHeader = () => {
         <ThemeProvider mode="dark">
             <Column>
                 <Header>
-                    <Title
-                        level={4}
-                        style={{ cursor: 'pointer' }}
-                        onClick={handleHome}
-                    >
-                        Price Converter
-                    </Title>
-                    <Row gap={8}>
-                        <strong>₿</strong>
-                        <Switch
-                            disableStateBgColorChange
-                            checked={mode === 'Sats'}
-                            onChange={handleToggle}
-                        />
-                        <strong>丰</strong>
-                        <Button
-                            variant="text"
-                            icon={<ReloadOutlined />}
-                            onClick={fetchAndStoreRates}
-                            loading={loading}
-                        />
-                        <Button
-                            variant="text"
-                            icon={<SettingOutlined />}
-                            onClick={handleSettings}
-                            aria-label="Settings"
-                        />
+                    <Row justify="space-between">
+                        <Title onClick={handleHome}>Price Converter</Title>
+                        <Row gap={8}>
+                            <strong>₿</strong>
+                            <Switch
+                                disableStateBgColorChange
+                                checked={mode === 'Sats'}
+                                onChange={handleToggle}
+                            />
+                            <strong>丰</strong>
+                            <Button
+                                variant="text"
+                                icon={<ReloadOutlined />}
+                                onClick={fetchAndStoreRates}
+                                loading={loading}
+                            />
+                            <Button
+                                variant="text"
+                                icon={<SettingOutlined />}
+                                onClick={handleSettings}
+                                aria-label="Settings"
+                            />
+                        </Row>
                     </Row>
                 </Header>
                 <RatesLoading />
