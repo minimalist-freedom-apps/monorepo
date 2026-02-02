@@ -21,12 +21,12 @@
         "@minimalistic-apps/local-storage": "workspace:*",
         "@minimalistic-apps/mini-store": "workspace:*",
         "@minimalistic-apps/type-utils": "workspace:*",
-        "react": "^18.2.0",
-        "react-dom": "^18.2.0"
+        "react": "^19.0.0",
+        "react-dom": "^19.0.0"
     },
     "devDependencies": {
-        "@types/react": "^18.2.0",
-        "@types/react-dom": "^18.2.0",
+        "@types/react": "^19.0.0",
+        "@types/react-dom": "^19.0.0",
         "@vitejs/plugin-react": "^4.3.0",
         "typescript": "^5.3.0",
         "vite": "^7.3.1",
