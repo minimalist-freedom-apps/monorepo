@@ -26,7 +26,7 @@ export const AddCurrencyScreen = () => {
     const availableCurrencies = typedObjectValues(rates)
         .filter(
             (it): it is CurrencyEntity =>
-                it !== undefined && selectedCurrencies.includes(it.code),
+                it !== undefined && !selectedCurrencies.includes(it.code),
         )
         .sort((a, b) => a.name.localeCompare(b.name))
         .map(it => ({ code: it.code, name: it.name }));
