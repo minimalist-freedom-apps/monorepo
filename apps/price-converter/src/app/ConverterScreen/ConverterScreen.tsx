@@ -1,11 +1,11 @@
 import type { CurrencyCode } from '@evolu/common';
+import { useQuery } from '@evolu/react';
 import type { AmountSats } from '@minimalistic-apps/bitcoin';
 import { Screen } from '@minimalistic-apps/components';
 import { FiatAmount } from '@minimalistic-apps/fiat';
 import { useServices } from '../../ServicesProvider';
 import {
     selectSatsAmount,
-    selectSelectedFiatCurrencies,
     selectSelectedFiatCurrenciesAmounts,
     useStore,
 } from '../../state/createStore';
@@ -15,7 +15,11 @@ import { CurrencyRow } from './CurrencyFiatRow';
 
 export const ConverterScreen = () => {
     const services = useServices();
-    const selectedCurrencies = useStore(selectSelectedFiatCurrencies);
+
+    const currencies = useQuery(services.getSelectedCurrencies.query);
+    const selectedCurrencies =
+        services.getSelectedCurrencies.getWithDefault(currencies);
+
     const satsAmount = useStore(selectSatsAmount);
     const currencyValues = useStore(selectSelectedFiatCurrenciesAmounts);
 
@@ -46,7 +50,7 @@ export const ConverterScreen = () => {
                 onChange={value => handleBtcChange(value as AmountSats)}
             />
 
-            {selectedCurrencies.map(code => (
+            {selectedCurrencies.map((code: CurrencyCode) => (
                 <CurrencyRow
                     key={code}
                     code={code}

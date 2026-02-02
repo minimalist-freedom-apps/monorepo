@@ -15,7 +15,6 @@ export type Screen = 'Converter' | 'AddCurrency' | 'Settings';
 export interface State {
     readonly rates: CurrencyMap;
     readonly satsAmount: AmountSats;
-    readonly selectedFiatCurrencies: ReadonlyArray<CurrencyCode>;
     readonly selectedFiatCurrenciesAmounts: Readonly<CurrencyValues>;
     readonly loading: boolean;
     readonly error: string;

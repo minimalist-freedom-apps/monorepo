@@ -3,6 +3,7 @@ import {
     createEvolu,
     createOwnerSecret,
     createRandomBytes,
+    deriveShardOwner,
     type Evolu,
     mnemonicToOwnerSecret,
     ownerSecretToMnemonic,
@@ -48,7 +49,9 @@ export const createEnsureEvolu = (deps: EnsureEvoluDeps): EnsureEvolu => {
             name: SimpleName.orThrow('price-converter'),
         });
 
-        evolu.useOwner(appOwner);
+        evolu.useOwner(
+            deriveShardOwner(appOwner, ['minimalistic-app', 'price-converter']),
+        );
 
         return evolu;
     };

@@ -1,4 +1,3 @@
-import { CurrencyCode, getOrThrow } from '@evolu/common';
 import type { AmountSats } from '@minimalistic-apps/bitcoin';
 import type { Selector, Store } from '@minimalistic-apps/mini-store';
 import { createStore as createMiniStore } from '@minimalistic-apps/mini-store';
@@ -11,7 +10,6 @@ export type StoreDep = { store: Store<State> };
 export const createStore = (): Store<State> => {
     const initialState: State = {
         rates: {} as never,
-        selectedFiatCurrencies: [getOrThrow(CurrencyCode.from('USD'))],
         satsAmount: 0 as AmountSats,
         selectedFiatCurrenciesAmounts: {},
         loading: false,
@@ -38,8 +36,6 @@ export const useStore = <T>(selector: Selector<State, T>): T => {
 };
 
 export const selectRates = (state: State) => state.rates;
-export const selectSelectedFiatCurrencies = (state: State) =>
-    state.selectedFiatCurrencies;
 export const selectSatsAmount = (state: State) => state.satsAmount;
 export const selectSelectedFiatCurrenciesAmounts = (state: State) =>
     state.selectedFiatCurrenciesAmounts;

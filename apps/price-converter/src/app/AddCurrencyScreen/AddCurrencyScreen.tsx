@@ -1,4 +1,5 @@
 import type { CurrencyCode } from '@evolu/common';
+import { useQuery } from '@evolu/react';
 import {
     Button,
     List,
@@ -10,16 +11,16 @@ import { typedObjectValues } from '@minimalistic-apps/type-utils';
 import { useState } from 'react';
 import type { CurrencyEntity } from '../../rates/FetchRates';
 import { useServices } from '../../ServicesProvider';
-import {
-    selectRates,
-    selectSelectedFiatCurrencies,
-    useStore,
-} from '../../state/createStore';
+import { selectRates, useStore } from '../../state/createStore';
 
 export const AddCurrencyScreen = () => {
     const services = useServices();
     const rates = useStore(selectRates);
-    const selectedCurrencies = useStore(selectSelectedFiatCurrencies);
+
+    const currencies = useQuery(services.getSelectedCurrencies.query);
+    const selectedCurrencies =
+        services.getSelectedCurrencies.getWithDefault(currencies);
+
     const [searchTerm, setSearchTerm] = useState('');
 
     const availableCurrencies = typedObjectValues(rates)

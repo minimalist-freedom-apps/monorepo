@@ -5,6 +5,10 @@ import {
     type EnsureEvoluDep,
 } from './app/evolu/createEvolu';
 import {
+    createGetSelectedCurrencies,
+    type GetSelectedCurrenciesDep,
+} from './app/evolu/getSelectedCurrencies';
+import {
     createLoadInitialState,
     type LoadInitialStateDep,
 } from './app/localStorage/loadInitialState';
@@ -28,7 +32,11 @@ import { createFetchAverageRates } from './rates/fetchAverageRates';
 import { createFetchBitpayRates } from './rates/fetchBitpayRates';
 import { createFetchBlockchainInfoRates } from './rates/fetchBlockchainInfoRates';
 import { createFetchCoingeckoRates } from './rates/fetchCoingeckoRates';
-import { type AddCurrencyDep, createAddCurrency } from './state/addCurrency';
+import {
+    type AddCurrencyDep,
+    createAddCurrency,
+    type EvoluDep,
+} from './state/addCurrency';
 import { createStore, type StoreDep } from './state/createStore';
 import {
     createRemoveCurrency,
@@ -43,7 +51,9 @@ export type Services = StoreDep &
     LoadInitialStateDep &
     FetchAndStoreRatesDep &
     PersistStoreDep &
-    EnsureEvoluDep;
+    EnsureEvoluDep &
+    EvoluDep &
+    GetSelectedCurrenciesDep;
 
 export const createCompositionRoot = (): Services => {
     const fetchDeps = {
@@ -68,8 +78,11 @@ export const createCompositionRoot = (): Services => {
     });
 
     const store = createStore();
-    const addCurrency = createAddCurrency({ store });
-    const removeCurrency = createRemoveCurrency({ store });
+    const ensureEvolu = createEnsureEvolu({ store, localStorage });
+    const evolu = ensureEvolu();
+    const getSelectedCurrencies = createGetSelectedCurrencies({ evolu });
+    const addCurrency = createAddCurrency({ store, evolu });
+    const removeCurrency = createRemoveCurrency({ store, evolu });
     const recalculateFromBtc = createRecalculateFromBtc({ store });
     const recalculateFromCurrency = createRecalculateFromCurrency({
         store,
@@ -90,8 +103,6 @@ export const createCompositionRoot = (): Services => {
 
     const persistStore = createPersistStore({ store, localStorage });
 
-    const ensureEvolu = createEnsureEvolu({ store, localStorage });
-
     return {
         store,
         addCurrency,
@@ -102,5 +113,7 @@ export const createCompositionRoot = (): Services => {
         fetchAndStoreRates,
         persistStore,
         ensureEvolu,
+        evolu,
+        getSelectedCurrencies,
     };
 };

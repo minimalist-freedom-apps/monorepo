@@ -1,3 +1,4 @@
+import { EvoluProvider } from '@evolu/react';
 import React from 'react';
 import ReactDOM from 'react-dom/client';
 import { App } from './app/App';
@@ -18,9 +19,11 @@ const main = () => {
     ReactDOM.createRoot(document.getElementById('root')!).render(
         <React.StrictMode>
             <ServicesProvider services={services}>
-                <ThemeWrapper>
-                    <App />
-                </ThemeWrapper>
+                <EvoluProvider value={services.evolu}>
+                    <ThemeWrapper>
+                        <App />
+                    </ThemeWrapper>
+                </EvoluProvider>
             </ServicesProvider>
         </React.StrictMode>,
     );
