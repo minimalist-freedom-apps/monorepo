@@ -1,14 +1,6 @@
 import { createCurrentDateTime } from '@minimalistic-apps/datetime';
 import { createLocalStorage } from '@minimalistic-apps/local-storage';
 import {
-    createLoadInitialState,
-    type LoadInitialStateDep,
-} from './app/localStorage/loadInitialState';
-import {
-    createPersistStore,
-    type PersistStoreDep,
-} from './app/localStorage/persistStore';
-import {
     createFetchAndStoreRates,
     type FetchAndStoreRatesDep,
 } from './converter/fetchAndStoreRates';
@@ -38,6 +30,14 @@ import {
     createGetSelectedCurrencies,
     type GetSelectedCurrenciesDep,
 } from './state/evolu/getSelectedCurrencies';
+import {
+    createLoadInitialState,
+    type LoadInitialStateDep,
+} from './state/localStorage/loadInitialState';
+import {
+    createPersistStore,
+    type PersistStoreDep,
+} from './state/localStorage/persistStore';
 import {
     createRemoveCurrency,
     type RemoveCurrencyDep,
