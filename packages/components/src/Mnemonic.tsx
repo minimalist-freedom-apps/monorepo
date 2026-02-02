@@ -1,7 +1,5 @@
-import { Card as AntCard } from 'antd';
 import { useState } from 'react';
-import { COLORS } from './colors';
-import { useTheme } from './ThemeProvider';
+import { Code } from './Code';
 
 interface MnemonicProps {
     readonly value: string | null;
@@ -22,8 +20,6 @@ const generateMaskedMnemonic = (): string => {
 const maskedMnemonic = generateMaskedMnemonic();
 
 export const Mnemonic = ({ value }: MnemonicProps) => {
-    const theme = useTheme();
-
     const [isRevealed, setIsRevealed] = useState(false);
 
     const handleToggleReveal = () => {
@@ -33,23 +29,8 @@ export const Mnemonic = ({ value }: MnemonicProps) => {
     const displayedMnemonic = isRevealed ? value : maskedMnemonic;
 
     return (
-        <AntCard
-            onClick={handleToggleReveal}
-            style={{
-                cursor: 'pointer',
-                width: '100%',
-                backgroundColor: COLORS[theme].elevation2,
-            }}
-            styles={{
-                body: {
-                    padding: '8px 12px',
-                    fontFamily: 'monospace',
-                    whiteSpace: 'pre-wrap',
-                    minHeight: '60px',
-                },
-            }}
-        >
+        <Code onClick={handleToggleReveal} copyable={isRevealed}>
             {displayedMnemonic ?? 'N/A'}
-        </AntCard>
+        </Code>
     );
 };

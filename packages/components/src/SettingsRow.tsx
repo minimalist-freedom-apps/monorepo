@@ -1,6 +1,6 @@
 import { isNonEmptyString } from '@minimalistic-apps/type-utils';
 import type { ReactNode } from 'react';
-import { Card, Column, Row, Text } from './index';
+import { Card, Column, Row, Text, Title } from './index';
 
 interface SettingsRowProps {
     readonly label: ReactNode;
@@ -20,7 +20,7 @@ export const SettingsRow = ({
             <Card>
                 <Column gap={12}>
                     <Column gap={4}>
-                        <Text>{label}</Text>
+                        <Title level={5}>{label}</Title>
                         {isNonEmptyString(description) ? (
                             <Text>{description}</Text>
                         ) : null}
@@ -35,7 +35,7 @@ export const SettingsRow = ({
         <Card>
             <Row align="center" justify="space-between">
                 <Column gap={4}>
-                    <Text>{label}</Text>
+                    <Title level={5}>{label}</Title>
                     {isNonEmptyString(description) ? (
                         <Text>{description}</Text>
                     ) : null}

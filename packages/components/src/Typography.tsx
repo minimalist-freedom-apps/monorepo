@@ -47,7 +47,7 @@ export const Paragraph = ({
         code={code}
         copyable={copyable}
         onClick={onClick}
-        style={style}
+        {...(style ? { style } : {})}
     >
         {children}
     </AntParagraph>

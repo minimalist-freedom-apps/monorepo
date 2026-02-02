@@ -23,6 +23,9 @@ export const Switch = ({
     unCheckedChildren,
     disableStateBgColorChange,
 }: SwitchProps) => {
+    const className =
+        disableStateBgColorChange === true ? 'antd-no-color-switch' : undefined;
+
     return (
         <AntSwitch
             checked={checked}
@@ -31,11 +34,7 @@ export const Switch = ({
             size={size}
             checkedChildren={checkedChildren}
             unCheckedChildren={unCheckedChildren}
-            className={
-                disableStateBgColorChange === true
-                    ? 'antd-no-color-switch'
-                    : undefined
-            }
+            {...(className ? { className } : {})}
         />
     );
 };
