@@ -13,5 +13,10 @@ export const Alert = ({
     showIcon = true,
     style,
 }: AlertProps) => (
-    <AntAlert message={message} type={type} showIcon={showIcon} style={style} />
+    <AntAlert
+        message={message}
+        type={type}
+        showIcon={showIcon}
+        {...(style ? { style } : {})}
+    />
 );
