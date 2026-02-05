@@ -8,11 +8,11 @@ import {
     ThemeProvider,
     Title,
 } from '@minimalistic-apps/components';
-import { useServices } from '../ServicesProvider';
+import { useDeps } from '../ServicesProvider';
 import { selectLoading, selectMode, useStore } from '../state/createStore';
 
 export const AppHeader = () => {
-    const { store, fetchAndStoreRates } = useServices();
+    const { store, fetchAndStoreRates } = useDeps();
     const loading = useStore(selectLoading);
     const mode = useStore(selectMode);
 

@@ -10,7 +10,7 @@ import {
 import { Input } from '@minimalistic-apps/components';
 import { type FiatAmount, formatFiatWithCommas } from '@minimalistic-apps/fiat';
 import { useEffect, useState } from 'react';
-import { useServices } from '../../ServicesProvider';
+import { useDeps } from '../../ServicesProvider';
 import {
     selectFocusedCurrency,
     selectMode,
@@ -50,7 +50,7 @@ export const CurrencyInput = ({
 }: CurrencyInputProps) => {
     const mode = useStore(selectMode);
     const focusedCurrency = useStore(selectFocusedCurrency);
-    const { store } = useServices();
+    const { store } = useDeps();
 
     const [inputValue, setInputValue] = useState(() =>
         formatInputValue(value, code, mode),

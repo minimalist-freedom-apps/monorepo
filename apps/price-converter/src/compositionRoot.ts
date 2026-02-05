@@ -1,6 +1,10 @@
 import { createCurrentDateTime } from '@minimalistic-apps/datetime';
 import { createLocalStorage } from '@minimalistic-apps/local-storage';
 import {
+    type AddCurrencyButtonDep,
+    createAddCurrencyButton,
+} from './app/AddCurrencyScreen/AddCurrencyButton';
+import {
     createFetchAndStoreRates,
     type FetchAndStoreRatesDep,
 } from './converter/fetchAndStoreRates';
@@ -40,7 +44,7 @@ import {
     type RemoveCurrencyDep,
 } from './state/removeCurrency';
 
-export type Services = StoreDep &
+export type Deps = StoreDep &
     AddCurrencyDep &
     RemoveCurrencyDep &
     RecalculateFromBtcDep &
@@ -49,9 +53,10 @@ export type Services = StoreDep &
     FetchAndStoreRatesDep &
     PersistStoreDep &
     EnsureEvoluDep &
-    GetSelectedCurrenciesDep;
+    GetSelectedCurrenciesDep &
+    AddCurrencyButtonDep;
 
-export const createCompositionRoot = (): Services => {
+export const createCompositionRoot = (): Deps => {
     const fetchDeps = {
         // Important to be wrapped to preserve the correct `this` context
         fetch: (input: RequestInfo | URL, init?: RequestInit) =>
@@ -102,6 +107,8 @@ export const createCompositionRoot = (): Services => {
 
     const persistStore = createPersistStore({ store, localStorage });
 
+    const AddCurrencyButton = createAddCurrencyButton({ store });
+
     return {
         store,
         addCurrency,
@@ -113,5 +120,6 @@ export const createCompositionRoot = (): Services => {
         persistStore,
         ensureEvolu,
         getSelectedCurrencies,
+        AddCurrencyButton,
     };
 };

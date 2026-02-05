@@ -4,7 +4,7 @@ import ReactDOM from 'react-dom/client';
 import { App } from './app/App';
 import { ThemeWrapper } from './app/ThemeWrapper';
 import { createCompositionRoot } from './compositionRoot';
-import { ServicesProvider } from './ServicesProvider';
+import { DepsProvider } from './ServicesProvider';
 
 const main = () => {
     const services = createCompositionRoot();
@@ -20,13 +20,13 @@ const main = () => {
 
     ReactDOM.createRoot(document.getElementById('root')!).render(
         <React.StrictMode>
-            <ServicesProvider services={services}>
+            <DepsProvider deps={services}>
                 <EvoluProvider value={evolu}>
                     <ThemeWrapper>
                         <App />
                     </ThemeWrapper>
                 </EvoluProvider>
-            </ServicesProvider>
+            </DepsProvider>
         </React.StrictMode>,
     );
 };

@@ -1,6 +1,6 @@
 import { Alert, Row, Text } from '@minimalistic-apps/components';
 import { useEffect, useRef, useState } from 'react';
-import { useServices } from '../ServicesProvider';
+import { useDeps } from '../ServicesProvider';
 import { selectError, selectLastUpdated, useStore } from '../state/createStore';
 
 const getTimeAgo = (timestamp: number): string => {
@@ -28,7 +28,7 @@ const getTimeAgo = (timestamp: number): string => {
 };
 
 export const RatesLoading = () => {
-    const { fetchAndStoreRates } = useServices();
+    const { fetchAndStoreRates } = useDeps();
     const error = useStore(selectError);
     const lastUpdated = useStore(selectLastUpdated);
     const [timeAgo, setTimeAgo] = useState<string>('');

@@ -1,10 +1,10 @@
 import { Column, SettingsRow, Switch } from '@minimalistic-apps/components';
-import { useServices } from '../../ServicesProvider';
+import { useDeps } from '../../ServicesProvider';
 import { selectThemeMode, useStore } from '../../state/createStore';
 import { EvoluMnemonicSettings } from './EvoluMnemonicSettingsSection';
 
 export const SettingsScreen = () => {
-    const { store } = useServices();
+    const { store } = useDeps();
     const themeMode = useStore(selectThemeMode);
 
     const handleThemeToggle = (checked: boolean) => {
