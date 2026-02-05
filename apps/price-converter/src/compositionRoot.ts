@@ -10,6 +10,8 @@ import {
     type ConverterScreenDep,
     createConverterScreen,
 } from './app/ConverterScreen/ConverterScreen';
+import { createCurrencyRow } from './app/ConverterScreen/CurrencyFiatRow';
+import { createCurrencyInput } from './app/ConverterScreen/CurrencyInput';
 import {
     createSettingsScreen,
     type SettingsScreenDep,
@@ -125,6 +127,23 @@ export const createCompositionRoot = (): Deps => {
 
     const AddCurrencyButton = createAddCurrencyButton({ store });
 
+    const CurrencyInput = createCurrencyInput({
+        connect: connect((state, ownProps) => ({
+            mode: state.mode,
+            focusedCurrency: state.focusedCurrency,
+            ...ownProps,
+        })),
+        setFocusedCurrency: code => store.setState({ focusedCurrency: code }),
+    });
+
+    const CurrencyRow = createCurrencyRow({
+        connect: connect((state, ownProps) => ({
+            mode: state.mode,
+            ...ownProps,
+        })),
+        CurrencyInput,
+    });
+
     const ConverterScreen = createConverterScreen({
         store,
         recalculateFromBtc,
@@ -132,6 +151,7 @@ export const createCompositionRoot = (): Deps => {
         getSelectedCurrencies,
         removeCurrency,
         AddCurrencyButton,
+        CurrencyRow,
     });
 
     const ThemeSettings = createThemeSettings({

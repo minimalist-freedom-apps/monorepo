@@ -7,23 +7,21 @@ import type React from 'react';
 import type { RecalculateFromBtcDep } from '../../converter/recalculateFromBtc';
 import type { RecalculateFromCurrencyDep } from '../../converter/recalculateFromCurrency';
 import {
-    type StoreDep,
     selectSatsAmount,
     selectSelectedFiatCurrenciesAmounts,
-    useStore,
 } from '../../state/createStore';
 import type { GetSelectedCurrenciesDep } from '../../state/evolu/getSelectedCurrencies';
 import type { RemoveCurrencyDep } from '../../state/removeCurrency';
 import type { AddCurrencyButtonDep } from '../AddCurrencyScreen/AddCurrencyButton';
 import { RatesLoading } from '../RatesLoading';
-import { CurrencyRow } from './CurrencyFiatRow';
+import type { CurrencyRowDep } from './CurrencyFiatRow';
 
-type ConverterScreenDeps = StoreDep &
-    RecalculateFromBtcDep &
+type ConverterScreenDeps = RecalculateFromBtcDep &
     RecalculateFromCurrencyDep &
     GetSelectedCurrenciesDep &
     RemoveCurrencyDep &
-    AddCurrencyButtonDep;
+    AddCurrencyButtonDep &
+    CurrencyRowDep;
 
 type ConverterScreen = React.FC;
 
@@ -60,19 +58,23 @@ export const createConverterScreen =
         return (
             <Screen gap={12}>
                 <RatesLoading />
-                <CurrencyRow
+                <deps.CurrencyRow
                     key="BTC"
                     code="BTC"
                     value={satsAmount}
-                    onChange={value => handleBtcChange(value as AmountSats)}
+                    onChange={(value: number) =>
+                        handleBtcChange(value as AmountSats)
+                    }
                 />
 
                 {selectedCurrencies.map((code: CurrencyCode) => (
-                    <CurrencyRow
+                    <deps.CurrencyRow
                         key={code}
                         code={code}
                         value={currencyValues[code] ?? 0}
-                        onChange={value => handleCurrencyChange(code, value)}
+                        onChange={(value: number) =>
+                            handleCurrencyChange(code, value)
+                        }
                         onRemove={() => deps.removeCurrency({ code })}
                     />
                 ))}

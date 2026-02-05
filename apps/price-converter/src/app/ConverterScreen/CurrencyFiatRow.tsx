@@ -5,27 +5,38 @@ import {
     Row,
     Text,
 } from '@minimalistic-apps/components';
-import { selectMode, useStore } from '../../state/createStore';
-import { CurrencyInput } from './CurrencyInput';
+import type { ComponentConnectDep } from '@minimalistic-apps/mini-store';
+import type React from 'react';
+import type { Mode } from '../../state/State';
+import type { CurrencyInputDep } from './CurrencyInput';
 
-interface CurrencyInputRowProps {
+type CurrencyRowOwnProps = {
     readonly code: CurrencyCode | 'BTC';
     readonly value: number;
     readonly onChange: (value: number) => void;
     readonly onRemove?: () => void;
-}
+};
 
-export const CurrencyRow = ({
-    code,
-    value,
-    onChange,
-    onRemove,
-}: CurrencyInputRowProps) => {
-    const mode = useStore(selectMode);
+type CurrencyRowStateProps = {
+    readonly mode: Mode;
+};
 
-    return (
+type CurrencyRowDeps = ComponentConnectDep<
+    CurrencyRowStateProps,
+    CurrencyRowOwnProps
+> &
+    CurrencyInputDep;
+
+type CurrencyRow = React.FC<CurrencyRowOwnProps>;
+
+export type CurrencyRowDep = {
+    CurrencyRow: CurrencyRow;
+};
+
+export const createCurrencyRow = (deps: CurrencyRowDeps): CurrencyRow =>
+    deps.connect(({ mode, code, value, onChange, onRemove }) => (
         <Row gap={12}>
-            <CurrencyInput value={value} onChange={onChange} code={code} />
+            <deps.CurrencyInput value={value} onChange={onChange} code={code} />
             <Text>{code === 'BTC' && mode === 'Sats' ? 'Sats' : code}</Text>
             {onRemove && (
                 <Button
@@ -37,5 +48,4 @@ export const CurrencyRow = ({
                 />
             )}
         </Row>
-    );
-};
+    ));

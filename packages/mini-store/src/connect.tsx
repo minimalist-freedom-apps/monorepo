@@ -6,20 +6,12 @@ type MapStateToProps<State, StateProps, OwnProps> = (
     ownProps: OwnProps,
 ) => StateProps;
 
-type Connect<State> = <StateProps, OwnProps = object>(
-    mapStateToProps: MapStateToProps<State, StateProps, OwnProps>,
-) => (
-    WrappedComponent: React.ComponentType<StateProps & OwnProps>,
-) => React.ComponentType<OwnProps>;
-
 type RenderFn<StateProps, OwnProps> = (
     props: StateProps & OwnProps,
 ) => React.ReactNode;
 
-type MapStateToPropsSimple<State, StateProps> = (state: State) => StateProps;
-
 type ComponentConnectFactory<State> = <StateProps, OwnProps = object>(
-    mapStateToProps: MapStateToPropsSimple<State, StateProps>,
+    mapStateToProps: MapStateToProps<State, StateProps, OwnProps>,
 ) => ComponentConnect<StateProps, OwnProps>;
 
 type ComponentConnect<StateProps, OwnProps = object> = (
@@ -30,12 +22,10 @@ export type ComponentConnectDep<StateProps, OwnProps = object> = {
     connect: ComponentConnect<StateProps, OwnProps>;
 };
 
-export type ConnectDep<State> = { connect: Connect<State> };
-
 export const createConnect =
     <State,>(store: Store<State>): ComponentConnectFactory<State> =>
     <StateProps, OwnProps = object>(
-        mapStateToProps: MapStateToPropsSimple<State, StateProps>,
+        mapStateToProps: MapStateToProps<State, StateProps, OwnProps>,
     ): ComponentConnect<StateProps, OwnProps> =>
     (render: RenderFn<StateProps, OwnProps>) => {
         class Connected extends React.Component<OwnProps> {
@@ -53,7 +43,7 @@ export const createConnect =
 
             render() {
                 const state = store.getState();
-                const stateProps = mapStateToProps(state);
+                const stateProps = mapStateToProps(state, this.props);
                 const props = { ...stateProps, ...this.props } as StateProps &
                     OwnProps;
 
