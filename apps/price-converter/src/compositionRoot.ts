@@ -1,6 +1,7 @@
 import type { Theme } from '@minimalistic-apps/components';
 import { createCurrentDateTime } from '@minimalistic-apps/datetime';
 import { createLocalStorage } from '@minimalistic-apps/local-storage';
+import { createConnect } from '../../../packages/mini-store/src/connect';
 import {
     type AddCurrencyButtonDep,
     createAddCurrencyButton,
@@ -31,12 +32,7 @@ import { createFetchBitpayRates } from './rates/fetchBitpayRates';
 import { createFetchBlockchainInfoRates } from './rates/fetchBlockchainInfoRates';
 import { createFetchCoingeckoRates } from './rates/fetchCoingeckoRates';
 import { type AddCurrencyDep, createAddCurrency } from './state/addCurrency';
-import {
-    createSimpleConnect,
-    createStore,
-    type SimpleConnectDep,
-    type StoreDep,
-} from './state/createStore';
+import { createStore } from './state/createStore';
 import { createEnsureEvoluOwner } from './state/evolu/createEnsureEvoluOwner';
 import {
     createEnsureEvolu,
@@ -59,9 +55,7 @@ import {
     type RemoveCurrencyDep,
 } from './state/removeCurrency';
 
-export type Deps = StoreDep &
-    SimpleConnectDep &
-    AddCurrencyDep &
+export type Deps = AddCurrencyDep &
     RemoveCurrencyDep &
     RecalculateFromBtcDep &
     RecalculateFromCurrencyDep &
@@ -98,7 +92,7 @@ export const createCompositionRoot = (): Deps => {
 
     const store = createStore();
 
-    const connect = createSimpleConnect(store);
+    const connect = createConnect(store);
     const setTheme = (theme: Theme) => store.setState({ theme });
 
     const ensureEvoluOwner = createEnsureEvoluOwner({ store });
@@ -147,8 +141,6 @@ export const createCompositionRoot = (): Deps => {
     const SettingsScreen = createSettingsScreen({ ThemeSettings });
 
     return {
-        store,
-        connect,
         addCurrency,
         removeCurrency,
         recalculateFromBtc,

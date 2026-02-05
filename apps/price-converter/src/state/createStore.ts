@@ -1,24 +1,7 @@
 import type { AmountSats } from '@minimalistic-apps/bitcoin';
-import type {
-    ConnectDep as GenericConnectDep,
-    SimpleConnectDep as GenericSimpleConnectDep,
-    Selector,
-    Store,
-} from '@minimalistic-apps/mini-store';
-import {
-    createConnect,
-    createStore as createMiniStore,
-    createSimpleConnect,
-} from '@minimalistic-apps/mini-store';
-import { useSyncExternalStore } from 'react';
-import { useDeps } from '../ServicesProvider';
+import type { Store } from '@minimalistic-apps/mini-store';
+import { createStore as createMiniStore } from '@minimalistic-apps/mini-store';
 import type { State } from './State';
-
-export type StoreDep = { store: Store<State> };
-export type ConnectDep = GenericConnectDep<State>;
-export type SimpleConnectDep = GenericSimpleConnectDep<State>;
-
-export { createConnect, createSimpleConnect };
 
 export const createStore = (): Store<State> => {
     const initialState: State = {
@@ -36,16 +19,6 @@ export const createStore = (): Store<State> => {
     };
 
     return createMiniStore(initialState);
-};
-
-export const useStore = <T>(selector: Selector<State, T>): T => {
-    const { store } = useDeps();
-
-    return useSyncExternalStore(
-        store.subscribe,
-        () => selector(store.getState()),
-        () => selector(store.getState()),
-    );
 };
 
 export const selectRates = (state: State) => state.rates;

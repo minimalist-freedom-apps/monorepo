@@ -12,60 +12,31 @@ type Connect<State> = <StateProps, OwnProps = object>(
     WrappedComponent: React.ComponentType<StateProps & OwnProps>,
 ) => React.ComponentType<OwnProps>;
 
-export type ConnectDep<State> = { connect: Connect<State> };
-
-export const createConnect =
-    <State,>(store: Store<State>): Connect<State> =>
-    <StateProps, OwnProps = object>(
-        mapStateToProps: MapStateToProps<State, StateProps, OwnProps>,
-    ) =>
-    (WrappedComponent: React.ComponentType<StateProps & OwnProps>) =>
-        class Connect extends React.Component<OwnProps> {
-            private unsubscribe: () => void = () => {};
-
-            componentDidMount() {
-                this.unsubscribe = store.subscribe(() => {
-                    this.forceUpdate();
-                });
-            }
-
-            componentWillUnmount() {
-                this.unsubscribe();
-            }
-
-            render() {
-                const state = store.getState();
-                const stateProps = mapStateToProps(state, this.props);
-
-                return <WrappedComponent {...this.props} {...stateProps} />;
-            }
-        };
-
 type RenderFn<StateProps, OwnProps> = (
     props: StateProps & OwnProps,
 ) => React.ReactNode;
 
 type MapStateToPropsSimple<State, StateProps> = (state: State) => StateProps;
 
-type SimpleConnect<State> = <StateProps, OwnProps = object>(
+type ComponentConnectFactory<State> = <StateProps, OwnProps = object>(
     mapStateToProps: MapStateToPropsSimple<State, StateProps>,
-) => ConnectedRender<StateProps, OwnProps>;
+) => ComponentConnect<StateProps, OwnProps>;
 
-type ConnectedRender<StateProps, OwnProps = object> = (
+type ComponentConnect<StateProps, OwnProps = object> = (
     render: RenderFn<StateProps, OwnProps>,
 ) => React.FC<OwnProps>;
 
-export type ConnectedRenderDep<StateProps, OwnProps = object> = {
-    connect: ConnectedRender<StateProps, OwnProps>;
+export type ComponentConnectDep<StateProps, OwnProps = object> = {
+    connect: ComponentConnect<StateProps, OwnProps>;
 };
 
-export type SimpleConnectDep<State> = { connect: SimpleConnect<State> };
+export type ConnectDep<State> = { connect: Connect<State> };
 
-export const createSimpleConnect =
-    <State,>(store: Store<State>): SimpleConnect<State> =>
+export const createConnect =
+    <State,>(store: Store<State>): ComponentConnectFactory<State> =>
     <StateProps, OwnProps = object>(
         mapStateToProps: MapStateToPropsSimple<State, StateProps>,
-    ): ConnectedRender<StateProps, OwnProps> =>
+    ): ComponentConnect<StateProps, OwnProps> =>
     (render: RenderFn<StateProps, OwnProps>) => {
         class Connected extends React.Component<OwnProps> {
             private unsubscribe: () => void = () => {};

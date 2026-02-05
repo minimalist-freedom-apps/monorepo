@@ -1,12 +1,12 @@
 import { SettingsRow, Switch, type Theme } from '@minimalistic-apps/components';
-import type { ConnectedRenderDep } from '@minimalistic-apps/mini-store';
+import type { ComponentConnectDep } from '@minimalistic-apps/mini-store';
 import type React from 'react';
 
 type ThemeSettingsStateProps = {
     readonly theme: Theme;
 };
 
-type ThemeSettingsDeps = ConnectedRenderDep<ThemeSettingsStateProps> & {
+type ThemeSettingsDeps = ComponentConnectDep<ThemeSettingsStateProps> & {
     readonly setTheme: (theme: Theme) => void;
 };
 
