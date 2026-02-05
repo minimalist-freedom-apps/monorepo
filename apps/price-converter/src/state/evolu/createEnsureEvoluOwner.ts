@@ -14,10 +14,9 @@ export interface EnsureEvoluOwnerDep {
 
 type EnsureEvoluOwnerDeps = StoreDep;
 
-export const createEnsureEvoluOwner = (
-    deps: EnsureEvoluOwnerDeps,
-): EnsureEvoluOwner => {
-    return () => {
+export const createEnsureEvoluOwner =
+    (deps: EnsureEvoluOwnerDeps): EnsureEvoluOwner =>
+    () => {
         const currentState = deps.store.getState();
         let { evoluMnemonic: mnemonic } = currentState;
 
@@ -32,4 +31,3 @@ export const createEnsureEvoluOwner = (
 
         return mnemonic;
     };
-};

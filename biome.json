@@ -30,6 +30,9 @@
             "complexity": {
                 "useArrowFunction": "error",
                 "noImplicitCoercions": "error"
+            },
+            "nursery": {
+                "useConsistentArrowReturn": "error"
             }
         }
     },

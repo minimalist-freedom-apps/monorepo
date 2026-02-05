@@ -3,11 +3,8 @@
  */
 export const isNonEmpty = <T>(
     value: T,
-): value is Exclude<T, null | undefined | boolean> => {
-    return (
-        value !== undefined &&
-        value !== null &&
-        value !== false &&
-        (typeof value !== 'string' || value !== '')
-    );
-};
+): value is Exclude<T, null | undefined | boolean> =>
+    value !== undefined &&
+    value !== null &&
+    value !== false &&
+    (typeof value !== 'string' || value !== '');
