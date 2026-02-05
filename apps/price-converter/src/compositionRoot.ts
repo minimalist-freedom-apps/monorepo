@@ -5,6 +5,10 @@ import {
     createAddCurrencyButton,
 } from './app/AddCurrencyScreen/AddCurrencyButton';
 import {
+    type ConverterScreenDep,
+    createConverterScreen,
+} from './app/ConverterScreen/ConverterScreen';
+import {
     createFetchAndStoreRates,
     type FetchAndStoreRatesDep,
 } from './converter/fetchAndStoreRates';
@@ -54,7 +58,8 @@ export type Deps = StoreDep &
     PersistStoreDep &
     EnsureEvoluDep &
     GetSelectedCurrenciesDep &
-    AddCurrencyButtonDep;
+    AddCurrencyButtonDep &
+    ConverterScreenDep;
 
 export const createCompositionRoot = (): Deps => {
     const fetchDeps = {
@@ -109,6 +114,15 @@ export const createCompositionRoot = (): Deps => {
 
     const AddCurrencyButton = createAddCurrencyButton({ store });
 
+    const ConverterScreen = createConverterScreen({
+        store,
+        recalculateFromBtc,
+        recalculateFromCurrency,
+        getSelectedCurrencies,
+        removeCurrency,
+        AddCurrencyButton,
+    });
+
     return {
         store,
         addCurrency,
@@ -121,5 +135,6 @@ export const createCompositionRoot = (): Deps => {
         ensureEvolu,
         getSelectedCurrencies,
         AddCurrencyButton,
+        ConverterScreen,
     };
 };
