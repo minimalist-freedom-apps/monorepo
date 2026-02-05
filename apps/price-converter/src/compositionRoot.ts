@@ -22,6 +22,7 @@ import {
     type EvoluDep,
 } from './state/addCurrency';
 import { createStore, type StoreDep } from './state/createStore';
+import { createEnsureEvoluOwner } from './state/evolu/createEnsureEvoluOwner';
 import {
     createEnsureEvolu,
     type EnsureEvoluDep,
@@ -78,7 +79,8 @@ export const createCompositionRoot = (): Services => {
     });
 
     const store = createStore();
-    const ensureEvolu = createEnsureEvolu({ store, localStorage });
+    const ensureEvoluOwner = createEnsureEvoluOwner({ store });
+    const ensureEvolu = createEnsureEvolu({ ensureEvoluOwner });
     const evolu = ensureEvolu();
     const getSelectedCurrencies = createGetSelectedCurrencies({ evolu });
     const addCurrency = createAddCurrency({ store, evolu });

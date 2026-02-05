@@ -1,17 +1,13 @@
 import {
     createAppOwner,
     createEvolu,
-    createOwnerSecret,
-    createRandomBytes,
     deriveShardOwner,
     type Evolu,
     mnemonicToOwnerSecret,
-    ownerSecretToMnemonic,
     SimpleName,
 } from '@evolu/common';
 import { evoluReactWebDeps } from '@evolu/react-web';
-import type { LocalStorageDep } from '@minimalistic-apps/local-storage';
-import type { StoreDep } from '../createStore';
+import type { EnsureEvoluOwnerDep } from './createEnsureEvoluOwner';
 import { Schema } from './schema';
 
 export type EnsureEvolu = () => Evolu<typeof Schema>;
@@ -20,7 +16,7 @@ export interface EnsureEvoluDep {
     readonly ensureEvolu: EnsureEvolu;
 }
 
-type EnsureEvoluDeps = StoreDep & LocalStorageDep;
+type EnsureEvoluDeps = EnsureEvoluOwnerDep;
 
 export const createEnsureEvolu = (deps: EnsureEvoluDeps): EnsureEvolu => {
     let evolu: Evolu<typeof Schema> | null = null;
@@ -30,18 +26,7 @@ export const createEnsureEvolu = (deps: EnsureEvoluDeps): EnsureEvolu => {
             return evolu;
         }
 
-        const currentState = deps.store.getState();
-        let { evoluMnemonic: mnemonic } = currentState;
-
-        if (mnemonic === null) {
-            const randomBytes = createRandomBytes();
-            const ownerSecret = createOwnerSecret({ randomBytes });
-            const newMnemonic = ownerSecretToMnemonic(ownerSecret);
-            mnemonic = newMnemonic;
-
-            deps.store.setState({ evoluMnemonic: mnemonic });
-        }
-
+        const mnemonic = deps.ensureEvoluOwner();
         const ownerSecret = mnemonicToOwnerSecret(mnemonic);
         const appOwner = createAppOwner(ownerSecret);
 
@@ -49,9 +34,11 @@ export const createEnsureEvolu = (deps: EnsureEvoluDeps): EnsureEvolu => {
             name: SimpleName.orThrow('price-converter'),
         });
 
-        evolu.useOwner(
-            deriveShardOwner(appOwner, ['minimalistic-app', 'price-converter']),
-        );
+        const shardOwner = deriveShardOwner(appOwner, [
+            'minimalistic-apps',
+            'price-converter',
+        ]);
+        evolu.useOwner(shardOwner);
 
         return evolu;
     };
