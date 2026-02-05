@@ -2,7 +2,7 @@ import type { AmountSats } from '@minimalistic-apps/bitcoin';
 import type { Selector, Store } from '@minimalistic-apps/mini-store';
 import { createStore as createMiniStore } from '@minimalistic-apps/mini-store';
 import { useSyncExternalStore } from 'react';
-import { useServices } from '../ServicesProvider';
+import { useDeps } from '../ServicesProvider';
 import type { State } from './State';
 
 export type StoreDep = { store: Store<State> };
@@ -26,7 +26,7 @@ export const createStore = (): Store<State> => {
 };
 
 export const useStore = <T>(selector: Selector<State, T>): T => {
-    const { store } = useServices();
+    const { store } = useDeps();
 
     return useSyncExternalStore(
         store.subscribe,

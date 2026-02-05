@@ -1,24 +1,24 @@
 import type { ReactNode } from 'react';
 import { createContext, useContext } from 'react';
-import type { Services } from './compositionRoot';
+import type { Deps } from './compositionRoot';
 
-const ServicesContext = createContext<Services | null>(null);
+const ServicesContext = createContext<Deps | null>(null);
 
-export interface ServicesProviderProps {
-    readonly services: Services;
+export interface DepsProviderProps {
+    readonly deps: Deps;
     readonly children: ReactNode;
 }
 
-export const ServicesProvider = ({
-    services,
+export const DepsProvider = ({
+    deps: services,
     children,
-}: ServicesProviderProps) => (
+}: DepsProviderProps) => (
     <ServicesContext.Provider value={services}>
         {children}
     </ServicesContext.Provider>
 );
 
-export const useServices = (): Services => {
+export const useDeps = (): Deps => {
     const services = useContext(ServicesContext);
 
     if (!services) {

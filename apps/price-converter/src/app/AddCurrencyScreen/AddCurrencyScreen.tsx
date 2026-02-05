@@ -10,14 +10,14 @@ import {
 import { typedObjectValues } from '@minimalistic-apps/type-utils';
 import { useState } from 'react';
 import type { CurrencyEntity } from '../../rates/FetchRates';
-import { useServices } from '../../ServicesProvider';
+import { useDeps } from '../../ServicesProvider';
 import { selectRates, useStore } from '../../state/createStore';
 
 export const AddCurrencyScreen = () => {
-    const services = useServices();
+    const deps = useDeps();
     const rates = useStore(selectRates);
 
-    const currencies = useQuery(services.getSelectedCurrencies.query);
+    const currencies = useQuery(deps.getSelectedCurrencies.query);
     const selectedCurrencies = currencies.flatMap(row =>
         row.currency === null ? [] : [row.currency],
     );
@@ -44,12 +44,12 @@ export const AddCurrencyScreen = () => {
           });
 
     const handleSelect = (code: string) => {
-        services.addCurrency({ code: code as CurrencyCode });
-        services.store.setState({ currentScreen: 'Converter' });
+        deps.addCurrency({ code: code as CurrencyCode });
+        deps.store.setState({ currentScreen: 'Converter' });
     };
 
     const handleBack = () => {
-        services.store.setState({ currentScreen: 'Converter' });
+        deps.store.setState({ currentScreen: 'Converter' });
     };
 
     const listItems = filteredCurrencies.map(item => ({

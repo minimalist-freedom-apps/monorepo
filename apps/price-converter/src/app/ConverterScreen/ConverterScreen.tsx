@@ -3,20 +3,19 @@ import { useQuery } from '@evolu/react';
 import type { AmountSats } from '@minimalistic-apps/bitcoin';
 import { Screen } from '@minimalistic-apps/components';
 import { FiatAmount } from '@minimalistic-apps/fiat';
-import { useServices } from '../../ServicesProvider';
+import { useDeps } from '../../ServicesProvider';
 import {
     selectSatsAmount,
     selectSelectedFiatCurrenciesAmounts,
     useStore,
 } from '../../state/createStore';
-import { AddCurrencyButton } from '../AddCurrencyScreen/AddCurrencyButton';
 import { RatesLoading } from '../RatesLoading';
 import { CurrencyRow } from './CurrencyFiatRow';
 
 export const ConverterScreen = () => {
-    const services = useServices();
+    const deps = useDeps();
 
-    const currencies = useQuery(services.getSelectedCurrencies.query);
+    const currencies = useQuery(deps.getSelectedCurrencies.query);
     const selectedCurrencies = currencies.flatMap(row =>
         row.currency === null ? [] : [row.currency],
     );
@@ -25,20 +24,20 @@ export const ConverterScreen = () => {
     const currencyValues = useStore(selectSelectedFiatCurrenciesAmounts);
 
     const handleBtcChange = (value: AmountSats) => {
-        services.store.setState({ satsAmount: value });
-        services.recalculateFromBtc();
+        deps.store.setState({ satsAmount: value });
+        deps.recalculateFromBtc();
     };
 
     const handleCurrencyChange = (code: CurrencyCode, value: number) => {
         const fiatAmount = FiatAmount(code).from(value);
 
-        services.store.setState({
+        deps.store.setState({
             fiatAmounts: {
                 ...currencyValues,
                 [code]: value,
             },
         });
-        services.recalculateFromCurrency({ code, value: fiatAmount });
+        deps.recalculateFromCurrency({ code, value: fiatAmount });
     };
 
     return (
@@ -57,11 +56,11 @@ export const ConverterScreen = () => {
                     code={code}
                     value={currencyValues[code] ?? 0}
                     onChange={value => handleCurrencyChange(code, value)}
-                    onRemove={() => services.removeCurrency({ code })}
+                    onRemove={() => deps.removeCurrency({ code })}
                 />
             ))}
 
-            <AddCurrencyButton />
+            <deps.AddCurrencyButton />
         </Screen>
     );
 };

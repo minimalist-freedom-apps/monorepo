@@ -1,16 +1,24 @@
 import { FloatButton, PlusOutlined } from '@minimalistic-apps/components';
-import { useServices } from '../../ServicesProvider';
+import type React from 'react';
+import type { StoreDep } from '../../state/createStore';
 
-export const AddCurrencyButton = () => {
-    const { store } = useServices();
+type AddCurrencyButtonDeps = StoreDep;
 
-    const onClick = () => store.setState({ currentScreen: 'AddCurrency' });
+type AddCurrencyButton = React.FC;
 
-    return (
-        <FloatButton
-            icon={<PlusOutlined />}
-            onClick={onClick}
-            tooltip="Add Currency"
-        />
-    );
-};
+export type AddCurrencyButtonDep = { AddCurrencyButton: AddCurrencyButton };
+
+export const createAddCurrencyButton =
+    (deps: AddCurrencyButtonDeps): AddCurrencyButton =>
+    () => {
+        const onClick = () =>
+            deps.store.setState({ currentScreen: 'AddCurrency' });
+
+        return (
+            <FloatButton
+                icon={<PlusOutlined />}
+                onClick={onClick}
+                tooltip="Add Currency"
+            />
+        );
+    };
