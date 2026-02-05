@@ -1,10 +1,23 @@
 import { Column, Mnemonic, SettingsRow } from '@minimalistic-apps/components';
-import { selectEvoluMnemonic, useStore } from '../../state/createStore';
+import type { ComponentConnectDep } from '@minimalistic-apps/mini-store';
+import type React from 'react';
 
-export const MnemonicSettings = () => {
-    const evoluMnemonic = useStore(selectEvoluMnemonic);
+type MnemonicSettingsStateProps = {
+    readonly evoluMnemonic: string | null;
+};
 
-    return (
+type MnemonicSettingsDeps = ComponentConnectDep<MnemonicSettingsStateProps>;
+
+type MnemonicSettings = React.FC;
+
+export type MnemonicSettingsDep = {
+    readonly MnemonicSettings: MnemonicSettings;
+};
+
+export const createMnemonicSettings = (
+    deps: MnemonicSettingsDeps,
+): MnemonicSettings =>
+    deps.connect(({ evoluMnemonic }) => (
         <Column gap={12}>
             <SettingsRow
                 direction="column"
@@ -19,5 +32,4 @@ export const MnemonicSettings = () => {
                 <Mnemonic value={evoluMnemonic} />
             </SettingsRow>
         </Column>
-    );
-};
+    ));

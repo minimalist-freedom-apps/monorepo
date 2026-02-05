@@ -1,3 +1,4 @@
+import type { AmountSats } from '@minimalistic-apps/bitcoin';
 import type { Theme } from '@minimalistic-apps/components';
 import { createCurrentDateTime } from '@minimalistic-apps/datetime';
 import { createLocalStorage } from '@minimalistic-apps/local-storage';
@@ -7,16 +8,26 @@ import {
     createAddCurrencyButton,
 } from './app/AddCurrencyScreen/AddCurrencyButton';
 import {
+    type AddCurrencyScreenDep,
+    createAddCurrencyScreen,
+} from './app/AddCurrencyScreen/AddCurrencyScreen';
+import { type AppDep, createApp } from './app/App';
+import { createAppHeader } from './app/AppHeader';
+import { createAppLayout } from './app/AppLayout';
+import {
     type ConverterScreenDep,
     createConverterScreen,
 } from './app/ConverterScreen/ConverterScreen';
 import { createCurrencyRow } from './app/ConverterScreen/CurrencyFiatRow';
 import { createCurrencyInput } from './app/ConverterScreen/CurrencyInput';
+import { createRatesLoading } from './app/RatesLoading';
+import { createMnemonicSettings } from './app/SettingsScreen/MnemonicSettings';
 import {
     createSettingsScreen,
     type SettingsScreenDep,
 } from './app/SettingsScreen/SettingsScreen';
 import { createThemeSettings } from './app/SettingsScreen/ThemeSettings';
+import { createThemeWrapper, type ThemeWrapperDep } from './app/ThemeWrapper';
 import {
     createFetchAndStoreRates,
     type FetchAndStoreRatesDep,
@@ -56,6 +67,7 @@ import {
     createRemoveCurrency,
     type RemoveCurrencyDep,
 } from './state/removeCurrency';
+import type { CurrencyValues, Screen } from './state/State';
 
 export type Deps = AddCurrencyDep &
     RemoveCurrencyDep &
@@ -68,7 +80,10 @@ export type Deps = AddCurrencyDep &
     GetSelectedCurrenciesDep &
     AddCurrencyButtonDep &
     ConverterScreenDep &
-    SettingsScreenDep;
+    SettingsScreenDep &
+    AddCurrencyScreenDep &
+    ThemeWrapperDep &
+    AppDep;
 
 export const createCompositionRoot = (): Deps => {
     const fetchDeps = {
@@ -96,6 +111,8 @@ export const createCompositionRoot = (): Deps => {
 
     const connect = createConnect(store);
     const setTheme = (theme: Theme) => store.setState({ theme });
+    const setCurrentScreen = (screen: Screen) =>
+        store.setState({ currentScreen: screen });
 
     const ensureEvoluOwner = createEnsureEvoluOwner({ store });
     const ensureEvolu = createEnsureEvolu({ ensureEvoluOwner });
@@ -144,21 +161,79 @@ export const createCompositionRoot = (): Deps => {
         CurrencyInput,
     });
 
+    const RatesLoading = createRatesLoading({
+        connect: connect(state => ({
+            error: state.error,
+            lastUpdated: state.lastUpdated,
+        })),
+        fetchAndStoreRates,
+    });
+
     const ConverterScreen = createConverterScreen({
-        store,
+        connect: connect(state => ({
+            satsAmount: state.satsAmount,
+            currencyValues: state.fiatAmounts,
+        })),
         recalculateFromBtc,
         recalculateFromCurrency,
         getSelectedCurrencies,
         removeCurrency,
         AddCurrencyButton,
         CurrencyRow,
+        RatesLoading,
+        setSatsAmount: (satsAmount: AmountSats) =>
+            store.setState({ satsAmount }),
+        setFiatAmounts: (fiatAmounts: Readonly<CurrencyValues>) =>
+            store.setState({ fiatAmounts }),
     });
 
     const ThemeSettings = createThemeSettings({
         connect: connect(state => ({ theme: state.theme })),
         setTheme,
     });
-    const SettingsScreen = createSettingsScreen({ ThemeSettings });
+
+    const MnemonicSettings = createMnemonicSettings({
+        connect: connect(state => ({ evoluMnemonic: state.evoluMnemonic })),
+    });
+
+    const SettingsScreen = createSettingsScreen({
+        ThemeSettings,
+        MnemonicSettings,
+    });
+
+    const AddCurrencyScreen = createAddCurrencyScreen({
+        connect: connect(state => ({ rates: state.rates })),
+        getSelectedCurrencies,
+        addCurrency,
+        setCurrentScreen,
+    });
+
+    const AppHeader = createAppHeader({
+        connect: connect(state => ({
+            loading: state.loading,
+            mode: state.mode,
+        })),
+        fetchAndStoreRates,
+        setMode: mode => store.setState({ mode }),
+        setCurrentScreen,
+    });
+
+    const AppLayout = createAppLayout({ AppHeader });
+
+    const ThemeWrapper = createThemeWrapper({
+        connect: connect((state, ownProps) => ({
+            themeMode: state.theme,
+            ...ownProps,
+        })),
+    });
+
+    const App = createApp({
+        connect: connect(state => ({ currentScreen: state.currentScreen })),
+        ConverterScreen,
+        AddCurrencyScreen,
+        SettingsScreen,
+        AppLayout,
+    });
 
     return {
         addCurrency,
@@ -173,5 +248,8 @@ export const createCompositionRoot = (): Deps => {
         AddCurrencyButton,
         ConverterScreen,
         SettingsScreen,
+        AddCurrencyScreen,
+        ThemeWrapper,
+        App,
     };
 };

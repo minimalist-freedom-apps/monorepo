@@ -1,16 +1,27 @@
 import { Layout } from '@minimalistic-apps/components';
+import type React from 'react';
 import type { ReactNode } from 'react';
-import { AppHeader } from './AppHeader';
+import type { AppHeaderDep } from './AppHeader';
 
 interface AppLayoutProps {
     readonly children: ReactNode;
 }
 
-export const AppLayout = ({ children }: AppLayoutProps) => (
-    <Layout>
-        <Layout.Header>
-            <AppHeader />
-        </Layout.Header>
-        <Layout.Content>{children}</Layout.Content>
-    </Layout>
-);
+type AppLayoutDeps = AppHeaderDep;
+
+type AppLayout = React.FC<AppLayoutProps>;
+
+export type AppLayoutDep = {
+    readonly AppLayout: AppLayout;
+};
+
+export const createAppLayout =
+    (deps: AppLayoutDeps): AppLayout =>
+    ({ children }: AppLayoutProps) => (
+        <Layout>
+            <Layout.Header>
+                <deps.AppHeader />
+            </Layout.Header>
+            <Layout.Content>{children}</Layout.Content>
+        </Layout>
+    );

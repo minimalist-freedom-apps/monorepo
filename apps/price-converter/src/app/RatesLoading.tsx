@@ -1,7 +1,8 @@
 import { Alert, Row, Text } from '@minimalistic-apps/components';
+import type { ComponentConnectDep } from '@minimalistic-apps/mini-store';
+import type React from 'react';
 import { useEffect, useRef, useState } from 'react';
-import { useDeps } from '../ServicesProvider';
-import { selectError, selectLastUpdated, useStore } from '../state/createStore';
+import type { FetchAndStoreRatesDep } from '../converter/fetchAndStoreRates';
 
 const getTimeAgo = (timestamp: number): string => {
     const now = Date.now();
@@ -27,37 +28,49 @@ const getTimeAgo = (timestamp: number): string => {
     return `${seconds}s ago`;
 };
 
-export const RatesLoading = () => {
-    const { fetchAndStoreRates } = useDeps();
-    const error = useStore(selectError);
-    const lastUpdated = useStore(selectLastUpdated);
-    const [timeAgo, setTimeAgo] = useState<string>('');
-    const intervalRef = useRef<number | null>(null);
-
-    useEffect(() => {
-        fetchAndStoreRates();
-    }, [fetchAndStoreRates]);
-
-    useEffect(() => {
-        if (lastUpdated !== null) {
-            const updateTime = () => {
-                setTimeAgo(getTimeAgo(lastUpdated));
-            };
-            updateTime();
-            intervalRef.current = setInterval(updateTime, 1000);
-
-            return () => {
-                if (intervalRef.current !== null) {
-                    clearInterval(intervalRef.current);
-                }
-            };
-        }
-    }, [lastUpdated]);
-
-    return (
-        <Row justify={error ? 'space-between' : 'end'} align="end">
-            {timeAgo && <Text>{timeAgo}</Text>}
-            {error && <Alert message={error} type="error" />}
-        </Row>
-    );
+type RatesLoadingStateProps = {
+    readonly error: string;
+    readonly lastUpdated: number | null;
 };
+
+type RatesLoadingDeps = ComponentConnectDep<RatesLoadingStateProps> &
+    FetchAndStoreRatesDep;
+
+type RatesLoading = React.FC;
+
+export type RatesLoadingDep = {
+    readonly RatesLoading: RatesLoading;
+};
+
+export const createRatesLoading = (deps: RatesLoadingDeps): RatesLoading =>
+    deps.connect(({ error, lastUpdated }) => {
+        const [timeAgo, setTimeAgo] = useState<string>('');
+        const intervalRef = useRef<number | null>(null);
+
+        useEffect(() => {
+            deps.fetchAndStoreRates();
+        }, []);
+
+        useEffect(() => {
+            if (lastUpdated !== null) {
+                const updateTime = () => {
+                    setTimeAgo(getTimeAgo(lastUpdated));
+                };
+                updateTime();
+                intervalRef.current = setInterval(updateTime, 1000);
+
+                return () => {
+                    if (intervalRef.current !== null) {
+                        clearInterval(intervalRef.current);
+                    }
+                };
+            }
+        }, [lastUpdated]);
+
+        return (
+            <Row justify={error ? 'space-between' : 'end'} align="end">
+                {timeAgo && <Text>{timeAgo}</Text>}
+                {error && <Alert message={error} type="error" />}
+            </Row>
+        );
+    });

@@ -1,8 +1,6 @@
 import { EvoluProvider } from '@evolu/react';
 import React from 'react';
 import ReactDOM from 'react-dom/client';
-import { App } from './app/App';
-import { ThemeWrapper } from './app/ThemeWrapper';
 import { createCompositionRoot } from './compositionRoot';
 import { DepsProvider } from './ServicesProvider';
 
@@ -22,9 +20,9 @@ const main = () => {
         <React.StrictMode>
             <DepsProvider deps={services}>
                 <EvoluProvider value={evolu}>
-                    <ThemeWrapper>
-                        <App />
-                    </ThemeWrapper>
+                    <services.ThemeWrapper>
+                        <services.App />
+                    </services.ThemeWrapper>
                 </EvoluProvider>
             </DepsProvider>
         </React.StrictMode>,

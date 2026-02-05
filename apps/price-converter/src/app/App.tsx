@@ -1,25 +1,42 @@
+import type { ComponentConnectDep } from '@minimalistic-apps/mini-store';
 import { exhaustive } from '@minimalistic-apps/type-utils';
-import { useDeps } from '../ServicesProvider';
-import { selectCurrentScreen, useStore } from '../state/createStore';
-import { AddCurrencyScreen } from './AddCurrencyScreen/AddCurrencyScreen';
-import { AppLayout } from './AppLayout';
+import type React from 'react';
+import type { Screen } from '../state/State';
+import type { AddCurrencyScreenDep } from './AddCurrencyScreen/AddCurrencyScreen';
+import type { AppLayoutDep } from './AppLayout';
+import type { ConverterScreenDep } from './ConverterScreen/ConverterScreen';
+import type { SettingsScreenDep } from './SettingsScreen/SettingsScreen';
 
-export const App = () => {
-    const deps = useDeps();
-    const currentScreen = useStore(selectCurrentScreen);
-
-    const renderScreen = () => {
-        switch (currentScreen) {
-            case 'Converter':
-                return <deps.ConverterScreen />;
-            case 'AddCurrency':
-                return <AddCurrencyScreen />;
-            case 'Settings':
-                return <deps.SettingsScreen />;
-            default:
-                return exhaustive(currentScreen);
-        }
-    };
-
-    return <AppLayout>{renderScreen()}</AppLayout>;
+type AppStateProps = {
+    readonly currentScreen: Screen;
 };
+
+type AppDeps = ComponentConnectDep<AppStateProps> &
+    ConverterScreenDep &
+    AddCurrencyScreenDep &
+    SettingsScreenDep &
+    AppLayoutDep;
+
+type App = React.FC;
+
+export type AppDep = {
+    readonly App: App;
+};
+
+export const createApp = (deps: AppDeps): App =>
+    deps.connect(({ currentScreen }: AppStateProps) => {
+        const renderScreen = () => {
+            switch (currentScreen) {
+                case 'Converter':
+                    return <deps.ConverterScreen />;
+                case 'AddCurrency':
+                    return <deps.AddCurrencyScreen />;
+                case 'Settings':
+                    return <deps.SettingsScreen />;
+                default:
+                    return exhaustive(currentScreen);
+            }
+        };
+
+        return <deps.AppLayout>{renderScreen()}</deps.AppLayout>;
+    });
