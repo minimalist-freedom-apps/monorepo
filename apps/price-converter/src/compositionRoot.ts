@@ -1,3 +1,4 @@
+import type { Theme } from '@minimalistic-apps/components';
 import { createCurrentDateTime } from '@minimalistic-apps/datetime';
 import { createLocalStorage } from '@minimalistic-apps/local-storage';
 import {
@@ -8,6 +9,11 @@ import {
     type ConverterScreenDep,
     createConverterScreen,
 } from './app/ConverterScreen/ConverterScreen';
+import {
+    createSettingsScreen,
+    type SettingsScreenDep,
+} from './app/SettingsScreen/SettingsScreen';
+import { createThemeSettings } from './app/SettingsScreen/ThemeSettings';
 import {
     createFetchAndStoreRates,
     type FetchAndStoreRatesDep,
@@ -25,7 +31,12 @@ import { createFetchBitpayRates } from './rates/fetchBitpayRates';
 import { createFetchBlockchainInfoRates } from './rates/fetchBlockchainInfoRates';
 import { createFetchCoingeckoRates } from './rates/fetchCoingeckoRates';
 import { type AddCurrencyDep, createAddCurrency } from './state/addCurrency';
-import { createStore, type StoreDep } from './state/createStore';
+import {
+    createSimpleConnect,
+    createStore,
+    type SimpleConnectDep,
+    type StoreDep,
+} from './state/createStore';
 import { createEnsureEvoluOwner } from './state/evolu/createEnsureEvoluOwner';
 import {
     createEnsureEvolu,
@@ -49,6 +60,7 @@ import {
 } from './state/removeCurrency';
 
 export type Deps = StoreDep &
+    SimpleConnectDep &
     AddCurrencyDep &
     RemoveCurrencyDep &
     RecalculateFromBtcDep &
@@ -59,7 +71,8 @@ export type Deps = StoreDep &
     EnsureEvoluDep &
     GetSelectedCurrenciesDep &
     AddCurrencyButtonDep &
-    ConverterScreenDep;
+    ConverterScreenDep &
+    SettingsScreenDep;
 
 export const createCompositionRoot = (): Deps => {
     const fetchDeps = {
@@ -84,6 +97,10 @@ export const createCompositionRoot = (): Deps => {
     });
 
     const store = createStore();
+
+    const connect = createSimpleConnect(store);
+    const setTheme = (theme: Theme) => store.setState({ theme });
+
     const ensureEvoluOwner = createEnsureEvoluOwner({ store });
     const ensureEvolu = createEnsureEvolu({ ensureEvoluOwner });
     const getSelectedCurrencies = createGetSelectedCurrencies({ ensureEvolu });
@@ -123,8 +140,15 @@ export const createCompositionRoot = (): Deps => {
         AddCurrencyButton,
     });
 
+    const ThemeSettings = createThemeSettings({
+        connect: connect(state => ({ theme: state.theme })),
+        setTheme,
+    });
+    const SettingsScreen = createSettingsScreen({ ThemeSettings });
+
     return {
         store,
+        connect,
         addCurrency,
         removeCurrency,
         recalculateFromBtc,
@@ -136,5 +160,6 @@ export const createCompositionRoot = (): Deps => {
         getSelectedCurrencies,
         AddCurrencyButton,
         ConverterScreen,
+        SettingsScreen,
     };
 };

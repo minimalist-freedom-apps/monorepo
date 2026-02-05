@@ -1,7 +1,7 @@
 import { Column, Mnemonic, SettingsRow } from '@minimalistic-apps/components';
 import { selectEvoluMnemonic, useStore } from '../../state/createStore';
 
-export const EvoluMnemonicSettings = () => {
+export const MnemonicSettings = () => {
     const evoluMnemonic = useStore(selectEvoluMnemonic);
 
     return (

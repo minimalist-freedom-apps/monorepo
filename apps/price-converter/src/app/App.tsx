@@ -3,7 +3,6 @@ import { useDeps } from '../ServicesProvider';
 import { selectCurrentScreen, useStore } from '../state/createStore';
 import { AddCurrencyScreen } from './AddCurrencyScreen/AddCurrencyScreen';
 import { AppLayout } from './AppLayout';
-import { SettingsScreen } from './SettingsScreen/SettingsScreen';
 
 export const App = () => {
     const deps = useDeps();
@@ -16,7 +15,7 @@ export const App = () => {
             case 'AddCurrency':
                 return <AddCurrencyScreen />;
             case 'Settings':
-                return <SettingsScreen />;
+                return <deps.SettingsScreen />;
             default:
                 return exhaustive(currentScreen);
         }

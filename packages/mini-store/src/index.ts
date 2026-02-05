@@ -1,3 +1,11 @@
+export {
+    type ConnectDep,
+    type ConnectedRenderDep,
+    createConnect,
+    createSimpleConnect,
+    type SimpleConnectDep,
+} from './connect';
+
 type Listener = () => void;
 
 export interface Store<State> {

@@ -1,25 +1,23 @@
-import { Column, SettingsRow, Switch } from '@minimalistic-apps/components';
-import { useDeps } from '../../ServicesProvider';
-import { selectThemeMode, useStore } from '../../state/createStore';
-import { EvoluMnemonicSettings } from './EvoluMnemonicSettingsSection';
+import { Column } from '@minimalistic-apps/components';
+import type React from 'react';
+import { MnemonicSettings } from './MnemonicSettings';
+import type { ThemeSettingsDep } from './ThemeSettings';
 
-export const SettingsScreen = () => {
-    const { store } = useDeps();
-    const themeMode = useStore(selectThemeMode);
+type SettingsScreenDeps = ThemeSettingsDep;
 
-    const handleThemeToggle = (checked: boolean) => {
-        store.setState({ theme: checked ? 'light' : 'dark' });
+type SettingsScreen = React.FC;
+
+export type SettingsScreenDep = { SettingsScreen: SettingsScreen };
+
+export const createSettingsScreen =
+    (deps: SettingsScreenDeps): SettingsScreen =>
+    () => {
+        const { ThemeSettings } = deps;
+
+        return (
+            <Column gap={12}>
+                <ThemeSettings />
+                <MnemonicSettings />
+            </Column>
+        );
     };
-
-    return (
-        <Column gap={12}>
-            <SettingsRow label="Theme Mode">
-                <Switch
-                    checked={themeMode === 'light'}
-                    onChange={handleThemeToggle}
-                />
-            </SettingsRow>
-            <EvoluMnemonicSettings />
-        </Column>
-    );
-};
