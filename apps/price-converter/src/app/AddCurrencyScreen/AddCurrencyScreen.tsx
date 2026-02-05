@@ -18,8 +18,9 @@ export const AddCurrencyScreen = () => {
     const rates = useStore(selectRates);
 
     const currencies = useQuery(services.getSelectedCurrencies.query);
-    const selectedCurrencies =
-        services.getSelectedCurrencies.getWithDefault(currencies);
+    const selectedCurrencies = currencies.flatMap(row =>
+        row.currency === null ? [] : [row.currency],
+    );
 
     const [searchTerm, setSearchTerm] = useState('');
 

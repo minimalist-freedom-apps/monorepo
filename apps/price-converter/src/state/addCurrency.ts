@@ -27,8 +27,11 @@ type AddCurrencyDeps = StoreDep & EvoluDep;
 export const createAddCurrency =
     (deps: AddCurrencyDeps): AddCurrency =>
     ({ code }) => {
-        const { selectedFiatCurrenciesAmounts, satsAmount, rates } =
-            deps.store.getState();
+        const {
+            fiatAmounts: selectedFiatCurrenciesAmounts,
+            satsAmount,
+            rates,
+        } = deps.store.getState();
 
         if (rates[code] === undefined) {
             return;
@@ -43,7 +46,7 @@ export const createAddCurrency =
         });
 
         deps.store.setState({
-            selectedFiatCurrenciesAmounts: {
+            fiatAmounts: {
                 ...selectedFiatCurrenciesAmounts,
                 [code]: bitcoinToFiat(btcAmount, rates[code].rate),
             },

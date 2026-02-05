@@ -21,7 +21,8 @@ type RemoveCurrencyDeps = StoreDep & EvoluDep;
 export const createRemoveCurrency =
     (deps: RemoveCurrencyDeps): RemoveCurrency =>
     ({ code }) => {
-        const { selectedFiatCurrenciesAmounts } = deps.store.getState();
+        const { fiatAmounts: selectedFiatCurrenciesAmounts } =
+            deps.store.getState();
 
         // Upsert with isDeleted flag
         // If currency doesn't exist, it will be created with isDeleted: true
@@ -36,6 +37,6 @@ export const createRemoveCurrency =
         const { [code]: _, ...newValues } = selectedFiatCurrenciesAmounts;
 
         deps.store.setState({
-            selectedFiatCurrenciesAmounts: newValues,
+            fiatAmounts: newValues,
         });
     };

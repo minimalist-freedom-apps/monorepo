@@ -17,8 +17,9 @@ export const ConverterScreen = () => {
     const services = useServices();
 
     const currencies = useQuery(services.getSelectedCurrencies.query);
-    const selectedCurrencies =
-        services.getSelectedCurrencies.getWithDefault(currencies);
+    const selectedCurrencies = currencies.flatMap(row =>
+        row.currency === null ? [] : [row.currency],
+    );
 
     const satsAmount = useStore(selectSatsAmount);
     const currencyValues = useStore(selectSelectedFiatCurrenciesAmounts);
@@ -32,7 +33,7 @@ export const ConverterScreen = () => {
         const fiatAmount = FiatAmount(code).from(value);
 
         services.store.setState({
-            selectedFiatCurrenciesAmounts: {
+            fiatAmounts: {
                 ...currencyValues,
                 [code]: value,
             },

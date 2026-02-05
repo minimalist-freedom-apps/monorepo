@@ -4,13 +4,18 @@ import {
     deriveShardOwner,
     type Evolu,
     mnemonicToOwnerSecret,
+    type ShardOwner,
     SimpleName,
+    type UnuseOwner,
 } from '@evolu/common';
 import { evoluReactWebDeps } from '@evolu/react-web';
 import type { EnsureEvoluOwnerDep } from './createEnsureEvoluOwner';
 import { Schema } from './schema';
 
-export type EnsureEvolu = () => Evolu<typeof Schema>;
+export type EnsureEvolu = () => {
+    evolu: Evolu<typeof Schema>;
+    shardOwner: ShardOwner;
+};
 
 export interface EnsureEvoluDep {
     readonly ensureEvolu: EnsureEvolu;
@@ -20,10 +25,12 @@ type EnsureEvoluDeps = EnsureEvoluOwnerDep;
 
 export const createEnsureEvolu = (deps: EnsureEvoluDeps): EnsureEvolu => {
     let evolu: Evolu<typeof Schema> | null = null;
+    let shardOwner: ShardOwner | null = null;
+    let unuseShardOwner: UnuseOwner = () => {};
 
     return () => {
-        if (evolu !== null) {
-            return evolu;
+        if (evolu !== null && shardOwner !== null) {
+            return { evolu, shardOwner };
         }
 
         const mnemonic = deps.ensureEvoluOwner();
@@ -34,12 +41,16 @@ export const createEnsureEvolu = (deps: EnsureEvoluDeps): EnsureEvolu => {
             name: SimpleName.orThrow('price-converter'),
         });
 
-        const shardOwner = deriveShardOwner(appOwner, [
-            'minimalistic-apps',
-            'price-converter',
-        ]);
-        evolu.useOwner(shardOwner);
+        if (shardOwner === null) {
+            shardOwner = deriveShardOwner(appOwner, [
+                'minimalistic-apps',
+                'price-converter',
+            ]);
+        }
 
-        return evolu;
+        unuseShardOwner();
+        unuseShardOwner = evolu.useOwner(shardOwner);
+
+        return { evolu, shardOwner };
     };
 };

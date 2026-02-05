@@ -1,48 +1,44 @@
-import { CurrencyCode, getOrThrow, sqliteTrue } from '@evolu/common';
+import type { CurrencyCode, Query, Row } from '@evolu/common';
+import { sqliteTrue } from '@evolu/common';
 import type { EvoluDep } from '../addCurrency';
+import type { EnsureEvoluDep } from './createEvolu';
+
+interface SelectedCurrencyRow extends Row {
+    readonly id: string;
+    readonly currency: CurrencyCode | null;
+}
 
 export interface GetSelectedCurrencies {
-    readonly query: ReturnType<EvoluDep['evolu']['createQuery']>;
-    readonly getWithDefault: (
-        currencies: ReadonlyArray<unknown>,
-    ) => ReadonlyArray<CurrencyCode>;
+    /** @deprecated With new Evolu, this wont be needed */
+    readonly query: Query<SelectedCurrencyRow>;
+    readonly get: () => Promise<CurrencyCode[]>;
 }
+
+type GetSelectedCurrenciesDeps = EvoluDep & EnsureEvoluDep;
 
 export interface GetSelectedCurrenciesDep {
     readonly getSelectedCurrencies: GetSelectedCurrencies;
 }
 
-type GetSelectedCurrenciesDeps = EvoluDep;
-
 export const createGetSelectedCurrencies = (
     deps: GetSelectedCurrenciesDeps,
 ): GetSelectedCurrencies => {
-    const query = deps.evolu.createQuery(db =>
+    const query: Query<SelectedCurrencyRow> = deps.evolu.createQuery(db =>
         db
             .selectFrom('currency')
             .select(['id', 'currency'])
             .where('isDeleted', 'is not', sqliteTrue),
     );
 
-    const getWithDefault = (
-        currencies: ReadonlyArray<unknown>,
-    ): ReadonlyArray<CurrencyCode> => {
-        const selectedCurrencies = (
-            currencies as ReadonlyArray<{ currency: CurrencyCode | null }>
-        )
-            .map(row => row.currency)
-            .filter((c): c is CurrencyCode => c !== null);
+    const { shardOwner } = deps.ensureEvolu();
 
-        // If no currencies selected, return USD as default
-        if (selectedCurrencies.length === 0) {
-            return [getOrThrow(CurrencyCode.from('USD'))];
-        }
+    const get = async (): Promise<CurrencyCode[]> => {
+        const result = await deps.evolu.loadQuery(query);
 
-        return selectedCurrencies;
+        return result
+            .filter(row => row.currency !== null && row.id === shardOwner.id)
+            .map(row => row.currency as CurrencyCode);
     };
 
-    return {
-        query,
-        getWithDefault,
-    };
+    return { query, get };
 };
