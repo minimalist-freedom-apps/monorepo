@@ -1,4 +1,4 @@
-import type { CurrencyCode, Mnemonic } from '@evolu/common';
+import type { Mnemonic } from '@evolu/common';
 import type { LocalStorageDep } from '@minimalistic-apps/local-storage';
 import type { CurrencyMap } from '../../rates/FetchRates';
 import type { StoreDep } from '../../state/createStore';
@@ -22,9 +22,6 @@ export const createLoadInitialState =
         const savedTimestampResult = deps.localStorage.load<number>(
             STORAGE_KEYS.TIMESTAMP,
         );
-        const savedCurrenciesResult = deps.localStorage.load<CurrencyCode[]>(
-            STORAGE_KEYS.SELECTED_CURRENCIES,
-        );
         const savedModeResult = deps.localStorage.load<Mode>(STORAGE_KEYS.MODE);
         const savedMnemonicResult = deps.localStorage.load<Mnemonic>(
             STORAGE_KEYS.EVOLU_MNEMONIC,
@@ -34,9 +31,6 @@ export const createLoadInitialState =
         const savedTimestamp = savedTimestampResult.ok
             ? savedTimestampResult.value
             : null;
-        const savedCurrencies = savedCurrenciesResult.ok
-            ? savedCurrenciesResult.value
-            : null;
         const savedMode = savedModeResult.ok ? savedModeResult.value : 'BTC';
         const savedMnemonic = savedMnemonicResult.ok
             ? savedMnemonicResult.value
@@ -45,9 +39,6 @@ export const createLoadInitialState =
         deps.store.setState({
             ...(savedRates !== null && { rates: savedRates }),
             ...(savedTimestamp !== null && { lastUpdated: savedTimestamp }),
-            ...(savedCurrencies !== null && {
-                selectedFiatCurrencies: savedCurrencies,
-            }),
             ...(savedMode && { mode: savedMode }),
             ...(savedMnemonic && { evoluMnemonic: savedMnemonic }),
         });

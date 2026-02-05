@@ -1,12 +1,8 @@
-import {
-    type CurrencyCode,
-    createIdFromString,
-    type Evolu,
-} from '@evolu/common';
+import { type CurrencyCode, createIdFromString } from '@evolu/common';
 import { satsToBtc } from '@minimalistic-apps/bitcoin';
 import { bitcoinToFiat } from '../converter/bitcoinToFiat';
 import type { StoreDep } from './createStore';
-import type { Schema } from './evolu/schema';
+import type { EnsureEvoluDep } from './evolu/createEvolu';
 
 export interface AddCurrencyParams {
     readonly code: CurrencyCode;
@@ -18,20 +14,12 @@ export interface AddCurrencyDep {
     readonly addCurrency: AddCurrency;
 }
 
-export interface EvoluDep {
-    readonly evolu: Evolu<typeof Schema>;
-}
-
-type AddCurrencyDeps = StoreDep & EvoluDep;
+type AddCurrencyDeps = StoreDep & EnsureEvoluDep;
 
 export const createAddCurrency =
     (deps: AddCurrencyDeps): AddCurrency =>
     ({ code }) => {
-        const {
-            fiatAmounts: selectedFiatCurrenciesAmounts,
-            satsAmount,
-            rates,
-        } = deps.store.getState();
+        const { fiatAmounts, satsAmount, rates } = deps.store.getState();
 
         if (rates[code] === undefined) {
             return;
@@ -40,14 +28,19 @@ export const createAddCurrency =
         const btcAmount = satsToBtc(satsAmount);
 
         // Upsert currency into Evolu (will insert if not exists, update if exists)
-        deps.evolu.upsert('currency', {
-            id: createIdFromString<'CurrencyId'>(code),
-            currency: code,
-        });
+        const { evolu, shardOwner } = deps.ensureEvolu();
+        evolu.upsert(
+            'currency',
+            {
+                id: createIdFromString<'CurrencyId'>(code),
+                currency: code,
+            },
+            { ownerId: shardOwner.id },
+        );
 
         deps.store.setState({
             fiatAmounts: {
-                ...selectedFiatCurrenciesAmounts,
+                ...fiatAmounts,
                 [code]: bitcoinToFiat(btcAmount, rates[code].rate),
             },
         });

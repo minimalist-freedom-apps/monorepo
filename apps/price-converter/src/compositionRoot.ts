@@ -16,11 +16,7 @@ import { createFetchAverageRates } from './rates/fetchAverageRates';
 import { createFetchBitpayRates } from './rates/fetchBitpayRates';
 import { createFetchBlockchainInfoRates } from './rates/fetchBlockchainInfoRates';
 import { createFetchCoingeckoRates } from './rates/fetchCoingeckoRates';
-import {
-    type AddCurrencyDep,
-    createAddCurrency,
-    type EvoluDep,
-} from './state/addCurrency';
+import { type AddCurrencyDep, createAddCurrency } from './state/addCurrency';
 import { createStore, type StoreDep } from './state/createStore';
 import { createEnsureEvoluOwner } from './state/evolu/createEnsureEvoluOwner';
 import {
@@ -53,7 +49,6 @@ export type Services = StoreDep &
     FetchAndStoreRatesDep &
     PersistStoreDep &
     EnsureEvoluDep &
-    EvoluDep &
     GetSelectedCurrenciesDep;
 
 export const createCompositionRoot = (): Services => {
@@ -81,11 +76,13 @@ export const createCompositionRoot = (): Services => {
     const store = createStore();
     const ensureEvoluOwner = createEnsureEvoluOwner({ store });
     const ensureEvolu = createEnsureEvolu({ ensureEvoluOwner });
-    const evolu = ensureEvolu();
-    const getSelectedCurrencies = createGetSelectedCurrencies({ evolu });
-    const addCurrency = createAddCurrency({ store, evolu });
-    const removeCurrency = createRemoveCurrency({ store, evolu });
-    const recalculateFromBtc = createRecalculateFromBtc({ store });
+    const getSelectedCurrencies = createGetSelectedCurrencies({ ensureEvolu });
+    const addCurrency = createAddCurrency({ store, ensureEvolu });
+    const removeCurrency = createRemoveCurrency({ store, ensureEvolu });
+    const recalculateFromBtc = createRecalculateFromBtc({
+        store,
+        getSelectedCurrencies,
+    });
     const recalculateFromCurrency = createRecalculateFromCurrency({
         store,
         recalculateFromBtc,
@@ -115,7 +112,6 @@ export const createCompositionRoot = (): Services => {
         fetchAndStoreRates,
         persistStore,
         ensureEvolu,
-        evolu,
         getSelectedCurrencies,
     };
 };

@@ -16,10 +16,12 @@ const main = () => {
         unsubscribe();
     });
 
+    const { evolu } = services.ensureEvolu();
+
     ReactDOM.createRoot(document.getElementById('root')!).render(
         <React.StrictMode>
             <ServicesProvider services={services}>
-                <EvoluProvider value={services.evolu}>
+                <EvoluProvider value={evolu}>
                     <ThemeWrapper>
                         <App />
                     </ThemeWrapper>

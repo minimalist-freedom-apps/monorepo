@@ -3,8 +3,8 @@ import {
     createIdFromString,
     sqliteTrue,
 } from '@evolu/common';
-import type { EvoluDep } from './addCurrency';
 import type { StoreDep } from './createStore';
+import type { EnsureEvoluDep } from './evolu/createEvolu';
 
 export interface RemoveCurrencyParams {
     readonly code: CurrencyCode;
@@ -16,27 +16,28 @@ export interface RemoveCurrencyDep {
     readonly removeCurrency: RemoveCurrency;
 }
 
-type RemoveCurrencyDeps = StoreDep & EvoluDep;
+type RemoveCurrencyDeps = StoreDep & EnsureEvoluDep;
 
 export const createRemoveCurrency =
     (deps: RemoveCurrencyDeps): RemoveCurrency =>
     ({ code }) => {
-        const { fiatAmounts: selectedFiatCurrenciesAmounts } =
-            deps.store.getState();
+        const { fiatAmounts } = deps.store.getState();
 
-        // Upsert with isDeleted flag
-        // If currency doesn't exist, it will be created with isDeleted: true
-        // If it exists, it will be marked as deleted
-        deps.evolu.upsert('currency', {
-            id: createIdFromString<'CurrencyId'>(code),
-            currency: code,
-            isDeleted: sqliteTrue,
-        });
+        const { evolu, shardOwner } = deps.ensureEvolu();
+        evolu.upsert(
+            'currency',
+            {
+                id: createIdFromString<'CurrencyId'>(code),
+                currency: code,
+                isDeleted: sqliteTrue,
+            },
+            { ownerId: shardOwner.id },
+        );
 
         // Drop [code] from selectedFiatCurrenciesAmounts
-        const { [code]: _, ...newValues } = selectedFiatCurrenciesAmounts;
+        const { [code]: _, ...newFiatAmounts } = fiatAmounts;
 
         deps.store.setState({
-            fiatAmounts: newValues,
+            fiatAmounts: newFiatAmounts,
         });
     };
