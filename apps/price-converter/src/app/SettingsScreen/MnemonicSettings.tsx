@@ -1,12 +1,12 @@
 import { Column, Mnemonic, SettingsRow } from '@minimalistic-apps/components';
-import type { Connected } from '@minimalistic-apps/connect';
+import type { FC } from 'react';
 
 export type MnemonicSettingsStateProps = {
     readonly evoluMnemonic: string | null;
 };
 
 export type MnemonicSettingsDep = {
-    readonly MnemonicSettings: Connected;
+    readonly MnemonicSettings: FC;
 };
 
 export const MnemonicSettingsPure = ({

@@ -11,8 +11,7 @@ Always prefer to write pure components.
 ### Pattern: Connected component with deps
 
 ```tsx
-import type { Connected } from '@minimalistic-apps/connect';
-import type React from 'react';
+import type { FC } from 'react';
 import type { Mode } from '../../state/State';
 
 type CurrencyInputOwnProps = {
@@ -31,7 +30,7 @@ type CurrencyInputDeps = {
 };
 
 export type CurrencyInputDep = {
-    readonly CurrencyInput: Connected<CurrencyInputOwnProps>;
+    CurrencyInput: FC<CurrencyInputOwnProps>;
 };
 
 export const InputPure = (
@@ -78,19 +77,20 @@ export const SettingsScreenPure = (
 // With deps — deps are the 3rd argument to connect
 const CurrencyInput = connect(
     InputPure,
-    state => ({
-        mode: state.mode,
-        focusedCurrency: state.focusedCurrency,
+    ({ store }) => ({
+        mode: store.mode,
+        focusedCurrency: store.focusedCurrency,
     }),
     {
-        setFocusedCurrency: code => store.setState({ focusedCurrency: code }),
+        setFocusedCurrency: (code: CurrencyCode | 'BTC') =>
+            store.setState({ focusedCurrency: code }),
     },
 );
 
 // Without deps — just pure function + mapStateToProps
 const MnemonicSettings = connect(
     MnemonicSettingsPure,
-    state => ({ evoluMnemonic: state.evoluMnemonic }),
+    ({ store }) => ({ evoluMnemonic: store.evoluMnemonic }),
 );
 
 // Non-connected component

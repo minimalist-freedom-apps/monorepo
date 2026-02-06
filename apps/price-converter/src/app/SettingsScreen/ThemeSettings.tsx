@@ -1,5 +1,5 @@
 import { SettingsRow, Switch, type Theme } from '@minimalistic-apps/components';
-import type { Connected } from '@minimalistic-apps/connect';
+import type { FC } from 'react';
 
 export type ThemeSettingsStateProps = {
     readonly theme: Theme;
@@ -10,7 +10,7 @@ type ThemeSettingsDeps = {
 };
 
 export type ThemeSettingsDep = {
-    ThemeSettings: Connected;
+    ThemeSettings: FC;
 };
 
 export const ThemeSettingsPure = (

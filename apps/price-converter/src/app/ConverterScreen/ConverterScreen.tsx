@@ -1,8 +1,8 @@
 import type { CurrencyCode } from '@evolu/common';
 import type { AmountSats } from '@minimalistic-apps/bitcoin';
 import { Screen } from '@minimalistic-apps/components';
-import type { Connected } from '@minimalistic-apps/connect';
 import { FiatAmount } from '@minimalistic-apps/fiat';
+import type { FC } from 'react';
 import type { RecalculateFromBtcDep } from '../../converter/recalculateFromBtc';
 import type { RecalculateFromCurrencyDep } from '../../converter/recalculateFromCurrency';
 import type { RemoveCurrencyDep } from '../../state/removeCurrency';
@@ -30,7 +30,7 @@ type ConverterScreenDeps = RecalculateFromBtcDep &
         readonly setFiatAmounts: SetFiatAmounts;
     };
 
-export type ConverterScreenDep = { ConverterScreen: Connected };
+export type ConverterScreenDep = { ConverterScreen: FC };
 
 export const ConverterScreenPure = (
     deps: ConverterScreenDeps,

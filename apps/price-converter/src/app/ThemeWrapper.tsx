@@ -1,6 +1,5 @@
 import { type Theme, ThemeProvider } from '@minimalistic-apps/components';
-import type { Connected } from '@minimalistic-apps/connect';
-import type { ReactNode } from 'react';
+import type { FC, ReactNode } from 'react';
 
 export type ThemeWrapperOwnProps = {
     readonly children: ReactNode;
@@ -11,7 +10,7 @@ export type ThemeWrapperStateProps = {
 };
 
 export type ThemeWrapperDep = {
-    readonly ThemeWrapper: Connected<ThemeWrapperOwnProps>;
+    readonly ThemeWrapper: FC<ThemeWrapperOwnProps>;
 };
 
 export const ThemeWrapperPure = ({

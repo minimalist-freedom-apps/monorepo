@@ -5,7 +5,7 @@ import {
     Row,
     Text,
 } from '@minimalistic-apps/components';
-import type { Connected } from '@minimalistic-apps/connect';
+import type { FC } from 'react';
 import type { Mode } from '../../state/State';
 import type { CurrencyInputDep } from './CurrencyInput';
 
@@ -23,7 +23,7 @@ export type CurrencyRowStateProps = {
 type CurrencyRowDeps = CurrencyInputDep;
 
 export type CurrencyRowDep = {
-    CurrencyRow: Connected<CurrencyRowOwnProps>;
+    CurrencyRow: FC<CurrencyRowOwnProps>;
 };
 
 export const CurrencyRowPure = (

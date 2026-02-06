@@ -6,8 +6,8 @@ import {
     SearchInput,
     Text,
 } from '@minimalistic-apps/components';
-import type { Connected } from '@minimalistic-apps/connect';
 import { typedObjectValues } from '@minimalistic-apps/type-utils';
+import type { FC } from 'react';
 import { useState } from 'react';
 import type { CurrencyEntity, CurrencyMap } from '../../rates/FetchRates';
 import type { AddCurrencyDep } from '../../state/addCurrency';
@@ -24,7 +24,7 @@ type AddCurrencyScreenDeps = AddCurrencyDep & {
 };
 
 export type AddCurrencyScreenDep = {
-    readonly AddCurrencyScreen: Connected;
+    readonly AddCurrencyScreen: FC;
 };
 
 export const AddCurrencyScreenPure = (

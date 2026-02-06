@@ -1,6 +1,5 @@
 import { Alert, Row, Text } from '@minimalistic-apps/components';
-import type { Connected } from '@minimalistic-apps/connect';
-import { useEffect, useRef, useState } from 'react';
+import { type FC, useEffect, useRef, useState } from 'react';
 import type { FetchAndStoreRatesDep } from '../converter/fetchAndStoreRates';
 
 const getTimeAgo = (timestamp: number): string => {
@@ -35,7 +34,7 @@ export type RatesLoadingStateProps = {
 type RatesLoadingDeps = FetchAndStoreRatesDep;
 
 export type RatesLoadingDep = {
-    readonly RatesLoading: Connected;
+    readonly RatesLoading: FC;
 };
 
 export const RatesLoadingPure = (

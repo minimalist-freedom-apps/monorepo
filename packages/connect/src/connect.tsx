@@ -16,9 +16,6 @@ type StoreStates<Stores extends SubscribableRecord> = {
         : never;
 };
 
-type NoOwnProps = Record<string, never>;
-export type Connected<OwnProps = NoOwnProps> = React.FC<OwnProps>;
-
 export type Connect<States> = {
     <RenderProps, StateProps>(
         render: (props: RenderProps) => React.ReactNode,

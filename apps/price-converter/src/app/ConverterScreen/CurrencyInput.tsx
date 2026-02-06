@@ -8,9 +8,8 @@ import {
     satsToBtc,
 } from '@minimalistic-apps/bitcoin';
 import { Input } from '@minimalistic-apps/components';
-import type { Connected } from '@minimalistic-apps/connect';
 import { type FiatAmount, formatFiatWithCommas } from '@minimalistic-apps/fiat';
-import { useEffect, useState } from 'react';
+import { type FC, useEffect, useState } from 'react';
 import type { Mode } from '../../state/State';
 import { parseFormattedNumber } from './parseFormattedNumber';
 
@@ -48,10 +47,10 @@ type CurrencyInputDeps = {
 };
 
 export type CurrencyInputDep = {
-    CurrencyInput: Connected<CurrencyInputOwnProps>;
+    CurrencyInput: FC<CurrencyInputOwnProps>;
 };
 
-export const InputPure = (
+export const CurrencyInputPure = (
     deps: CurrencyInputDeps,
     {
         mode,

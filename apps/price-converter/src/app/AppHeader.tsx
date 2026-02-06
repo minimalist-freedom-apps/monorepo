@@ -8,7 +8,7 @@ import {
     ThemeProvider,
     Title,
 } from '@minimalistic-apps/components';
-import type { Connected } from '@minimalistic-apps/connect';
+import type { FC } from 'react';
 import type { FetchAndStoreRatesDep } from '../converter/fetchAndStoreRates';
 import type { Mode } from '../state/State';
 
@@ -26,7 +26,7 @@ type AppHeaderDeps = FetchAndStoreRatesDep & {
 };
 
 export type AppHeaderDep = {
-    readonly AppHeader: Connected;
+    readonly AppHeader: FC;
 };
 
 export const AppHeaderPure = (

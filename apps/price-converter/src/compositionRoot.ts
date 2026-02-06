@@ -12,7 +12,7 @@ import { AppHeaderPure } from './app/AppHeader';
 import { type AppLayoutProps, AppLayoutPure } from './app/AppLayout';
 import { ConverterScreenPure } from './app/ConverterScreen/ConverterScreen';
 import { CurrencyRowPure } from './app/ConverterScreen/CurrencyFiatRow';
-import { InputPure } from './app/ConverterScreen/CurrencyInput';
+import { CurrencyInputPure } from './app/ConverterScreen/CurrencyInput';
 import { RatesLoadingPure } from './app/RatesLoading';
 import { MnemonicSettingsPure } from './app/SettingsScreen/MnemonicSettings';
 import { SettingsScreenPure } from './app/SettingsScreen/SettingsScreen';
@@ -104,7 +104,7 @@ export const createCompositionRoot = (): Main => {
     const AddCurrencyButton = () => AddCurrencyButtonPure({ store });
 
     const CurrencyInput = connect(
-        InputPure,
+        CurrencyInputPure,
         ({ store }) => ({
             mode: store.mode,
             focusedCurrency: store.focusedCurrency,

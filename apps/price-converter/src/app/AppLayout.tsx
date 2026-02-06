@@ -1,6 +1,5 @@
 import { Layout } from '@minimalistic-apps/components';
-import type { Connected } from '@minimalistic-apps/connect';
-import type { ReactNode } from 'react';
+import type { FC, ReactNode } from 'react';
 import type { AppHeaderDep } from './AppHeader';
 
 export interface AppLayoutProps {
@@ -10,7 +9,7 @@ export interface AppLayoutProps {
 type AppLayoutDeps = AppHeaderDep;
 
 export type AppLayoutDep = {
-    readonly AppLayout: Connected<AppLayoutProps>;
+    readonly AppLayout: FC<AppLayoutProps>;
 };
 
 export const AppLayoutPure = (
