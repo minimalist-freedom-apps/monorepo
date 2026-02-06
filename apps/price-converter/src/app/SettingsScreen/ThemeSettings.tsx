@@ -1,12 +1,9 @@
 import { SettingsRow, Switch, type Theme } from '@minimalistic-apps/components';
 import type { FC } from 'react';
+import type { SetThemeDep } from '../../state/setTheme';
 
 export type ThemeSettingsStateProps = {
     readonly theme: Theme;
-};
-
-type ThemeSettingsDeps = {
-    readonly setTheme: (theme: Theme) => void;
 };
 
 export type ThemeSettingsDep = {
@@ -14,7 +11,7 @@ export type ThemeSettingsDep = {
 };
 
 export const ThemeSettingsPure = (
-    deps: ThemeSettingsDeps,
+    deps: SetThemeDep,
     { theme }: ThemeSettingsStateProps,
 ) => {
     const onThemeToggle = (checked: boolean) => {

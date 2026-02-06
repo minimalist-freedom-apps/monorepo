@@ -1,6 +1,5 @@
 import type { CurrencyCode } from '@evolu/common';
 import type { AmountSats } from '@minimalistic-apps/bitcoin';
-import type { Theme } from '@minimalistic-apps/components';
 import { createConnect } from '@minimalistic-apps/connect';
 import { createCurrentDateTime } from '@minimalistic-apps/datetime';
 import { createLocalStorage } from '@minimalistic-apps/local-storage';
@@ -37,6 +36,7 @@ import { createPersistStore } from './state/localStorage/persistStore';
 import { createStatePersistence } from './state/localStorage/statePersistence';
 import { createRemoveCurrency } from './state/removeCurrency';
 import type { CurrencyValues, Screen } from './state/State';
+import { createSetTheme } from './state/setTheme';
 
 export const createCompositionRoot = (): Main => {
     // Store
@@ -61,7 +61,7 @@ export const createCompositionRoot = (): Main => {
     const connect = createConnect({ store, selectedCurrencies });
 
     // Converter
-    const setTheme = (theme: Theme) => store.setState({ theme });
+    const setTheme = createSetTheme({ store });
     const setCurrentScreen = (screen: Screen) =>
         store.setState({ currentScreen: screen });
 
