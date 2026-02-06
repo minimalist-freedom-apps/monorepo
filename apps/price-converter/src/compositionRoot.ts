@@ -3,89 +3,37 @@ import type { Theme } from '@minimalistic-apps/components';
 import { createCurrentDateTime } from '@minimalistic-apps/datetime';
 import { createLocalStorage } from '@minimalistic-apps/local-storage';
 import { createConnect } from '../../../packages/mini-store/src/connect';
-import {
-    type AddCurrencyButtonDep,
-    createAddCurrencyButton,
-} from './app/AddCurrencyScreen/AddCurrencyButton';
-import {
-    type AddCurrencyScreenDep,
-    createAddCurrencyScreen,
-} from './app/AddCurrencyScreen/AddCurrencyScreen';
-import { type AppDep, createApp } from './app/App';
+import { createAddCurrencyButton } from './app/AddCurrencyScreen/AddCurrencyButton';
+import { createAddCurrencyScreen } from './app/AddCurrencyScreen/AddCurrencyScreen';
+import { type App, createApp } from './app/App';
 import { createAppHeader } from './app/AppHeader';
 import { createAppLayout } from './app/AppLayout';
-import {
-    type ConverterScreenDep,
-    createConverterScreen,
-} from './app/ConverterScreen/ConverterScreen';
+import { createConverterScreen } from './app/ConverterScreen/ConverterScreen';
 import { createCurrencyRow } from './app/ConverterScreen/CurrencyFiatRow';
 import { createCurrencyInput } from './app/ConverterScreen/CurrencyInput';
 import { createRatesLoading } from './app/RatesLoading';
 import { createMnemonicSettings } from './app/SettingsScreen/MnemonicSettings';
-import {
-    createSettingsScreen,
-    type SettingsScreenDep,
-} from './app/SettingsScreen/SettingsScreen';
+import { createSettingsScreen } from './app/SettingsScreen/SettingsScreen';
 import { createThemeSettings } from './app/SettingsScreen/ThemeSettings';
-import { createThemeWrapper, type ThemeWrapperDep } from './app/ThemeWrapper';
-import {
-    createFetchAndStoreRates,
-    type FetchAndStoreRatesDep,
-} from './converter/fetchAndStoreRates';
-import {
-    createRecalculateFromBtc,
-    type RecalculateFromBtcDep,
-} from './converter/recalculateFromBtc';
-import {
-    createRecalculateFromCurrency,
-    type RecalculateFromCurrencyDep,
-} from './converter/recalculateFromCurrency';
+import { createThemeWrapper } from './app/ThemeWrapper';
+import { createFetchAndStoreRates } from './converter/fetchAndStoreRates';
+import { createRecalculateFromBtc } from './converter/recalculateFromBtc';
+import { createRecalculateFromCurrency } from './converter/recalculateFromCurrency';
 import { createFetchAverageRates } from './rates/fetchAverageRates';
 import { createFetchBitpayRates } from './rates/fetchBitpayRates';
 import { createFetchBlockchainInfoRates } from './rates/fetchBlockchainInfoRates';
 import { createFetchCoingeckoRates } from './rates/fetchCoingeckoRates';
-import { type AddCurrencyDep, createAddCurrency } from './state/addCurrency';
+import { createAddCurrency } from './state/addCurrency';
 import { createStore } from './state/createStore';
 import { createEnsureEvoluOwner } from './state/evolu/createEnsureEvoluOwner';
-import {
-    createEnsureEvolu,
-    type EnsureEvoluDep,
-} from './state/evolu/createEvolu';
-import {
-    createGetSelectedCurrencies,
-    type GetSelectedCurrenciesDep,
-} from './state/evolu/getSelectedCurrencies';
-import {
-    createLoadInitialState,
-    type LoadInitialStateDep,
-} from './state/localStorage/loadInitialState';
-import {
-    createPersistStore,
-    type PersistStoreDep,
-} from './state/localStorage/persistStore';
-import {
-    createRemoveCurrency,
-    type RemoveCurrencyDep,
-} from './state/removeCurrency';
+import { createEnsureEvolu } from './state/evolu/createEvolu';
+import { createGetSelectedCurrencies } from './state/evolu/getSelectedCurrencies';
+import { createLoadInitialState } from './state/localStorage/loadInitialState';
+import { createPersistStore } from './state/localStorage/persistStore';
+import { createRemoveCurrency } from './state/removeCurrency';
 import type { CurrencyValues, Screen } from './state/State';
 
-export type Deps = AddCurrencyDep &
-    RemoveCurrencyDep &
-    RecalculateFromBtcDep &
-    RecalculateFromCurrencyDep &
-    LoadInitialStateDep &
-    FetchAndStoreRatesDep &
-    PersistStoreDep &
-    EnsureEvoluDep &
-    GetSelectedCurrenciesDep &
-    AddCurrencyButtonDep &
-    ConverterScreenDep &
-    SettingsScreenDep &
-    AddCurrencyScreenDep &
-    ThemeWrapperDep &
-    AppDep;
-
-export const createCompositionRoot = (): Deps => {
+export const createAppCompositionRoot = (): App => {
     const fetchDeps = {
         // Important to be wrapped to preserve the correct `this` context
         fetch: (input: RequestInfo | URL, init?: RequestInit) =>
@@ -227,29 +175,14 @@ export const createCompositionRoot = (): Deps => {
         })),
     });
 
-    const App = createApp({
+    return createApp({
         connect: connect(state => ({ currentScreen: state.currentScreen })),
         ConverterScreen,
         AddCurrencyScreen,
         SettingsScreen,
         AppLayout,
-    });
-
-    return {
-        addCurrency,
-        removeCurrency,
-        recalculateFromBtc,
-        recalculateFromCurrency,
-        loadInitialState,
-        fetchAndStoreRates,
-        persistStore,
-        ensureEvolu,
-        getSelectedCurrencies,
-        AddCurrencyButton,
-        ConverterScreen,
-        SettingsScreen,
-        AddCurrencyScreen,
         ThemeWrapper,
-        App,
-    };
+        loadInitialState,
+        persistStore,
+    });
 };

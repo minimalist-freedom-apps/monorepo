@@ -56,9 +56,6 @@ importers:
       '@evolu/common':
         specifier: ^7.4.1
         version: 7.4.1
-      '@evolu/react':
-        specifier: ^10.4.0
-        version: 10.4.0(@evolu/common@7.4.1)(react@19.2.4)
       '@evolu/react-web':
         specifier: ^2.4.0
         version: 2.4.0(@evolu/common@7.4.1)(@evolu/web@2.4.0(@evolu/common@7.4.1))(react-dom@19.2.4(react@19.2.4))(react@19.2.4)
@@ -1192,13 +1189,6 @@ packages:
       '@evolu/web': ^2.4.0
       react: '>=19'
       react-dom: '>=19'
-
-  '@evolu/react@10.4.0':
-    resolution: {integrity: sha512-BLXlLT+/dKSei/JrkLc9Z3fRb48vcXQmaExe0VMdxMzv2h8CyO5l4G635eQtH8F7I40VsnXLCURxNyzKF9DEQw==}
-    engines: {node: '>=22.0.0'}
-    peerDependencies:
-      '@evolu/common': ^7.4.0
-      react: '>=19'
 
   '@evolu/sqlite-wasm@2.2.4':
     resolution: {integrity: sha512-/JOYGFN93QspD2C8HVxVgBUlFWqJ1IpaVuIhEB53u4+ZvE+D3LjpNHDYiwZgf0n7VaH2U85OY5eV3wUrWc3scg==}
@@ -4601,11 +4591,6 @@ snapshots:
       '@evolu/web': 2.4.0(@evolu/common@7.4.1)
       react: 19.2.4
       react-dom: 19.2.4(react@19.2.4)
-
-  '@evolu/react@10.4.0(@evolu/common@7.4.1)(react@19.2.4)':
-    dependencies:
-      '@evolu/common': 7.4.1
-      react: 19.2.4
 
   '@evolu/sqlite-wasm@2.2.4': {}
 

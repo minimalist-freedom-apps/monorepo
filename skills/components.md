@@ -60,3 +60,6 @@ const CurrencyInput = createCurrencyInput({
 ## Hooks
 Do not use React hooks at all. Never. They are anti-pattern. They hide external dependencies and make code harder to test.
 
+### Exceptions
+- `useState` and `useRef` for local component state
+- `useEffect` for lifecycle methods (e.g. to trigger side effects on mount/unmount)
