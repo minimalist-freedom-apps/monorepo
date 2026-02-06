@@ -1,4 +1,1 @@
-export {
-    type MockConnect,
-    mockConnect,
-} from './mockConnect.js';
+export { mockConnect } from './mockConnect.js';

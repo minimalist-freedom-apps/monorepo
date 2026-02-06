@@ -1,22 +1,22 @@
 import type { Theme } from '@minimalistic-apps/components';
-import { mockConnect } from '@minimalistic-apps/mini-store/mocks';
 import { render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { describe, expect, test, vi } from 'vitest';
-import {
-    createThemeSettings,
-    type ThemeSettingsDeps,
-} from './ThemeSettings.js';
+import { themeSettingsPure } from './ThemeSettings.js';
 
-const createTestDeps = (theme: Theme): ThemeSettingsDeps => ({
-    connect: mockConnect({ theme }),
-    setTheme: vi.fn(),
-});
+const createTestComponent = (theme: Theme) => {
+    const setTheme = vi.fn();
+    const deps = { setTheme };
+    const ThemeSettings: React.FC = () => (
+        <>{themeSettingsPure(deps, { theme })}</>
+    );
 
-describe(createThemeSettings.name, () => {
+    return { setTheme, ThemeSettings };
+};
+
+describe(themeSettingsPure.name, () => {
     test('renders Theme Mode label', () => {
-        const deps = createTestDeps('dark');
-        const ThemeSettings = createThemeSettings(deps);
+        const { ThemeSettings } = createTestComponent('dark');
 
         render(<ThemeSettings />);
 
@@ -24,8 +24,7 @@ describe(createThemeSettings.name, () => {
     });
 
     test('switch is checked when theme is light', () => {
-        const deps = createTestDeps('light');
-        const ThemeSettings = createThemeSettings(deps);
+        const { ThemeSettings } = createTestComponent('light');
 
         render(<ThemeSettings />);
 
@@ -33,8 +32,7 @@ describe(createThemeSettings.name, () => {
     });
 
     test('switch is unchecked when theme is dark', () => {
-        const deps = createTestDeps('dark');
-        const ThemeSettings = createThemeSettings(deps);
+        const { ThemeSettings } = createTestComponent('dark');
 
         render(<ThemeSettings />);
 
@@ -43,23 +41,21 @@ describe(createThemeSettings.name, () => {
 
     test('calls setTheme with light when toggling from dark', async () => {
         const user = userEvent.setup();
-        const deps = createTestDeps('dark');
-        const ThemeSettings = createThemeSettings(deps);
+        const { setTheme, ThemeSettings } = createTestComponent('dark');
 
         render(<ThemeSettings />);
         await user.click(screen.getByRole('switch'));
 
-        expect(deps.setTheme).toHaveBeenCalledWith('light');
+        expect(setTheme).toHaveBeenCalledWith('light');
     });
 
     test('calls setTheme with dark when toggling from light', async () => {
         const user = userEvent.setup();
-        const deps = createTestDeps('light');
-        const ThemeSettings = createThemeSettings(deps);
+        const { setTheme, ThemeSettings } = createTestComponent('light');
 
         render(<ThemeSettings />);
         await user.click(screen.getByRole('switch'));
 
-        expect(deps.setTheme).toHaveBeenCalledWith('dark');
+        expect(setTheme).toHaveBeenCalledWith('dark');
     });
 });

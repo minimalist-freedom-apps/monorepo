@@ -3,7 +3,6 @@ import { useQuery } from '@evolu/react';
 import type { AmountSats } from '@minimalistic-apps/bitcoin';
 import { Screen } from '@minimalistic-apps/components';
 import { FiatAmount } from '@minimalistic-apps/fiat';
-import type { ComponentConnectDep } from '@minimalistic-apps/mini-store';
 import type React from 'react';
 import type { RecalculateFromBtcDep } from '../../converter/recalculateFromBtc';
 import type { RecalculateFromCurrencyDep } from '../../converter/recalculateFromCurrency';
@@ -14,7 +13,7 @@ import type { AddCurrencyButtonDep } from '../AddCurrencyScreen/AddCurrencyButto
 import type { RatesLoadingDep } from '../RatesLoading';
 import type { CurrencyRowDep } from './CurrencyFiatRow';
 
-type ConverterScreenStateProps = {
+export type ConverterScreenStateProps = {
     readonly satsAmount: AmountSats;
     readonly currencyValues: Readonly<CurrencyValues>;
 };
@@ -22,8 +21,7 @@ type ConverterScreenStateProps = {
 type SetSatsAmount = (satsAmount: AmountSats) => void;
 type SetFiatAmounts = (fiatAmounts: Readonly<CurrencyValues>) => void;
 
-type ConverterScreenDeps = ComponentConnectDep<ConverterScreenStateProps> &
-    RecalculateFromBtcDep &
+type ConverterScreenDeps = RecalculateFromBtcDep &
     RecalculateFromCurrencyDep &
     GetSelectedCurrenciesDep &
     RemoveCurrencyDep &
@@ -38,60 +36,55 @@ type ConverterScreen = React.FC;
 
 export type ConverterScreenDep = { ConverterScreen: ConverterScreen };
 
-export const createConverterScreen = (
+export const converterScreenPure = (
     deps: ConverterScreenDeps,
-): ConverterScreen =>
-    deps.connect(
-        ({ satsAmount, currencyValues }: ConverterScreenStateProps) => {
-            const currencies = useQuery(deps.getSelectedCurrencies.query);
-            const selectedCurrencies = currencies.flatMap(row =>
-                row.currency === null ? [] : [row.currency],
-            );
-
-            const handleBtcChange = (value: AmountSats) => {
-                deps.setSatsAmount(value);
-                deps.recalculateFromBtc();
-            };
-
-            const handleCurrencyChange = (
-                code: CurrencyCode,
-                value: number,
-            ) => {
-                const fiatAmount = FiatAmount(code).from(value);
-
-                deps.setFiatAmounts({
-                    ...currencyValues,
-                    [code]: value,
-                });
-                deps.recalculateFromCurrency({ code, value: fiatAmount });
-            };
-
-            return (
-                <Screen gap={12}>
-                    <deps.RatesLoading />
-                    <deps.CurrencyRow
-                        key="BTC"
-                        code="BTC"
-                        value={satsAmount}
-                        onChange={(value: number) =>
-                            handleBtcChange(value as AmountSats)
-                        }
-                    />
-
-                    {selectedCurrencies.map((code: CurrencyCode) => (
-                        <deps.CurrencyRow
-                            key={code}
-                            code={code}
-                            value={currencyValues[code] ?? 0}
-                            onChange={(value: number) =>
-                                handleCurrencyChange(code, value)
-                            }
-                            onRemove={() => deps.removeCurrency({ code })}
-                        />
-                    ))}
-
-                    <deps.AddCurrencyButton />
-                </Screen>
-            );
-        },
+    { satsAmount, currencyValues }: ConverterScreenStateProps,
+): React.ReactNode => {
+    const currencies = useQuery(deps.getSelectedCurrencies.query);
+    const selectedCurrencies = currencies.flatMap(row =>
+        row.currency === null ? [] : [row.currency],
     );
+
+    const handleBtcChange = (value: AmountSats) => {
+        deps.setSatsAmount(value);
+        deps.recalculateFromBtc();
+    };
+
+    const handleCurrencyChange = (code: CurrencyCode, value: number) => {
+        const fiatAmount = FiatAmount(code).from(value);
+
+        deps.setFiatAmounts({
+            ...currencyValues,
+            [code]: value,
+        });
+        deps.recalculateFromCurrency({ code, value: fiatAmount });
+    };
+
+    return (
+        <Screen gap={12}>
+            <deps.RatesLoading />
+            <deps.CurrencyRow
+                key="BTC"
+                code="BTC"
+                value={satsAmount}
+                onChange={(value: number) =>
+                    handleBtcChange(value as AmountSats)
+                }
+            />
+
+            {selectedCurrencies.map((code: CurrencyCode) => (
+                <deps.CurrencyRow
+                    key={code}
+                    code={code}
+                    value={currencyValues[code] ?? 0}
+                    onChange={(value: number) =>
+                        handleCurrencyChange(code, value)
+                    }
+                    onRemove={() => deps.removeCurrency({ code })}
+                />
+            ))}
+
+            <deps.AddCurrencyButton />
+        </Screen>
+    );
+};

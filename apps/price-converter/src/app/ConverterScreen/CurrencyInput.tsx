@@ -9,7 +9,6 @@ import {
 } from '@minimalistic-apps/bitcoin';
 import { Input } from '@minimalistic-apps/components';
 import { type FiatAmount, formatFiatWithCommas } from '@minimalistic-apps/fiat';
-import type { ComponentConnectDep } from '@minimalistic-apps/mini-store';
 import type React from 'react';
 import { useEffect, useState } from 'react';
 import type { Mode } from '../../state/State';
@@ -33,21 +32,18 @@ const formatInputValue = (
     return formatFiatWithCommas(value as FiatAmount<CurrencyCode>);
 };
 
-type CurrencyInputOwnProps = {
+export type CurrencyInputOwnProps = {
     readonly value: number;
     readonly code: CurrencyCode | 'BTC';
     readonly onChange: (value: number) => void;
 };
 
-type CurrencyInputStateProps = {
+export type CurrencyInputStateProps = {
     readonly mode: Mode;
     readonly focusedCurrency: CurrencyCode | 'BTC' | null;
 };
 
-type CurrencyInputDeps = ComponentConnectDep<
-    CurrencyInputStateProps,
-    CurrencyInputOwnProps
-> & {
+type CurrencyInputDeps = {
     readonly setFocusedCurrency: (code: CurrencyCode | 'BTC') => void;
 };
 
@@ -57,49 +53,57 @@ export type CurrencyInputDep = {
     CurrencyInput: CurrencyInput;
 };
 
-export const createCurrencyInput = (deps: CurrencyInputDeps): CurrencyInput =>
-    deps.connect(({ mode, focusedCurrency, value, code, onChange }) => {
-        const [inputValue, setInputValue] = useState(() =>
-            formatInputValue(value, code, mode),
-        );
+export const currencyInputPure = (
+    deps: CurrencyInputDeps,
+    {
+        mode,
+        focusedCurrency,
+        value,
+        code,
+        onChange,
+    }: CurrencyInputStateProps & CurrencyInputOwnProps,
+): React.ReactNode => {
+    const [inputValue, setInputValue] = useState(() =>
+        formatInputValue(value, code, mode),
+    );
 
-        useEffect(() => {
-            // Prevent overwriting input while user is typing
-            if (focusedCurrency === code) {
-                return;
-            }
+    useEffect(() => {
+        // Prevent overwriting input while user is typing
+        if (focusedCurrency === code) {
+            return;
+        }
 
-            setInputValue(formatInputValue(value, code, mode));
-        }, [value, code, mode, focusedCurrency]);
+        setInputValue(formatInputValue(value, code, mode));
+    }, [value, code, mode, focusedCurrency]);
 
-        const handleChange = (newValue: string) => {
-            setInputValue(newValue);
+    const handleChange = (newValue: string) => {
+        setInputValue(newValue);
 
-            const numberValue = parseFormattedNumber(newValue);
+        const numberValue = parseFormattedNumber(newValue);
 
-            if (!Number.isNaN(numberValue)) {
-                const normalizedValue =
-                    mode === 'BTC' && code === 'BTC'
-                        ? btcToSats(numberValue as AmountBtc)
-                        : numberValue;
+        if (!Number.isNaN(numberValue)) {
+            const normalizedValue =
+                mode === 'BTC' && code === 'BTC'
+                    ? btcToSats(numberValue as AmountBtc)
+                    : numberValue;
 
-                onChange(normalizedValue);
-            }
-        };
+            onChange(normalizedValue);
+        }
+    };
 
-        const handleFocus = () => {
-            deps.setFocusedCurrency(code);
-        };
+    const handleFocus = () => {
+        deps.setFocusedCurrency(code);
+    };
 
-        return (
-            <Input
-                value={inputValue}
-                onChange={handleChange}
-                onFocus={handleFocus}
-                placeholder={`Type in the ${code} amount`}
-                monospace
-                large
-                className="minimalistic-input-with-small-placeholder"
-            />
-        );
-    });
+    return (
+        <Input
+            value={inputValue}
+            onChange={handleChange}
+            onFocus={handleFocus}
+            placeholder={`Type in the ${code} amount`}
+            monospace
+            large
+            className="minimalistic-input-with-small-placeholder"
+        />
+    );
+};

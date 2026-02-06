@@ -1,5 +1,4 @@
 import { Alert, Row, Text } from '@minimalistic-apps/components';
-import type { ComponentConnectDep } from '@minimalistic-apps/mini-store';
 import type React from 'react';
 import { useEffect, useRef, useState } from 'react';
 import type { FetchAndStoreRatesDep } from '../converter/fetchAndStoreRates';
@@ -28,13 +27,12 @@ const getTimeAgo = (timestamp: number): string => {
     return `${seconds}s ago`;
 };
 
-type RatesLoadingStateProps = {
+export type RatesLoadingStateProps = {
     readonly error: string;
     readonly lastUpdated: number | null;
 };
 
-type RatesLoadingDeps = ComponentConnectDep<RatesLoadingStateProps> &
-    FetchAndStoreRatesDep;
+type RatesLoadingDeps = FetchAndStoreRatesDep;
 
 type RatesLoading = React.FC;
 
@@ -42,35 +40,37 @@ export type RatesLoadingDep = {
     readonly RatesLoading: RatesLoading;
 };
 
-export const createRatesLoading = (deps: RatesLoadingDeps): RatesLoading =>
-    deps.connect(({ error, lastUpdated }) => {
-        const [timeAgo, setTimeAgo] = useState<string>('');
-        const intervalRef = useRef<number | null>(null);
+export const ratesLoadingPure = (
+    deps: RatesLoadingDeps,
+    { error, lastUpdated }: RatesLoadingStateProps,
+): React.ReactNode => {
+    const [timeAgo, setTimeAgo] = useState<string>('');
+    const intervalRef = useRef<number | null>(null);
 
-        useEffect(() => {
-            deps.fetchAndStoreRates();
-        }, []);
+    useEffect(() => {
+        deps.fetchAndStoreRates();
+    }, [deps.fetchAndStoreRates]);
 
-        useEffect(() => {
-            if (lastUpdated !== null) {
-                const updateTime = () => {
-                    setTimeAgo(getTimeAgo(lastUpdated));
-                };
-                updateTime();
-                intervalRef.current = setInterval(updateTime, 1000);
+    useEffect(() => {
+        if (lastUpdated !== null) {
+            const updateTime = () => {
+                setTimeAgo(getTimeAgo(lastUpdated));
+            };
+            updateTime();
+            intervalRef.current = setInterval(updateTime, 1000);
 
-                return () => {
-                    if (intervalRef.current !== null) {
-                        clearInterval(intervalRef.current);
-                    }
-                };
-            }
-        }, [lastUpdated]);
+            return () => {
+                if (intervalRef.current !== null) {
+                    clearInterval(intervalRef.current);
+                }
+            };
+        }
+    }, [lastUpdated]);
 
-        return (
-            <Row justify={error ? 'space-between' : 'end'} align="end">
-                {timeAgo && <Text>{timeAgo}</Text>}
-                {error && <Alert message={error} type="error" />}
-            </Row>
-        );
-    });
+    return (
+        <Row justify={error ? 'space-between' : 'end'} align="end">
+            {timeAgo && <Text>{timeAgo}</Text>}
+            {error && <Alert message={error} type="error" />}
+        </Row>
+    );
+};

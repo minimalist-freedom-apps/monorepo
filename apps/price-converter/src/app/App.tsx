@@ -1,4 +1,3 @@
-import type { ComponentConnectDep } from '@minimalistic-apps/mini-store';
 import { exhaustive } from '@minimalistic-apps/type-utils';
 import type React from 'react';
 import type { Screen } from '../state/State';
@@ -8,12 +7,11 @@ import type { ConverterScreenDep } from './ConverterScreen/ConverterScreen';
 import type { SettingsScreenDep } from './SettingsScreen/SettingsScreen';
 import type { ThemeWrapperDep } from './ThemeWrapper';
 
-type AppStateProps = {
+export type AppStateProps = {
     readonly currentScreen: Screen;
 };
 
-type AppDeps = ComponentConnectDep<AppStateProps> &
-    ConverterScreenDep &
+type AppDeps = ConverterScreenDep &
     AddCurrencyScreenDep &
     SettingsScreenDep &
     AppLayoutDep &
@@ -25,24 +23,26 @@ export type AppDep = {
     readonly App: App;
 };
 
-export const createApp = (deps: AppDeps): App =>
-    deps.connect(({ currentScreen }: AppStateProps) => {
-        const renderScreen = () => {
-            switch (currentScreen) {
-                case 'Converter':
-                    return <deps.ConverterScreen />;
-                case 'AddCurrency':
-                    return <deps.AddCurrencyScreen />;
-                case 'Settings':
-                    return <deps.SettingsScreen />;
-                default:
-                    return exhaustive(currentScreen);
-            }
-        };
+export const appPure = (
+    deps: AppDeps,
+    { currentScreen }: AppStateProps,
+): React.ReactNode => {
+    const renderScreen = () => {
+        switch (currentScreen) {
+            case 'Converter':
+                return <deps.ConverterScreen />;
+            case 'AddCurrency':
+                return <deps.AddCurrencyScreen />;
+            case 'Settings':
+                return <deps.SettingsScreen />;
+            default:
+                return exhaustive(currentScreen);
+        }
+    };
 
-        return (
-            <deps.ThemeWrapper>
-                <deps.AppLayout>{renderScreen()}</deps.AppLayout>
-            </deps.ThemeWrapper>
-        );
-    });
+    return (
+        <deps.ThemeWrapper>
+            <deps.AppLayout>{renderScreen()}</deps.AppLayout>
+        </deps.ThemeWrapper>
+    );
+};

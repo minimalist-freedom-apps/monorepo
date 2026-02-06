@@ -9,11 +9,11 @@ type SettingsScreen = React.FC;
 
 export type SettingsScreenDep = { SettingsScreen: SettingsScreen };
 
-export const createSettingsScreen =
-    (deps: SettingsScreenDeps): SettingsScreen =>
-    () => (
-        <Column gap={12}>
-            <deps.ThemeSettings />
-            <deps.MnemonicSettings />
-        </Column>
-    );
+export const settingsScreenPure = (
+    deps: SettingsScreenDeps,
+): React.ReactNode => (
+    <Column gap={12}>
+        <deps.ThemeSettings />
+        <deps.MnemonicSettings />
+    </Column>
+);
