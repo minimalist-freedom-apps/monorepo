@@ -1,5 +1,5 @@
 import { Column } from '@minimalistic-apps/components';
-import type { Connected } from '@minimalistic-apps/mini-store';
+import type { Connected } from '@minimalistic-apps/connect';
 import type { MnemonicSettingsDep } from './MnemonicSettings';
 import type { ThemeSettingsDep } from './ThemeSettings';
 

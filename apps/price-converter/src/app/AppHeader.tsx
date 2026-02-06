@@ -8,7 +8,7 @@ import {
     ThemeProvider,
     Title,
 } from '@minimalistic-apps/components';
-import type { Connected } from '@minimalistic-apps/mini-store';
+import type { Connected } from '@minimalistic-apps/connect';
 import type { FetchAndStoreRatesDep } from '../converter/fetchAndStoreRates';
 import type { Mode } from '../state/State';
 

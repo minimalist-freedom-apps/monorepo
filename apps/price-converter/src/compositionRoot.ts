@@ -1,10 +1,10 @@
 import type { CurrencyCode } from '@evolu/common';
 import type { AmountSats } from '@minimalistic-apps/bitcoin';
 import type { Theme } from '@minimalistic-apps/components';
+import { createConnect } from '@minimalistic-apps/connect';
 import { createCurrentDateTime } from '@minimalistic-apps/datetime';
 import { createLocalStorage } from '@minimalistic-apps/local-storage';
 import { createWindow } from '@minimalistic-apps/window';
-import { createConnect } from '../../../packages/mini-store/src/connect';
 import { AddCurrencyButtonPure } from './app/AddCurrencyScreen/AddCurrencyButton';
 import { AddCurrencyScreenPure } from './app/AddCurrencyScreen/AddCurrencyScreen';
 import { AppPure } from './app/App';

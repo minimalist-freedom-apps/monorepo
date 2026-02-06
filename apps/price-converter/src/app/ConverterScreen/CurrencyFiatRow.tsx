@@ -5,7 +5,7 @@ import {
     Row,
     Text,
 } from '@minimalistic-apps/components';
-import type { Connected } from '@minimalistic-apps/mini-store';
+import type { Connected } from '@minimalistic-apps/connect';
 import type { Mode } from '../../state/State';
 import type { CurrencyInputDep } from './CurrencyInput';
 
