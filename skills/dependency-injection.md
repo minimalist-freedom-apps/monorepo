@@ -55,3 +55,32 @@ export const createCompositionRoot = (): Deps => {
 }
 ```
 
+### Never create services inside other services
+
+All service creation must happen in the composition root. Never call `createXxx` inside another service factory.
+
+❌ Bad:
+```ts
+const createStatePersistence = (deps: Deps): StatePersistence => {
+    const loadInitialState = createLoadInitialState(deps); // Don't do this!
+    const persistStore = createPersistStore(deps); // Don't do this!
+    // ...
+};
+```
+
+✅ Good:
+```ts
+const createStatePersistence = (deps: StatePersistenceDeps): StatePersistence => {
+    // Use injected dependencies directly
+    deps.loadInitialState();
+    deps.persistStore.start();
+};
+
+// In composition root:
+const loadInitialState = createLoadInitialState({ store, localStorage });
+const persistStore = createPersistStore({ store, localStorage });
+const statePersistence = createStatePersistence({ loadInitialState, persistStore });
+```
+
+**Exception**: Create services inside other services only when a parameter needed for creation is not known at composition root time (e.g., runtime values, user input).
+

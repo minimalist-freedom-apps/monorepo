@@ -2,10 +2,11 @@ import type { AmountSats } from '@minimalistic-apps/bitcoin';
 import type { Theme } from '@minimalistic-apps/components';
 import { createCurrentDateTime } from '@minimalistic-apps/datetime';
 import { createLocalStorage } from '@minimalistic-apps/local-storage';
+import { createWindow } from '@minimalistic-apps/window';
 import { createConnect } from '../../../packages/mini-store/src/connect';
 import { createAddCurrencyButton } from './app/AddCurrencyScreen/AddCurrencyButton';
 import { createAddCurrencyScreen } from './app/AddCurrencyScreen/AddCurrencyScreen';
-import { type App, createApp } from './app/App';
+import { createApp } from './app/App';
 import { createAppHeader } from './app/AppHeader';
 import { createAppLayout } from './app/AppLayout';
 import { createConverterScreen } from './app/ConverterScreen/ConverterScreen';
@@ -19,6 +20,7 @@ import { createThemeWrapper } from './app/ThemeWrapper';
 import { createFetchAndStoreRates } from './converter/fetchAndStoreRates';
 import { createRecalculateFromBtc } from './converter/recalculateFromBtc';
 import { createRecalculateFromCurrency } from './converter/recalculateFromCurrency';
+import { createMain, type Main } from './createMain';
 import { createFetchAverageRates } from './rates/fetchAverageRates';
 import { createFetchBitpayRates } from './rates/fetchBitpayRates';
 import { createFetchBlockchainInfoRates } from './rates/fetchBlockchainInfoRates';
@@ -30,10 +32,11 @@ import { createEnsureEvolu } from './state/evolu/createEvolu';
 import { createGetSelectedCurrencies } from './state/evolu/getSelectedCurrencies';
 import { createLoadInitialState } from './state/localStorage/loadInitialState';
 import { createPersistStore } from './state/localStorage/persistStore';
+import { createStatePersistence } from './state/localStorage/statePersistence';
 import { createRemoveCurrency } from './state/removeCurrency';
 import type { CurrencyValues, Screen } from './state/State';
 
-export const createAppCompositionRoot = (): App => {
+export const createCompositionRoot = (): Main => {
     const fetchDeps = {
         // Important to be wrapped to preserve the correct `this` context
         fetch: (input: RequestInfo | URL, init?: RequestInit) =>
@@ -76,9 +79,19 @@ export const createAppCompositionRoot = (): App => {
         recalculateFromBtc,
     });
 
+    const window = createWindow();
+
     const loadInitialState = createLoadInitialState({
         store,
         localStorage,
+    });
+
+    const persistStore = createPersistStore({ store, localStorage });
+
+    const statePersistence = createStatePersistence({
+        loadInitialState,
+        persistStore,
+        window: window,
     });
 
     const fetchAndStoreRates = createFetchAndStoreRates({
@@ -87,8 +100,6 @@ export const createAppCompositionRoot = (): App => {
         recalculateFromBtc,
         currentDateTime,
     });
-
-    const persistStore = createPersistStore({ store, localStorage });
 
     const AddCurrencyButton = createAddCurrencyButton({ store });
 
@@ -175,14 +186,17 @@ export const createAppCompositionRoot = (): App => {
         })),
     });
 
-    return createApp({
+    const App = createApp({
         connect: connect(state => ({ currentScreen: state.currentScreen })),
         ConverterScreen,
         AddCurrencyScreen,
         SettingsScreen,
         AppLayout,
         ThemeWrapper,
-        loadInitialState,
-        persistStore,
+    });
+
+    return createMain({
+        App,
+        statePersistence,
     });
 };

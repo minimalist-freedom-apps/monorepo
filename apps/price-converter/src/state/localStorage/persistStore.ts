@@ -2,9 +2,9 @@ import type { LocalStorageDep } from '@minimalistic-apps/local-storage';
 import type { StoreDep } from '../../state/createStore';
 import { STORAGE_KEYS } from './storageKeys';
 
-export interface PersistStore {
-    readonly start: () => () => void;
-}
+type Unsubscribe = () => void;
+
+export type PersistStore = () => Unsubscribe;
 
 export interface PersistStoreDep {
     readonly persistStore: PersistStore;
@@ -12,8 +12,9 @@ export interface PersistStoreDep {
 
 type PersistStoreDeps = LocalStorageDep & StoreDep;
 
-export const createPersistStore = (deps: PersistStoreDeps): PersistStore => {
-    const start = () => {
+export const createPersistStore =
+    (deps: PersistStoreDeps): PersistStore =>
+    () => {
         const unsubscribe = deps.store.subscribe(() => {
             const state = deps.store.getState();
 
@@ -33,6 +34,3 @@ export const createPersistStore = (deps: PersistStoreDeps): PersistStore => {
 
         return unsubscribe;
     };
-
-    return { start };
-};

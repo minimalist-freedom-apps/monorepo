@@ -1,9 +1,6 @@
 import type { ComponentConnectDep } from '@minimalistic-apps/mini-store';
 import { exhaustive } from '@minimalistic-apps/type-utils';
 import type React from 'react';
-import { useEffect } from 'react';
-import type { LoadInitialStateDep } from '../state/localStorage/loadInitialState';
-import type { PersistStoreDep } from '../state/localStorage/persistStore';
 import type { Screen } from '../state/State';
 import type { AddCurrencyScreenDep } from './AddCurrencyScreen/AddCurrencyScreen';
 import type { AppLayoutDep } from './AppLayout';
@@ -20,9 +17,7 @@ type AppDeps = ComponentConnectDep<AppStateProps> &
     AddCurrencyScreenDep &
     SettingsScreenDep &
     AppLayoutDep &
-    ThemeWrapperDep &
-    LoadInitialStateDep &
-    PersistStoreDep;
+    ThemeWrapperDep;
 
 export type App = React.FC;
 
@@ -32,18 +27,6 @@ export type AppDep = {
 
 export const createApp = (deps: AppDeps): App =>
     deps.connect(({ currentScreen }: AppStateProps) => {
-        useEffect(() => {
-            deps.loadInitialState();
-            const unsubscribe = deps.persistStore.start();
-
-            window.addEventListener('beforeunload', unsubscribe);
-
-            return () => {
-                window.removeEventListener('beforeunload', unsubscribe);
-                unsubscribe();
-            };
-        }, []);
-
         const renderScreen = () => {
             switch (currentScreen) {
                 case 'Converter':
