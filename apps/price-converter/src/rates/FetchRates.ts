@@ -22,3 +22,7 @@ export const FetchRatesError = (): FetchRatesError => ({
 });
 
 export type FetchRates = () => Promise<Result<CurrencyMap, FetchRatesError>>;
+
+export interface FetchRatesDep {
+    readonly fetchRates: FetchRates;
+}
