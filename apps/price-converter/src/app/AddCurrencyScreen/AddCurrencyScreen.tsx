@@ -11,17 +11,14 @@ import type { FC } from 'react';
 import { useState } from 'react';
 import type { CurrencyEntity, CurrencyMap } from '../../rates/FetchRates';
 import type { AddCurrencyDep } from '../../state/addCurrency';
+import type { NavigateDep } from '../../state/navigate';
 
 export type AddCurrencyScreenStateProps = {
     readonly rates: CurrencyMap;
     readonly selectedCurrencies: ReadonlyArray<CurrencyCode>;
 };
 
-type SetCurrentScreen = (screen: 'Converter') => void;
-
-type AddCurrencyScreenDeps = AddCurrencyDep & {
-    readonly setCurrentScreen: SetCurrentScreen;
-};
+type AddCurrencyScreenDeps = AddCurrencyDep & NavigateDep;
 
 export type AddCurrencyScreenDep = {
     readonly AddCurrencyScreen: FC;
@@ -54,11 +51,11 @@ export const AddCurrencyScreenPure = (
 
     const handleSelect = (code: string) => {
         deps.addCurrency({ code: code as CurrencyCode });
-        deps.setCurrentScreen('Converter');
+        deps.navigate('Converter');
     };
 
     const handleBack = () => {
-        deps.setCurrentScreen('Converter');
+        deps.navigate('Converter');
     };
 
     const listItems = filteredCurrencies.map(item => ({

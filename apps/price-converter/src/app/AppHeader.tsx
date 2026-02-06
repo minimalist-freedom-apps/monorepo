@@ -10,6 +10,7 @@ import {
 } from '@minimalistic-apps/components';
 import type { FC } from 'react';
 import type { FetchAndStoreRatesDep } from '../converter/fetchAndStoreRates';
+import type { NavigateDep } from '../state/navigate';
 import type { Mode } from '../state/State';
 
 export type AppHeaderStateProps = {
@@ -18,12 +19,11 @@ export type AppHeaderStateProps = {
 };
 
 type SetMode = (mode: Mode) => void;
-type SetCurrentScreen = (screen: 'Converter' | 'Settings') => void;
 
-type AppHeaderDeps = FetchAndStoreRatesDep & {
-    readonly setMode: SetMode;
-    readonly setCurrentScreen: SetCurrentScreen;
-};
+type AppHeaderDeps = FetchAndStoreRatesDep &
+    NavigateDep & {
+        readonly setMode: SetMode;
+    };
 
 export type AppHeaderDep = {
     readonly AppHeader: FC;
@@ -38,11 +38,11 @@ export const AppHeaderPure = (
     };
 
     const handleSettings = () => {
-        deps.setCurrentScreen('Settings');
+        deps.navigate('Settings');
     };
 
     const handleHome = () => {
-        deps.setCurrentScreen('Converter');
+        deps.navigate('Converter');
     };
 
     return (

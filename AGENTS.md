@@ -31,4 +31,4 @@ See the following files:
 - [verification.md](skills/verification.md)
 - [components.md](skills/components.md)
 - [verification.md](skills/verification.md)
-- [state.md](skills/state.md)
+- [store.md](skills/store.md)

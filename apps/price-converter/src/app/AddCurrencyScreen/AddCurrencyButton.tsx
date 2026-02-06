@@ -1,13 +1,13 @@
 import { FloatButton, PlusOutlined } from '@minimalistic-apps/components';
 import type { FC } from 'react';
-import type { StoreDep } from '../../state/createStore';
+import type { NavigateDep } from '../../state/navigate';
 
-type AddCurrencyButtonDeps = StoreDep;
+type AddCurrencyButtonDeps = NavigateDep;
 
 export type AddCurrencyButtonDep = { AddCurrencyButton: FC };
 
 export const AddCurrencyButtonPure = (deps: AddCurrencyButtonDeps) => {
-    const onClick = () => deps.store.setState({ currentScreen: 'AddCurrency' });
+    const onClick = () => deps.navigate('AddCurrency');
 
     return (
         <FloatButton

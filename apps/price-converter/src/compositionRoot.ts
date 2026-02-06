@@ -34,8 +34,9 @@ import {
 import { createLoadInitialState } from './state/localStorage/loadInitialState';
 import { createPersistStore } from './state/localStorage/persistStore';
 import { createStatePersistence } from './state/localStorage/statePersistence';
+import { createNavigate } from './state/navigate';
 import { createRemoveCurrency } from './state/removeCurrency';
-import type { CurrencyValues, Screen } from './state/State';
+import type { CurrencyValues } from './state/State';
 import { createSetTheme } from './state/setTheme';
 
 export const createCompositionRoot = (): Main => {
@@ -62,8 +63,7 @@ export const createCompositionRoot = (): Main => {
 
     // Converter
     const setTheme = createSetTheme({ store });
-    const setCurrentScreen = (screen: Screen) =>
-        store.setState({ currentScreen: screen });
+    const navigate = createNavigate({ store });
 
     const addCurrency = createAddCurrency({ store, ensureEvolu });
     const removeCurrency = createRemoveCurrency({ store, ensureEvolu });
@@ -101,7 +101,7 @@ export const createCompositionRoot = (): Main => {
     });
 
     // Components
-    const AddCurrencyButton = () => AddCurrencyButtonPure({ store });
+    const AddCurrencyButton = () => AddCurrencyButtonPure({ navigate });
 
     const CurrencyInput = connect(
         CurrencyInputPure,
@@ -183,7 +183,7 @@ export const createCompositionRoot = (): Main => {
         }),
         {
             addCurrency,
-            setCurrentScreen,
+            navigate,
         },
     );
 
@@ -196,7 +196,7 @@ export const createCompositionRoot = (): Main => {
         {
             fetchAndStoreRates,
             setMode: (mode: 'BTC' | 'Sats') => store.setState({ mode }),
-            setCurrentScreen,
+            navigate,
         },
     );
 
