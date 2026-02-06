@@ -18,6 +18,7 @@
         "@minimalistic-apps/datetime": "workspace:*",
         "@minimalistic-apps/fiat": "workspace:*",
         "@minimalistic-apps/local-storage": "workspace:*",
+        "@minimalistic-apps/connect": "workspace:*",
         "@minimalistic-apps/mini-store": "workspace:*",
         "@minimalistic-apps/type-utils": "workspace:*",
         "@minimalistic-apps/window": "workspace:*",

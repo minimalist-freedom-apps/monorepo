@@ -1,5 +1,5 @@
 import { Layout } from '@minimalistic-apps/components';
-import type { Connected } from '@minimalistic-apps/mini-store';
+import type { Connected } from '@minimalistic-apps/connect';
 import type { ReactNode } from 'react';
 import type { AppHeaderDep } from './AppHeader';
 

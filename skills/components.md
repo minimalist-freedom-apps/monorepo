@@ -3,7 +3,7 @@ Always prefer to write pure components.
 
 ## Component as Dependency
 - If you need to access external dependency (global state, fetch, ...) in a component, do not use context & hooks. Instead, make component a pure render function.
-- Use `connect` from `@minimalistic-apps/mini-store` to connect components to state.
+- Use `connect` from `@minimalistic-apps/connect` to connect components to state.
 - The `connect` function receives the pure component, a `mapStateToProps` function, and optionally the deps object.
 - The component itself does not know about the global State type — `connect` handles the mapping.
 - Components are never curried. They take `(deps, props)` as two separate arguments, or just `(props)` when there are no deps.
@@ -11,7 +11,7 @@ Always prefer to write pure components.
 ### Pattern: Connected component with deps
 
 ```tsx
-import type { Connected } from '@minimalistic-apps/mini-store';
+import type { Connected } from '@minimalistic-apps/connect';
 import type React from 'react';
 import type { Mode } from '../../state/State';
 

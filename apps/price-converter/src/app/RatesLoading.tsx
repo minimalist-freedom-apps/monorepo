@@ -1,5 +1,5 @@
 import { Alert, Row, Text } from '@minimalistic-apps/components';
-import type { Connected } from '@minimalistic-apps/mini-store';
+import type { Connected } from '@minimalistic-apps/connect';
 import { useEffect, useRef, useState } from 'react';
 import type { FetchAndStoreRatesDep } from '../converter/fetchAndStoreRates';
 

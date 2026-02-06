@@ -7,7 +7,7 @@ import {
     SearchInput,
     Text,
 } from '@minimalistic-apps/components';
-import type { Connected } from '@minimalistic-apps/mini-store';
+import type { Connected } from '@minimalistic-apps/connect';
 import { typedObjectValues } from '@minimalistic-apps/type-utils';
 import { useState } from 'react';
 import type { CurrencyEntity, CurrencyMap } from '../../rates/FetchRates';

@@ -1,4 +1,4 @@
-import type { Connected } from '@minimalistic-apps/mini-store';
+import type { Connected } from '@minimalistic-apps/connect';
 import { exhaustive } from '@minimalistic-apps/type-utils';
 import type { Screen } from '../state/State';
 import type { AddCurrencyScreenDep } from './AddCurrencyScreen/AddCurrencyScreen';
