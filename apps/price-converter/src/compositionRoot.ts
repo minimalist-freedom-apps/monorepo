@@ -30,6 +30,7 @@ import { createAddCurrency } from './state/addCurrency';
 import { createStore } from './state/createStore';
 import { createEnsureEvoluOwner } from './state/evolu/createEnsureEvoluOwner';
 import { createEnsureEvolu } from './state/evolu/createEvolu';
+import { createSubscribableQuery } from './state/evolu/createSubscribableQuery';
 import { createGetSelectedCurrencies } from './state/evolu/getSelectedCurrencies';
 import { createLoadInitialState } from './state/localStorage/loadInitialState';
 import { createPersistStore } from './state/localStorage/persistStore';
@@ -69,7 +70,8 @@ export const createCompositionRoot = (): Main => {
     // HACK: We need this to subscribe query, in next Evolu this won't be necessary.
     //       But now, we cannot create static query.
     const { evolu } = ensureEvolu();
-    const selectedCurrencies = evolu.subscribeQuery(
+    const selectedCurrencies = createSubscribableQuery(
+        evolu,
         getSelectedCurrencies.query,
     );
 
