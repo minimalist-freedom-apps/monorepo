@@ -1,5 +1,4 @@
 import type { CurrencyCode } from '@evolu/common';
-import { useQuery } from '@evolu/react';
 import {
     Button,
     List,
@@ -12,18 +11,17 @@ import { typedObjectValues } from '@minimalistic-apps/type-utils';
 import { useState } from 'react';
 import type { CurrencyEntity, CurrencyMap } from '../../rates/FetchRates';
 import type { AddCurrencyDep } from '../../state/addCurrency';
-import type { GetSelectedCurrenciesDep } from '../../state/evolu/getSelectedCurrencies';
 
 export type AddCurrencyScreenStateProps = {
     readonly rates: CurrencyMap;
+    readonly selectedCurrencies: ReadonlyArray<CurrencyCode>;
 };
 
 type SetCurrentScreen = (screen: 'Converter') => void;
 
-type AddCurrencyScreenDeps = GetSelectedCurrenciesDep &
-    AddCurrencyDep & {
-        readonly setCurrentScreen: SetCurrentScreen;
-    };
+type AddCurrencyScreenDeps = AddCurrencyDep & {
+    readonly setCurrentScreen: SetCurrentScreen;
+};
 
 export type AddCurrencyScreenDep = {
     readonly AddCurrencyScreen: Connected;
@@ -31,13 +29,8 @@ export type AddCurrencyScreenDep = {
 
 export const AddCurrencyScreenPure = (
     deps: AddCurrencyScreenDeps,
-    { rates }: AddCurrencyScreenStateProps,
+    { rates, selectedCurrencies }: AddCurrencyScreenStateProps,
 ) => {
-    const currencies = useQuery(deps.getSelectedCurrencies.query);
-    const selectedCurrencies = currencies.flatMap(row =>
-        row.currency === null ? [] : [row.currency],
-    );
-
     const [searchTerm, setSearchTerm] = useState('');
 
     const availableCurrencies = typedObjectValues(rates)

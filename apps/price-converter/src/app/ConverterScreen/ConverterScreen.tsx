@@ -1,12 +1,10 @@
 import type { CurrencyCode } from '@evolu/common';
-import { useQuery } from '@evolu/react';
 import type { AmountSats } from '@minimalistic-apps/bitcoin';
 import { Screen } from '@minimalistic-apps/components';
 import type { Connected } from '@minimalistic-apps/connect';
 import { FiatAmount } from '@minimalistic-apps/fiat';
 import type { RecalculateFromBtcDep } from '../../converter/recalculateFromBtc';
 import type { RecalculateFromCurrencyDep } from '../../converter/recalculateFromCurrency';
-import type { GetSelectedCurrenciesDep } from '../../state/evolu/getSelectedCurrencies';
 import type { RemoveCurrencyDep } from '../../state/removeCurrency';
 import type { CurrencyValues } from '../../state/State';
 import type { AddCurrencyButtonDep } from '../AddCurrencyScreen/AddCurrencyButton';
@@ -16,6 +14,7 @@ import type { CurrencyRowDep } from './CurrencyFiatRow';
 export type ConverterScreenStateProps = {
     readonly satsAmount: AmountSats;
     readonly currencyValues: Readonly<CurrencyValues>;
+    readonly selectedCurrencies: ReadonlyArray<CurrencyCode>;
 };
 
 type SetSatsAmount = (satsAmount: AmountSats) => void;
@@ -23,7 +22,6 @@ type SetFiatAmounts = (fiatAmounts: Readonly<CurrencyValues>) => void;
 
 type ConverterScreenDeps = RecalculateFromBtcDep &
     RecalculateFromCurrencyDep &
-    GetSelectedCurrenciesDep &
     RemoveCurrencyDep &
     AddCurrencyButtonDep &
     CurrencyRowDep &
@@ -36,13 +34,12 @@ export type ConverterScreenDep = { ConverterScreen: Connected };
 
 export const ConverterScreenPure = (
     deps: ConverterScreenDeps,
-    { satsAmount, currencyValues }: ConverterScreenStateProps,
+    {
+        satsAmount,
+        currencyValues,
+        selectedCurrencies,
+    }: ConverterScreenStateProps,
 ) => {
-    const currencies = useQuery(deps.getSelectedCurrencies.query);
-    const selectedCurrencies = currencies.flatMap(row =>
-        row.currency === null ? [] : [row.currency],
-    );
-
     const handleBtcChange = (value: AmountSats) => {
         deps.setSatsAmount(value);
         deps.recalculateFromBtc();

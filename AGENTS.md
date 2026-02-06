@@ -28,4 +28,5 @@ See the following files:
 - [test-driven-development.md](skills/test-driven-development.md)
 - [testing.md](skills/testing.md)
 - [variable-shadowing.md](skills/variable-shadowing.md)
+- [verification.md](skills/verification.md)
 - [components.md](skills/components.md)

@@ -31,7 +31,10 @@ import { createStore } from './state/createStore';
 import { createEnsureEvoluOwner } from './state/evolu/createEnsureEvoluOwner';
 import { createEnsureEvolu } from './state/evolu/createEvolu';
 import { createSubscribableQuery } from './state/evolu/createSubscribableQuery';
-import { createGetSelectedCurrencies } from './state/evolu/getSelectedCurrencies';
+import {
+    createGetSelectedCurrencies,
+    selectCurrencyCodes,
+} from './state/evolu/getSelectedCurrencies';
 import { createLoadInitialState } from './state/localStorage/loadInitialState';
 import { createPersistStore } from './state/localStorage/persistStore';
 import { createStatePersistence } from './state/localStorage/statePersistence';
@@ -151,14 +154,14 @@ export const createCompositionRoot = (): Main => {
 
     const ConverterScreen = connect(
         ConverterScreenPure,
-        ({ store }) => ({
+        ({ store, selectedCurrencies }) => ({
             satsAmount: store.satsAmount,
             currencyValues: store.fiatAmounts,
+            selectedCurrencies: selectCurrencyCodes(selectedCurrencies),
         }),
         {
             recalculateFromBtc,
             recalculateFromCurrency,
-            getSelectedCurrencies,
             removeCurrency,
             AddCurrencyButton,
             CurrencyRow,
@@ -190,9 +193,11 @@ export const createCompositionRoot = (): Main => {
 
     const AddCurrencyScreen = connect(
         AddCurrencyScreenPure,
-        ({ store }) => ({ rates: store.rates }),
+        ({ store, selectedCurrencies }) => ({
+            rates: store.rates,
+            selectedCurrencies: selectCurrencyCodes(selectedCurrencies),
+        }),
         {
-            getSelectedCurrencies,
             addCurrency,
             setCurrentScreen,
         },

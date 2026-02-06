@@ -2,10 +2,15 @@ import type { CurrencyCode, Query, Row } from '@evolu/common';
 import { sqliteTrue } from '@evolu/common';
 import type { EnsureEvoluDep } from './createEvolu';
 
-interface SelectedCurrencyRow extends Row {
+export interface SelectedCurrencyRow extends Row {
     readonly id: string;
     readonly currency: CurrencyCode | null;
 }
+
+export const selectCurrencyCodes = (
+    rows: ReadonlyArray<SelectedCurrencyRow>,
+): ReadonlyArray<CurrencyCode> =>
+    rows.flatMap(row => (row.currency === null ? [] : [row.currency]));
 
 export interface GetSelectedCurrencies {
     /** @deprecated With new Evolu, this wont be needed */

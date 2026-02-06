@@ -39,15 +39,15 @@ export type RatesLoadingDep = {
 };
 
 export const RatesLoadingPure = (
-    deps: RatesLoadingDeps,
+    { fetchAndStoreRates }: RatesLoadingDeps,
     { error, lastUpdated }: RatesLoadingStateProps,
 ) => {
     const [timeAgo, setTimeAgo] = useState<string>('');
     const intervalRef = useRef<number | null>(null);
 
     useEffect(() => {
-        deps.fetchAndStoreRates();
-    }, [deps.fetchAndStoreRates]);
+        fetchAndStoreRates();
+    }, [fetchAndStoreRates]);
 
     useEffect(() => {
         if (lastUpdated !== null) {
