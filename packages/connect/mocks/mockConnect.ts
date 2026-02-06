@@ -7,9 +7,9 @@ export const mockConnect =
     ): React.FC<OwnProps> =>
         ((ownProps: OwnProps) => {
             const props = {
-                ...stateProps,
-                ...ownProps,
-            } as StateProps & OwnProps;
+                ...(stateProps as object),
+                ...(ownProps as object),
+            };
 
             if (deps !== undefined) {
                 return (
@@ -17,10 +17,10 @@ export const mockConnect =
                         deps: unknown,
                         props: StateProps & OwnProps,
                     ) => React.ReactNode
-                )(deps, props);
+                )(deps, props as StateProps & OwnProps);
             }
 
             return (
                 render as (props: StateProps & OwnProps) => React.ReactNode
-            )(props);
+            )(props as StateProps & OwnProps);
         }) as React.FC<OwnProps>;

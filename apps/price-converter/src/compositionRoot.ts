@@ -61,14 +61,24 @@ export const createCompositionRoot = (): Main => {
 
     const store = createStore();
 
-    const connect = createConnect(store);
+    // Evolu
+    const ensureEvoluOwner = createEnsureEvoluOwner({ store });
+    const ensureEvolu = createEnsureEvolu({ ensureEvoluOwner });
+    const getSelectedCurrencies = createGetSelectedCurrencies({ ensureEvolu });
+
+    // HACK: We need this to subscribe query, in next Evolu this won't be necessary.
+    //       But now, we cannot create static query.
+    const { evolu } = ensureEvolu();
+    const selectedCurrencies = evolu.subscribeQuery(
+        getSelectedCurrencies.query,
+    );
+
+    const connect = createConnect({ store, selectedCurrencies });
+
     const setTheme = (theme: Theme) => store.setState({ theme });
     const setCurrentScreen = (screen: Screen) =>
         store.setState({ currentScreen: screen });
 
-    const ensureEvoluOwner = createEnsureEvoluOwner({ store });
-    const ensureEvolu = createEnsureEvolu({ ensureEvoluOwner });
-    const getSelectedCurrencies = createGetSelectedCurrencies({ ensureEvolu });
     const addCurrency = createAddCurrency({ store, ensureEvolu });
     const removeCurrency = createRemoveCurrency({ store, ensureEvolu });
     const recalculateFromBtc = createRecalculateFromBtc({
@@ -106,9 +116,9 @@ export const createCompositionRoot = (): Main => {
 
     const CurrencyInput = connect(
         InputPure,
-        state => ({
-            mode: state.mode,
-            focusedCurrency: state.focusedCurrency,
+        ({ store }) => ({
+            mode: store.mode,
+            focusedCurrency: store.focusedCurrency,
         }),
         {
             setFocusedCurrency: (code: CurrencyCode | 'BTC') =>
@@ -118,8 +128,8 @@ export const createCompositionRoot = (): Main => {
 
     const CurrencyRow = connect(
         CurrencyRowPure,
-        state => ({
-            mode: state.mode,
+        ({ store }) => ({
+            mode: store.mode,
         }),
         {
             CurrencyInput,
@@ -128,9 +138,9 @@ export const createCompositionRoot = (): Main => {
 
     const RatesLoading = connect(
         RatesLoadingPure,
-        state => ({
-            error: state.error,
-            lastUpdated: state.lastUpdated,
+        ({ store }) => ({
+            error: store.error,
+            lastUpdated: store.lastUpdated,
         }),
         {
             fetchAndStoreRates,
@@ -139,9 +149,9 @@ export const createCompositionRoot = (): Main => {
 
     const ConverterScreen = connect(
         ConverterScreenPure,
-        state => ({
-            satsAmount: state.satsAmount,
-            currencyValues: state.fiatAmounts,
+        ({ store }) => ({
+            satsAmount: store.satsAmount,
+            currencyValues: store.fiatAmounts,
         }),
         {
             recalculateFromBtc,
@@ -160,14 +170,14 @@ export const createCompositionRoot = (): Main => {
 
     const ThemeSettings = connect(
         ThemeSettingsPure,
-        state => ({ theme: state.theme }),
+        ({ store }) => ({ theme: store.theme }),
         {
             setTheme,
         },
     );
 
-    const MnemonicSettings = connect(MnemonicSettingsPure, state => ({
-        evoluMnemonic: state.evoluMnemonic,
+    const MnemonicSettings = connect(MnemonicSettingsPure, ({ store }) => ({
+        evoluMnemonic: store.evoluMnemonic,
     }));
 
     const SettingsScreen = () =>
@@ -178,7 +188,7 @@ export const createCompositionRoot = (): Main => {
 
     const AddCurrencyScreen = connect(
         AddCurrencyScreenPure,
-        state => ({ rates: state.rates }),
+        ({ store }) => ({ rates: store.rates }),
         {
             getSelectedCurrencies,
             addCurrency,
@@ -188,9 +198,9 @@ export const createCompositionRoot = (): Main => {
 
     const AppHeader = connect(
         AppHeaderPure,
-        state => ({
-            loading: state.loading,
-            mode: state.mode,
+        ({ store }) => ({
+            loading: store.loading,
+            mode: store.mode,
         }),
         {
             fetchAndStoreRates,
@@ -202,13 +212,13 @@ export const createCompositionRoot = (): Main => {
     const AppLayout = (props: AppLayoutProps) =>
         AppLayoutPure({ AppHeader }, props);
 
-    const ThemeWrapper = connect(ThemeWrapperPure, state => ({
-        themeMode: state.theme,
+    const ThemeWrapper = connect(ThemeWrapperPure, ({ store }) => ({
+        themeMode: store.theme,
     }));
 
     const App = connect(
         AppPure,
-        state => ({ currentScreen: state.currentScreen }),
+        ({ store }) => ({ currentScreen: store.currentScreen }),
         {
             ConverterScreen,
             AddCurrencyScreen,
