@@ -1,5 +1,5 @@
 import type React from 'react';
-import { useCallback, useSyncExternalStore } from 'react';
+import { useCallback, useRef, useSyncExternalStore } from 'react';
 
 type Listener = () => void;
 
@@ -47,26 +47,47 @@ export const createConnect = <Stores extends SubscribableRecord>(
         };
     };
 
-    const getStates = (): StoreStates<Stores> => {
-        const states: Record<string, unknown> = {};
-
-        for (const [key, s] of storeEntries) {
-            states[key] = s.getState();
-        }
-
-        return states as StoreStates<Stores>;
-    };
-
     const connect = (
         render: (...args: readonly unknown[]) => React.ReactNode,
         mapStateToProps: (states: StoreStates<Stores>) => unknown,
         deps?: unknown,
     ): React.FC<unknown> => {
         const ConnectedComponent: React.FC<unknown> = ownProps => {
-            const getSnapshot = useCallback(
-                () => mapStateToProps(getStates()),
-                [],
-            );
+            const cacheRef = useRef<
+                | {
+                      readonly storeStates: ReadonlyArray<unknown>;
+                      readonly mapped: unknown;
+                  }
+                | undefined
+            >(undefined);
+
+            const getSnapshot = useCallback(() => {
+                const currentStoreStates = storeEntries.map(([, s]) =>
+                    s.getState(),
+                );
+
+                if (
+                    cacheRef.current !== undefined &&
+                    currentStoreStates.every((state, i) =>
+                        Object.is(state, cacheRef.current?.storeStates[i]),
+                    )
+                ) {
+                    return cacheRef.current.mapped;
+                }
+
+                const states: Record<string, unknown> = {};
+
+                for (let i = 0; i < storeEntries.length; i++) {
+                    states[storeEntries[i][0]] = currentStoreStates[i];
+                }
+
+                const mapped = mapStateToProps(states as StoreStates<Stores>);
+
+                cacheRef.current = { storeStates: currentStoreStates, mapped };
+
+                return mapped;
+            }, []);
+
             const stateProps = useSyncExternalStore(subscribe, getSnapshot);
             const props = {
                 ...(stateProps as object),
