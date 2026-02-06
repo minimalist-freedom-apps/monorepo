@@ -42,28 +42,11 @@ import { createRemoveCurrency } from './state/removeCurrency';
 import type { CurrencyValues, Screen } from './state/State';
 
 export const createCompositionRoot = (): Main => {
-    const fetchDeps = {
-        // Important to be wrapped to preserve the correct `this` context
-        fetch: (input: RequestInfo | URL, init?: RequestInit) =>
-            globalThis.fetch(input, init),
-    };
-
-    const fetchCoingeckoRates = createFetchCoingeckoRates(fetchDeps);
-    const fetchBitpayRates = createFetchBitpayRates(fetchDeps);
-    const fetchBlockchainInfoRates = createFetchBlockchainInfoRates(fetchDeps);
-
+    // Store
+    const store = createStore();
     const currentDateTime = createCurrentDateTime();
     const localStorage = createLocalStorage();
-
-    const fetchAverageRates = createFetchAverageRates({
-        fetchRates: [
-            fetchCoingeckoRates,
-            fetchBitpayRates,
-            fetchBlockchainInfoRates,
-        ],
-    });
-
-    const store = createStore();
+    const window = createWindow();
 
     // Evolu
     const ensureEvoluOwner = createEnsureEvoluOwner({ store });
@@ -80,6 +63,7 @@ export const createCompositionRoot = (): Main => {
 
     const connect = createConnect({ store, selectedCurrencies });
 
+    // Converter
     const setTheme = (theme: Theme) => store.setState({ theme });
     const setCurrentScreen = (screen: Screen) =>
         store.setState({ currentScreen: screen });
@@ -95,8 +79,33 @@ export const createCompositionRoot = (): Main => {
         recalculateFromBtc,
     });
 
-    const window = createWindow();
+    // Fetch Rates
+    const fetchDeps = {
+        // Important to be wrapped to preserve the correct `this` context
+        fetch: (input: RequestInfo | URL, init?: RequestInit) =>
+            globalThis.fetch(input, init),
+    };
 
+    const fetchCoingeckoRates = createFetchCoingeckoRates(fetchDeps);
+    const fetchBitpayRates = createFetchBitpayRates(fetchDeps);
+    const fetchBlockchainInfoRates = createFetchBlockchainInfoRates(fetchDeps);
+
+    const fetchAverageRates = createFetchAverageRates({
+        fetchRates: [
+            fetchCoingeckoRates,
+            fetchBitpayRates,
+            fetchBlockchainInfoRates,
+        ],
+    });
+
+    const fetchAndStoreRates = createFetchAndStoreRates({
+        store,
+        fetchAverageRates,
+        recalculateFromBtc,
+        currentDateTime,
+    });
+
+    // State Persistence
     const loadInitialState = createLoadInitialState({
         store,
         localStorage,
@@ -110,13 +119,7 @@ export const createCompositionRoot = (): Main => {
         window: window,
     });
 
-    const fetchAndStoreRates = createFetchAndStoreRates({
-        store,
-        fetchAverageRates,
-        recalculateFromBtc,
-        currentDateTime,
-    });
-
+    // Components
     const AddCurrencyButton = () => AddCurrencyButtonPure({ store });
 
     const CurrencyInput = connect(
