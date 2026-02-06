@@ -14,7 +14,7 @@ type ComponentConnectFactory<State> = <StateProps, OwnProps = object>(
     mapStateToProps: MapStateToProps<State, StateProps, OwnProps>,
 ) => ComponentConnect<StateProps, OwnProps>;
 
-type ComponentConnect<StateProps, OwnProps = object> = (
+export type ComponentConnect<StateProps, OwnProps = object> = (
     render: RenderFn<StateProps, OwnProps>,
 ) => React.FC<OwnProps>;
 

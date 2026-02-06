@@ -2,11 +2,10 @@ import { EvoluProvider } from '@evolu/react';
 import React from 'react';
 import ReactDOM from 'react-dom/client';
 import { createCompositionRoot } from './compositionRoot';
-import { DepsProvider } from './ServicesProvider';
 
 const main = () => {
     const services = createCompositionRoot();
-    services.loadInitialState();
+    services.loadInitialState(); // Todo: this is hack shall not be here
 
     const unsubscribe = services.persistStore.start();
 
@@ -18,13 +17,11 @@ const main = () => {
 
     ReactDOM.createRoot(document.getElementById('root')!).render(
         <React.StrictMode>
-            <DepsProvider deps={services}>
-                <EvoluProvider value={evolu}>
-                    <services.ThemeWrapper>
-                        <services.App />
-                    </services.ThemeWrapper>
-                </EvoluProvider>
-            </DepsProvider>
+            <EvoluProvider value={evolu}>
+                <services.ThemeWrapper>
+                    <services.App />
+                </services.ThemeWrapper>
+            </EvoluProvider>
         </React.StrictMode>,
     );
 };
