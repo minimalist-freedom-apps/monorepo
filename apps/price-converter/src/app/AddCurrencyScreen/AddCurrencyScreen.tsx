@@ -7,8 +7,8 @@ import {
     SearchInput,
     Text,
 } from '@minimalistic-apps/components';
+import type { Connected } from '@minimalistic-apps/mini-store';
 import { typedObjectValues } from '@minimalistic-apps/type-utils';
-import type React from 'react';
 import { useState } from 'react';
 import type { CurrencyEntity, CurrencyMap } from '../../rates/FetchRates';
 import type { AddCurrencyDep } from '../../state/addCurrency';
@@ -25,16 +25,14 @@ type AddCurrencyScreenDeps = GetSelectedCurrenciesDep &
         readonly setCurrentScreen: SetCurrentScreen;
     };
 
-type AddCurrencyScreen = React.FC;
-
 export type AddCurrencyScreenDep = {
-    readonly AddCurrencyScreen: AddCurrencyScreen;
+    readonly AddCurrencyScreen: Connected;
 };
 
-export const addCurrencyScreenPure = (
+export const AddCurrencyScreenPure = (
     deps: AddCurrencyScreenDeps,
     { rates }: AddCurrencyScreenStateProps,
-): React.ReactNode => {
+) => {
     const currencies = useQuery(deps.getSelectedCurrencies.query);
     const selectedCurrencies = currencies.flatMap(row =>
         row.currency === null ? [] : [row.currency],

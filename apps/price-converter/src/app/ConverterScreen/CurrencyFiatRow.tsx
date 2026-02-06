@@ -5,7 +5,7 @@ import {
     Row,
     Text,
 } from '@minimalistic-apps/components';
-import type React from 'react';
+import type { Connected } from '@minimalistic-apps/mini-store';
 import type { Mode } from '../../state/State';
 import type { CurrencyInputDep } from './CurrencyInput';
 
@@ -22,13 +22,11 @@ export type CurrencyRowStateProps = {
 
 type CurrencyRowDeps = CurrencyInputDep;
 
-type CurrencyRow = React.FC<CurrencyRowOwnProps>;
-
 export type CurrencyRowDep = {
-    CurrencyRow: CurrencyRow;
+    CurrencyRow: Connected<CurrencyRowOwnProps>;
 };
 
-export const currencyRowPure = (
+export const CurrencyRowPure = (
     deps: CurrencyRowDeps,
     {
         mode,
@@ -37,7 +35,7 @@ export const currencyRowPure = (
         onChange,
         onRemove,
     }: CurrencyRowStateProps & CurrencyRowOwnProps,
-): React.ReactNode => (
+) => (
     <Row gap={12}>
         <deps.CurrencyInput value={value} onChange={onChange} code={code} />
         <Text>{code === 'BTC' && mode === 'Sats' ? 'Sats' : code}</Text>

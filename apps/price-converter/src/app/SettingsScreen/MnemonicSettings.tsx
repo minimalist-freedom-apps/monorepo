@@ -1,19 +1,17 @@
 import { Column, Mnemonic, SettingsRow } from '@minimalistic-apps/components';
-import type React from 'react';
+import type { Connected } from '@minimalistic-apps/mini-store';
 
 export type MnemonicSettingsStateProps = {
     readonly evoluMnemonic: string | null;
 };
 
-type MnemonicSettings = React.FC;
-
 export type MnemonicSettingsDep = {
-    readonly MnemonicSettings: MnemonicSettings;
+    readonly MnemonicSettings: Connected;
 };
 
-export const mnemonicSettingsPure = ({
+export const MnemonicSettingsPure = ({
     evoluMnemonic,
-}: MnemonicSettingsStateProps): React.ReactNode => (
+}: MnemonicSettingsStateProps) => (
     <Column gap={12}>
         <SettingsRow
             direction="column"

@@ -11,6 +11,7 @@ Always prefer to write pure components.
 ### Pattern: Connected component with deps
 
 ```tsx
+import type { Connected } from '@minimalistic-apps/mini-store';
 import type React from 'react';
 import type { Mode } from '../../state/State';
 
@@ -29,16 +30,14 @@ type CurrencyInputDeps = {
     readonly setFocusedCurrency: (code: CurrencyCode | 'BTC') => void;
 };
 
-type CurrencyInput = React.FC<CurrencyInputOwnProps>;
-
 export type CurrencyInputDep = {
-    readonly CurrencyInput: CurrencyInput;
+    readonly CurrencyInput: Connected<CurrencyInputOwnProps>;
 };
 
-export const currencyInputPure = (
+export const InputPure = (
     deps: CurrencyInputDeps,
     { value, code, onChange, mode, focusedCurrency }: CurrencyInputStateProps & CurrencyInputOwnProps,
-): React.ReactNode => {
+) => {
     // Component implementation using deps.* and props
     return <Input value={value} onChange={onChange} />;
 };
@@ -51,9 +50,9 @@ export type MnemonicSettingsStateProps = {
     readonly evoluMnemonic: string | null;
 };
 
-export const mnemonicSettingsPure = (
+export const MnemonicSettingsPure = (
     { evoluMnemonic }: MnemonicSettingsStateProps,
-): React.ReactNode => (
+) => (
     <Column gap={12}>
         <Mnemonic value={evoluMnemonic} />
     </Column>
@@ -63,9 +62,9 @@ export const mnemonicSettingsPure = (
 ### Pattern: Non-connected component (no state)
 
 ```tsx
-export const settingsScreenPure = (
+export const SettingsScreenPure = (
     deps: SettingsScreenDeps,
-): React.ReactNode => (
+) => (
     <Column gap={12}>
         <deps.ThemeSettings />
         <deps.MnemonicSettings />
@@ -78,7 +77,7 @@ export const settingsScreenPure = (
 ```tsx
 // With deps — deps are the 3rd argument to connect
 const CurrencyInput = connect(
-    currencyInputPure,
+    InputPure,
     state => ({
         mode: state.mode,
         focusedCurrency: state.focusedCurrency,
@@ -90,13 +89,13 @@ const CurrencyInput = connect(
 
 // Without deps — just pure function + mapStateToProps
 const MnemonicSettings = connect(
-    mnemonicSettingsPure,
+    MnemonicSettingsPure,
     state => ({ evoluMnemonic: state.evoluMnemonic }),
 );
 
-// Non-connected component — wrap as React.FC
-const SettingsScreen: React.FC = () =>
-    settingsScreenPure({ ThemeSettings, MnemonicSettings });
+// Non-connected component
+const SettingsScreen = () =>
+    SettingsScreenPure({ ThemeSettings, MnemonicSettings });
 ```
 
 ## Hooks

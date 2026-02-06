@@ -9,7 +9,7 @@ import {
 } from '@minimalistic-apps/bitcoin';
 import { Input } from '@minimalistic-apps/components';
 import { type FiatAmount, formatFiatWithCommas } from '@minimalistic-apps/fiat';
-import type React from 'react';
+import type { Connected } from '@minimalistic-apps/mini-store';
 import { useEffect, useState } from 'react';
 import type { Mode } from '../../state/State';
 import { parseFormattedNumber } from './parseFormattedNumber';
@@ -47,13 +47,11 @@ type CurrencyInputDeps = {
     readonly setFocusedCurrency: (code: CurrencyCode | 'BTC') => void;
 };
 
-type CurrencyInput = React.FC<CurrencyInputOwnProps>;
-
 export type CurrencyInputDep = {
-    CurrencyInput: CurrencyInput;
+    CurrencyInput: Connected<CurrencyInputOwnProps>;
 };
 
-export const currencyInputPure = (
+export const InputPure = (
     deps: CurrencyInputDeps,
     {
         mode,
@@ -62,7 +60,7 @@ export const currencyInputPure = (
         code,
         onChange,
     }: CurrencyInputStateProps & CurrencyInputOwnProps,
-): React.ReactNode => {
+) => {
     const [inputValue, setInputValue] = useState(() =>
         formatInputValue(value, code, mode),
     );

@@ -1,6 +1,9 @@
 import React from 'react';
 import type { Store } from './store';
 
+type NoOwnProps = Record<string, never>;
+export type Connected<OwnProps = NoOwnProps> = React.FC<OwnProps>;
+
 export type Connect<State> = {
     <RenderProps, StateProps>(
         render: (props: RenderProps) => React.ReactNode,

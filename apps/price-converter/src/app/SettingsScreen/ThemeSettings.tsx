@@ -1,5 +1,5 @@
 import { SettingsRow, Switch, type Theme } from '@minimalistic-apps/components';
-import type React from 'react';
+import type { Connected } from '@minimalistic-apps/mini-store';
 
 export type ThemeSettingsStateProps = {
     readonly theme: Theme;
@@ -9,16 +9,14 @@ type ThemeSettingsDeps = {
     readonly setTheme: (theme: Theme) => void;
 };
 
-type ThemeSettings = React.FC;
-
 export type ThemeSettingsDep = {
-    ThemeSettings: ThemeSettings;
+    ThemeSettings: Connected;
 };
 
-export const themeSettingsPure = (
+export const ThemeSettingsPure = (
     deps: ThemeSettingsDeps,
     { theme }: ThemeSettingsStateProps,
-): React.ReactNode => {
+) => {
     const onThemeToggle = (checked: boolean) => {
         deps.setTheme(checked ? 'light' : 'dark');
     };

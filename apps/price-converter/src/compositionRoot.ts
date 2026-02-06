@@ -5,19 +5,19 @@ import { createCurrentDateTime } from '@minimalistic-apps/datetime';
 import { createLocalStorage } from '@minimalistic-apps/local-storage';
 import { createWindow } from '@minimalistic-apps/window';
 import { createConnect } from '../../../packages/mini-store/src/connect';
-import { addCurrencyButtonPure } from './app/AddCurrencyScreen/AddCurrencyButton';
-import { addCurrencyScreenPure } from './app/AddCurrencyScreen/AddCurrencyScreen';
-import { appPure } from './app/App';
-import { appHeaderPure } from './app/AppHeader';
-import { appLayoutPure } from './app/AppLayout';
-import { converterScreenPure } from './app/ConverterScreen/ConverterScreen';
-import { currencyRowPure } from './app/ConverterScreen/CurrencyFiatRow';
-import { currencyInputPure } from './app/ConverterScreen/CurrencyInput';
-import { ratesLoadingPure } from './app/RatesLoading';
-import { mnemonicSettingsPure } from './app/SettingsScreen/MnemonicSettings';
-import { settingsScreenPure } from './app/SettingsScreen/SettingsScreen';
-import { themeSettingsPure } from './app/SettingsScreen/ThemeSettings';
-import { themeWrapperPure } from './app/ThemeWrapper';
+import { AddCurrencyButtonPure } from './app/AddCurrencyScreen/AddCurrencyButton';
+import { AddCurrencyScreenPure } from './app/AddCurrencyScreen/AddCurrencyScreen';
+import { AppPure } from './app/App';
+import { AppHeaderPure } from './app/AppHeader';
+import { type AppLayoutProps, AppLayoutPure } from './app/AppLayout';
+import { ConverterScreenPure } from './app/ConverterScreen/ConverterScreen';
+import { CurrencyRowPure } from './app/ConverterScreen/CurrencyFiatRow';
+import { InputPure } from './app/ConverterScreen/CurrencyInput';
+import { RatesLoadingPure } from './app/RatesLoading';
+import { MnemonicSettingsPure } from './app/SettingsScreen/MnemonicSettings';
+import { SettingsScreenPure } from './app/SettingsScreen/SettingsScreen';
+import { ThemeSettingsPure } from './app/SettingsScreen/ThemeSettings';
+import { ThemeWrapperPure } from './app/ThemeWrapper';
 import { createFetchAndStoreRates } from './converter/fetchAndStoreRates';
 import { createRecalculateFromBtc } from './converter/recalculateFromBtc';
 import { createRecalculateFromCurrency } from './converter/recalculateFromCurrency';
@@ -102,10 +102,10 @@ export const createCompositionRoot = (): Main => {
         currentDateTime,
     });
 
-    const AddCurrencyButton: React.FC = () => addCurrencyButtonPure({ store });
+    const AddCurrencyButton = () => AddCurrencyButtonPure({ store });
 
     const CurrencyInput = connect(
-        currencyInputPure,
+        InputPure,
         state => ({
             mode: state.mode,
             focusedCurrency: state.focusedCurrency,
@@ -117,7 +117,7 @@ export const createCompositionRoot = (): Main => {
     );
 
     const CurrencyRow = connect(
-        currencyRowPure,
+        CurrencyRowPure,
         state => ({
             mode: state.mode,
         }),
@@ -127,7 +127,7 @@ export const createCompositionRoot = (): Main => {
     );
 
     const RatesLoading = connect(
-        ratesLoadingPure,
+        RatesLoadingPure,
         state => ({
             error: state.error,
             lastUpdated: state.lastUpdated,
@@ -138,7 +138,7 @@ export const createCompositionRoot = (): Main => {
     );
 
     const ConverterScreen = connect(
-        converterScreenPure,
+        ConverterScreenPure,
         state => ({
             satsAmount: state.satsAmount,
             currencyValues: state.fiatAmounts,
@@ -159,25 +159,25 @@ export const createCompositionRoot = (): Main => {
     );
 
     const ThemeSettings = connect(
-        themeSettingsPure,
+        ThemeSettingsPure,
         state => ({ theme: state.theme }),
         {
             setTheme,
         },
     );
 
-    const MnemonicSettings = connect(mnemonicSettingsPure, state => ({
+    const MnemonicSettings = connect(MnemonicSettingsPure, state => ({
         evoluMnemonic: state.evoluMnemonic,
     }));
 
-    const SettingsScreen: React.FC = () =>
-        settingsScreenPure({
+    const SettingsScreen = () =>
+        SettingsScreenPure({
             ThemeSettings,
             MnemonicSettings,
         });
 
     const AddCurrencyScreen = connect(
-        addCurrencyScreenPure,
+        AddCurrencyScreenPure,
         state => ({ rates: state.rates }),
         {
             getSelectedCurrencies,
@@ -187,7 +187,7 @@ export const createCompositionRoot = (): Main => {
     );
 
     const AppHeader = connect(
-        appHeaderPure,
+        AppHeaderPure,
         state => ({
             loading: state.loading,
             mode: state.mode,
@@ -199,15 +199,15 @@ export const createCompositionRoot = (): Main => {
         },
     );
 
-    const AppLayout: React.FC<{ readonly children: React.ReactNode }> = props =>
-        appLayoutPure({ AppHeader }, props);
+    const AppLayout = (props: AppLayoutProps) =>
+        AppLayoutPure({ AppHeader }, props);
 
-    const ThemeWrapper = connect(themeWrapperPure, state => ({
+    const ThemeWrapper = connect(ThemeWrapperPure, state => ({
         themeMode: state.theme,
     }));
 
     const App = connect(
-        appPure,
+        AppPure,
         state => ({ currentScreen: state.currentScreen }),
         {
             ConverterScreen,
@@ -218,8 +218,5 @@ export const createCompositionRoot = (): Main => {
         },
     );
 
-    return createMain({
-        App,
-        statePersistence,
-    });
+    return createMain({ App, statePersistence });
 };

@@ -1,5 +1,5 @@
+import type { Connected } from '@minimalistic-apps/mini-store';
 import { exhaustive } from '@minimalistic-apps/type-utils';
-import type React from 'react';
 import type { Screen } from '../state/State';
 import type { AddCurrencyScreenDep } from './AddCurrencyScreen/AddCurrencyScreen';
 import type { AppLayoutDep } from './AppLayout';
@@ -17,16 +17,11 @@ type AppDeps = ConverterScreenDep &
     AppLayoutDep &
     ThemeWrapperDep;
 
-export type App = React.FC;
-
 export type AppDep = {
-    readonly App: App;
+    readonly App: Connected;
 };
 
-export const appPure = (
-    deps: AppDeps,
-    { currentScreen }: AppStateProps,
-): React.ReactNode => {
+export const AppPure = (deps: AppDeps, { currentScreen }: AppStateProps) => {
     const renderScreen = () => {
         switch (currentScreen) {
             case 'Converter':

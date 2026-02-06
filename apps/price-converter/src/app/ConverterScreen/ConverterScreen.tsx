@@ -3,7 +3,7 @@ import { useQuery } from '@evolu/react';
 import type { AmountSats } from '@minimalistic-apps/bitcoin';
 import { Screen } from '@minimalistic-apps/components';
 import { FiatAmount } from '@minimalistic-apps/fiat';
-import type React from 'react';
+import type { Connected } from '@minimalistic-apps/mini-store';
 import type { RecalculateFromBtcDep } from '../../converter/recalculateFromBtc';
 import type { RecalculateFromCurrencyDep } from '../../converter/recalculateFromCurrency';
 import type { GetSelectedCurrenciesDep } from '../../state/evolu/getSelectedCurrencies';
@@ -32,14 +32,12 @@ type ConverterScreenDeps = RecalculateFromBtcDep &
         readonly setFiatAmounts: SetFiatAmounts;
     };
 
-type ConverterScreen = React.FC;
+export type ConverterScreenDep = { ConverterScreen: Connected };
 
-export type ConverterScreenDep = { ConverterScreen: ConverterScreen };
-
-export const converterScreenPure = (
+export const ConverterScreenPure = (
     deps: ConverterScreenDeps,
     { satsAmount, currencyValues }: ConverterScreenStateProps,
-): React.ReactNode => {
+) => {
     const currencies = useQuery(deps.getSelectedCurrencies.query);
     const selectedCurrencies = currencies.flatMap(row =>
         row.currency === null ? [] : [row.currency],

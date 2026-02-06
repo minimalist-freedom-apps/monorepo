@@ -2,19 +2,17 @@ import type { Theme } from '@minimalistic-apps/components';
 import { render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { describe, expect, test, vi } from 'vitest';
-import { themeSettingsPure } from './ThemeSettings.js';
+import { ThemeSettingsPure } from './ThemeSettings.js';
 
 const createTestComponent = (theme: Theme) => {
     const setTheme = vi.fn();
     const deps = { setTheme };
-    const ThemeSettings: React.FC = () => (
-        <>{themeSettingsPure(deps, { theme })}</>
-    );
+    const ThemeSettings = () => <>{ThemeSettingsPure(deps, { theme })}</>;
 
     return { setTheme, ThemeSettings };
 };
 
-describe(themeSettingsPure.name, () => {
+describe(ThemeSettingsPure.name, () => {
     test('renders Theme Mode label', () => {
         const { ThemeSettings } = createTestComponent('dark');
 

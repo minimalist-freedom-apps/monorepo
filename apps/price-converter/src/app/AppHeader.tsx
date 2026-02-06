@@ -8,7 +8,7 @@ import {
     ThemeProvider,
     Title,
 } from '@minimalistic-apps/components';
-import type React from 'react';
+import type { Connected } from '@minimalistic-apps/mini-store';
 import type { FetchAndStoreRatesDep } from '../converter/fetchAndStoreRates';
 import type { Mode } from '../state/State';
 
@@ -25,16 +25,14 @@ type AppHeaderDeps = FetchAndStoreRatesDep & {
     readonly setCurrentScreen: SetCurrentScreen;
 };
 
-type AppHeader = React.FC;
-
 export type AppHeaderDep = {
-    readonly AppHeader: AppHeader;
+    readonly AppHeader: Connected;
 };
 
-export const appHeaderPure = (
+export const AppHeaderPure = (
     deps: AppHeaderDeps,
     { loading, mode }: AppHeaderStateProps,
-): React.ReactNode => {
+) => {
     const handleToggle = (checked: boolean) => {
         deps.setMode(checked ? 'Sats' : 'BTC');
     };

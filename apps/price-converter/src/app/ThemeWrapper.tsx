@@ -1,5 +1,5 @@
 import { type Theme, ThemeProvider } from '@minimalistic-apps/components';
-import type React from 'react';
+import type { Connected } from '@minimalistic-apps/mini-store';
 import type { ReactNode } from 'react';
 
 export type ThemeWrapperOwnProps = {
@@ -10,15 +10,13 @@ export type ThemeWrapperStateProps = {
     readonly themeMode: Theme;
 };
 
-type ThemeWrapper = React.FC<ThemeWrapperOwnProps>;
-
 export type ThemeWrapperDep = {
-    readonly ThemeWrapper: ThemeWrapper;
+    readonly ThemeWrapper: Connected<ThemeWrapperOwnProps>;
 };
 
-export const themeWrapperPure = ({
+export const ThemeWrapperPure = ({
     themeMode,
     children,
-}: ThemeWrapperStateProps & ThemeWrapperOwnProps): React.ReactNode => (
+}: ThemeWrapperStateProps & ThemeWrapperOwnProps) => (
     <ThemeProvider mode={themeMode}>{children}</ThemeProvider>
 );

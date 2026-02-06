@@ -1,5 +1,5 @@
 import { Alert, Row, Text } from '@minimalistic-apps/components';
-import type React from 'react';
+import type { Connected } from '@minimalistic-apps/mini-store';
 import { useEffect, useRef, useState } from 'react';
 import type { FetchAndStoreRatesDep } from '../converter/fetchAndStoreRates';
 
@@ -34,16 +34,14 @@ export type RatesLoadingStateProps = {
 
 type RatesLoadingDeps = FetchAndStoreRatesDep;
 
-type RatesLoading = React.FC;
-
 export type RatesLoadingDep = {
-    readonly RatesLoading: RatesLoading;
+    readonly RatesLoading: Connected;
 };
 
-export const ratesLoadingPure = (
+export const RatesLoadingPure = (
     deps: RatesLoadingDeps,
     { error, lastUpdated }: RatesLoadingStateProps,
-): React.ReactNode => {
+) => {
     const [timeAgo, setTimeAgo] = useState<string>('');
     const intervalRef = useRef<number | null>(null);
 
