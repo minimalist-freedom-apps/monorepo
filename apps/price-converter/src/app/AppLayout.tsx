@@ -15,13 +15,14 @@ export type AppLayoutDep = {
     readonly AppLayout: AppLayout;
 };
 
-export const createAppLayout =
-    (deps: AppLayoutDeps): AppLayout =>
-    ({ children }: AppLayoutProps) => (
-        <Layout>
-            <Layout.Header>
-                <deps.AppHeader />
-            </Layout.Header>
-            <Layout.Content>{children}</Layout.Content>
-        </Layout>
-    );
+export const appLayoutPure = (
+    deps: AppLayoutDeps,
+    { children }: AppLayoutProps,
+): React.ReactNode => (
+    <Layout>
+        <Layout.Header>
+            <deps.AppHeader />
+        </Layout.Header>
+        <Layout.Content>{children}</Layout.Content>
+    </Layout>
+);

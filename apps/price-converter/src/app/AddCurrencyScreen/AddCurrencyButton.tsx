@@ -8,17 +8,16 @@ type AddCurrencyButton = React.FC;
 
 export type AddCurrencyButtonDep = { AddCurrencyButton: AddCurrencyButton };
 
-export const createAddCurrencyButton =
-    (deps: AddCurrencyButtonDeps): AddCurrencyButton =>
-    () => {
-        const onClick = () =>
-            deps.store.setState({ currentScreen: 'AddCurrency' });
+export const addCurrencyButtonPure = (
+    deps: AddCurrencyButtonDeps,
+): React.ReactNode => {
+    const onClick = () => deps.store.setState({ currentScreen: 'AddCurrency' });
 
-        return (
-            <FloatButton
-                icon={<PlusOutlined />}
-                onClick={onClick}
-                tooltip="Add Currency"
-            />
-        );
-    };
+    return (
+        <FloatButton
+            icon={<PlusOutlined />}
+            onClick={onClick}
+            tooltip="Add Currency"
+        />
+    );
+};
