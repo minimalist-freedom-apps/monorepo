@@ -22,10 +22,7 @@ import { createFetchAndStoreRates } from './converter/fetchAndStoreRates';
 import { createRecalculateFromBtc } from './converter/recalculateFromBtc';
 import { createRecalculateFromCurrency } from './converter/recalculateFromCurrency';
 import { createMain, type Main } from './createMain';
-import { createFetchAverageRates } from './rates/fetchAverageRates';
-import { createFetchBitpayRates } from './rates/fetchBitpayRates';
-import { createFetchBlockchainInfoRates } from './rates/fetchBlockchainInfoRates';
-import { createFetchCoingeckoRates } from './rates/fetchCoingeckoRates';
+import { createFetchRatesCompositionRoot } from './rates/fetchRatesCompositionRoot';
 import { createAddCurrency } from './state/addCurrency';
 import { createStore } from './state/createStore';
 import { createEnsureEvoluOwner } from './state/evolu/createEnsureEvoluOwner';
@@ -80,27 +77,11 @@ export const createCompositionRoot = (): Main => {
     });
 
     // Fetch Rates
-    const fetchDeps = {
-        // Important to be wrapped to preserve the correct `this` context
-        fetch: (input: RequestInfo | URL, init?: RequestInit) =>
-            globalThis.fetch(input, init),
-    };
-
-    const fetchCoingeckoRates = createFetchCoingeckoRates(fetchDeps);
-    const fetchBitpayRates = createFetchBitpayRates(fetchDeps);
-    const fetchBlockchainInfoRates = createFetchBlockchainInfoRates(fetchDeps);
-
-    const fetchAverageRates = createFetchAverageRates({
-        fetchRates: [
-            fetchCoingeckoRates,
-            fetchBitpayRates,
-            fetchBlockchainInfoRates,
-        ],
-    });
+    const fetchRates = createFetchRatesCompositionRoot();
 
     const fetchAndStoreRates = createFetchAndStoreRates({
         store,
-        fetchAverageRates,
+        fetchRates,
         recalculateFromBtc,
         currentDateTime,
     });

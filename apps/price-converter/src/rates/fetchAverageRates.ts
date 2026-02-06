@@ -7,10 +7,6 @@ import {
     FetchRatesError,
 } from './FetchRates.js';
 
-export interface FetchAverageRatesDep {
-    readonly fetchAverageRates: FetchRates;
-}
-
 export interface FetchAverageRatesDeps {
     readonly fetchRates: readonly FetchRates[];
 }
