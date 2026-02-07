@@ -10,3 +10,5 @@ type ThemeSettingsDeps = {
     readonly setTheme: SetTheme;
 };
 ```
+
+Place it in the very same folder as is the `createStore`.

@@ -37,6 +37,7 @@ import { createPersistStore } from './state/localStorage/persistStore';
 import { createStatePersistence } from './state/localStorage/statePersistence';
 import { createNavigate } from './state/navigate';
 import { createRemoveFiatAmount } from './state/removeFiatAmount';
+import { createSetBtcMode } from './state/setBtcMode';
 import { createSetFiatAmount } from './state/setFiatAmount';
 import { createSetFocusedCurrency } from './state/setFocusedCurrency';
 import { createSetSatsAmount } from './state/setSatsAmount';
@@ -55,6 +56,7 @@ export const createCompositionRoot = (): Main => {
     const setSatsAmount = createSetSatsAmount({ store });
     const setFiatAmount = createSetFiatAmount({ store });
     const setFocusedCurrency = createSetFocusedCurrency({ store });
+    const setBtcMode = createSetBtcMode({ store });
     const removeFiatAmount = createRemoveFiatAmount({ store });
 
     // State Persistence
@@ -136,7 +138,7 @@ export const createCompositionRoot = (): Main => {
     const CurrencyRow = connect(
         CurrencyRowPure,
         ({ store }) => ({
-            btcNode: store.btcMode,
+            btcMode: store.btcMode,
         }),
         {
             CurrencyInput,
@@ -205,12 +207,11 @@ export const createCompositionRoot = (): Main => {
         AppHeaderPure,
         ({ store }) => ({
             loading: store.loading,
-            btcMode: store.btcMode,
+            mode: store.btcMode,
         }),
         {
             fetchAndStoreRates,
-            setBtcMode: (btcMode: 'BTC' | 'Sats') =>
-                store.setState({ btcMode: btcMode }),
+            setBtcMode,
             navigate,
         },
     );

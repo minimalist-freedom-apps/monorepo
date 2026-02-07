@@ -12,18 +12,14 @@ import type { FC } from 'react';
 import type { FetchAndStoreRatesDep } from '../converter/fetchAndStoreRates';
 import type { NavigateDep } from '../state/navigate';
 import type { BtcMode } from '../state/State';
+import type { SetBtcModeDep } from '../state/setBtcMode';
 
 export type AppHeaderStateProps = {
     readonly loading: boolean;
     readonly mode: BtcMode;
 };
 
-type SetMode = (mode: BtcMode) => void;
-
-type AppHeaderDeps = FetchAndStoreRatesDep &
-    NavigateDep & {
-        readonly setBtcMode: SetMode;
-    };
+type AppHeaderDeps = FetchAndStoreRatesDep & NavigateDep & SetBtcModeDep;
 
 export type AppHeaderDep = {
     readonly AppHeader: FC;

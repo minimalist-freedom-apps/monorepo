@@ -33,7 +33,9 @@ export const createLoadInitialState =
         const savedTimestamp = savedTimestampResult.ok
             ? savedTimestampResult.value
             : null;
-        const savedMode = savedModeResult.ok ? savedModeResult.value : 'BTC';
+        const savedBtcMode: BtcMode = savedModeResult.ok
+            ? (savedModeResult.value ?? 'btc')
+            : 'btc';
         const savedMnemonic = savedMnemonicResult.ok
             ? savedMnemonicResult.value
             : null;
@@ -41,7 +43,7 @@ export const createLoadInitialState =
         deps.store.setState({
             ...(savedRates !== null && { rates: savedRates }),
             ...(savedTimestamp !== null && { lastUpdated: savedTimestamp }),
-            ...(savedMode && { btcMode: savedMode }),
+            ...{ btcMode: savedBtcMode },
             ...(savedMnemonic && { evoluMnemonic: savedMnemonic }),
         });
     };
