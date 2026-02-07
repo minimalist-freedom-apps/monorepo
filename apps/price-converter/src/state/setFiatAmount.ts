@@ -9,8 +9,8 @@ export interface SetFiatAmountParams {
 
 export type SetFiatAmount = (params: SetFiatAmountParams) => void;
 
-export interface ChangeFiatAmountDep {
-    readonly changeFiatAmount: SetFiatAmount;
+export interface SetFiatAmountDep {
+    readonly setFiatAmount: SetFiatAmount;
 }
 
 export const createSetFiatAmount =
