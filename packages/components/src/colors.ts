@@ -29,7 +29,7 @@ export const COLORS: Record<Theme, ColorScheme> = {
         elevation2: '#2a2a2a',
 
         textPrimary: '#ffffff',
-        textSecondary: '#999999',
+        textSecondary: '#999999FF',
         border: '#333333',
         error: '#ff4d4f',
         fadedColor: '#777777FF',

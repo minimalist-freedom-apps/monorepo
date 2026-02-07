@@ -83,7 +83,7 @@ export const Circle = () => {
                         }
                     />
                 </Row>
-                <Text secondary>area = π · (d/2)²</Text>
+                <Text secondary>area = π · (d/2)² — π cancels out</Text>
             </Column>
         </Card>
     );

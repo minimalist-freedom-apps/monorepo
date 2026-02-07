@@ -1,3 +1,5 @@
+import './Input.css';
+
 import type { InputRef as AntInputRef } from 'antd';
 import { Input as AntInput } from 'antd';
 import type { ChangeEvent, RefObject } from 'react';
