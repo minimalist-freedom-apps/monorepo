@@ -3,8 +3,8 @@ import {
     createIdFromString,
     sqliteTrue,
 } from '@evolu/common';
-import type { StoreDep } from './createStore';
-import type { EnsureEvoluDep } from './evolu/createEvolu';
+import type { EnsureEvoluDep } from '../state/evolu/createEvolu';
+import type { RemoveFiatAmountDep } from '../state/removeFiatAmount';
 
 export interface RemoveCurrencyParams {
     readonly code: CurrencyCode;
@@ -16,13 +16,11 @@ export interface RemoveCurrencyDep {
     readonly removeCurrency: RemoveCurrency;
 }
 
-type RemoveCurrencyDeps = StoreDep & EnsureEvoluDep;
+type RemoveCurrencyDeps = EnsureEvoluDep & RemoveFiatAmountDep;
 
 export const createRemoveCurrency =
     (deps: RemoveCurrencyDeps): RemoveCurrency =>
     ({ code }) => {
-        const { fiatAmounts } = deps.store.getState();
-
         const { evolu, shardOwner } = deps.ensureEvolu();
         evolu.upsert(
             'currency',
@@ -34,10 +32,5 @@ export const createRemoveCurrency =
             { ownerId: shardOwner.id },
         );
 
-        // Drop [code] from selectedFiatCurrenciesAmounts
-        const { [code]: _, ...newFiatAmounts } = fiatAmounts;
-
-        deps.store.setState({
-            fiatAmounts: newFiatAmounts,
-        });
+        deps.removeFiatAmount(code);
     };
