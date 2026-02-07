@@ -8,7 +8,7 @@ import {
     SearchInput,
     Text,
 } from '@minimalistic-apps/components';
-import { getFlagsForCurrency } from '@minimalistic-apps/fiat';
+import { CURRENCY_TERRITORIES } from '@minimalistic-apps/fiat';
 import { typedObjectValues } from '@minimalistic-apps/type-utils';
 import type { FC } from 'react';
 import { useState } from 'react';
@@ -89,10 +89,16 @@ export const AddCurrencyScreenPure = (
                     renderItem={item => (
                         <Row gap={12} justify="space-between">
                             <Flex flex="1" style={{ minWidth: 0 }}>
-                                <Text>
+                                <Row gap={4} wrap>
                                     {item.name}&nbsp;&nbsp;
-                                    {getFlagsForCurrency(item.code).join(' ')}
-                                </Text>
+                                    {(
+                                        CURRENCY_TERRITORIES[item.code] ?? []
+                                    ).map(t => (
+                                        <span key={t.name} title={t.name}>
+                                            {t.flag}
+                                        </span>
+                                    ))}
+                                </Row>
                             </Flex>
                             <Text nowrap flexShrink={0} strong>
                                 {item.code}
