@@ -167,9 +167,12 @@ export const createCompositionRoot = (): Main => {
             selectedCurrencies: selectCurrencyCodes(selectedCurrencies),
         }),
         {
+            // Services
             changeBtcAmount,
             changeFiatAmount,
             removeCurrency,
+
+            // Components
             AddCurrencyButton,
             CurrencyRow,
             RatesLoading,
@@ -230,6 +233,7 @@ export const createCompositionRoot = (): Main => {
         AppPure,
         ({ store }) => ({ currentScreen: store.currentScreen }),
         {
+            // Components
             ConverterScreen,
             AddCurrencyScreen,
             SettingsScreen,
