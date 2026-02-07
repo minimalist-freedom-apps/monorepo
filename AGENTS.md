@@ -33,3 +33,4 @@ See the following files:
 - [verification.md](skills/verification.md)
 - [store.md](skills/store.md)
 - [typescript.md](skills/typescript.md)
+- [code-style.md](skills/code-style.md)

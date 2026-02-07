@@ -1,11 +1,14 @@
 import { Card as AntCard } from 'antd';
-import type { ReactNode } from 'react';
+import type { CSSProperties, ReactNode } from 'react';
 
 interface CardProps {
     readonly children?: ReactNode;
     readonly title?: ReactNode;
+    readonly padding?: CSSProperties['padding'];
 }
 
-export const Card = ({ children, title }: CardProps) => (
-    <AntCard title={title}>{children}</AntCard>
+export const Card = ({ children, title, padding = 16 }: CardProps) => (
+    <AntCard title={title} styles={{ body: { padding }, header: { padding } }}>
+        {children}
+    </AntCard>
 );

@@ -8,16 +8,20 @@ interface TextProps {
     readonly strong?: boolean;
     readonly nowrap?: boolean;
     readonly flexShrink?: number;
+    readonly large?: boolean;
+    readonly secondary?: boolean;
     readonly onClick?: () => void;
 }
 
 const buildTextStyle = (
     nowrap: boolean,
     flexShrink: number | undefined,
+    large: boolean,
 ): Record<string, never> | { readonly style: React.CSSProperties } => {
     const style: React.CSSProperties = {
         ...(nowrap ? { whiteSpace: 'nowrap' } : {}),
         ...(flexShrink !== undefined ? { flexShrink } : {}),
+        ...(large ? { fontSize: '1.5rem' } : {}),
     };
 
     return Object.keys(style).length > 0 ? { style } : {};
@@ -28,12 +32,15 @@ export const Text = ({
     strong = false,
     nowrap = false,
     flexShrink,
+    large = false,
+    secondary = false,
     onClick,
 }: TextProps) => (
     <AntText
         strong={strong}
         onClick={onClick}
-        {...buildTextStyle(nowrap, flexShrink)}
+        {...(secondary ? { type: 'secondary' as const } : {})}
+        {...buildTextStyle(nowrap, flexShrink, large)}
     >
         {children}
     </AntText>

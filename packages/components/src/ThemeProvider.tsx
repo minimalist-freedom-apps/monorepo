@@ -16,6 +16,7 @@ const darkTheme: ThemeConfig = {
 
         // rest
         colorPrimary: COLORS.dark.primary,
+        colorTextBase: COLORS.dark.textPrimary,
         colorText: COLORS.dark.textPrimary,
         colorTextSecondary: COLORS.dark.textSecondary,
         colorBorder: COLORS.dark.border,
@@ -44,6 +45,7 @@ const lightTheme: ThemeConfig = {
         colorBgElevated: COLORS.light.elevation2,
 
         colorPrimary: COLORS.light.primary,
+        colorTextBase: COLORS.light.textPrimary,
         colorText: COLORS.light.textPrimary,
         colorTextSecondary: COLORS.light.textSecondary,
         colorBorder: COLORS.light.border,

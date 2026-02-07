@@ -1,6 +1,7 @@
 import 'antd/dist/reset.css';
 
 export { Alert } from './Alert';
+export { AppHeader } from './AppHeader';
 export { Button } from './Button';
 export { Card } from './Card';
 export { Code } from './Code';
@@ -8,6 +9,7 @@ export { COLORS, injectColorVariables, type Theme } from './colors';
 export type { FlexProps } from './Flex';
 export { Column, Flex, Row } from './Flex';
 export { FloatButton } from './FloatButton';
+export { Fraction } from './Fraction';
 export {
     DeleteOutlined,
     PlusOutlined,
