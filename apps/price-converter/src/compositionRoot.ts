@@ -1,5 +1,4 @@
 import type { CurrencyCode } from '@evolu/common';
-import type { AmountSats } from '@minimalistic-apps/bitcoin';
 import { createConnect } from '@minimalistic-apps/connect';
 import { createCurrentDateTime } from '@minimalistic-apps/datetime';
 import { createLocalStorage } from '@minimalistic-apps/local-storage';
@@ -20,6 +19,7 @@ import { ThemeWrapperPure } from './app/ThemeWrapper';
 import { createFetchAndStoreRates } from './converter/fetchAndStoreRates';
 import { createRecalculateFromBtc } from './converter/recalculateFromBtc';
 import { createRecalculateFromCurrency } from './converter/recalculateFromCurrency';
+import { createRemoveCurrency } from './converter/removeCurrency';
 import { createMain, type Main } from './createMain';
 import { createFetchRatesCompositionRoot } from './rates/fetchRatesCompositionRoot';
 import { createAddCurrency } from './state/addCurrency';
@@ -35,16 +35,38 @@ import { createLoadInitialState } from './state/localStorage/loadInitialState';
 import { createPersistStore } from './state/localStorage/persistStore';
 import { createStatePersistence } from './state/localStorage/statePersistence';
 import { createNavigate } from './state/navigate';
-import { createRemoveCurrency } from './state/removeCurrency';
-import type { CurrencyValues } from './state/State';
+import { createRemoveFiatAmount } from './state/removeFiatAmount';
+import { createSetFiatAmount } from './state/setFiatAmount';
+import { createSetSatsAmount } from './state/setSatsAmount';
 import { createSetTheme } from './state/setTheme';
 
 export const createCompositionRoot = (): Main => {
-    // Store
-    const store = createStore();
+    // Low Level
+    const window = createWindow();
     const currentDateTime = createCurrentDateTime();
     const localStorage = createLocalStorage();
-    const window = createWindow();
+
+    // Store
+    const store = createStore();
+    const setTheme = createSetTheme({ store });
+    const navigate = createNavigate({ store });
+    const setSatsAmount = createSetSatsAmount({ store });
+    const changeFiatAmount = createSetFiatAmount({ store });
+    const removeFiatAmount = createRemoveFiatAmount({ store });
+
+    // State Persistence
+    const loadInitialState = createLoadInitialState({
+        store,
+        localStorage,
+    });
+
+    const persistStore = createPersistStore({ store, localStorage });
+
+    const statePersistence = createStatePersistence({
+        loadInitialState,
+        persistStore,
+        window: window,
+    });
 
     // Evolu
     const ensureEvoluOwner = createEnsureEvoluOwner({ store });
@@ -61,12 +83,15 @@ export const createCompositionRoot = (): Main => {
 
     const connect = createConnect({ store, selectedCurrencies });
 
-    // Converter
-    const setTheme = createSetTheme({ store });
-    const navigate = createNavigate({ store });
+    // Fetch Rates
+    const fetchRates = createFetchRatesCompositionRoot();
 
+    // Converter - This is juicy business logic
     const addCurrency = createAddCurrency({ store, ensureEvolu });
-    const removeCurrency = createRemoveCurrency({ store, ensureEvolu });
+    const removeCurrency = createRemoveCurrency({
+        ensureEvolu,
+        removeFiatAmount,
+    });
     const recalculateFromBtc = createRecalculateFromBtc({
         store,
         getSelectedCurrencies,
@@ -76,28 +101,11 @@ export const createCompositionRoot = (): Main => {
         recalculateFromBtc,
     });
 
-    // Fetch Rates
-    const fetchRates = createFetchRatesCompositionRoot();
-
     const fetchAndStoreRates = createFetchAndStoreRates({
         store,
         fetchRates,
         recalculateFromBtc,
         currentDateTime,
-    });
-
-    // State Persistence
-    const loadInitialState = createLoadInitialState({
-        store,
-        localStorage,
-    });
-
-    const persistStore = createPersistStore({ store, localStorage });
-
-    const statePersistence = createStatePersistence({
-        loadInitialState,
-        persistStore,
-        window: window,
     });
 
     // Components
@@ -140,7 +148,7 @@ export const createCompositionRoot = (): Main => {
         ConverterScreenPure,
         ({ store, selectedCurrencies }) => ({
             satsAmount: store.satsAmount,
-            currencyValues: store.fiatAmounts,
+            fiatAmounts: store.fiatAmounts,
             selectedCurrencies: selectCurrencyCodes(selectedCurrencies),
         }),
         {
@@ -150,10 +158,8 @@ export const createCompositionRoot = (): Main => {
             AddCurrencyButton,
             CurrencyRow,
             RatesLoading,
-            setSatsAmount: (satsAmount: AmountSats) =>
-                store.setState({ satsAmount }),
-            setFiatAmounts: (fiatAmounts: Readonly<CurrencyValues>) =>
-                store.setState({ fiatAmounts }),
+            setSatsAmount,
+            changeFiatAmount,
         },
     );
 

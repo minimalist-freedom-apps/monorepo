@@ -5,53 +5,44 @@ import { FiatAmount } from '@minimalistic-apps/fiat';
 import type { FC } from 'react';
 import type { RecalculateFromBtcDep } from '../../converter/recalculateFromBtc';
 import type { RecalculateFromCurrencyDep } from '../../converter/recalculateFromCurrency';
-import type { RemoveCurrencyDep } from '../../state/removeCurrency';
+import type { RemoveCurrencyDep } from '../../converter/removeCurrency';
 import type { CurrencyValues } from '../../state/State';
+import type { ChangeFiatAmountDep } from '../../state/setFiatAmount';
+import type { SetSatsAmountDep } from '../../state/setSatsAmount';
 import type { AddCurrencyButtonDep } from '../AddCurrencyScreen/AddCurrencyButton';
 import type { RatesLoadingDep } from '../RatesLoading';
 import type { CurrencyRowDep } from './CurrencyFiatRow';
 
 export type ConverterScreenStateProps = {
     readonly satsAmount: AmountSats;
-    readonly currencyValues: Readonly<CurrencyValues>;
+    readonly fiatAmounts: Readonly<CurrencyValues>;
     readonly selectedCurrencies: ReadonlyArray<CurrencyCode>;
 };
-
-type SetSatsAmount = (satsAmount: AmountSats) => void;
-type SetFiatAmounts = (fiatAmounts: Readonly<CurrencyValues>) => void;
 
 type ConverterScreenDeps = RecalculateFromBtcDep &
     RecalculateFromCurrencyDep &
     RemoveCurrencyDep &
+    SetSatsAmountDep &
+    ChangeFiatAmountDep &
     AddCurrencyButtonDep &
     CurrencyRowDep &
-    RatesLoadingDep & {
-        readonly setSatsAmount: SetSatsAmount;
-        readonly setFiatAmounts: SetFiatAmounts;
-    };
+    RatesLoadingDep;
 
 export type ConverterScreenDep = { ConverterScreen: FC };
 
 export const ConverterScreenPure = (
     deps: ConverterScreenDeps,
-    {
-        satsAmount,
-        currencyValues,
-        selectedCurrencies,
-    }: ConverterScreenStateProps,
+    { satsAmount, fiatAmounts, selectedCurrencies }: ConverterScreenStateProps,
 ) => {
     const handleBtcChange = (value: AmountSats) => {
         deps.setSatsAmount(value);
         deps.recalculateFromBtc();
     };
 
-    const handleCurrencyChange = (code: CurrencyCode, value: number) => {
+    const handleFiatChange = (code: CurrencyCode, value: number) => {
         const fiatAmount = FiatAmount(code).from(value);
 
-        deps.setFiatAmounts({
-            ...currencyValues,
-            [code]: value,
-        });
+        deps.changeFiatAmount({ code, amount: fiatAmount });
         deps.recalculateFromCurrency({ code, value: fiatAmount });
     };
 
@@ -71,10 +62,8 @@ export const ConverterScreenPure = (
                 <deps.CurrencyRow
                     key={code}
                     code={code}
-                    value={currencyValues[code] ?? 0}
-                    onChange={(value: number) =>
-                        handleCurrencyChange(code, value)
-                    }
+                    value={fiatAmounts[code] ?? 0}
+                    onChange={(value: number) => handleFiatChange(code, value)}
                     onRemove={() => deps.removeCurrency({ code })}
                 />
             ))}
