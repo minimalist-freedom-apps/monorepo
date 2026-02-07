@@ -5,6 +5,7 @@ export interface FlexProps {
     readonly children: ReactNode;
     readonly gap?: number;
     readonly flex?: number | string;
+    readonly wrap?: boolean;
     readonly align?: 'start' | 'center' | 'end' | 'stretch';
     readonly justify?:
         | 'start'
@@ -20,6 +21,7 @@ export const Flex = ({
     children,
     gap = 0,
     flex,
+    wrap = false,
     align = 'stretch',
     justify = 'start',
     direction = 'row',
@@ -28,6 +30,7 @@ export const Flex = ({
     <AntFlex
         gap={gap}
         flex={flex}
+        wrap={wrap ? 'wrap' : undefined}
         align={align}
         justify={justify}
         vertical={direction === 'column'}
