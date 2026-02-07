@@ -1,4 +1,4 @@
-### Store Manipulation
+## Store Manipulation
 Never use `deps.store.setState` directly. Always create a service for the state manipulation.
 
 Example:

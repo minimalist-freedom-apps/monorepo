@@ -7,7 +7,7 @@ import type { RecalculateFromBtcDep } from '../../converter/recalculateFromBtc';
 import type { RecalculateFromCurrencyDep } from '../../converter/recalculateFromCurrency';
 import type { RemoveCurrencyDep } from '../../converter/removeCurrency';
 import type { CurrencyValues } from '../../state/State';
-import type { ChangeFiatAmountDep } from '../../state/setFiatAmount';
+import type { SetFiatAmountDep } from '../../state/setFiatAmount';
 import type { SetSatsAmountDep } from '../../state/setSatsAmount';
 import type { AddCurrencyButtonDep } from '../AddCurrencyScreen/AddCurrencyButton';
 import type { RatesLoadingDep } from '../RatesLoading';
@@ -23,7 +23,7 @@ type ConverterScreenDeps = RecalculateFromBtcDep &
     RecalculateFromCurrencyDep &
     RemoveCurrencyDep &
     SetSatsAmountDep &
-    ChangeFiatAmountDep &
+    SetFiatAmountDep &
     AddCurrencyButtonDep &
     CurrencyRowDep &
     RatesLoadingDep;
@@ -42,7 +42,7 @@ export const ConverterScreenPure = (
     const handleFiatChange = (code: CurrencyCode, value: number) => {
         const fiatAmount = FiatAmount(code).from(value);
 
-        deps.changeFiatAmount({ code, amount: fiatAmount });
+        deps.setFiatAmount({ code, amount: fiatAmount });
         deps.recalculateFromCurrency({ code, value: fiatAmount });
     };
 

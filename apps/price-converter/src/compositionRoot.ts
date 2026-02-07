@@ -51,7 +51,7 @@ export const createCompositionRoot = (): Main => {
     const setTheme = createSetTheme({ store });
     const navigate = createNavigate({ store });
     const setSatsAmount = createSetSatsAmount({ store });
-    const changeFiatAmount = createSetFiatAmount({ store });
+    const setFiatAmount = createSetFiatAmount({ store });
     const removeFiatAmount = createRemoveFiatAmount({ store });
 
     // State Persistence
@@ -159,7 +159,7 @@ export const createCompositionRoot = (): Main => {
             CurrencyRow,
             RatesLoading,
             setSatsAmount,
-            changeFiatAmount,
+            setFiatAmount,
         },
     );
 
