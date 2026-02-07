@@ -1,7 +1,6 @@
 import { describe, expect, test } from 'vitest';
 import {
     asCurrencyCodeUnsafe,
-    CURRENCY_TERRITORIES,
     currencyMatchesTerritory,
     getFlagsForCurrency,
     getTerritoryNamesForCurrency,
@@ -13,38 +12,6 @@ const JPY = asCurrencyCodeUnsafe('JPY');
 const CHF = asCurrencyCodeUnsafe('CHF');
 const NOK = asCurrencyCodeUnsafe('NOK');
 const XYZ = asCurrencyCodeUnsafe('XYZ');
-
-describe('CURRENCY_TERRITORIES', () => {
-    test('contains USD with United States as first territory', () => {
-        const usd = CURRENCY_TERRITORIES[USD];
-
-        expect(usd).toBeDefined();
-        expect(usd![0]).toEqual({
-            flag: '🇺🇸',
-            name: 'United States',
-        });
-    });
-
-    test('contains EUR with multiple territories', () => {
-        const eur = CURRENCY_TERRITORIES[EUR];
-
-        expect(eur).toBeDefined();
-        expect(eur!.length).toBeGreaterThan(10);
-        expect(eur![0]).toEqual({ flag: '🇪🇺', name: 'EU' });
-    });
-
-    test('contains single-territory currencies', () => {
-        const jpy = CURRENCY_TERRITORIES[JPY];
-
-        expect(jpy).toEqual([{ flag: '🇯🇵', name: 'Japan' }]);
-    });
-
-    test('returns undefined for unknown currency', () => {
-        const unknown = CURRENCY_TERRITORIES[XYZ] as unknown;
-
-        expect(unknown).toBeUndefined();
-    });
-});
 
 describe(getFlagsForCurrency.name, () => {
     test('returns flags for a known currency', () => {

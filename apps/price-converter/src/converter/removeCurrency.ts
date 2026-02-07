@@ -3,7 +3,7 @@ import {
     createIdFromString,
     sqliteTrue,
 } from '@evolu/common';
-import type { EnsureEvoluDep } from '../../../../packages/evolu/src/createEnsureEvolu';
+import type { EnsureEvoluDep } from '../state/evolu/schema';
 import type { RemoveFiatAmountDep } from '../state/removeFiatAmount';
 
 export interface RemoveCurrencyParams {

@@ -1,8 +1,8 @@
 import { type CurrencyCode, createIdFromString } from '@evolu/common';
 import { satsToBtc } from '@minimalistic-apps/bitcoin';
-import type { EnsureEvoluDep } from '../../../../packages/evolu/src/createEnsureEvolu';
 import { bitcoinToFiat } from '../converter/bitcoinToFiat';
 import type { StoreDep } from './createStore';
+import type { EnsureEvoluDep } from './evolu/schema';
 
 export interface AddCurrencyParams {
     readonly code: CurrencyCode;
