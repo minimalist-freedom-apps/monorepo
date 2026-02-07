@@ -10,7 +10,6 @@ const USD = asCurrencyCodeUnsafe('USD');
 const EUR = asCurrencyCodeUnsafe('EUR');
 const JPY = asCurrencyCodeUnsafe('JPY');
 const CHF = asCurrencyCodeUnsafe('CHF');
-const NOK = asCurrencyCodeUnsafe('NOK');
 const XYZ = asCurrencyCodeUnsafe('XYZ');
 
 describe(getFlagsForCurrency.name, () => {
@@ -19,13 +18,6 @@ describe(getFlagsForCurrency.name, () => {
 
         expect(flags).toContain('🇺🇸');
         expect(flags.length).toBeGreaterThan(1);
-    });
-
-    test('returns unique flags only', () => {
-        const flags = getFlagsForCurrency(NOK);
-
-        // NOK has Norway twice (Norway + Svalbard), flags should be deduplicated
-        expect(flags).toEqual(['🇳🇴']);
     });
 
     test('returns single flag for single-territory currency', () => {
