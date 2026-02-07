@@ -4,7 +4,7 @@ import { VitePWA } from 'vite-plugin-pwa';
 
 export default defineConfig({
     optimizeDeps: {
-        exclude: ['@evolu/react-web', '@evolu/sqlite-wasm'],
+        exclude: ['@evolu/web', '@evolu/sqlite-wasm'],
     },
     worker: {
         format: 'es',

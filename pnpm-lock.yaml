@@ -56,9 +56,9 @@ importers:
       '@evolu/common':
         specifier: ^7.4.1
         version: 7.4.1
-      '@evolu/react-web':
+      '@evolu/web':
         specifier: ^2.4.0
-        version: 2.4.0(@evolu/common@7.4.1)(@evolu/web@2.4.0(@evolu/common@7.4.1))(react-dom@19.2.4(react@19.2.4))(react@19.2.4)
+        version: 2.4.0(@evolu/common@7.4.1)
       '@minimalistic-apps/bitcoin':
         specifier: workspace:*
         version: link:../../packages/bitcoin
@@ -181,9 +181,9 @@ importers:
       '@evolu/common':
         specifier: ^7.4.1
         version: 7.4.1
-      '@evolu/react-web':
+      '@evolu/web':
         specifier: ^2.4.0
-        version: 2.4.0(@evolu/common@7.4.1)(@evolu/web@2.4.0(@evolu/common@7.4.1))(react-dom@19.2.4(react@19.2.4))(react@19.2.4)
+        version: 2.4.0(@evolu/common@7.4.1)
       '@minimalistic-apps/connect':
         specifier: workspace:*
         version: link:../connect
@@ -1219,15 +1219,6 @@ packages:
   '@evolu/common@7.4.1':
     resolution: {integrity: sha512-aTSJN9GXvoN5FXo8DRiYdbMVFvBUG6N7Ygu7n5viyauPKBwylyAazZuDcBlQg5MxVv6YrF5c6w2LRG/OR2UIHA==}
     engines: {node: '>=22.0.0'}
-
-  '@evolu/react-web@2.4.0':
-    resolution: {integrity: sha512-8zf/qQM+JZWykh0eGIAhE3CRFptGB0FwyQa4jp5Ce7yyOkekRMRs5WMZQA9QbRoY/OBRyOcwIP4aUk/tj49VwQ==}
-    engines: {node: '>=22.0.0'}
-    peerDependencies:
-      '@evolu/common': ^7.4.0
-      '@evolu/web': ^2.4.0
-      react: '>=19'
-      react-dom: '>=19'
 
   '@evolu/sqlite-wasm@2.2.4':
     resolution: {integrity: sha512-/JOYGFN93QspD2C8HVxVgBUlFWqJ1IpaVuIhEB53u4+ZvE+D3LjpNHDYiwZgf0n7VaH2U85OY5eV3wUrWc3scg==}
@@ -4555,13 +4546,6 @@ snapshots:
       kysely: 0.28.11
       msgpackr: 1.11.8
       random: 5.4.1
-
-  '@evolu/react-web@2.4.0(@evolu/common@7.4.1)(@evolu/web@2.4.0(@evolu/common@7.4.1))(react-dom@19.2.4(react@19.2.4))(react@19.2.4)':
-    dependencies:
-      '@evolu/common': 7.4.1
-      '@evolu/web': 2.4.0(@evolu/common@7.4.1)
-      react: 19.2.4
-      react-dom: 19.2.4(react@19.2.4)
 
   '@evolu/sqlite-wasm@2.2.4': {}
 

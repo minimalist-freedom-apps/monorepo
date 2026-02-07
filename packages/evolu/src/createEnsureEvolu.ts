@@ -13,7 +13,7 @@ import {
     type UnuseOwner,
 } from '@evolu/common';
 import type { ValidateSchema } from '@evolu/common/local-first';
-import { evoluReactWebDeps } from '@evolu/react-web';
+import { evoluWebDeps } from '@evolu/web';
 import type { EnsureEvoluOwnerDep } from '@minimalistic-apps/evolu';
 
 export type EvoluStorage<S extends EvoluSchema> = {
@@ -30,7 +30,7 @@ const createEvoluStorage = <S extends EvoluSchema>(
     const ownerSecret = mnemonicToOwnerSecret(mnemonic);
     const appOwner = createAppOwner(ownerSecret);
 
-    const evolu = createEvolu(evoluReactWebDeps)(schema, {
+    const evolu = createEvolu(evoluWebDeps)(schema, {
         name: SimpleName.orThrow('price-converter'),
         transports: [],
     });
