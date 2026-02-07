@@ -15,6 +15,7 @@ interface InputProps {
     readonly inputRef?: RefObject<InputRef>;
     readonly monospace?: boolean;
     readonly large?: boolean;
+    readonly textAlign?: 'center' | 'left' | 'right';
     readonly className?: string;
 }
 
@@ -27,6 +28,7 @@ export const Input = ({
     inputRef,
     monospace = false,
     large = false,
+    textAlign,
     className,
 }: InputProps) => {
     const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
@@ -47,6 +49,7 @@ export const Input = ({
                 fontFamily: monospace ? 'monospace' : 'inherit',
                 fontSize: large ? '1.25rem' : '1.125rem',
                 fontWeight: 600,
+                textAlign,
             }}
         />
     );

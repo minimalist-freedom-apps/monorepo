@@ -53,6 +53,7 @@ export const Rectangle = () => {
                                 onChange={setAmount}
                                 placeholder="amount"
                                 inputMode="decimal"
+                                textAlign="center"
                             />
                         }
                         denominator={
@@ -72,12 +73,13 @@ export const Rectangle = () => {
                     </Text>
                     <Fraction
                         numerator={
-                            <Row gap={4} align="center">
+                            <Row gap={12} align="center">
                                 <Input
                                     value={originalA}
                                     onChange={setOriginalA}
                                     placeholder="a"
                                     inputMode="decimal"
+                                    textAlign="center"
                                 />
                                 <Text strong>×</Text>
                                 <Input
@@ -85,16 +87,18 @@ export const Rectangle = () => {
                                     onChange={setOriginalB}
                                     placeholder="b"
                                     inputMode="decimal"
+                                    textAlign="center"
                                 />
                             </Row>
                         }
                         denominator={
-                            <Row gap={4} align="center">
+                            <Row gap={12} align="center">
                                 <Input
                                     value={newA}
                                     onChange={setNewA}
                                     placeholder="a"
                                     inputMode="decimal"
+                                    textAlign="center"
                                 />
                                 <Text strong>×</Text>
                                 <Input
@@ -102,6 +106,7 @@ export const Rectangle = () => {
                                     onChange={setNewB}
                                     placeholder="b"
                                     inputMode="decimal"
+                                    textAlign="center"
                                 />
                             </Row>
                         }

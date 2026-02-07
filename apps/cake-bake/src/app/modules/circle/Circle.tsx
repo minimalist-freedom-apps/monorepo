@@ -41,6 +41,7 @@ export const Circle = () => {
                                 onChange={setAmount}
                                 placeholder="amount"
                                 inputMode="decimal"
+                                textAlign="center"
                             />
                         }
                         denominator={
@@ -64,8 +65,9 @@ export const Circle = () => {
                                 <Input
                                     value={originalDiameter}
                                     onChange={setOriginalDiameter}
-                                    placeholder="orig ⌀"
+                                    placeholder="⌀"
                                     inputMode="decimal"
+                                    textAlign="center"
                                 />
                                 <Text>²</Text>
                             </Row>
@@ -75,8 +77,9 @@ export const Circle = () => {
                                 <Input
                                     value={newDiameter}
                                     onChange={setNewDiameter}
-                                    placeholder="new ⌀"
+                                    placeholder="⌀"
                                     inputMode="decimal"
+                                    textAlign="center"
                                 />
                                 <Text>²</Text>
                             </Row>
