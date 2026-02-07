@@ -64,8 +64,14 @@ export const AddCurrencyScreenPure = (
     }));
 
     return (
-        <Screen>
-            <Button onClick={handleBack}>← Back</Button>
+        <Screen gap={12}>
+            <Button
+                onClick={handleBack}
+                variant="text"
+                style={{ alignSelf: 'start' }}
+            >
+                ← Back
+            </Button>
             <SearchInput
                 value={searchTerm}
                 onChange={setSearchTerm}

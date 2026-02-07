@@ -1,5 +1,5 @@
-import { Empty as AntEmpty, List as AntList } from 'antd';
-import type { MouseEvent, ReactNode } from 'react';
+import { Empty as AntEmpty } from 'antd';
+import type { KeyboardEvent, MouseEvent, ReactNode } from 'react';
 
 interface ListItem {
     readonly key: string;
@@ -9,8 +9,26 @@ interface ListProps<T extends ListItem> {
     readonly items: ReadonlyArray<T>;
     readonly renderItem: (item: T) => ReactNode;
     readonly emptyText?: string;
-    readonly onItemClick?: (item: T) => void;
+    readonly onItemClick: (item: T) => void;
 }
+
+const itemStyle = {
+    padding: '10px 12px',
+    borderRadius: 8,
+    transition: 'background 0.15s ease',
+} as const;
+
+const interactiveStyle = {
+    ...itemStyle,
+    cursor: 'pointer',
+    background: 'transparent',
+    border: 'none',
+    color: 'inherit',
+    font: 'inherit',
+    textAlign: 'left',
+    width: '100%',
+    display: 'block',
+} as const;
 
 export const List = <T extends ListItem>({
     items,
@@ -22,31 +40,36 @@ export const List = <T extends ListItem>({
         return <AntEmpty description={emptyText} />;
     }
 
-    const handleMouseEnter = (e: MouseEvent<HTMLDivElement>) => {
-        e.currentTarget.style.background = '#2a2a2a';
+    const handleMouseEnter = (e: MouseEvent<HTMLButtonElement>) => {
+        e.currentTarget.style.background = 'var(--color-elevation2)';
     };
 
-    const handleMouseLeave = (e: MouseEvent<HTMLDivElement>) => {
+    const handleMouseLeave = (e: MouseEvent<HTMLButtonElement>) => {
         e.currentTarget.style.background = 'transparent';
     };
 
+    const handleKeyDown = (e: KeyboardEvent<HTMLButtonElement>, item: T) => {
+        if (e.key === 'Enter' || e.key === ' ') {
+            e.preventDefault();
+            onItemClick(item);
+        }
+    };
+
     return (
-        <AntList
-            dataSource={[...items]}
-            renderItem={(item: T) => (
-                <AntList.Item
-                    onClick={() => onItemClick?.(item)}
-                    style={{
-                        cursor: onItemClick ? 'pointer' : 'default',
-                        padding: '12px 16px',
-                        borderRadius: 4,
-                    }}
-                    onMouseEnter={onItemClick ? handleMouseEnter : undefined}
-                    onMouseLeave={onItemClick ? handleMouseLeave : undefined}
+        <div style={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
+            {items.map(item => (
+                <button
+                    key={item.key}
+                    type="button"
+                    onClick={() => onItemClick(item)}
+                    onKeyDown={e => handleKeyDown(e, item)}
+                    onMouseEnter={handleMouseEnter}
+                    onMouseLeave={handleMouseLeave}
+                    style={interactiveStyle}
                 >
                     {renderItem(item)}
-                </AntList.Item>
-            )}
-        />
+                </button>
+            ))}
+        </div>
     );
 };
