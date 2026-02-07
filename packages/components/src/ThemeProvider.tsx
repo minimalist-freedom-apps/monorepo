@@ -20,6 +20,7 @@ const darkTheme: ThemeConfig = {
         colorTextSecondary: COLORS.dark.textSecondary,
         colorBorder: COLORS.dark.border,
         borderRadius: 4,
+        fontSize: 16,
         fontFamily:
             '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif',
     },
@@ -47,6 +48,7 @@ const lightTheme: ThemeConfig = {
         colorTextSecondary: COLORS.light.textSecondary,
         colorBorder: COLORS.light.border,
         borderRadius: 4,
+        fontSize: 16,
         fontFamily:
             '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif',
     },

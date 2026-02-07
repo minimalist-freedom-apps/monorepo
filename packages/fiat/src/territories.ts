@@ -315,12 +315,13 @@ export const CURRENCY_TERRITORIES = {
 export const getFlagsForCurrency = (
     currencyCode: CurrencyCode,
 ): ReadonlyArray<string> => [
-    ...new Set(CURRENCY_TERRITORIES[currencyCode].map(t => t.flag)),
+    ...new Set((CURRENCY_TERRITORIES[currencyCode] ?? []).map(t => t.flag)),
 ];
 
 export const getTerritoryNamesForCurrency = (
     currencyCode: CurrencyCode,
-): ReadonlyArray<string> => CURRENCY_TERRITORIES[currencyCode].map(t => t.name);
+): ReadonlyArray<string> =>
+    (CURRENCY_TERRITORIES[currencyCode] ?? []).map(t => t.name);
 
 export const currencyMatchesTerritory = (
     currencyCode: CurrencyCode,
@@ -328,7 +329,7 @@ export const currencyMatchesTerritory = (
 ): boolean => {
     const term = searchTerm.toLowerCase();
 
-    return CURRENCY_TERRITORIES[currencyCode].some(t =>
+    return (CURRENCY_TERRITORIES[currencyCode] ?? []).some(t =>
         t.name.toLowerCase().includes(term),
     );
 };
