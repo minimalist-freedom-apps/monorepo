@@ -1,4 +1,4 @@
-export const calculateNewAmount = (
+export const calculateCircle = (
     amount: number,
     originalDiameter: number,
     newDiameter: number,

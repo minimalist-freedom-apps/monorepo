@@ -5,6 +5,13 @@
 - Mock dependencies using the same interfaces
 - Never rely on global state or shared mutable deps between tests
 
+### Describe
+If you test function, use `function.name` to reference it, to make renaming easier:
+
+```ts
+describe(calculateCircle.name, () => {}
+```
+
 ### Test deps pattern
 
 Create fresh deps at the start of each test for isolation. Each call creates independent instances, preventing shared state between tests.
