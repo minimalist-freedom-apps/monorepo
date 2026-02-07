@@ -3,12 +3,10 @@ import type { AmountSats } from '@minimalistic-apps/bitcoin';
 import { Screen } from '@minimalistic-apps/components';
 import { FiatAmount } from '@minimalistic-apps/fiat';
 import type { FC } from 'react';
-import type { RecalculateFromBtcDep } from '../../converter/recalculateFromBtc';
-import type { RecalculateFromCurrencyDep } from '../../converter/recalculateFromCurrency';
+import type { ChangeBtcAmountDep } from '../../converter/changeBtcAmount';
+import type { ChangeFiatAmountDep } from '../../converter/changeFiatAmount';
 import type { RemoveCurrencyDep } from '../../converter/removeCurrency';
 import type { CurrencyValues } from '../../state/State';
-import type { SetFiatAmountDep } from '../../state/setFiatAmount';
-import type { SetSatsAmountDep } from '../../state/setSatsAmount';
 import type { AddCurrencyButtonDep } from '../AddCurrencyScreen/AddCurrencyButton';
 import type { RatesLoadingDep } from '../RatesLoading';
 import type { CurrencyRowDep } from './CurrencyFiatRow';
@@ -19,11 +17,9 @@ export type ConverterScreenStateProps = {
     readonly selectedCurrencies: ReadonlyArray<CurrencyCode>;
 };
 
-type ConverterScreenDeps = RecalculateFromBtcDep &
-    RecalculateFromCurrencyDep &
+type ConverterScreenDeps = ChangeBtcAmountDep &
+    ChangeFiatAmountDep &
     RemoveCurrencyDep &
-    SetSatsAmountDep &
-    SetFiatAmountDep &
     AddCurrencyButtonDep &
     CurrencyRowDep &
     RatesLoadingDep;
@@ -35,15 +31,11 @@ export const ConverterScreenPure = (
     { satsAmount, fiatAmounts, selectedCurrencies }: ConverterScreenStateProps,
 ) => {
     const handleBtcChange = (value: AmountSats) => {
-        deps.setSatsAmount(value);
-        deps.recalculateFromBtc();
+        deps.changeBtcAmount(value);
     };
 
     const handleFiatChange = (code: CurrencyCode, value: number) => {
-        const fiatAmount = FiatAmount(code).from(value);
-
-        deps.setFiatAmount({ code, amount: fiatAmount });
-        deps.recalculateFromCurrency({ code, value: fiatAmount });
+        deps.changeFiatAmount({ code, value: FiatAmount(code).from(value) });
     };
 
     return (

@@ -16,6 +16,8 @@ import { MnemonicSettingsPure } from './app/SettingsScreen/MnemonicSettings';
 import { SettingsScreenPure } from './app/SettingsScreen/SettingsScreen';
 import { ThemeSettingsPure } from './app/SettingsScreen/ThemeSettings';
 import { ThemeWrapperPure } from './app/ThemeWrapper';
+import { createChangeBtcAmount } from './converter/changeBtcAmount';
+import { createChangeFiatAmount } from './converter/changeFiatAmount';
 import { createFetchAndStoreRates } from './converter/fetchAndStoreRates';
 import { createRecalculateFromBtc } from './converter/recalculateFromBtc';
 import { createRecalculateFromCurrency } from './converter/recalculateFromCurrency';
@@ -100,6 +102,14 @@ export const createCompositionRoot = (): Main => {
         store,
         recalculateFromBtc,
     });
+    const changeFiatAmount = createChangeFiatAmount({
+        setFiatAmount,
+        recalculateFromCurrency,
+    });
+    const changeBtcAmount = createChangeBtcAmount({
+        setSatsAmount,
+        recalculateFromBtc,
+    });
 
     const fetchAndStoreRates = createFetchAndStoreRates({
         store,
@@ -152,14 +162,12 @@ export const createCompositionRoot = (): Main => {
             selectedCurrencies: selectCurrencyCodes(selectedCurrencies),
         }),
         {
-            recalculateFromBtc,
-            recalculateFromCurrency,
+            changeBtcAmount,
+            changeFiatAmount,
             removeCurrency,
             AddCurrencyButton,
             CurrencyRow,
             RatesLoading,
-            setSatsAmount,
-            setFiatAmount,
         },
     );
 
