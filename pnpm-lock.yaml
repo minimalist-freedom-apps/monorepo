@@ -181,6 +181,9 @@ importers:
       '@evolu/common':
         specifier: ^7.4.1
         version: 7.4.1
+      '@evolu/react-web':
+        specifier: ^2.4.0
+        version: 2.4.0(@evolu/common@7.4.1)(@evolu/web@2.4.0(@evolu/common@7.4.1))(react-dom@19.2.4(react@19.2.4))(react@19.2.4)
       '@minimalistic-apps/connect':
         specifier: workspace:*
         version: link:../connect

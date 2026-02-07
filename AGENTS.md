@@ -32,3 +32,4 @@ See the following files:
 - [components.md](skills/components.md)
 - [verification.md](skills/verification.md)
 - [store.md](skills/store.md)
+- [typescript.md](skills/typescript.md)
