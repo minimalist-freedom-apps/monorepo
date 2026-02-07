@@ -7,16 +7,14 @@ import {
     SearchInput,
     Text,
 } from '@minimalistic-apps/components';
-import {
-    currencyMatchesTerritory,
-    getFlagsForCurrency,
-} from '@minimalistic-apps/fiat';
+import { getFlagsForCurrency } from '@minimalistic-apps/fiat';
 import { typedObjectValues } from '@minimalistic-apps/type-utils';
 import type { FC } from 'react';
 import { useState } from 'react';
 import type { CurrencyEntity, CurrencyMap } from '../../rates/FetchRates';
 import type { AddCurrencyDep } from '../../state/addCurrency';
 import type { NavigateDep } from '../../state/navigate';
+import { filterCurrencies } from './filterCurrencies';
 
 export type AddCurrencyScreenStateProps = {
     readonly rates: CurrencyMap;
@@ -43,16 +41,10 @@ export const AddCurrencyScreenPure = (
         .sort((a, b) => a.name.localeCompare(b.name))
         .map(it => ({ code: it.code, name: it.name }));
 
-    const filteredCurrencies = !searchTerm
-        ? availableCurrencies
-        : availableCurrencies.filter(({ code, name }) => {
-              const term = searchTerm.toLowerCase();
-              const matchesCode = code.toLowerCase().includes(term);
-              const matchesName = name.toLowerCase().includes(term);
-              const matchesTerritory = currencyMatchesTerritory(code, term);
-
-              return matchesCode || matchesName || matchesTerritory;
-          });
+    const filteredCurrencies = filterCurrencies(
+        availableCurrencies,
+        searchTerm,
+    );
 
     const handleSelect = (code: string) => {
         deps.addCurrency({ code: code as CurrencyCode });
