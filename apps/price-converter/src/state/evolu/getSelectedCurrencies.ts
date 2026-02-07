@@ -1,6 +1,6 @@
 import type { CurrencyCode, Query, Row } from '@evolu/common';
 import { sqliteTrue } from '@evolu/common';
-import type { EnsureEvoluDep } from './createEvolu';
+import type { EnsureEvoluDep } from './schema';
 
 export interface SelectedCurrencyRow extends Row {
     readonly id: string;

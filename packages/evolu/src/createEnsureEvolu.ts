@@ -4,6 +4,7 @@ import {
     createOwnerWebSocketTransport,
     deriveShardOwner,
     type Evolu,
+    type EvoluSchema,
     type Mnemonic,
     mnemonicToOwnerSecret,
     type ShardOwner,
@@ -11,22 +12,25 @@ import {
     type SyncOwner,
     type UnuseOwner,
 } from '@evolu/common';
+import type { ValidateSchema } from '@evolu/common/local-first';
 import { evoluReactWebDeps } from '@evolu/react-web';
 import type { EnsureEvoluOwnerDep } from '@minimalistic-apps/evolu';
-import { Schema } from './schema';
 
-export type EvoluStorage = {
-    evolu: Evolu<typeof Schema>;
+export type EvoluStorage<S extends EvoluSchema> = {
+    evolu: Evolu<S>;
     shardOwner: ShardOwner;
     updateRelayUrls: (urls: string[]) => Promise<void>;
     dispose: () => Promise<void>;
 };
 
-const createEvoluStorage = (mnemonic: Mnemonic): EvoluStorage => {
+const createEvoluStorage = <S extends EvoluSchema>(
+    mnemonic: Mnemonic,
+    schema: ValidateSchema<S> extends never ? S : ValidateSchema<S>,
+): EvoluStorage<S> => {
     const ownerSecret = mnemonicToOwnerSecret(mnemonic);
     const appOwner = createAppOwner(ownerSecret);
 
-    const evolu = createEvolu(evoluReactWebDeps)(Schema, {
+    const evolu = createEvolu(evoluReactWebDeps)(schema, {
         name: SimpleName.orThrow('price-converter'),
         transports: [],
     });
@@ -71,22 +75,23 @@ const createEvoluStorage = (mnemonic: Mnemonic): EvoluStorage => {
     };
 };
 
-export type EnsureEvoluStorage = () => EvoluStorage;
+export type EnsureEvoluStorage<S extends EvoluSchema> = () => EvoluStorage<S>;
 
-export interface EnsureEvoluDep {
-    readonly ensureEvolu: EnsureEvoluStorage;
+export interface EnsureEvoluDep<S extends EvoluSchema> {
+    readonly ensureEvolu: EnsureEvoluStorage<S>;
 }
 
 type EnsureEvoluDeps = EnsureEvoluOwnerDep;
 
-export const createEnsureEvolu = (
+export const createEnsureEvolu = <S extends EvoluSchema>(
     deps: EnsureEvoluDeps,
-): EnsureEvoluStorage => {
-    let storage: EvoluStorage | null = null;
+    schema: ValidateSchema<S> extends never ? S : ValidateSchema<S>,
+): EnsureEvoluStorage<S> => {
+    let storage: EvoluStorage<S> | null = null;
 
     return () => {
         if (storage === null) {
-            storage = createEvoluStorage(deps.ensureEvoluOwner());
+            storage = createEvoluStorage(deps.ensureEvoluOwner(), schema);
         }
 
         return storage;

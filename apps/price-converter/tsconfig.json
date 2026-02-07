@@ -5,7 +5,7 @@
         "jsx": "react-jsx",
         "types": ["@testing-library/jest-dom"]
     },
-    "include": ["src"],
+    "include": ["src", "../../packages/evolu/src/createEnsureEvolu.ts"],
     "references": [
         {
             "path": "./tsconfig.node.json"

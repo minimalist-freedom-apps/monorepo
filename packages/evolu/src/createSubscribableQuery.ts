@@ -1,15 +1,10 @@
-import type { Query, QueryRows, Row, StoreSubscribe } from '@evolu/common';
+import type { Evolu, EvoluSchema, Query, QueryRows, Row } from '@evolu/common';
 import type { Subscribable } from '@minimalistic-apps/connect';
 
-interface SubscribableQueryDeps {
-    readonly subscribeQuery: (query: Query) => StoreSubscribe;
-    readonly getQueryRows: <R extends Row>(query: Query<R>) => QueryRows<R>;
-}
-
-export const createSubscribableQuery = <R extends Row>(
-    deps: SubscribableQueryDeps,
+export const createSubscribableQuery = <S extends EvoluSchema, R extends Row>(
+    evolu: Evolu<S>,
     query: Query<R>,
 ): Subscribable<QueryRows<R>> => ({
-    subscribe: deps.subscribeQuery(query),
-    getState: () => deps.getQueryRows(query),
+    subscribe: evolu.subscribeQuery(query),
+    getState: () => evolu.getQueryRows(query),
 });

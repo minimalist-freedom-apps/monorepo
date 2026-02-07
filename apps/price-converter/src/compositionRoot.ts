@@ -6,6 +6,7 @@ import {
 } from '@minimalistic-apps/evolu';
 import { createLocalStorage } from '@minimalistic-apps/local-storage';
 import { createWindow } from '@minimalistic-apps/window';
+import { createEnsureEvolu } from '../../../packages/evolu/src/createEnsureEvolu';
 import { AddCurrencyButtonPure } from './app/AddCurrencyScreen/AddCurrencyButton';
 import { AddCurrencyScreenPure } from './app/AddCurrencyScreen/AddCurrencyScreen';
 import { AppPure } from './app/App';
@@ -29,12 +30,11 @@ import { createMain, type Main } from './createMain';
 import { createFetchRatesCompositionRoot } from './rates/fetchRatesCompositionRoot';
 import { createAddCurrency } from './state/addCurrency';
 import { createStore } from './state/createStore';
-
-import { createEnsureEvolu } from './state/evolu/createEvolu';
 import {
     createGetSelectedCurrencies,
     selectCurrencyCodes,
 } from './state/evolu/getSelectedCurrencies';
+import { Schema } from './state/evolu/schema';
 import { createLoadInitialState } from './state/localStorage/loadInitialState';
 import { createPersistStore } from './state/localStorage/persistStore';
 import { createStatePersistence } from './state/localStorage/statePersistence';
@@ -78,7 +78,7 @@ export const createCompositionRoot = (): Main => {
 
     // Evolu
     const ensureEvoluOwner = createEnsureEvoluOwner({ store });
-    const ensureEvolu = createEnsureEvolu({ ensureEvoluOwner });
+    const ensureEvolu = createEnsureEvolu({ ensureEvoluOwner }, Schema);
     const getSelectedCurrencies = createGetSelectedCurrencies({ ensureEvolu });
 
     // HACK: We need this to subscribe query, in next Evolu this won't be necessary.

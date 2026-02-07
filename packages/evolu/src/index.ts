@@ -1,3 +1,4 @@
+export { createEnsureEvolu, type EnsureEvoluDep } from './createEnsureEvolu';
 export {
     createEnsureEvoluOwner,
     type EnsureEvoluOwner,
