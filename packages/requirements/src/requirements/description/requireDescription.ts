@@ -2,8 +2,9 @@ import { existsSync, readFileSync } from 'node:fs';
 import { resolve } from 'node:path';
 import type { Requirement } from '../Requirement';
 
-export const matchingDescription: Requirement = {
+export const requireDescription: Requirement = {
     name: 'matching description',
+    applies: ({ projectType }) => projectType === 'app',
     generate: async () => [],
     verify: ({ appDir }) => {
         const configPath = resolve(appDir, 'config.ts');

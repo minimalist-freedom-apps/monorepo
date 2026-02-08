@@ -1,14 +1,15 @@
 import { existsSync } from 'node:fs';
 import { resolve } from 'node:path';
 import { pathToFileURL } from 'node:url';
-import type { AppConfig } from '../../AppConfig';
+import type { AppConfig } from '../appConfig/AppConfig';
 import type { Requirement } from '../Requirement';
 import { generateIcons } from './generateIcons';
 
 const REQUIRED_ICONS = ['favicon.png', 'icon-192x192.png', 'icon-512x512.png'] as const;
 
-export const generatedIcons: Requirement = {
+export const requireIcons: Requirement = {
     name: 'has generated icons',
+    applies: ({ projectType }) => projectType === 'app',
     generate: async ({ appDir }) => {
         const configPath = resolve(appDir, 'config.ts');
 

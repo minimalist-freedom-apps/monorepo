@@ -24,8 +24,9 @@ const checkExtends = ({ filePath }: { readonly filePath: string }): string | und
     return undefined;
 };
 
-export const tsconfigExtends: Requirement = {
+export const requireTsconfig: Requirement = {
     name: 'tsconfig extends shared config',
+    applies: ({ dirName }) => dirName !== 'tsconfig',
     generate: async () => [],
     verify: ({ appDir }) => {
         const errors: Array<string> = [];

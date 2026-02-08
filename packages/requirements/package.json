@@ -1,5 +1,5 @@
 {
-    "name": "@minimalistic-apps/app-api",
+    "name": "@minimalistic-apps/requirements",
     "version": "0.0.1",
     "type": "module",
     "bin": {

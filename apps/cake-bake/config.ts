@@ -1,4 +1,4 @@
-import type { AppConfig } from '@minimalistic-apps/app-api';
+import type { AppConfig } from '@minimalistic-apps/requirements';
 
 export const config: AppConfig = {
     appName: 'Cake Bake',

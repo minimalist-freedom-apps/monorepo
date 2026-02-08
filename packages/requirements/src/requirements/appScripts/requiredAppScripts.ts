@@ -12,8 +12,9 @@ const REQUIRED_SCRIPTS = [
     'generate:icons',
 ] as const;
 
-export const requiredScripts: Requirement = {
+export const requiredAppScripts: Requirement = {
     name: 'has required scripts',
+    applies: ({ projectType }) => projectType === 'app',
     generate: async () => [],
     verify: ({ appDir }) => {
         const pkgPath = join(appDir, 'package.json');
