@@ -2,10 +2,10 @@
 
 import { readdirSync } from 'node:fs';
 import { join, resolve } from 'node:path';
-import type { AppRequirement } from './requirements/AppRequirement';
 import { configTs } from './requirements/configTs/configTs';
 import { generatedIcons } from './requirements/generatedIcons/generatedIcons';
 import { matchingDescription } from './requirements/matchingDescription/matchingDescription';
+import type { Requirement } from './requirements/Requirement';
 import { requiredScripts } from './requirements/requiredScripts/requiredScripts';
 import { tsconfigExtends } from './requirements/tsconfigExtends/tsconfigExtends';
 
@@ -13,14 +13,14 @@ import { tsconfigExtends } from './requirements/tsconfigExtends/tsconfigExtends'
 
 const TSCONFIG_PACKAGE_NAME = 'tsconfig';
 
-const appRequirements: ReadonlyArray<AppRequirement> = [
+const appRequirements: ReadonlyArray<Requirement> = [
     configTs,
     requiredScripts,
     generatedIcons,
     matchingDescription,
 ];
 
-const projectRequirements: ReadonlyArray<AppRequirement> = [tsconfigExtends];
+const projectRequirements: ReadonlyArray<Requirement> = [tsconfigExtends];
 
 // --- Helpers ---
 

@@ -1,6 +1,6 @@
 import { existsSync, readFileSync } from 'node:fs';
 import { basename, join } from 'node:path';
-import type { AppRequirement } from '../AppRequirement';
+import type { Requirement } from '../Requirement';
 
 const TSCONFIG_PACKAGE = '@minimalistic-apps/tsconfig';
 
@@ -24,7 +24,7 @@ const checkExtends = ({ filePath }: { readonly filePath: string }): string | und
     return undefined;
 };
 
-export const tsconfigExtends: AppRequirement = {
+export const tsconfigExtends: Requirement = {
     name: 'tsconfig extends shared config',
     generate: async () => [],
     verify: ({ appDir }) => {

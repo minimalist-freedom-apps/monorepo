@@ -1,8 +1,8 @@
 import { existsSync } from 'node:fs';
 import { join } from 'node:path';
-import type { AppRequirement } from '../AppRequirement';
+import type { Requirement } from '../Requirement';
 
-export const configTs: AppRequirement = {
+export const configTs: Requirement = {
     name: 'has config.ts',
     generate: async () => [],
     verify: ({ appDir }) => {

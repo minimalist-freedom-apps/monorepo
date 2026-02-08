@@ -1,8 +1,8 @@
 import { existsSync, readFileSync } from 'node:fs';
 import { resolve } from 'node:path';
-import type { AppRequirement } from '../AppRequirement';
+import type { Requirement } from '../Requirement';
 
-export const matchingDescription: AppRequirement = {
+export const matchingDescription: Requirement = {
     name: 'matching description',
     generate: async () => [],
     verify: ({ appDir }) => {

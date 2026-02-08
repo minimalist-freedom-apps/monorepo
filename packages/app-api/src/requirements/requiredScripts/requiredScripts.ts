@@ -1,6 +1,6 @@
 import { existsSync, readFileSync } from 'node:fs';
 import { join } from 'node:path';
-import type { AppRequirement } from '../AppRequirement';
+import type { Requirement } from '../Requirement';
 
 const REQUIRED_SCRIPTS = [
     'dev',
@@ -12,7 +12,7 @@ const REQUIRED_SCRIPTS = [
     'generate:icons',
 ] as const;
 
-export const requiredScripts: AppRequirement = {
+export const requiredScripts: Requirement = {
     name: 'has required scripts',
     generate: async () => [],
     verify: ({ appDir }) => {

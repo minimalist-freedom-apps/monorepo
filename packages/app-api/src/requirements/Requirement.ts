@@ -1,4 +1,4 @@
-export interface AppRequirement {
+export interface Requirement {
     readonly name: string;
 
     readonly generate: ({ appDir }: { readonly appDir: string }) => Promise<ReadonlyArray<string>>;
