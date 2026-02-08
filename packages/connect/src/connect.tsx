@@ -1,4 +1,4 @@
-import { typedObjectEntries } from '@minimalistic-apps/type-utils';
+import { typedObjectEntries } from '@minimalist-apps/type-utils';
 import type React from 'react';
 import { useCallback, useRef, useSyncExternalStore } from 'react';
 

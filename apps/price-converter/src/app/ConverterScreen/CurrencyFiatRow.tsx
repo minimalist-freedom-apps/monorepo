@@ -1,5 +1,5 @@
 import type { CurrencyCode } from '@evolu/common';
-import { Button, DeleteOutlined, Row, Text } from '@minimalistic-apps/components';
+import { Button, DeleteOutlined, Row, Text } from '@minimalist-apps/components';
 import type { FC } from 'react';
 import type { BtcMode } from '../../state/State';
 import type { CurrencyInputDep } from './CurrencyInput';

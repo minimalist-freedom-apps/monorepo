@@ -1,5 +1,5 @@
 {
-    "name": "@minimalistic-apps/connect",
+    "name": "@minimalist-apps/connect",
     "version": "1.0.0",
     "private": true,
     "type": "module",
@@ -15,10 +15,10 @@
         "typecheck": "tsc --noEmit"
     },
     "dependencies": {
-        "@minimalistic-apps/type-utils": "workspace:*"
+        "@minimalist-apps/type-utils": "workspace:*"
     },
     "devDependencies": {
-        "@minimalistic-apps/tsconfig": "workspace:*",
+        "@minimalist-apps/tsconfig": "workspace:*",
         "@types/react": "^19.0.0",
         "typescript": "^5.3.0"
     }

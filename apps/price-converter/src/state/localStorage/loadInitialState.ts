@@ -1,5 +1,5 @@
 import type { Mnemonic } from '@evolu/common';
-import type { LocalStorageDep } from '@minimalistic-apps/local-storage';
+import type { LocalStorageDep } from '@minimalist-apps/local-storage';
 import type { CurrencyMap } from '../../rates/FetchRates';
 import type { StoreDep } from '../../state/createStore';
 import type { BtcMode } from '../../state/State';

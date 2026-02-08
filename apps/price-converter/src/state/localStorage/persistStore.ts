@@ -1,4 +1,4 @@
-import type { LocalStorageDep } from '@minimalistic-apps/local-storage';
+import type { LocalStorageDep } from '@minimalist-apps/local-storage';
 import type { StoreDep } from '../../state/createStore';
 import { STORAGE_KEYS } from './storageKeys';
 

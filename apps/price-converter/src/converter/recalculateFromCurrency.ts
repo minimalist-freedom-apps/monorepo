@@ -1,6 +1,6 @@
 import type { CurrencyCode } from '@evolu/common';
-import { btcToSats } from '@minimalistic-apps/bitcoin';
-import type { FiatAmount } from '@minimalistic-apps/fiat';
+import { btcToSats } from '@minimalist-apps/bitcoin';
+import type { FiatAmount } from '@minimalist-apps/fiat';
 import type { StoreDep } from '../state/createStore';
 import { fiatToBitcoin } from './fiatToBitcoin';
 import type { RecalculateFromBtcDep } from './recalculateFromBtc';

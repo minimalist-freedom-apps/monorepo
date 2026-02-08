@@ -1,4 +1,4 @@
-import { Layout } from '@minimalistic-apps/components';
+import { Layout } from '@minimalist-apps/components';
 import type { FC, ReactNode } from 'react';
 import type { AppHeaderDep } from './AppHeader';
 

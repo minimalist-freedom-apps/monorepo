@@ -1,4 +1,4 @@
-import { type Theme, ThemeProvider } from '@minimalistic-apps/components';
+import { type Theme, ThemeProvider } from '@minimalist-apps/components';
 import type { FC, ReactNode } from 'react';
 
 export type ThemeWrapperOwnProps = {

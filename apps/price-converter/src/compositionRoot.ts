@@ -1,8 +1,8 @@
-import { createConnect } from '@minimalistic-apps/connect';
-import { createCurrentDateTime } from '@minimalistic-apps/datetime';
-import { createEnsureEvoluOwner, createSubscribableQuery } from '@minimalistic-apps/evolu';
-import { createLocalStorage } from '@minimalistic-apps/local-storage';
-import { createWindow } from '@minimalistic-apps/window';
+import { createConnect } from '@minimalist-apps/connect';
+import { createCurrentDateTime } from '@minimalist-apps/datetime';
+import { createEnsureEvoluOwner, createSubscribableQuery } from '@minimalist-apps/evolu';
+import { createLocalStorage } from '@minimalist-apps/local-storage';
+import { createWindow } from '@minimalist-apps/window';
 import { createEnsureEvolu } from '../../../packages/evolu/src/createEnsureEvolu';
 import { AddCurrencyButtonPure } from './app/AddCurrencyScreen/AddCurrencyButton';
 import { AddCurrencyScreenPure } from './app/AddCurrencyScreen/AddCurrencyScreen';

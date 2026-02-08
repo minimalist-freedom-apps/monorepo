@@ -1,4 +1,4 @@
-import { SettingsRow, Switch, type Theme } from '@minimalistic-apps/components';
+import { SettingsRow, Switch, type Theme } from '@minimalist-apps/components';
 import type { FC } from 'react';
 import type { SetThemeDep } from '../../state/setTheme';
 

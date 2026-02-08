@@ -1,4 +1,4 @@
-import type { WindowServiceDep } from '@minimalistic-apps/window';
+import type { WindowServiceDep } from '@minimalist-apps/window';
 import type { LoadInitialStateDep } from './loadInitialState';
 import type { PersistStoreDep } from './persistStore';
 

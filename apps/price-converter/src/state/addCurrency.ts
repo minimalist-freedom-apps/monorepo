@@ -1,5 +1,5 @@
 import { type CurrencyCode, createIdFromString } from '@evolu/common';
-import { satsToBtc } from '@minimalistic-apps/bitcoin';
+import { satsToBtc } from '@minimalist-apps/bitcoin';
 import { bitcoinToFiat } from '../converter/bitcoinToFiat';
 import type { StoreDep } from './createStore';
 import type { EnsureEvoluDep } from './evolu/schema';

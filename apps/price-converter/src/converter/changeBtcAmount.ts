@@ -1,4 +1,4 @@
-import type { AmountSats } from '@minimalistic-apps/bitcoin';
+import type { AmountSats } from '@minimalist-apps/bitcoin';
 import type { SetSatsAmountDep } from '../state/setSatsAmount';
 import type { RecalculateFromBtcDep } from './recalculateFromBtc';
 

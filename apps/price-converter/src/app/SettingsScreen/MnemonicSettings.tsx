@@ -1,4 +1,4 @@
-import { Column, Mnemonic, SettingsRow } from '@minimalistic-apps/components';
+import { Column, Mnemonic, SettingsRow } from '@minimalist-apps/components';
 import type { FC } from 'react';
 
 export type MnemonicSettingsStateProps = {

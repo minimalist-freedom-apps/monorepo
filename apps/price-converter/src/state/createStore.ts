@@ -1,6 +1,6 @@
-import type { AmountSats } from '@minimalistic-apps/bitcoin';
-import type { Store } from '@minimalistic-apps/mini-store';
-import { createStore as createMiniStore } from '@minimalistic-apps/mini-store';
+import type { AmountSats } from '@minimalist-apps/bitcoin';
+import type { Store } from '@minimalist-apps/mini-store';
+import { createStore as createMiniStore } from '@minimalist-apps/mini-store';
 import type { State } from './State';
 
 export type StoreDep = { store: Store<State> };

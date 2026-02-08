@@ -1,7 +1,7 @@
 import type { CurrencyCode } from '@evolu/common';
-import { Button, Flex, List, Row, Screen, SearchInput, Text } from '@minimalistic-apps/components';
-import { CURRENCY_TERRITORIES } from '@minimalistic-apps/fiat';
-import { typedObjectValues } from '@minimalistic-apps/type-utils';
+import { Button, Flex, List, Row, Screen, SearchInput, Text } from '@minimalist-apps/components';
+import { CURRENCY_TERRITORIES } from '@minimalist-apps/fiat';
+import { typedObjectValues } from '@minimalist-apps/type-utils';
 import type { FC } from 'react';
 import { useState } from 'react';
 import type { CurrencyEntity, CurrencyMap } from '../../rates/FetchRates';

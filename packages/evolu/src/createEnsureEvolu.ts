@@ -14,7 +14,7 @@ import {
 } from '@evolu/common';
 import type { ValidateSchema } from '@evolu/common/local-first';
 import { evoluWebDeps } from '@evolu/web';
-import type { EnsureEvoluOwnerDep } from '@minimalistic-apps/evolu';
+import type { EnsureEvoluOwnerDep } from '@minimalist-apps/evolu';
 
 export type EvoluStorage<S extends EvoluSchema> = {
     evolu: Evolu<S>;
@@ -56,7 +56,7 @@ const createEvoluStorage = <S extends EvoluSchema>(
         unuseOwner = evolu.useOwner(syncOwner);
     };
 
-    const shardOwner = deriveShardOwner(appOwner, ['minimalistic-apps', 'price-converter']);
+    const shardOwner = deriveShardOwner(appOwner, ['minimalist-apps', 'price-converter']);
 
     const unuseShardOwner = evolu.useOwner(shardOwner);
 

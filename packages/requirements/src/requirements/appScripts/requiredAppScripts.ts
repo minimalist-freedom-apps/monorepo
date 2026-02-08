@@ -1,6 +1,6 @@
 import { existsSync, readFileSync } from 'node:fs';
 import { join } from 'node:path';
-import { typedObjectKeys } from '@minimalistic-apps/type-utils';
+import { typedObjectKeys } from '@minimalist-apps/type-utils';
 import type { Requirement } from '../Requirement';
 
 const REQUIRED_SCRIPTS = [

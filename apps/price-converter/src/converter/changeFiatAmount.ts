@@ -1,5 +1,5 @@
 import type { CurrencyCode } from '@evolu/common';
-import type { FiatAmount } from '@minimalistic-apps/fiat';
+import type { FiatAmount } from '@minimalist-apps/fiat';
 import type { SetFiatAmountDep } from '../state/setFiatAmount';
 import type { RecalculateFromCurrencyDep } from './recalculateFromCurrency';
 

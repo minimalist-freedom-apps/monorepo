@@ -1,9 +1,9 @@
-> 👉**Looking for original price-converter? See [legacy](https://github.com/Minimalistic-Apps/price-converter-legacy) repository.**
+> 👉**Looking for original price-converter? See [legacy](https://github.com/minimalist-freedom-apps/price-converter) repository.**
 
 
 ## Apps
 - 🚧 [**Price Converter**](apps/price-converter/README.md) - Converts Fiat Shitcoins to Bitcoin/Sats
-- [**Cake Bake**](apps/cake-bake/README.md) - Scale your cake recipes to size of your plate
+- [**Scale Cake**](apps/scale-cake/README.md) - Scale your cake recipes to size of your plate
 
 ## Development
 See: [Development](docs/development.md)

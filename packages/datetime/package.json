@@ -1,5 +1,5 @@
 {
-    "name": "@minimalistic-apps/datetime",
+    "name": "@minimalist-apps/datetime",
     "version": "0.0.1",
     "type": "module",
     "exports": {
@@ -9,6 +9,6 @@
         }
     },
     "devDependencies": {
-        "@minimalistic-apps/tsconfig": "workspace:*"
+        "@minimalist-apps/tsconfig": "workspace:*"
     }
 }

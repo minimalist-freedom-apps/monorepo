@@ -2,7 +2,7 @@ import { existsSync, readFileSync } from 'node:fs';
 import { basename, join } from 'node:path';
 import type { Requirement } from '../Requirement';
 
-const TSCONFIG_PACKAGE = '@minimalistic-apps/tsconfig';
+const TSCONFIG_PACKAGE = '@minimalist-apps/tsconfig';
 
 const checkExtends = ({ filePath }: { readonly filePath: string }): string | undefined => {
     if (!existsSync(filePath)) {

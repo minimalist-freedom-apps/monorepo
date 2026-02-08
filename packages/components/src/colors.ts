@@ -1,4 +1,4 @@
-import { typedObjectEntries } from '@minimalistic-apps/type-utils';
+import { typedObjectEntries } from '@minimalist-apps/type-utils';
 
 export type Theme = 'dark' | 'light';
 
@@ -18,8 +18,8 @@ interface ColorScheme {
 }
 
 /**
- * Minimalistic Apps brand color from style guidelines.
- * @see https://github.com/Minimalistic-Apps/style-guidelines
+ * Minimalist Freedom Apps brand color from style guidelines.
+ * @see https://github.com/Minimalist-Apps/style-guidelines
  */
 export const BRAND_COLOR = '#087d89';
 

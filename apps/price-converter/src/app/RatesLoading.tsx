@@ -1,5 +1,5 @@
-import { Alert, Row, Text } from '@minimalistic-apps/components';
-import type { IntervalId } from '@minimalistic-apps/type-utils';
+import { Alert, Row, Text } from '@minimalist-apps/components';
+import type { IntervalId } from '@minimalist-apps/type-utils';
 import { type FC, useEffect, useRef, useState } from 'react';
 import type { FetchAndStoreRatesDep } from '../converter/fetchAndStoreRates';
 

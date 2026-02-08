@@ -1,4 +1,4 @@
-import { exhaustive } from '@minimalistic-apps/type-utils';
+import { exhaustive } from '@minimalist-apps/type-utils';
 import type { FC } from 'react';
 import type { Screen } from '../state/State';
 import type { AddCurrencyScreenDep } from './AddCurrencyScreen/AddCurrencyScreen';

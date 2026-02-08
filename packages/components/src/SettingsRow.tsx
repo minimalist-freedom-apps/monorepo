@@ -1,4 +1,4 @@
-import { isNonEmptyString } from '@minimalistic-apps/type-utils';
+import { isNonEmptyString } from '@minimalist-apps/type-utils';
 import type { ReactNode } from 'react';
 import { Card, Column, Row, Text, Title } from './index';
 

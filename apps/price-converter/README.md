@@ -1,6 +1,6 @@
 # Price Converter
 
-Minimalistic app converting prices of fiat shitcoins and Bitcoin
+Minimalist app converting prices of fiat shitcoins and Bitcoin
 
 ## Features
 
@@ -15,7 +15,7 @@ Minimalistic app converting prices of fiat shitcoins and Bitcoin
 
 ## Feature requests
 
-This is minimalistic app that has one sole purpose. **It converts prices in grocery stores between
+This is minimalist app that has one sole purpose. **It converts prices in grocery stores between
 fiat shitcoins and uses Bitcoin as base currency.**
 
 Only features that are aligned with the purpose of the app will be considered.

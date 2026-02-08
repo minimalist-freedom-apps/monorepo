@@ -1,4 +1,4 @@
-import { setupMobileNative } from '@minimalistic-apps/mobile-native';
+import { setupMobileNative } from '@minimalist-apps/mobile-native';
 import { createCompositionRoot } from './compositionRoot';
 
 setupMobileNative();

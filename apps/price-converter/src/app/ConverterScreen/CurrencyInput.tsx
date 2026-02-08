@@ -6,9 +6,9 @@ import {
     formatBtcWithCommas,
     formatSats,
     satsToBtc,
-} from '@minimalistic-apps/bitcoin';
-import { Input } from '@minimalistic-apps/components';
-import { type FiatAmount, formatFiatWithCommas } from '@minimalistic-apps/fiat';
+} from '@minimalist-apps/bitcoin';
+import { Input } from '@minimalist-apps/components';
+import { type FiatAmount, formatFiatWithCommas } from '@minimalist-apps/fiat';
 import { type FC, useEffect, useState } from 'react';
 import type { BtcMode } from '../../state/State';
 import type { SetFocusedCurrencyDep } from '../../state/setFocusedCurrency';
@@ -95,7 +95,7 @@ export const CurrencyInputPure = (
             placeholder={`Type in the ${code} amount`}
             monospace
             size="large"
-            className="minimalistic-input-with-small-placeholder"
+            className="minimalist-input-with-small-placeholder"
         />
     );
 };

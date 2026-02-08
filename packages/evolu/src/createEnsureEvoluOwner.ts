@@ -4,7 +4,7 @@ import {
     type Mnemonic,
     ownerSecretToMnemonic,
 } from '@evolu/common';
-import type { Store } from '@minimalistic-apps/mini-store';
+import type { Store } from '@minimalist-apps/mini-store';
 
 interface EvoluOwnerState {
     readonly evoluMnemonic: Mnemonic | null;

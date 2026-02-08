@@ -1,6 +1,6 @@
 import { mkdir, writeFile } from 'node:fs/promises';
 import { join } from 'node:path';
-import { BRAND_COLOR } from '@minimalistic-apps/components';
+import { BRAND_COLOR } from '@minimalist-apps/components';
 import { createCanvas } from '@napi-rs/canvas';
 
 // --- Types ---
