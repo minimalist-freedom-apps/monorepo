@@ -17,6 +17,9 @@ importers:
       '@minimalistic-apps/app-api':
         specifier: workspace:*
         version: link:packages/app-api
+      '@minimalistic-apps/tsconfig':
+        specifier: workspace:*
+        version: link:packages/tsconfig
       '@stylistic/eslint-plugin':
         specifier: ^5.7.1
         version: 5.7.1(eslint@9.39.2)
@@ -87,6 +90,9 @@ importers:
       '@minimalistic-apps/app-api':
         specifier: workspace:*
         version: link:../../packages/app-api
+      '@minimalistic-apps/tsconfig':
+        specifier: workspace:*
+        version: link:../../packages/tsconfig
       '@types/react':
         specifier: ^19.0.0
         version: 19.2.13
@@ -166,6 +172,9 @@ importers:
       '@minimalistic-apps/app-api':
         specifier: workspace:*
         version: link:../../packages/app-api
+      '@minimalistic-apps/tsconfig':
+        specifier: workspace:*
+        version: link:../../packages/tsconfig
       '@testing-library/jest-dom':
         specifier: ^6.9.1
         version: 6.9.1
@@ -206,6 +215,9 @@ importers:
         specifier: ^4.0.0
         version: 4.21.0
     devDependencies:
+      '@minimalistic-apps/tsconfig':
+        specifier: workspace:*
+        version: link:../tsconfig
       '@types/node':
         specifier: ^22.0.0
         version: 22.19.10
@@ -216,6 +228,9 @@ importers:
         specifier: ^7.4.1
         version: 7.4.1
     devDependencies:
+      '@minimalistic-apps/tsconfig':
+        specifier: workspace:*
+        version: link:../tsconfig
       typescript:
         specifier: ^5.3.0
         version: 5.9.3
@@ -238,6 +253,9 @@ importers:
         specifier: ^19.0.0
         version: 19.2.4(react@19.2.4)
     devDependencies:
+      '@minimalistic-apps/tsconfig':
+        specifier: workspace:*
+        version: link:../tsconfig
       '@types/react':
         specifier: ^19.0.0
         version: 19.2.13
@@ -250,6 +268,9 @@ importers:
 
   packages/connect:
     devDependencies:
+      '@minimalistic-apps/tsconfig':
+        specifier: workspace:*
+        version: link:../tsconfig
       '@types/react':
         specifier: ^19.0.0
         version: 19.2.13
@@ -257,7 +278,11 @@ importers:
         specifier: ^5.3.0
         version: 5.9.3
 
-  packages/datetime: {}
+  packages/datetime:
+    devDependencies:
+      '@minimalistic-apps/tsconfig':
+        specifier: workspace:*
+        version: link:../tsconfig
 
   packages/evolu:
     dependencies:
@@ -274,6 +299,9 @@ importers:
         specifier: workspace:*
         version: link:../mini-store
     devDependencies:
+      '@minimalistic-apps/tsconfig':
+        specifier: workspace:*
+        version: link:../tsconfig
       typescript:
         specifier: ^5.3.0
         version: 5.9.3
@@ -284,6 +312,9 @@ importers:
         specifier: ^7.4.1
         version: 7.4.1
     devDependencies:
+      '@minimalistic-apps/tsconfig':
+        specifier: workspace:*
+        version: link:../tsconfig
       typescript:
         specifier: ^5.3.0
         version: 5.9.3
@@ -293,9 +324,16 @@ importers:
       '@evolu/common':
         specifier: ^7.4.1
         version: 7.4.1
+    devDependencies:
+      '@minimalistic-apps/tsconfig':
+        specifier: workspace:*
+        version: link:../tsconfig
 
   packages/mini-store:
     devDependencies:
+      '@minimalistic-apps/tsconfig':
+        specifier: workspace:*
+        version: link:../tsconfig
       typescript:
         specifier: ^5.3.0
         version: 5.9.3
@@ -311,14 +349,27 @@ importers:
       '@minimalistic-apps/components':
         specifier: workspace:*
         version: link:../components
+    devDependencies:
+      '@minimalistic-apps/tsconfig':
+        specifier: workspace:*
+        version: link:../tsconfig
+
+  packages/tsconfig: {}
 
   packages/type-utils:
     devDependencies:
+      '@minimalistic-apps/tsconfig':
+        specifier: workspace:*
+        version: link:../tsconfig
       typescript:
         specifier: ^5.3.0
         version: 5.9.3
 
-  packages/window: {}
+  packages/window:
+    devDependencies:
+      '@minimalistic-apps/tsconfig':
+        specifier: workspace:*
+        version: link:../tsconfig
 
 packages:
 

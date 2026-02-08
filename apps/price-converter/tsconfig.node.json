@@ -1,11 +1,4 @@
 {
-    "compilerOptions": {
-        "composite": true,
-        "skipLibCheck": true,
-        "module": "ESNext",
-        "moduleResolution": "bundler",
-        "allowSyntheticDefaultImports": true,
-        "strictNullChecks": true
-    },
+    "extends": "@minimalistic-apps/tsconfig/app-node.json",
     "include": ["vite.config.ts", "capacitor.config.ts", "config.ts"]
 }

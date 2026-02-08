@@ -15,6 +15,7 @@
         "typecheck": "tsc --noEmit"
     },
     "devDependencies": {
+        "@minimalistic-apps/tsconfig": "workspace:*",
         "@types/react": "^19.0.0",
         "typescript": "^5.3.0"
     }

@@ -10,5 +10,8 @@
     },
     "dependencies": {
         "@evolu/common": "^7.4.1"
+    },
+    "devDependencies": {
+        "@minimalistic-apps/tsconfig": "workspace:*"
     }
 }

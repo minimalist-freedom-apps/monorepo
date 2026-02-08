@@ -1,7 +1,6 @@
 {
-    "extends": "../../tsconfig.base.json",
+    "extends": "@minimalistic-apps/tsconfig/library.json",
     "compilerOptions": {
-        "outDir": "dist",
         "types": ["node"]
     },
     "include": ["src"]

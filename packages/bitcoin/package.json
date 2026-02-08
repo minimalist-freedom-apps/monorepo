@@ -18,6 +18,7 @@
         "@evolu/common": "^7.4.1"
     },
     "devDependencies": {
+        "@minimalistic-apps/tsconfig": "workspace:*",
         "typescript": "^5.3.0"
     }
 }

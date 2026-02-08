@@ -1,8 +1,6 @@
 {
-    "extends": "../../tsconfig.base.json",
+    "extends": "@minimalistic-apps/tsconfig/app.json",
     "compilerOptions": {
-        "useDefineForClassFields": true,
-        "jsx": "react-jsx",
         "types": ["@testing-library/jest-dom"]
     },
     "include": ["src", "config.ts", "../../packages/evolu/src/createEnsureEvolu.ts"],

@@ -14,5 +14,8 @@
         "@capacitor/core": "^7.2.0",
         "@capacitor/status-bar": "^7.0.0",
         "@minimalistic-apps/components": "workspace:*"
+    },
+    "devDependencies": {
+        "@minimalistic-apps/tsconfig": "workspace:*"
     }
 }

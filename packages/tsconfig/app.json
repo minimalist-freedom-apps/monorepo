@@ -1,0 +1,7 @@
+{
+    "extends": "./base.json",
+    "compilerOptions": {
+        "useDefineForClassFields": true,
+        "jsx": "react-jsx"
+    }
+}

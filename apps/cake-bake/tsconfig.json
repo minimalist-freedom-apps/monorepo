@@ -1,9 +1,5 @@
 {
-    "extends": "../../tsconfig.base.json",
-    "compilerOptions": {
-        "useDefineForClassFields": true,
-        "jsx": "react-jsx"
-    },
+    "extends": "@minimalistic-apps/tsconfig/app.json",
     "include": ["src", "config.ts"],
     "references": [
         {

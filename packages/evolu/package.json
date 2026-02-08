@@ -21,6 +21,7 @@
         "@minimalistic-apps/mini-store": "workspace:*"
     },
     "devDependencies": {
+        "@minimalistic-apps/tsconfig": "workspace:*",
         "typescript": "^5.3.0"
     }
 }
