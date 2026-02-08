@@ -1,6 +1,7 @@
 {
     "extends": "@minimalistic-apps/tsconfig/library.json",
     "compilerOptions": {
+        // Contains React JSX components
         "jsx": "react-jsx"
     },
     "include": ["src"]

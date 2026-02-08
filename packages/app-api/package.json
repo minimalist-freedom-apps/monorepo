@@ -3,8 +3,8 @@
     "version": "0.0.1",
     "type": "module",
     "bin": {
-        "app-standard-verifier": "./src/requirements/verify.ts",
-        "app-standard-generator": "./src/requirements/generate.ts"
+        "app-standard-verifier": "./src/verify.ts",
+        "app-standard-generator": "./src/generate.ts"
     },
     "exports": {
         ".": {
