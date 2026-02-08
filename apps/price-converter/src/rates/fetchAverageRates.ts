@@ -1,5 +1,5 @@
 import { CurrencyCode, err, ok } from '@evolu/common';
-import { typedObjectKeys } from '@minimalistic-apps/type-utils';
+import { typedObjectKeys } from '@minimalist-apps/type-utils';
 import { RateBtcPerFiat } from '../converter/rate.js';
 import { type CurrencyMap, type FetchRates, FetchRatesError } from './FetchRates.js';
 

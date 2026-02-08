@@ -1,4 +1,4 @@
-import type { Theme } from '@minimalistic-apps/components';
+import type { Theme } from '@minimalist-apps/components';
 import { render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { describe, expect, test, vi } from 'vitest';

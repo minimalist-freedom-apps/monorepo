@@ -1,5 +1,5 @@
 {
-    "name": "@minimalistic-apps/tsconfig",
+    "name": "@minimalist-apps/tsconfig",
     "version": "1.0.0",
     "private": true,
     "type": "module"

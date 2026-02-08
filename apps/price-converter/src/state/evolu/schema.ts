@@ -1,5 +1,5 @@
 import { CurrencyCode, id } from '@evolu/common';
-import type { EnsureEvoluDep as EnsureEvoluDepPackage } from '@minimalistic-apps/evolu';
+import type { EnsureEvoluDep as EnsureEvoluDepPackage } from '@minimalist-apps/evolu';
 
 const CurrencyId = id('CurrencyId');
 // biome-ignore lint/correctness/noUnusedVariables: Type alias for Evolu schema

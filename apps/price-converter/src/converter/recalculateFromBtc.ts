@@ -1,4 +1,4 @@
-import { satsToBtc } from '@minimalistic-apps/bitcoin';
+import { satsToBtc } from '@minimalist-apps/bitcoin';
 import type { StoreDep } from '../state/createStore';
 import type { GetSelectedCurrenciesDep } from '../state/evolu/getSelectedCurrencies';
 import type { CurrencyValues } from '../state/State';

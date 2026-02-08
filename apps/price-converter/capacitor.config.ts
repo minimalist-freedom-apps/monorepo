@@ -2,7 +2,7 @@ import type { CapacitorConfig } from '@capacitor/cli';
 import { config as appConfig } from './config';
 
 const config: CapacitorConfig = {
-    appId: 'com.minimalistic.priceconverter',
+    appId: 'com.minimalist.priceconverter',
     appName: appConfig.appName,
     webDir: 'dist',
     server: {

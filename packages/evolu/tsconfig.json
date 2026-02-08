@@ -1,5 +1,5 @@
 {
-    "extends": "@minimalistic-apps/tsconfig/library.json",
+    "extends": "@minimalist-apps/tsconfig/library.json",
     "compilerOptions": {
         // Evolu requires rootDir to resolve the "." export map entry in its package.json
         "rootDir": "./src",

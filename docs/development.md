@@ -2,10 +2,10 @@
 
 ```bash
 # Dev server
-pnpm --filter @minimalistic-apps/price-converter dev
+pnpm --filter @minimalist-apps/price-converter dev
 
 # Build
-pnpm --filter @minimalistic-apps/price-converter build
+pnpm --filter @minimalist-apps/price-converter build
 
 # Preview production build
-pnpm --filter @minimalistic-apps/price-converter preview
+pnpm --filter @minimalist-apps/price-converter preview

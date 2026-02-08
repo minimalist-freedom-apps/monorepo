@@ -1,7 +1,7 @@
 import type { CurrencyCode } from '@evolu/common';
-import type { AmountSats } from '@minimalistic-apps/bitcoin';
-import { Screen } from '@minimalistic-apps/components';
-import { FiatAmount } from '@minimalistic-apps/fiat';
+import type { AmountSats } from '@minimalist-apps/bitcoin';
+import { Screen } from '@minimalist-apps/components';
+import { FiatAmount } from '@minimalist-apps/fiat';
 import type { FC } from 'react';
 import type { ChangeBtcAmountDep } from '../../converter/changeBtcAmount';
 import type { ChangeFiatAmountDep } from '../../converter/changeFiatAmount';

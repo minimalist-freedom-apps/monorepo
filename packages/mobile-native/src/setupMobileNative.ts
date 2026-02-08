@@ -1,6 +1,6 @@
 import { Capacitor } from '@capacitor/core';
 import { StatusBar, Style } from '@capacitor/status-bar';
-import { BRAND_COLOR } from '@minimalistic-apps/components';
+import { BRAND_COLOR } from '@minimalist-apps/components';
 
 /**
  * Android WebView does not support the Web Locks API (`navigator.locks`).

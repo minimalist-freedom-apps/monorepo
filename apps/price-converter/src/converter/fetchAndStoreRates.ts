@@ -1,4 +1,4 @@
-import type { CurrentDateTimeDep } from '@minimalistic-apps/datetime';
+import type { CurrentDateTimeDep } from '@minimalist-apps/datetime';
 import type { FetchRatesDep } from '../rates/FetchRates';
 import type { StoreDep } from '../state/createStore';
 import type { RecalculateFromBtcDep } from './recalculateFromBtc';

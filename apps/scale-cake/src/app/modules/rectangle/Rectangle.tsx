@@ -1,4 +1,4 @@
-import { Card, Fraction, Input, Row, Text } from '@minimalistic-apps/components';
+import { Card, Fraction, Input, Row, Text } from '@minimalist-apps/components';
 import { useState } from 'react';
 import { calculateRectangle } from './calculateRectangle';
 

@@ -1,4 +1,4 @@
-import { Column } from '@minimalistic-apps/components';
+import { Column } from '@minimalist-apps/components';
 import type { FC } from 'react';
 import type { MnemonicSettingsDep } from './MnemonicSettings';
 import type { ThemeSettingsDep } from './ThemeSettings';

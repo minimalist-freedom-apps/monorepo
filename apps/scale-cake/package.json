@@ -1,5 +1,5 @@
 {
-    "name": "@minimalistic-apps/cake-bake",
+    "name": "@minimalist-apps/scale-cake",
     "version": "1.0.0",
     "description": "Cake ingredient calculator — scale recipes by pan diameter",
     "private": true,
@@ -16,16 +16,16 @@
     "dependencies": {
         "@capacitor/core": "^7.2.0",
         "@capacitor/status-bar": "^7.0.0",
-        "@minimalistic-apps/components": "workspace:*",
-        "@minimalistic-apps/mobile-native": "workspace:*",
+        "@minimalist-apps/components": "workspace:*",
+        "@minimalist-apps/mobile-native": "workspace:*",
         "react": "^19.0.0",
         "react-dom": "^19.0.0"
     },
     "devDependencies": {
         "@capacitor/android": "^7.2.0",
         "@capacitor/cli": "^7.2.0",
-        "@minimalistic-apps/requirements": "workspace:*",
-        "@minimalistic-apps/tsconfig": "workspace:*",
+        "@minimalist-apps/requirements": "workspace:*",
+        "@minimalist-apps/tsconfig": "workspace:*",
         "@types/react": "^19.0.0",
         "@types/react-dom": "^19.0.0",
         "@vitejs/plugin-react": "^4.3.0",

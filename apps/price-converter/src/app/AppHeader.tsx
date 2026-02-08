@@ -4,7 +4,7 @@ import {
     ReloadOutlined,
     SettingOutlined,
     Switch,
-} from '@minimalistic-apps/components';
+} from '@minimalist-apps/components';
 import type { FC } from 'react';
 import type { FetchAndStoreRatesDep } from '../converter/fetchAndStoreRates';
 import type { NavigateDep } from '../state/navigate';

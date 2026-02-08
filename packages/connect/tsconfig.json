@@ -1,5 +1,5 @@
 {
-    "extends": "@minimalistic-apps/tsconfig/library.json",
+    "extends": "@minimalist-apps/tsconfig/library.json",
     "compilerOptions": {
         // Contains React JSX components
         "jsx": "react-jsx"

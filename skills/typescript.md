@@ -4,7 +4,7 @@
 
 Never use `Object.keys`, `Object.values`, `Object.entries`, or `Object.fromEntries` directly — their return types are loosely typed (`string[]`, `unknown[]`, etc.).
 
-Use the strongly-typed wrappers from `@minimalistic-apps/type-utils` instead:
+Use the strongly-typed wrappers from `@minimalist-apps/type-utils` instead:
 
 | ❌ Avoid              | ✅ Use instead            |
 | --------------------- | ------------------------- |
@@ -19,7 +19,7 @@ import {
     typedObjectValues,
     typedObjectEntries,
     typedObjectFromEntries,
-} from '@minimalistic-apps/type-utils';
+} from '@minimalist-apps/type-utils';
 
 const config = { host: 'localhost', port: 3000 };
 

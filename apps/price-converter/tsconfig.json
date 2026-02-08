@@ -1,4 +1,4 @@
 {
-    "extends": "@minimalistic-apps/tsconfig/app.json",
+    "extends": "@minimalist-apps/tsconfig/app.json",
     "include": ["src", "config.ts", "vite.config.ts"]
 }

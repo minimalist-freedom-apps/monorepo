@@ -1,7 +1,7 @@
 {
-    "name": "price-converter-monorepo",
+    "name": "@minimalist-freedom-apps/monorepo",
     "version": "1.0.0",
-    "description": "Price Converter Monorepo",
+    "description": "Minimalist Freedom Apps monorepo",
     "private": true,
     "type": "module",
     "scripts": {
@@ -17,13 +17,14 @@
         "test": "vitest run",
         "requirements:verify": "requirements-verify",
         "requirements:fix": "requirements-fix",
+        "build:clean": "find apps -type d \\( -name android -o -name dist \\) -exec rm -rf {} +",
         "prepare": "husky"
     },
     "devDependencies": {
         "@biomejs/biome": "^2.3.13",
         "@eslint/js": "^9.39.2",
-        "@minimalistic-apps/requirements": "workspace:*",
-        "@minimalistic-apps/tsconfig": "workspace:*",
+        "@minimalist-apps/requirements": "workspace:*",
+        "@minimalist-apps/tsconfig": "workspace:*",
         "@stylistic/eslint-plugin": "^5.7.1",
         "@testing-library/jest-dom": "^6.9.1",
         "@testing-library/react": "^16.3.2",

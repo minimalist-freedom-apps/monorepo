@@ -1,8 +1,8 @@
-import type { AppConfig } from '@minimalistic-apps/requirements';
+import type { AppConfig } from '@minimalist-apps/requirements';
 
 export const config: AppConfig = {
     appName: 'Price Converter',
     appShortName: 'Price Converter',
-    appDescription: 'Minimalistic Bitcoin Price Converter',
+    appDescription: 'Minimalist Bitcoin Price Converter',
     appIconEmoji: '💱',
 };

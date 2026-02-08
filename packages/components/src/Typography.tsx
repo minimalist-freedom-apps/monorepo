@@ -1,4 +1,4 @@
-import { typedObjectKeys } from '@minimalistic-apps/type-utils';
+import { typedObjectKeys } from '@minimalist-apps/type-utils';
 import { Typography } from 'antd';
 import type { ReactNode } from 'react';
 

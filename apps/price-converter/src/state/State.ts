@@ -1,7 +1,7 @@
 import type { CurrencyCode, Mnemonic } from '@evolu/common';
-import type { AmountSats } from '@minimalistic-apps/bitcoin';
-import type { Theme } from '@minimalistic-apps/components';
-import type { FiatAmount } from '@minimalistic-apps/fiat';
+import type { AmountSats } from '@minimalist-apps/bitcoin';
+import type { Theme } from '@minimalist-apps/components';
+import type { FiatAmount } from '@minimalist-apps/fiat';
 import type { CurrencyMap } from '../rates/FetchRates';
 
 export type BtcMode = 'btc' | 'sats';

@@ -1,5 +1,5 @@
 {
-    "name": "@minimalistic-apps/local-storage",
+    "name": "@minimalist-apps/local-storage",
     "version": "0.0.1",
     "type": "module",
     "exports": {
@@ -12,6 +12,6 @@
         "@evolu/common": "^7.4.1"
     },
     "devDependencies": {
-        "@minimalistic-apps/tsconfig": "workspace:*"
+        "@minimalist-apps/tsconfig": "workspace:*"
     }
 }

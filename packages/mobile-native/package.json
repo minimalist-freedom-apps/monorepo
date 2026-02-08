@@ -1,5 +1,5 @@
 {
-    "name": "@minimalistic-apps/mobile-native",
+    "name": "@minimalist-apps/mobile-native",
     "version": "0.0.1",
     "type": "module",
     "main": "./src/index.ts",
@@ -13,9 +13,9 @@
     "dependencies": {
         "@capacitor/core": "^7.2.0",
         "@capacitor/status-bar": "^7.0.0",
-        "@minimalistic-apps/components": "workspace:*"
+        "@minimalist-apps/components": "workspace:*"
     },
     "devDependencies": {
-        "@minimalistic-apps/tsconfig": "workspace:*"
+        "@minimalist-apps/tsconfig": "workspace:*"
     }
 }

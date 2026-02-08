@@ -1,4 +1,4 @@
-import { FloatButton, PlusOutlined } from '@minimalistic-apps/components';
+import { FloatButton, PlusOutlined } from '@minimalist-apps/components';
 import type { FC } from 'react';
 import type { NavigateDep } from '../../state/navigate';
 

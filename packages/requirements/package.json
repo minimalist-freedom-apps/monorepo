@@ -1,5 +1,5 @@
 {
-    "name": "@minimalistic-apps/requirements",
+    "name": "@minimalist-apps/requirements",
     "version": "0.0.1",
     "type": "module",
     "bin": {
@@ -13,13 +13,13 @@
         }
     },
     "dependencies": {
-        "@minimalistic-apps/components": "workspace:*",
-        "@minimalistic-apps/type-utils": "workspace:*",
+        "@minimalist-apps/components": "workspace:*",
+        "@minimalist-apps/type-utils": "workspace:*",
         "@napi-rs/canvas": "^0.1.65",
         "tsx": "^4.0.0"
     },
     "devDependencies": {
-        "@minimalistic-apps/tsconfig": "workspace:*",
+        "@minimalist-apps/tsconfig": "workspace:*",
         "@types/node": "^22.0.0"
     }
 }

@@ -14,10 +14,10 @@ importers:
       '@eslint/js':
         specifier: ^9.39.2
         version: 9.39.2
-      '@minimalistic-apps/requirements':
+      '@minimalist-apps/requirements':
         specifier: workspace:*
         version: link:packages/requirements
-      '@minimalistic-apps/tsconfig':
+      '@minimalist-apps/tsconfig':
         specifier: workspace:*
         version: link:packages/tsconfig
       '@stylistic/eslint-plugin':
@@ -60,55 +60,6 @@ importers:
         specifier: ^2.0.0
         version: 2.1.9(@types/node@25.2.2)(jsdom@28.0.0(@noble/hashes@2.0.1))(terser@5.46.0)
 
-  apps/cake-bake:
-    dependencies:
-      '@capacitor/core':
-        specifier: ^7.2.0
-        version: 7.4.5
-      '@capacitor/status-bar':
-        specifier: ^7.0.0
-        version: 7.0.4(@capacitor/core@7.4.5)
-      '@minimalistic-apps/components':
-        specifier: workspace:*
-        version: link:../../packages/components
-      '@minimalistic-apps/mobile-native':
-        specifier: workspace:*
-        version: link:../../packages/mobile-native
-      react:
-        specifier: ^19.0.0
-        version: 19.2.4
-      react-dom:
-        specifier: ^19.0.0
-        version: 19.2.4(react@19.2.4)
-    devDependencies:
-      '@capacitor/android':
-        specifier: ^7.2.0
-        version: 7.4.5(@capacitor/core@7.4.5)
-      '@capacitor/cli':
-        specifier: ^7.2.0
-        version: 7.4.5
-      '@minimalistic-apps/requirements':
-        specifier: workspace:*
-        version: link:../../packages/requirements
-      '@minimalistic-apps/tsconfig':
-        specifier: workspace:*
-        version: link:../../packages/tsconfig
-      '@types/react':
-        specifier: ^19.0.0
-        version: 19.2.13
-      '@types/react-dom':
-        specifier: ^19.0.0
-        version: 19.2.3(@types/react@19.2.13)
-      '@vitejs/plugin-react':
-        specifier: ^4.3.0
-        version: 4.7.0(vite@7.3.1(@types/node@25.2.2)(terser@5.46.0)(tsx@4.21.0))
-      typescript:
-        specifier: ^5.3.0
-        version: 5.9.3
-      vite:
-        specifier: ^7.3.1
-        version: 7.3.1(@types/node@25.2.2)(terser@5.46.0)(tsx@4.21.0)
-
   apps/price-converter:
     dependencies:
       '@capacitor/core':
@@ -123,37 +74,37 @@ importers:
       '@evolu/web':
         specifier: ^2.4.0
         version: 2.4.0(@evolu/common@7.4.1)
-      '@minimalistic-apps/bitcoin':
+      '@minimalist-apps/bitcoin':
         specifier: workspace:*
         version: link:../../packages/bitcoin
-      '@minimalistic-apps/components':
+      '@minimalist-apps/components':
         specifier: workspace:*
         version: link:../../packages/components
-      '@minimalistic-apps/connect':
+      '@minimalist-apps/connect':
         specifier: workspace:*
         version: link:../../packages/connect
-      '@minimalistic-apps/datetime':
+      '@minimalist-apps/datetime':
         specifier: workspace:*
         version: link:../../packages/datetime
-      '@minimalistic-apps/evolu':
+      '@minimalist-apps/evolu':
         specifier: workspace:*
         version: link:../../packages/evolu
-      '@minimalistic-apps/fiat':
+      '@minimalist-apps/fiat':
         specifier: workspace:*
         version: link:../../packages/fiat
-      '@minimalistic-apps/local-storage':
+      '@minimalist-apps/local-storage':
         specifier: workspace:*
         version: link:../../packages/local-storage
-      '@minimalistic-apps/mini-store':
+      '@minimalist-apps/mini-store':
         specifier: workspace:*
         version: link:../../packages/mini-store
-      '@minimalistic-apps/mobile-native':
+      '@minimalist-apps/mobile-native':
         specifier: workspace:*
         version: link:../../packages/mobile-native
-      '@minimalistic-apps/type-utils':
+      '@minimalist-apps/type-utils':
         specifier: workspace:*
         version: link:../../packages/type-utils
-      '@minimalistic-apps/window':
+      '@minimalist-apps/window':
         specifier: workspace:*
         version: link:../../packages/window
       react:
@@ -169,10 +120,10 @@ importers:
       '@capacitor/cli':
         specifier: ^7.2.0
         version: 7.4.5
-      '@minimalistic-apps/requirements':
+      '@minimalist-apps/requirements':
         specifier: workspace:*
         version: link:../../packages/requirements
-      '@minimalistic-apps/tsconfig':
+      '@minimalist-apps/tsconfig':
         specifier: workspace:*
         version: link:../../packages/tsconfig
       '@testing-library/jest-dom':
@@ -203,13 +154,62 @@ importers:
         specifier: ^7.3.1
         version: 7.3.1(@types/node@25.2.2)(terser@5.46.0)(tsx@4.21.0)
 
+  apps/scale-cake:
+    dependencies:
+      '@capacitor/core':
+        specifier: ^7.2.0
+        version: 7.4.5
+      '@capacitor/status-bar':
+        specifier: ^7.0.0
+        version: 7.0.4(@capacitor/core@7.4.5)
+      '@minimalist-apps/components':
+        specifier: workspace:*
+        version: link:../../packages/components
+      '@minimalist-apps/mobile-native':
+        specifier: workspace:*
+        version: link:../../packages/mobile-native
+      react:
+        specifier: ^19.0.0
+        version: 19.2.4
+      react-dom:
+        specifier: ^19.0.0
+        version: 19.2.4(react@19.2.4)
+    devDependencies:
+      '@capacitor/android':
+        specifier: ^7.2.0
+        version: 7.4.5(@capacitor/core@7.4.5)
+      '@capacitor/cli':
+        specifier: ^7.2.0
+        version: 7.4.5
+      '@minimalist-apps/requirements':
+        specifier: workspace:*
+        version: link:../../packages/requirements
+      '@minimalist-apps/tsconfig':
+        specifier: workspace:*
+        version: link:../../packages/tsconfig
+      '@types/react':
+        specifier: ^19.0.0
+        version: 19.2.13
+      '@types/react-dom':
+        specifier: ^19.0.0
+        version: 19.2.3(@types/react@19.2.13)
+      '@vitejs/plugin-react':
+        specifier: ^4.3.0
+        version: 4.7.0(vite@7.3.1(@types/node@25.2.2)(terser@5.46.0)(tsx@4.21.0))
+      typescript:
+        specifier: ^5.3.0
+        version: 5.9.3
+      vite:
+        specifier: ^7.3.1
+        version: 7.3.1(@types/node@25.2.2)(terser@5.46.0)(tsx@4.21.0)
+
   packages/bitcoin:
     dependencies:
       '@evolu/common':
         specifier: ^7.4.1
         version: 7.4.1
     devDependencies:
-      '@minimalistic-apps/tsconfig':
+      '@minimalist-apps/tsconfig':
         specifier: workspace:*
         version: link:../tsconfig
       typescript:
@@ -221,7 +221,7 @@ importers:
       '@ant-design/icons':
         specifier: ^6.1.0
         version: 6.1.0(react-dom@19.2.4(react@19.2.4))(react@19.2.4)
-      '@minimalistic-apps/type-utils':
+      '@minimalist-apps/type-utils':
         specifier: workspace:*
         version: link:../type-utils
       antd:
@@ -234,7 +234,7 @@ importers:
         specifier: ^19.0.0
         version: 19.2.4(react@19.2.4)
     devDependencies:
-      '@minimalistic-apps/tsconfig':
+      '@minimalist-apps/tsconfig':
         specifier: workspace:*
         version: link:../tsconfig
       '@types/react':
@@ -249,11 +249,11 @@ importers:
 
   packages/connect:
     dependencies:
-      '@minimalistic-apps/type-utils':
+      '@minimalist-apps/type-utils':
         specifier: workspace:*
         version: link:../type-utils
     devDependencies:
-      '@minimalistic-apps/tsconfig':
+      '@minimalist-apps/tsconfig':
         specifier: workspace:*
         version: link:../tsconfig
       '@types/react':
@@ -265,7 +265,7 @@ importers:
 
   packages/datetime:
     devDependencies:
-      '@minimalistic-apps/tsconfig':
+      '@minimalist-apps/tsconfig':
         specifier: workspace:*
         version: link:../tsconfig
 
@@ -277,14 +277,14 @@ importers:
       '@evolu/web':
         specifier: ^2.4.0
         version: 2.4.0(@evolu/common@7.4.1)
-      '@minimalistic-apps/connect':
+      '@minimalist-apps/connect':
         specifier: workspace:*
         version: link:../connect
-      '@minimalistic-apps/mini-store':
+      '@minimalist-apps/mini-store':
         specifier: workspace:*
         version: link:../mini-store
     devDependencies:
-      '@minimalistic-apps/tsconfig':
+      '@minimalist-apps/tsconfig':
         specifier: workspace:*
         version: link:../tsconfig
       typescript:
@@ -297,7 +297,7 @@ importers:
         specifier: ^7.4.1
         version: 7.4.1
     devDependencies:
-      '@minimalistic-apps/tsconfig':
+      '@minimalist-apps/tsconfig':
         specifier: workspace:*
         version: link:../tsconfig
       typescript:
@@ -310,13 +310,13 @@ importers:
         specifier: ^7.4.1
         version: 7.4.1
     devDependencies:
-      '@minimalistic-apps/tsconfig':
+      '@minimalist-apps/tsconfig':
         specifier: workspace:*
         version: link:../tsconfig
 
   packages/mini-store:
     devDependencies:
-      '@minimalistic-apps/tsconfig':
+      '@minimalist-apps/tsconfig':
         specifier: workspace:*
         version: link:../tsconfig
       typescript:
@@ -331,20 +331,20 @@ importers:
       '@capacitor/status-bar':
         specifier: ^7.0.0
         version: 7.0.4(@capacitor/core@7.4.5)
-      '@minimalistic-apps/components':
+      '@minimalist-apps/components':
         specifier: workspace:*
         version: link:../components
     devDependencies:
-      '@minimalistic-apps/tsconfig':
+      '@minimalist-apps/tsconfig':
         specifier: workspace:*
         version: link:../tsconfig
 
   packages/requirements:
     dependencies:
-      '@minimalistic-apps/components':
+      '@minimalist-apps/components':
         specifier: workspace:*
         version: link:../components
-      '@minimalistic-apps/type-utils':
+      '@minimalist-apps/type-utils':
         specifier: workspace:*
         version: link:../type-utils
       '@napi-rs/canvas':
@@ -354,7 +354,7 @@ importers:
         specifier: ^4.0.0
         version: 4.21.0
     devDependencies:
-      '@minimalistic-apps/tsconfig':
+      '@minimalist-apps/tsconfig':
         specifier: workspace:*
         version: link:../tsconfig
       '@types/node':
@@ -365,7 +365,7 @@ importers:
 
   packages/type-utils:
     devDependencies:
-      '@minimalistic-apps/tsconfig':
+      '@minimalist-apps/tsconfig':
         specifier: workspace:*
         version: link:../tsconfig
       typescript:
@@ -374,7 +374,7 @@ importers:
 
   packages/window:
     devDependencies:
-      '@minimalistic-apps/tsconfig':
+      '@minimalist-apps/tsconfig':
         specifier: workspace:*
         version: link:../tsconfig
 
