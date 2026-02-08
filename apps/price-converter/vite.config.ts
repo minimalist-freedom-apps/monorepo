@@ -19,11 +19,7 @@ export default defineConfig({
         react(),
         VitePWA({
             registerType: 'autoUpdate',
-            includeAssets: [
-                'favicon.ico',
-                'robots.txt',
-                'apple-touch-icon.png',
-            ],
+            includeAssets: ['robots.txt'],
             manifest: {
                 name: 'Minimalistic Price Converter',
                 short_name: 'Price Converter',

@@ -1,0 +1,21 @@
+{
+    "name": "@minimalistic-apps/icon-generator",
+    "version": "0.0.1",
+    "type": "module",
+    "bin": {
+        "generate-icons": "./src/cli.ts"
+    },
+    "exports": {
+        ".": {
+            "types": "./src/index.ts",
+            "default": "./src/index.ts"
+        }
+    },
+    "dependencies": {
+        "@napi-rs/canvas": "^0.1.65",
+        "tsx": "^4.0.0"
+    },
+    "devDependencies": {
+        "@types/node": "^22.0.0"
+    }
+}

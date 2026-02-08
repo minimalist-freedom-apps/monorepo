@@ -6,11 +6,12 @@
     "type": "module",
     "scripts": {
         "dev": "vite",
+        "dev:android": "CAP_SERVER_URL=http://$(hostname -I | awk '{print $1}'):5173 npx cap run android",
         "build": "vite build",
+        "build:android": "vite build && npx cap sync android",
         "preview": "vite preview",
         "typecheck": "tsc --noEmit",
-        "build:android": "vite build && npx cap sync android",
-        "dev:android": "CAP_SERVER_URL=http://$(hostname -I | awk '{print $1}'):5173 npx cap run android"
+        "generate:icons": "generate-icons"
     },
     "dependencies": {
         "@capacitor/core": "^7.2.0",
@@ -34,6 +35,7 @@
     "devDependencies": {
         "@capacitor/android": "^7.2.0",
         "@capacitor/cli": "^7.2.0",
+        "@minimalistic-apps/icon-generator": "workspace:*",
         "@testing-library/jest-dom": "^6.9.1",
         "@testing-library/react": "^16.3.2",
         "@testing-library/user-event": "^14.6.1",
