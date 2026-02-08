@@ -20,6 +20,33 @@ export default [
         rules: {
             '@typescript-eslint/strict-boolean-expressions': 'error',
             '@typescript-eslint/no-unnecessary-condition': 'error',
+            'no-restricted-properties': [
+                'error',
+                {
+                    object: 'Object',
+                    property: 'keys',
+                    message:
+                        'Use typedObjectKeys from @packages/type-utils instead for type-safe keys.',
+                },
+                {
+                    object: 'Object',
+                    property: 'values',
+                    message:
+                        'Use typedObjectValues from @packages/type-utils instead for type-safe values.',
+                },
+                {
+                    object: 'Object',
+                    property: 'entries',
+                    message:
+                        'Use typedObjectEntries from @packages/type-utils instead for type-safe entries.',
+                },
+                {
+                    object: 'Object',
+                    property: 'fromEntries',
+                    message:
+                        'Use typedObjectFromEntries from @packages/type-utils instead for type-safe fromEntries.',
+                },
+            ],
             '@stylistic/padding-line-between-statements': [
                 'error',
                 { blankLine: 'always', prev: '*', next: 'return' },
@@ -29,6 +56,12 @@ export default [
                 { blankLine: 'always', prev: '*', next: 'switch' },
                 { blankLine: 'always', prev: '*', next: 'try' },
             ],
+        },
+    },
+    {
+        files: ['**/type-utils/src/typedObject.ts'],
+        rules: {
+            'no-restricted-properties': 'off',
         },
     },
     {

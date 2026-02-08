@@ -2,22 +2,8 @@
 
 import { readdirSync } from 'node:fs';
 import { basename, join, resolve } from 'node:path';
-import { requireAppConfig } from './requirements/appConfig/requireAppConfig';
-import { requireIcons } from './requirements/appIcons/requireIcons';
-import { requiredAppScripts } from './requirements/appScripts/requiredAppScripts';
-import { requireRescription } from './requirements/description/requireDescription';
-import type { ProjectType, Requirement } from './requirements/Requirement';
-import { requireTsconfig } from './requirements/tsconfig/requireTsconfig';
-
-// --- Requirements ---
-
-const requirements: ReadonlyArray<Requirement> = [
-    requireAppConfig,
-    requiredAppScripts,
-    requireIcons,
-    requireRescription,
-    requireTsconfig,
-];
+import { requirements } from './allRequirements';
+import type { ProjectType } from './requirements/Requirement';
 
 // --- Helpers ---
 
@@ -26,7 +12,7 @@ const getSubDirs = ({ parentDir }: { readonly parentDir: string }): ReadonlyArra
         .filter(entry => entry.isDirectory())
         .map(entry => join(parentDir, entry.name));
 
-const generateForProjects = async ({
+const fixProjects = async ({
     projectDirs,
     projectType,
 }: {
@@ -37,14 +23,14 @@ const generateForProjects = async ({
 
     for (const dir of projectDirs) {
         const dirName = basename(dir);
-        console.log(`\nGenerating for ${dir}…`);
+        console.log(`\nFixing ${dir}…`);
 
         for (const requirement of requirements) {
             if (!requirement.applies({ projectType, dirName })) {
                 continue;
             }
 
-            const requirementErrors = await requirement.generate({ appDir: dir });
+            const requirementErrors = await requirement.fix({ appDir: dir });
 
             for (const error of requirementErrors) {
                 errors.push(`${dir} [${requirement.name}]: ${error}`);
@@ -67,12 +53,12 @@ if (appDirs.length === 0) {
 }
 
 const errors: Array<string> = [
-    ...(await generateForProjects({ projectDirs: appDirs, projectType: 'app' })),
-    ...(await generateForProjects({ projectDirs: packageDirs, projectType: 'package' })),
+    ...(await fixProjects({ projectDirs: appDirs, projectType: 'app' })),
+    ...(await fixProjects({ projectDirs: packageDirs, projectType: 'package' })),
 ];
 
 if (errors.length > 0) {
-    console.error('\nGeneration had errors:\n');
+    console.error('\nFix had errors:\n');
 
     for (const error of errors) {
         console.error(`  ✗ ${error}`);
@@ -82,4 +68,4 @@ if (errors.length > 0) {
     process.exit(1);
 }
 
-console.log(`\n✓ Generated for ${appDirs.length} app(s) and ${packageDirs.length} package(s).`);
+console.log(`\n✓ Fixed ${appDirs.length} app(s) and ${packageDirs.length} package(s).`);

@@ -1,3 +1,5 @@
+import { typedObjectEntries } from '@minimalistic-apps/type-utils';
+
 export type Theme = 'dark' | 'light';
 
 interface ColorScheme {
@@ -66,7 +68,7 @@ export const injectColorVariables = (mode: Theme): void => {
     const colors = COLORS[mode];
     const root = document.documentElement;
 
-    for (const [key, value] of Object.entries(colors)) {
+    for (const [key, value] of typedObjectEntries(colors)) {
         root.style.setProperty(`--color-${key}`, value);
     }
 };

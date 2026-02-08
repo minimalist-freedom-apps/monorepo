@@ -5,7 +5,7 @@ import type { Requirement } from '../Requirement';
 export const requireDescription: Requirement = {
     name: 'matching description',
     applies: ({ projectType }) => projectType === 'app',
-    generate: async () => [],
+    fix: async () => [],
     verify: ({ appDir }) => {
         const configPath = resolve(appDir, 'config.ts');
         const pkgPath = resolve(appDir, 'package.json');

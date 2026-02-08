@@ -27,7 +27,7 @@ const checkExtends = ({ filePath }: { readonly filePath: string }): string | und
 export const requireTsconfig: Requirement = {
     name: 'tsconfig extends shared config',
     applies: ({ dirName }) => dirName !== 'tsconfig',
-    generate: async () => [],
+    fix: async () => [],
     verify: ({ appDir }) => {
         const errors: Array<string> = [];
 

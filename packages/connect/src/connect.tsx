@@ -1,3 +1,4 @@
+import { typedObjectEntries } from '@minimalistic-apps/type-utils';
 import type React from 'react';
 import { useCallback, useRef, useSyncExternalStore } from 'react';
 
@@ -30,7 +31,7 @@ export type Connect<States> = {
 export const createConnect = <Stores extends SubscribableRecord>(
     stores: Stores,
 ): Connect<StoreStates<Stores>> => {
-    const storeEntries = Object.entries(stores);
+    const storeEntries = typedObjectEntries(stores);
 
     const subscribe = (callback: Listener) => {
         const unsubscribes = storeEntries.map(([, s]) => s.subscribe(callback));
@@ -71,7 +72,7 @@ export const createConnect = <Stores extends SubscribableRecord>(
                 const states: Record<string, unknown> = {};
 
                 for (let i = 0; i < storeEntries.length; i++) {
-                    states[storeEntries[i][0]] = currentStoreStates[i];
+                    states[storeEntries[i][0] as string] = currentStoreStates[i];
                 }
 
                 const mapped = mapStateToProps(states as StoreStates<Stores>);

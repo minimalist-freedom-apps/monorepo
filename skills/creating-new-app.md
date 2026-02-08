@@ -1,6 +1,6 @@
 # Creating a New App
 
-Every app lives in `apps/` and must pass `pnpm verify:apps`. Auto-fix what's possible with `pnpm generate:apps`.
+Every app lives in `apps/` and must pass `pnpm requirements:verify`. Auto-fix what's possible with `pnpm requirements:fix`.
 
 ## Steps
 
@@ -11,7 +11,7 @@ Read the implementation of the `packages/requirements/src/requirements` for deta
 3. **Use `appName` in `capacitor.config.ts`** 
 4. **Add required scripts** to `package.json`
 5. **Add `@minimalistic-apps/requirements`** as a dev dependency (`"workspace:*"`).
-6. **Run `generate:apps` 
+6. **Run `requirements:fix` 
 8. **Ensure `"description"` in `package.json`** matches `appDescription` from `config.ts`.
 
 

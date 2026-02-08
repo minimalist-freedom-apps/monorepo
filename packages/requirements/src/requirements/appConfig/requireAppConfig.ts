@@ -5,7 +5,7 @@ import type { Requirement } from '../Requirement';
 export const requireAppConfig: Requirement = {
     name: 'has config.ts',
     applies: ({ projectType }) => projectType === 'app',
-    generate: async () => [],
+    fix: async () => [],
     verify: ({ appDir }) => {
         const configPath = join(appDir, 'config.ts');
 

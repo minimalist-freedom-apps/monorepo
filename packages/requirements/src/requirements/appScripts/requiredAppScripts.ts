@@ -1,5 +1,6 @@
 import { existsSync, readFileSync } from 'node:fs';
 import { join } from 'node:path';
+import { typedObjectKeys } from '@minimalistic-apps/type-utils';
 import type { Requirement } from '../Requirement';
 
 const REQUIRED_SCRIPTS = [
@@ -15,7 +16,7 @@ const REQUIRED_SCRIPTS = [
 export const requiredAppScripts: Requirement = {
     name: 'has required scripts',
     applies: ({ projectType }) => projectType === 'app',
-    generate: async () => [],
+    fix: async () => [],
     verify: ({ appDir }) => {
         const pkgPath = join(appDir, 'package.json');
         const errors: Array<string> = [];
@@ -31,7 +32,7 @@ export const requiredAppScripts: Requirement = {
             return ['no "scripts" in package.json'];
         }
 
-        const scriptKeys = Object.keys(scripts);
+        const scriptKeys = typedObjectKeys(scripts);
 
         const missing = REQUIRED_SCRIPTS.filter(s => !scriptKeys.includes(s));
         const extra = scriptKeys.filter(
