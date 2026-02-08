@@ -16,12 +16,14 @@ interface ColorScheme {
 }
 
 /**
- * Minimalistic Apps brand colors from style guidelines.
+ * Minimalistic Apps brand color from style guidelines.
  * @see https://github.com/Minimalistic-Apps/style-guidelines
  */
+export const BRAND_COLOR = '#087d89';
+
 export const COLORS: Record<Theme, ColorScheme> = {
     dark: {
-        primary: '#087d89',
+        primary: BRAND_COLOR,
 
         // background elevations
         elevation0: '#121212',
@@ -38,7 +40,7 @@ export const COLORS: Record<Theme, ColorScheme> = {
         transparent: '#FFFFFF5D',
     },
     light: {
-        primary: '#087d89',
+        primary: BRAND_COLOR,
 
         // background elevations
         elevation0: '#f5f5f5',

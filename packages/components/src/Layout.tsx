@@ -27,7 +27,16 @@ interface HeaderProps {
     readonly children: ReactNode;
 }
 
-const Header = ({ children }: HeaderProps) => <AntHeader>{children}</AntHeader>;
+const Header = ({ children }: HeaderProps) => (
+    <AntHeader
+        style={{
+            paddingTop: 'env(safe-area-inset-top, 0px)',
+            height: 'calc(64px + env(safe-area-inset-top, 0px))',
+        }}
+    >
+        {children}
+    </AntHeader>
+);
 
 interface LayoutProps {
     readonly children: ReactNode;
