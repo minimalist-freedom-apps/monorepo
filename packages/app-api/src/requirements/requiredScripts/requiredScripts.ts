@@ -1,6 +1,6 @@
 import { existsSync, readFileSync } from 'node:fs';
 import { join } from 'node:path';
-import type { AppCheck } from '../AppCheck.ts';
+import type { AppRequirement } from '../AppRequirement';
 
 const REQUIRED_SCRIPTS = [
     'dev',
@@ -12,21 +12,22 @@ const REQUIRED_SCRIPTS = [
     'generate:icons',
 ] as const;
 
-export const hasRequiredScripts: AppCheck = {
+export const requiredScripts: AppRequirement = {
     name: 'has required scripts',
-    run: ({ appDir }) => {
+    generate: async () => [],
+    verify: ({ appDir }) => {
         const pkgPath = join(appDir, 'package.json');
         const errors: Array<string> = [];
 
         if (!existsSync(pkgPath)) {
-            return [`missing package.json`];
+            return ['missing package.json'];
         }
 
         const pkg = JSON.parse(readFileSync(pkgPath, 'utf-8'));
         const scripts: Record<string, string> | undefined = pkg.scripts;
 
         if (scripts === undefined) {
-            return [`no "scripts" in package.json`];
+            return ['no "scripts" in package.json'];
         }
 
         const scriptKeys = Object.keys(scripts);

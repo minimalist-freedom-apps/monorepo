@@ -2,17 +2,19 @@
 
 import { readdirSync } from 'node:fs';
 import { join, resolve } from 'node:path';
-import type { AppCheck } from './AppCheck';
-import { hasConfigTs } from './checks/hasConfigTs';
-import { hasGeneratedIcons } from './checks/hasGeneratedIcons';
-import { hasRequiredScripts } from './checks/hasRequiredScripts';
+import type { AppRequirement } from './requirements/AppRequirement';
+import { configTs } from './requirements/configTs/configTs';
+import { generatedIcons } from './requirements/generatedIcons/generatedIcons';
+import { matchingDescription } from './requirements/matchingDescription/matchingDescription';
+import { requiredScripts } from './requirements/requiredScripts/requiredScripts';
 
-// --- Checks ---
+// --- Requirements ---
 
-const checks: ReadonlyArray<AppCheck> = [
-    hasConfigTs,
-    hasRequiredScripts,
-    hasGeneratedIcons,
+const requirements: ReadonlyArray<AppRequirement> = [
+    configTs,
+    requiredScripts,
+    generatedIcons,
+    matchingDescription,
 ];
 
 // --- Helpers ---
@@ -40,11 +42,11 @@ if (appDirs.length === 0) {
 const errors: Array<string> = [];
 
 for (const appDir of appDirs) {
-    for (const check of checks) {
-        const checkErrors = check.run({ appDir });
+    for (const requirement of requirements) {
+        const requirementErrors = requirement.verify({ appDir });
 
-        for (const error of checkErrors) {
-            errors.push(`${appDir} [${check.name}]: ${error}`);
+        for (const error of requirementErrors) {
+            errors.push(`${appDir} [${requirement.name}]: ${error}`);
         }
     }
 }

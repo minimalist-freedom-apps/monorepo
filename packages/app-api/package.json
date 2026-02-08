@@ -3,8 +3,8 @@
     "version": "0.0.1",
     "type": "module",
     "bin": {
-        "generate-icons": "./src/app-icon/generate.ts",
-        "app-standard-verifier": "./src/verifier/verify.ts"
+        "app-standard-verifier": "./src/requirements/verify.ts",
+        "app-standard-generator": "./src/requirements/generate.ts"
     },
     "exports": {
         ".": {

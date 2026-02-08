@@ -3,7 +3,7 @@
 import { existsSync } from 'node:fs';
 import { resolve } from 'node:path';
 import { pathToFileURL } from 'node:url';
-import type { AppConfig } from '../AppConfig';
+import type { AppConfig } from '../../AppConfig';
 import { generateIcons } from './generateIcons';
 
 const appDir = process.cwd();

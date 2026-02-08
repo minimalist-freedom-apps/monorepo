@@ -35,3 +35,4 @@ See the following files:
 - [typescript.md](skills/typescript.md)
 - [code-style.md](skills/code-style.md)
 - [app-requirements.md](skills/app-requirements.md)
+- [creating-new-app.md](skills/creating-new-app.md)

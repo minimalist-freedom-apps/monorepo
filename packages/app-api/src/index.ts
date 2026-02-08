@@ -1,3 +1,4 @@
 export type { AppConfig } from './AppConfig';
-export type { GenerateIconsConfig } from './app-icon/generateIcons';
-export { generateIcons } from './app-icon/generateIcons';
+export type { AppRequirement } from './requirements/AppRequirement';
+export type { GenerateIconsConfig } from './requirements/generatedIcons/generateIcons';
+export { generateIcons } from './requirements/generatedIcons/generateIcons';

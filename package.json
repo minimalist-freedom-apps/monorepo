@@ -16,6 +16,7 @@
         "typecheck": "pnpm -r typecheck",
         "test": "vitest run",
         "verify:apps": "app-standard-verifier",
+        "generate:apps": "app-standard-generator",
         "prepare": "husky"
     },
     "devDependencies": {
