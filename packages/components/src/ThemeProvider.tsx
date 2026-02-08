@@ -34,6 +34,10 @@ const darkTheme: ThemeConfig = {
         Card: {
             colorBorderSecondary: COLORS.dark.border,
         },
+        Input: {
+            paddingBlock: 10,
+            paddingBlockLG: 14,
+        },
     },
 };
 
@@ -62,6 +66,10 @@ const lightTheme: ThemeConfig = {
         },
         Card: {
             colorBorderSecondary: COLORS.light.border,
+        },
+        Input: {
+            paddingBlock: 10,
+            paddingBlockLG: 14,
         },
     },
 };

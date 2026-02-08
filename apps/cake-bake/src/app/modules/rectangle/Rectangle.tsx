@@ -1,6 +1,5 @@
 import {
     Card,
-    Column,
     Fraction,
     Input,
     Row,
@@ -44,76 +43,78 @@ export const Rectangle = () => {
 
     return (
         <Card title="Rectangle">
-            <Column gap={12}>
-                <Row align="center" justify="center" gap={16}>
-                    <Fraction
-                        numerator={
+            <Row align="center" justify="center" gap={16}>
+                <Fraction
+                    numerator={
+                        <Input
+                            value={amount}
+                            onChange={setAmount}
+                            placeholder="amount"
+                            inputMode="decimal"
+                            textAlign="center"
+                            label="amount"
+                        />
+                    }
+                    denominator={
+                        result !== null ? (
+                            <Text strong large>
+                                {formatResult(result)}
+                            </Text>
+                        ) : (
+                            <Text large secondary>
+                                ?
+                            </Text>
+                        )
+                    }
+                />
+                <Text strong large>
+                    =
+                </Text>
+                <Fraction
+                    numerator={
+                        <Row gap={12} align="center">
                             <Input
-                                value={amount}
-                                onChange={setAmount}
-                                placeholder="amount"
+                                value={originalA}
+                                onChange={setOriginalA}
+                                placeholder="a"
                                 inputMode="decimal"
                                 textAlign="center"
+                                label="a"
                             />
-                        }
-                        denominator={
-                            result !== null ? (
-                                <Text strong large>
-                                    {formatResult(result)}
-                                </Text>
-                            ) : (
-                                <Text large secondary>
-                                    ?
-                                </Text>
-                            )
-                        }
-                    />
-                    <Text strong large>
-                        =
-                    </Text>
-                    <Fraction
-                        numerator={
-                            <Row gap={12} align="center">
-                                <Input
-                                    value={originalA}
-                                    onChange={setOriginalA}
-                                    placeholder="a"
-                                    inputMode="decimal"
-                                    textAlign="center"
-                                />
-                                <Text strong>×</Text>
-                                <Input
-                                    value={originalB}
-                                    onChange={setOriginalB}
-                                    placeholder="b"
-                                    inputMode="decimal"
-                                    textAlign="center"
-                                />
-                            </Row>
-                        }
-                        denominator={
-                            <Row gap={12} align="center">
-                                <Input
-                                    value={newA}
-                                    onChange={setNewA}
-                                    placeholder="a"
-                                    inputMode="decimal"
-                                    textAlign="center"
-                                />
-                                <Text strong>×</Text>
-                                <Input
-                                    value={newB}
-                                    onChange={setNewB}
-                                    placeholder="b"
-                                    inputMode="decimal"
-                                    textAlign="center"
-                                />
-                            </Row>
-                        }
-                    />
-                </Row>
-                <Text secondary>area = a × b</Text>
-            </Column>
+                            <Text strong>×</Text>
+                            <Input
+                                value={originalB}
+                                onChange={setOriginalB}
+                                placeholder="b"
+                                inputMode="decimal"
+                                textAlign="center"
+                                label="b"
+                            />
+                        </Row>
+                    }
+                    denominator={
+                        <Row gap={12} align="center">
+                            <Input
+                                value={newA}
+                                onChange={setNewA}
+                                placeholder="a"
+                                inputMode="decimal"
+                                textAlign="center"
+                                label="new a"
+                            />
+                            <Text strong>×</Text>
+                            <Input
+                                value={newB}
+                                onChange={setNewB}
+                                placeholder="b"
+                                inputMode="decimal"
+                                textAlign="center"
+                                label="new b"
+                            />
+                        </Row>
+                    }
+                />
+            </Row>
         </Card>
     );
 };

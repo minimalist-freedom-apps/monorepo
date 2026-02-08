@@ -1,7 +1,7 @@
 import './Input.css';
 
 import type { InputRef as AntInputRef } from 'antd';
-import { Input as AntInput } from 'antd';
+import { Input as AntInput, theme } from 'antd';
 import type { ChangeEvent, RefObject } from 'react';
 
 export type InputRef = AntInputRef;
@@ -14,10 +14,23 @@ interface InputProps {
     readonly inputMode?: 'decimal' | 'numeric' | 'text';
     readonly inputRef?: RefObject<InputRef>;
     readonly monospace?: boolean;
-    readonly large?: boolean;
+    readonly size?: 'small' | 'medium' | 'large';
     readonly textAlign?: 'center' | 'left' | 'right';
+    readonly label?: string;
     readonly className?: string;
 }
+
+const antSizeMap = {
+    small: 'small',
+    medium: 'middle',
+    large: 'large',
+} as const;
+
+const fontSizeMap = {
+    small: '0.875rem',
+    medium: '1.125rem',
+    large: '1.25rem',
+} as const;
 
 export const Input = ({
     value,
@@ -27,15 +40,18 @@ export const Input = ({
     inputMode = 'text',
     inputRef,
     monospace = false,
-    large = false,
+    size = 'medium',
     textAlign,
+    label,
     className,
 }: InputProps) => {
+    const { token } = theme.useToken();
+
     const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
         onChange(e.target.value);
     };
 
-    return (
+    const input = (
         <AntInput
             ref={inputRef}
             value={value}
@@ -44,13 +60,40 @@ export const Input = ({
             placeholder={placeholder}
             inputMode={inputMode}
             className={className}
+            size={antSizeMap[size]}
             style={{
                 flex: 1,
                 fontFamily: monospace ? 'monospace' : 'inherit',
-                fontSize: large ? '1.25rem' : '1.125rem',
+                fontSize: fontSizeMap[size],
                 fontWeight: 600,
                 textAlign,
             }}
         />
+    );
+
+    if (label === undefined) {
+        return input;
+    }
+
+    return (
+        <div style={{ position: 'relative', flex: 1 }}>
+            <span
+                style={{
+                    position: 'absolute',
+                    top: -8,
+                    left: 8,
+                    fontSize: 12,
+                    lineHeight: '16px',
+                    padding: '0 4px',
+                    backgroundColor: token.colorBgContainer,
+                    color: token.colorTextSecondary,
+                    zIndex: 1,
+                    pointerEvents: 'none',
+                }}
+            >
+                {label}
+            </span>
+            {input}
+        </div>
     );
 };

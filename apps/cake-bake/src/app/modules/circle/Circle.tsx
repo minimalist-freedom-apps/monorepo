@@ -1,6 +1,5 @@
 import {
     Card,
-    Column,
     Fraction,
     Input,
     Row,
@@ -32,62 +31,62 @@ export const Circle = () => {
 
     return (
         <Card title="Circle">
-            <Column gap={12}>
-                <Row align="center" justify="center" gap={16}>
-                    <Fraction
-                        numerator={
+            <Row align="center" justify="center" gap={16}>
+                <Fraction
+                    numerator={
+                        <Input
+                            value={amount}
+                            onChange={setAmount}
+                            placeholder="amount"
+                            inputMode="decimal"
+                            textAlign="center"
+                            label="amount"
+                        />
+                    }
+                    denominator={
+                        result !== null ? (
+                            <Text strong large>
+                                {formatResult(result)}
+                            </Text>
+                        ) : (
+                            <Text large secondary>
+                                ?
+                            </Text>
+                        )
+                    }
+                />
+                <Text strong large>
+                    =
+                </Text>
+                <Fraction
+                    numerator={
+                        <Row gap={4} align="center">
                             <Input
-                                value={amount}
-                                onChange={setAmount}
-                                placeholder="amount"
+                                value={originalDiameter}
+                                onChange={setOriginalDiameter}
+                                placeholder="⌀"
                                 inputMode="decimal"
                                 textAlign="center"
+                                label="original ⌀"
                             />
-                        }
-                        denominator={
-                            result !== null ? (
-                                <Text strong large>
-                                    {formatResult(result)}
-                                </Text>
-                            ) : (
-                                <Text large secondary>
-                                    ?
-                                </Text>
-                            )
-                        }
-                    />
-                    <Text strong large>
-                        =
-                    </Text>
-                    <Fraction
-                        numerator={
-                            <Row gap={4} align="center">
-                                <Input
-                                    value={originalDiameter}
-                                    onChange={setOriginalDiameter}
-                                    placeholder="⌀"
-                                    inputMode="decimal"
-                                    textAlign="center"
-                                />
-                                <Text>²</Text>
-                            </Row>
-                        }
-                        denominator={
-                            <Row gap={4} align="center">
-                                <Input
-                                    value={newDiameter}
-                                    onChange={setNewDiameter}
-                                    placeholder="⌀"
-                                    inputMode="decimal"
-                                    textAlign="center"
-                                />
-                                <Text>²</Text>
-                            </Row>
-                        }
-                    />
-                </Row>
-                <Text secondary>area = π · (d/2)² — π cancels out</Text>
-            </Column>
+                            <Text>²</Text>
+                        </Row>
+                    }
+                    denominator={
+                        <Row gap={4} align="center">
+                            <Input
+                                value={newDiameter}
+                                onChange={setNewDiameter}
+                                placeholder="⌀"
+                                inputMode="decimal"
+                                textAlign="center"
+                                label="new ⌀"
+                            />
+                            <Text>²</Text>
+                        </Row>
+                    }
+                />
+            </Row>
         </Card>
     );
 };
