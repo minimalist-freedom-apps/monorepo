@@ -56,6 +56,9 @@ importers:
       '@capacitor/core':
         specifier: ^7.2.0
         version: 7.4.5
+      '@capacitor/status-bar':
+        specifier: ^7.0.0
+        version: 7.0.4(@capacitor/core@7.4.5)
       '@minimalistic-apps/components':
         specifier: workspace:*
         version: link:../../packages/components
@@ -93,6 +96,9 @@ importers:
       '@capacitor/core':
         specifier: ^7.2.0
         version: 7.4.5
+      '@capacitor/status-bar':
+        specifier: ^7.0.0
+        version: 7.0.4(@capacitor/core@7.4.5)
       '@evolu/common':
         specifier: ^7.4.1
         version: 7.4.1
@@ -905,6 +911,11 @@ packages:
 
   '@capacitor/core@7.4.5':
     resolution: {integrity: sha512-JnUywi0WRbqm4QYoplNsMQ7KAVuyrQFha0dOH9YDVCyrVHUvPcvrnK+9j5elUMgy+pOh3ve+pk6BVoySr91c+A==}
+
+  '@capacitor/status-bar@7.0.4':
+    resolution: {integrity: sha512-2BszlCqIlBZxHLjRyQbumKyuuisutkeJH+5eSKAEJKaDVJcfmAzr2v3MXWsRLrAHJFteLzRXkOlce5msSy28tQ==}
+    peerDependencies:
+      '@capacitor/core': '>=7.0.0'
 
   '@csstools/color-helpers@6.0.1':
     resolution: {integrity: sha512-NmXRccUJMk2AWA5A7e5a//3bCIMyOu2hAtdRYrhPPHjDxINuCwX1w6rnIZ4xjLcp0ayv6h8Pc3X0eJUGiAAXHQ==}
@@ -4661,6 +4672,10 @@ snapshots:
   '@capacitor/core@7.4.5':
     dependencies:
       tslib: 2.8.1
+
+  '@capacitor/status-bar@7.0.4(@capacitor/core@7.4.5)':
+    dependencies:
+      '@capacitor/core': 7.4.5
 
   '@csstools/color-helpers@6.0.1': {}
 

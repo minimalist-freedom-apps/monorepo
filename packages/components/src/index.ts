@@ -5,7 +5,12 @@ export { AppHeader } from './AppHeader';
 export { Button } from './Button';
 export { Card } from './Card';
 export { Code } from './Code';
-export { COLORS, injectColorVariables, type Theme } from './colors';
+export {
+    BRAND_COLOR,
+    COLORS,
+    injectColorVariables,
+    type Theme,
+} from './colors';
 export { Divider } from './Divider';
 export type { FlexProps } from './Flex';
 export { Column, Flex, Row } from './Flex';
