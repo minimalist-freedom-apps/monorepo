@@ -6,6 +6,7 @@ import {
     Switch,
 } from '@minimalist-apps/components';
 import type { FC } from 'react';
+import { config } from '../../config';
 import type { FetchAndStoreRatesDep } from '../converter/fetchAndStoreRates';
 import type { NavigateDep } from '../state/navigate';
 import type { BtcMode } from '../state/State';
@@ -36,7 +37,7 @@ export const AppHeaderPure = (deps: AppHeaderDeps, { loading, mode }: AppHeaderS
     };
 
     return (
-        <AppHeader title="Price Converter" onTitleClick={handleHome}>
+        <AppHeader title={config.appShortName} onTitleClick={handleHome}>
             <strong>₿</strong>
             <Switch disableStateBgColorChange checked={mode === 'sats'} onChange={handleToggle} />
             <strong>丰</strong>
