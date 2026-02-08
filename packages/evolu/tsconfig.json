@@ -3,6 +3,7 @@
     "compilerOptions": {
         // Evolu requires rootDir to resolve the "." export map entry in its package.json
         "rootDir": "./src",
+        // Contains React JSX components
         "jsx": "react-jsx"
     },
     "include": ["src"]

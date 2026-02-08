@@ -1,6 +1,7 @@
 {
     "extends": "@minimalistic-apps/tsconfig/library.json",
     "compilerOptions": {
+        // Uses Node.js APIs (fs, path) for file-system based verification
         "types": ["node"]
     },
     "include": ["src"]
