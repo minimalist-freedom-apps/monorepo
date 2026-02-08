@@ -33,14 +33,18 @@ export const requiredScripts: AppRequirement = {
         const scriptKeys = Object.keys(scripts);
 
         const missing = REQUIRED_SCRIPTS.filter(s => !scriptKeys.includes(s));
-        const extra = scriptKeys.filter(s => !REQUIRED_SCRIPTS.includes(s as (typeof REQUIRED_SCRIPTS)[number]));
+        const extra = scriptKeys.filter(
+            s => !REQUIRED_SCRIPTS.includes(s as (typeof REQUIRED_SCRIPTS)[number]),
+        );
 
         for (const name of missing) {
             errors.push(`missing script "${name}"`);
         }
 
         for (const name of extra) {
-            errors.push(`unexpected script "${name}" (only ${REQUIRED_SCRIPTS.join(', ')} allowed)`);
+            errors.push(
+                `unexpected script "${name}" (only ${REQUIRED_SCRIPTS.join(', ')} allowed)`,
+            );
         }
 
         if (missing.length === 0 && extra.length === 0) {

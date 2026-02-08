@@ -10,7 +10,12 @@ import { requiredScripts } from './requirements/requiredScripts/requiredScripts'
 
 // --- Requirements ---
 
-const requirements: ReadonlyArray<AppRequirement> = [configTs, requiredScripts, generatedIcons, matchingDescription];
+const requirements: ReadonlyArray<AppRequirement> = [
+    configTs,
+    requiredScripts,
+    generatedIcons,
+    matchingDescription,
+];
 
 // --- Helpers ---
 

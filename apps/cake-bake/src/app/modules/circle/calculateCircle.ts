@@ -1,4 +1,8 @@
-export const calculateCircle = (amount: number, originalDiameter: number, newDiameter: number): number | null => {
+export const calculateCircle = (
+    amount: number,
+    originalDiameter: number,
+    newDiameter: number,
+): number | null => {
     if (originalDiameter === 0) {
         return null;
     }

@@ -1,4 +1,10 @@
-import { AppHeader, Button, ReloadOutlined, SettingOutlined, Switch } from '@minimalistic-apps/components';
+import {
+    AppHeader,
+    Button,
+    ReloadOutlined,
+    SettingOutlined,
+    Switch,
+} from '@minimalistic-apps/components';
 import type { FC } from 'react';
 import type { FetchAndStoreRatesDep } from '../converter/fetchAndStoreRates';
 import type { NavigateDep } from '../state/navigate';
@@ -34,8 +40,18 @@ export const AppHeaderPure = (deps: AppHeaderDeps, { loading, mode }: AppHeaderS
             <strong>₿</strong>
             <Switch disableStateBgColorChange checked={mode === 'sats'} onChange={handleToggle} />
             <strong>丰</strong>
-            <Button variant="text" icon={<ReloadOutlined />} onClick={deps.fetchAndStoreRates} loading={loading} />
-            <Button variant="text" icon={<SettingOutlined />} onClick={handleSettings} aria-label="Settings" />
+            <Button
+                variant="text"
+                icon={<ReloadOutlined />}
+                onClick={deps.fetchAndStoreRates}
+                loading={loading}
+            />
+            <Button
+                variant="text"
+                icon={<SettingOutlined />}
+                onClick={handleSettings}
+                aria-label="Settings"
+            />
         </AppHeader>
     );
 };

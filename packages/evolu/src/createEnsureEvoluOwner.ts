@@ -1,4 +1,9 @@
-import { createOwnerSecret, createRandomBytes, type Mnemonic, ownerSecretToMnemonic } from '@evolu/common';
+import {
+    createOwnerSecret,
+    createRandomBytes,
+    type Mnemonic,
+    ownerSecretToMnemonic,
+} from '@evolu/common';
 import type { Store } from '@minimalistic-apps/mini-store';
 
 interface EvoluOwnerState {
