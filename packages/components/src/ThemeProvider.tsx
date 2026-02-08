@@ -22,7 +22,8 @@ const darkTheme: ThemeConfig = {
         colorBorder: COLORS.dark.border,
         borderRadius: 4,
         fontSize: 16,
-        fontFamily: '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif',
+        fontFamily:
+            '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif',
     },
     components: {
         Layout: {
@@ -54,7 +55,8 @@ const lightTheme: ThemeConfig = {
         colorBorder: COLORS.light.border,
         borderRadius: 4,
         fontSize: 16,
-        fontFamily: '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif',
+        fontFamily:
+            '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif',
     },
     components: {
         Layout: {
@@ -84,7 +86,9 @@ export const ThemeProvider = ({ children, mode = 'dark' }: ThemeProviderProps) =
 
     return (
         <ThemeContext.Provider value={mode}>
-            <ConfigProvider theme={mode === 'dark' ? darkTheme : lightTheme}>{children}</ConfigProvider>
+            <ConfigProvider theme={mode === 'dark' ? darkTheme : lightTheme}>
+                {children}
+            </ConfigProvider>
         </ThemeContext.Provider>
     );
 };

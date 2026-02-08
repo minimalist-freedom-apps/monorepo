@@ -27,7 +27,9 @@ export type Connect<States> = {
     ): React.FC<Omit<RenderProps, keyof StateProps>>;
 };
 
-export const createConnect = <Stores extends SubscribableRecord>(stores: Stores): Connect<StoreStates<Stores>> => {
+export const createConnect = <Stores extends SubscribableRecord>(
+    stores: Stores,
+): Connect<StoreStates<Stores>> => {
     const storeEntries = Object.entries(stores);
 
     const subscribe = (callback: Listener) => {
@@ -59,7 +61,9 @@ export const createConnect = <Stores extends SubscribableRecord>(stores: Stores)
 
                 if (
                     cacheRef.current !== undefined &&
-                    currentStoreStates.every((state, i) => Object.is(state, cacheRef.current?.storeStates[i]))
+                    currentStoreStates.every((state, i) =>
+                        Object.is(state, cacheRef.current?.storeStates[i]),
+                    )
                 ) {
                     return cacheRef.current.mapped;
                 }

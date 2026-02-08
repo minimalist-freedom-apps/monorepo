@@ -27,7 +27,10 @@ import { createMain, type Main } from './createMain';
 import { createFetchRatesCompositionRoot } from './rates/fetchRatesCompositionRoot';
 import { createAddCurrency } from './state/addCurrency';
 import { createStore } from './state/createStore';
-import { createGetSelectedCurrencies, selectCurrencyCodes } from './state/evolu/getSelectedCurrencies';
+import {
+    createGetSelectedCurrencies,
+    selectCurrencyCodes,
+} from './state/evolu/getSelectedCurrencies';
 import { Schema } from './state/evolu/schema';
 import { createLoadInitialState } from './state/localStorage/loadInitialState';
 import { createPersistStore } from './state/localStorage/persistStore';

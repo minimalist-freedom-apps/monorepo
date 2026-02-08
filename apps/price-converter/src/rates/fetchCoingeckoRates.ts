@@ -25,29 +25,34 @@ export const createFetchCoingeckoRates =
     () =>
         tryAsync(
             async () => {
-                const response = await deps.fetch('https://api.coingecko.com/api/v3/exchange_rates');
+                const response = await deps.fetch(
+                    'https://api.coingecko.com/api/v3/exchange_rates',
+                );
 
                 if (!response.ok) {
                     throw new Error('Coingecko API failed');
                 }
                 const data: CoingeckoResponse = await response.json();
 
-                const rates = typedObjectEntries(data.rates).reduce<CurrencyMap>((acc, [code, info]) => {
-                    if (info.type === 'fiat') {
-                        const upperCode = String(code).toUpperCase();
-                        const codeResult = CurrencyCode.from(upperCode);
+                const rates = typedObjectEntries(data.rates).reduce<CurrencyMap>(
+                    (acc, [code, info]) => {
+                        if (info.type === 'fiat') {
+                            const upperCode = String(code).toUpperCase();
+                            const codeResult = CurrencyCode.from(upperCode);
 
-                        if (codeResult.ok) {
-                            acc[codeResult.value] = {
-                                code: codeResult.value,
-                                name: info.name,
-                                rate: RateBtcPerFiat(codeResult.value).from(1 / info.value),
-                            };
+                            if (codeResult.ok) {
+                                acc[codeResult.value] = {
+                                    code: codeResult.value,
+                                    name: info.name,
+                                    rate: RateBtcPerFiat(codeResult.value).from(1 / info.value),
+                                };
+                            }
                         }
-                    }
 
-                    return acc;
-                }, {});
+                        return acc;
+                    },
+                    {},
+                );
 
                 return rates;
             },

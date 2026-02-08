@@ -29,7 +29,9 @@ export const createFetchAverageRates =
             }
 
             const validCode = codeResult.value;
-            const rates = sources.filter(source => source[validCode]).map(source => source[validCode]?.rate);
+            const rates = sources
+                .filter(source => source[validCode])
+                .map(source => source[validCode]?.rate);
 
             if (rates.length > 0) {
                 const avgRate = rates.reduce((sum, rate) => sum + (rate ?? 0), 0) / rates.length;

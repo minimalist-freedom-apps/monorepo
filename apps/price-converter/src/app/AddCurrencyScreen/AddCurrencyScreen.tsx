@@ -27,7 +27,9 @@ export const AddCurrencyScreenPure = (
     const [searchTerm, setSearchTerm] = useState('');
 
     const availableCurrencies = typedObjectValues(rates)
-        .filter((it): it is CurrencyEntity => it !== undefined && !selectedCurrencies.includes(it.code))
+        .filter(
+            (it): it is CurrencyEntity => it !== undefined && !selectedCurrencies.includes(it.code),
+        )
         .sort((a, b) => a.name.localeCompare(b.name))
         .map(it => ({ code: it.code, name: it.name }));
 
@@ -52,7 +54,11 @@ export const AddCurrencyScreenPure = (
             <Button onClick={handleBack} variant="text" style={{ alignSelf: 'start' }}>
                 ← Back
             </Button>
-            <SearchInput value={searchTerm} onChange={setSearchTerm} placeholder="Search currencies..." />
+            <SearchInput
+                value={searchTerm}
+                onChange={setSearchTerm}
+                placeholder="Search currencies..."
+            />
             <div
                 style={{
                     maxHeight: 'calc(100vh - 200px)',

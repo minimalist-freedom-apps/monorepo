@@ -28,6 +28,14 @@ export const CurrencyRowPure = (
     <Row gap={12}>
         <deps.CurrencyInput value={value} onChange={onChange} code={code} />
         <Text>{code === 'BTC' && btcMode === 'sats' ? 'Sats' : code}</Text>
-        {onRemove && <Button variant="primary" danger icon={<DeleteOutlined />} onClick={onRemove} size="small" />}
+        {onRemove && (
+            <Button
+                variant="primary"
+                danger
+                icon={<DeleteOutlined />}
+                onClick={onRemove}
+                size="small"
+            />
+        )}
     </Row>
 );

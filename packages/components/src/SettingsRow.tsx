@@ -9,7 +9,12 @@ interface SettingsRowProps {
     readonly direction?: 'row' | 'column';
 }
 
-export const SettingsRow = ({ label, children, description, direction = 'row' }: SettingsRowProps) => {
+export const SettingsRow = ({
+    label,
+    children,
+    description,
+    direction = 'row',
+}: SettingsRowProps) => {
     if (direction === 'column') {
         return (
             <Card>

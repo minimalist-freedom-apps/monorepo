@@ -18,7 +18,10 @@ export const createStatePersistence = (deps: StatePersistenceDeps): StatePersist
 
         const unsubscribe = deps.persistStore();
 
-        const removeBeforeUnloadListener = deps.window.addEventListener('beforeunload', unsubscribe);
+        const removeBeforeUnloadListener = deps.window.addEventListener(
+            'beforeunload',
+            unsubscribe,
+        );
 
         return () => {
             removeBeforeUnloadListener();

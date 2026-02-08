@@ -14,7 +14,11 @@ import type { BtcMode } from '../../state/State';
 import type { SetFocusedCurrencyDep } from '../../state/setFocusedCurrency';
 import { parseFormattedNumber } from './parseFormattedNumber';
 
-const formatInputValue = (value: number, currencyCode: CurrencyCode | 'BTC', displayMode: BtcMode): string => {
+const formatInputValue = (
+    value: number,
+    currencyCode: CurrencyCode | 'BTC',
+    displayMode: BtcMode,
+): string => {
     if (value === 0) {
         return '';
     }
@@ -45,7 +49,13 @@ export type CurrencyInputDep = {
 
 export const CurrencyInputPure = (
     deps: SetFocusedCurrencyDep,
-    { mode, focusedCurrency, value, code, onChange }: CurrencyInputStateProps & CurrencyInputOwnProps,
+    {
+        mode,
+        focusedCurrency,
+        value,
+        code,
+        onChange,
+    }: CurrencyInputStateProps & CurrencyInputOwnProps,
 ) => {
     const [inputValue, setInputValue] = useState(() => formatInputValue(value, code, mode));
 
@@ -65,7 +75,9 @@ export const CurrencyInputPure = (
 
         if (!Number.isNaN(numberValue)) {
             const normalizedValue =
-                mode === 'btc' && code === 'BTC' ? btcToSats(numberValue as AmountBtc) : numberValue;
+                mode === 'btc' && code === 'BTC'
+                    ? btcToSats(numberValue as AmountBtc)
+                    : numberValue;
 
             onChange(normalizedValue);
         }

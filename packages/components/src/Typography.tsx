@@ -67,7 +67,13 @@ interface ParagraphProps {
     readonly style?: React.CSSProperties;
 }
 
-export const Paragraph = ({ children, code = false, copyable = false, onClick, style }: ParagraphProps) => (
+export const Paragraph = ({
+    children,
+    code = false,
+    copyable = false,
+    onClick,
+    style,
+}: ParagraphProps) => (
     <AntParagraph code={code} copyable={copyable} onClick={onClick} {...(style ? { style } : {})}>
         {children}
     </AntParagraph>

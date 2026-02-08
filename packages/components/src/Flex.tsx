@@ -35,6 +35,8 @@ export const Flex = ({
     </AntFlex>
 );
 
-export const Row = (props: FlexProps) => <Flex {...props} direction="row" align={props.align ?? 'center'} />;
+export const Row = (props: FlexProps) => (
+    <Flex {...props} direction="row" align={props.align ?? 'center'} />
+);
 
 export const Column = (props: FlexProps) => <Flex {...props} direction="column" />;

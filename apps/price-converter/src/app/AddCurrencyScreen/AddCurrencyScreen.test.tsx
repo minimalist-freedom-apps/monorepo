@@ -36,7 +36,9 @@ const createTestComponent = (selectedCurrencies: ReadonlyArray<CurrencyCode> = [
     const deps = { navigate, addCurrency };
     const rates = createTestRates();
 
-    const AddCurrencyScreen = () => <>{AddCurrencyScreenPure(deps, { rates, selectedCurrencies })}</>;
+    const AddCurrencyScreen = () => (
+        <>{AddCurrencyScreenPure(deps, { rates, selectedCurrencies })}</>
+    );
 
     return { navigate, addCurrency, AddCurrencyScreen };
 };

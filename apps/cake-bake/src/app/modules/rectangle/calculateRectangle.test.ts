@@ -76,7 +76,14 @@ describe(calculateRectangle.name, () => {
         },
     ];
 
-    test.each(testCases)('$description', ({ amount, originalA, originalB, newA, newB, expected }) => {
+    test.each(testCases)('$description', ({
+        amount,
+        originalA,
+        originalB,
+        newA,
+        newB,
+        expected,
+    }) => {
         const result = calculateRectangle({
             amount,
             originalA,

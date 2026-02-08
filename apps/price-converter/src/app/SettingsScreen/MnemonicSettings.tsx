@@ -14,7 +14,12 @@ export const MnemonicSettingsPure = ({ evoluMnemonic }: MnemonicSettingsStatePro
         <SettingsRow
             direction="column"
             label="Backup Phrase"
-            description={<>Tap to reveal/hide your backup phrase. Keep it safe and do not share it with anyone.</>}
+            description={
+                <>
+                    Tap to reveal/hide your backup phrase. Keep it safe and do not share it with
+                    anyone.
+                </>
+            }
         >
             <Mnemonic value={evoluMnemonic} />
         </SettingsRow>
