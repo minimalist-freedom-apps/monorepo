@@ -4,13 +4,16 @@ import type { Requirement } from '../Requirement';
 
 const TSCONFIG_PACKAGE = '@minimalist-apps/tsconfig';
 
+const stripJsonComments = (jsonc: string): string =>
+    jsonc.replace(/\/\/.*$/gm, '').replace(/\/\*[\s\S]*?\*\//g, '');
+
 const checkExtends = ({ filePath }: { readonly filePath: string }): string | undefined => {
     if (!existsSync(filePath)) {
         return `missing ${basename(filePath)}`;
     }
 
     const content = readFileSync(filePath, 'utf-8');
-    const tsconfig = JSON.parse(content);
+    const tsconfig = JSON.parse(stripJsonComments(content));
     const extendsValue: string | undefined = tsconfig.extends;
 
     if (extendsValue === undefined) {
