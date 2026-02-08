@@ -1,5 +1,6 @@
 import { mkdir, writeFile } from 'node:fs/promises';
 import { join } from 'node:path';
+import { BRAND_COLOR } from '@minimalistic-apps/components';
 import { createCanvas } from '@napi-rs/canvas';
 
 // --- Types ---
@@ -11,12 +12,6 @@ export interface GenerateIconsConfig {
 }
 
 // --- Constants ---
-
-/**
- * Minimalistic Apps brand color from style guidelines.
- * @see https://github.com/Minimalistic-Apps/style-guidelines
- */
-const BRAND_COLOR = '#087d89';
 
 const EMOJI_FONT_FAMILY =
     '"Noto Color Emoji", "Apple Color Emoji", "Segoe UI Emoji", "Twemoji Mozilla", sans-serif';

@@ -196,6 +196,9 @@ importers:
 
   packages/app-api:
     dependencies:
+      '@minimalistic-apps/components':
+        specifier: workspace:*
+        version: link:../components
       '@napi-rs/canvas':
         specifier: ^0.1.65
         version: 0.1.90

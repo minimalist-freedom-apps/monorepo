@@ -13,6 +13,7 @@
         }
     },
     "dependencies": {
+        "@minimalistic-apps/components": "workspace:*",
         "@napi-rs/canvas": "^0.1.65",
         "tsx": "^4.0.0"
     },
