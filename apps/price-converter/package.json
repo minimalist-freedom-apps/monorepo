@@ -13,7 +13,6 @@
     },
     "dependencies": {
         "@capacitor/core": "^7.2.0",
-        "@capacitor/status-bar": "^7.0.0",
         "@evolu/common": "^7.4.1",
         "@evolu/web": "^2.4.0",
         "@minimalistic-apps/bitcoin": "workspace:*",
@@ -24,6 +23,7 @@
         "@minimalistic-apps/local-storage": "workspace:*",
         "@minimalistic-apps/connect": "workspace:*",
         "@minimalistic-apps/mini-store": "workspace:*",
+        "@minimalistic-apps/mobile-native": "workspace:*",
         "@minimalistic-apps/type-utils": "workspace:*",
         "@minimalistic-apps/window": "workspace:*",
         "react": "^19.0.0",

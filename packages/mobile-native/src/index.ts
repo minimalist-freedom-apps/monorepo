@@ -1,0 +1,1 @@
+export { setupMobileNative } from './setupMobileNative';
