@@ -46,7 +46,6 @@ export const Rectangle = () => {
                         <Input
                             value={amount}
                             onChange={setAmount}
-                            placeholder="amount"
                             inputMode="decimal"
                             textAlign="center"
                             label="amount"
@@ -73,7 +72,6 @@ export const Rectangle = () => {
                             <Input
                                 value={originalA}
                                 onChange={setOriginalA}
-                                placeholder="a"
                                 inputMode="decimal"
                                 textAlign="center"
                                 label="a"
@@ -82,7 +80,6 @@ export const Rectangle = () => {
                             <Input
                                 value={originalB}
                                 onChange={setOriginalB}
-                                placeholder="b"
                                 inputMode="decimal"
                                 textAlign="center"
                                 label="b"
@@ -94,7 +91,6 @@ export const Rectangle = () => {
                             <Input
                                 value={newA}
                                 onChange={setNewA}
-                                placeholder="a"
                                 inputMode="decimal"
                                 textAlign="center"
                                 label="new a"
@@ -103,7 +99,6 @@ export const Rectangle = () => {
                             <Input
                                 value={newB}
                                 onChange={setNewB}
-                                placeholder="b"
                                 inputMode="decimal"
                                 textAlign="center"
                                 label="new b"

@@ -34,7 +34,6 @@ export const Circle = () => {
                         <Input
                             value={amount}
                             onChange={setAmount}
-                            placeholder="amount"
                             inputMode="decimal"
                             textAlign="center"
                             label="amount"
@@ -61,7 +60,6 @@ export const Circle = () => {
                             <Input
                                 value={originalDiameter}
                                 onChange={setOriginalDiameter}
-                                placeholder="⌀"
                                 inputMode="decimal"
                                 textAlign="center"
                                 label="original ⌀"
@@ -74,7 +72,6 @@ export const Circle = () => {
                             <Input
                                 value={newDiameter}
                                 onChange={setNewDiameter}
-                                placeholder="⌀"
                                 inputMode="decimal"
                                 textAlign="center"
                                 label="new ⌀"
