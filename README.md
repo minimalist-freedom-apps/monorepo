@@ -1,20 +1,12 @@
-👉**Looking for original price-converter? See [legacy](https://github.com/Minimalistic-Apps/price-converter-legacy) repository.**
+> 👉**Looking for original price-converter? See [legacy](https://github.com/Minimalistic-Apps/price-converter-legacy) repository.**
 
-This is rewrite of the original Price Converter into React PWA.
 
-# Price Converter
+## Apps
+- 🚧 [**Price Converter**](apps/price-converter/README.md) - Converts Fiat Shitcoins to Bitcoin/Sats
+- [**Cake Bake**](apps/cake-bake/README.md) - Scale your cake recipes to size of your plate
 
-🚧🚧🚧 Still under development 🚧🚧🚧
+## Development
+See: [Development](docs/development.md)
 
-### Run some app:
-
-```bash
-# Dev server
-pnpm --filter @minimalistic-apps/price-converter dev
-
-# Build
-pnpm --filter @minimalistic-apps/price-converter build
-
-# Preview production build
-pnpm --filter @minimalistic-apps/price-converter preview
-```
+## iOS Support
+See: [iOS Support](docs/ios-support.md)

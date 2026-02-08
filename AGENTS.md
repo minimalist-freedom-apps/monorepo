@@ -34,3 +34,4 @@ See the following files:
 - [store.md](skills/store.md)
 - [typescript.md](skills/typescript.md)
 - [code-style.md](skills/code-style.md)
+- [app-requirements.md](skills/app-requirements.md)
