@@ -15,8 +15,8 @@
         "lint:eslint:fix": "eslint --fix .",
         "typecheck": "pnpm -r typecheck",
         "test": "vitest run",
-        "verify:apps": "app-standard-verifier",
-        "generate:apps": "app-standard-generator",
+        "requirements:verify": "requirements-verify",
+        "requirements:fix": "requirements-fix",
         "prepare": "husky"
     },
     "devDependencies": {

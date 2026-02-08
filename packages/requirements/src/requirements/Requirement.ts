@@ -11,7 +11,7 @@ export interface Requirement {
         readonly dirName: string;
     }) => boolean;
 
-    readonly generate: ({ appDir }: { readonly appDir: string }) => Promise<ReadonlyArray<string>>;
+    readonly fix: ({ appDir }: { readonly appDir: string }) => Promise<ReadonlyArray<string>>;
 
     readonly verify: ({ appDir }: { readonly appDir: string }) => ReadonlyArray<string>;
 }

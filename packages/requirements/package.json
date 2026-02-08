@@ -3,8 +3,8 @@
     "version": "0.0.1",
     "type": "module",
     "bin": {
-        "app-standard-verifier": "./src/verify.ts",
-        "app-standard-generator": "./src/generate.ts"
+        "requirements-verify": "./src/verify.ts",
+        "requirements-fix": "./src/fix.ts"
     },
     "exports": {
         ".": {
@@ -14,6 +14,7 @@
     },
     "dependencies": {
         "@minimalistic-apps/components": "workspace:*",
+        "@minimalistic-apps/type-utils": "workspace:*",
         "@napi-rs/canvas": "^0.1.65",
         "tsx": "^4.0.0"
     },

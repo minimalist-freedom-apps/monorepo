@@ -10,7 +10,7 @@ const REQUIRED_ICONS = ['favicon.png', 'icon-192x192.png', 'icon-512x512.png'] a
 export const requireIcons: Requirement = {
     name: 'has generated icons',
     applies: ({ projectType }) => projectType === 'app',
-    generate: async ({ appDir }) => {
+    fix: async ({ appDir }) => {
         const configPath = resolve(appDir, 'config.ts');
 
         if (!existsSync(configPath)) {

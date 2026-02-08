@@ -1,3 +1,4 @@
+import { typedObjectKeys } from '@minimalistic-apps/type-utils';
 import { Typography } from 'antd';
 import type { ReactNode } from 'react';
 
@@ -24,7 +25,7 @@ const buildTextStyle = (
         ...(large ? { fontSize: '1.5rem' } : {}),
     };
 
-    return Object.keys(style).length > 0 ? { style } : {};
+    return typedObjectKeys(style).length > 0 ? { style } : {};
 };
 
 export const Text = ({

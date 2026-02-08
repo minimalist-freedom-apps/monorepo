@@ -2,22 +2,8 @@
 
 import { readdirSync } from 'node:fs';
 import { basename, join, resolve } from 'node:path';
-import { requireAppConfig } from './requirements/appConfig/requireAppConfig';
-import { requireIcons } from './requirements/appIcons/requireIcons';
-import { requiredAppScripts } from './requirements/appScripts/requiredAppScripts';
-import { requireRescription } from './requirements/description/requireDescription';
-import type { ProjectType, Requirement } from './requirements/Requirement';
-import { requireTsconfig } from './requirements/tsconfig/requireTsconfig';
-
-// --- Requirements ---
-
-const requirements: ReadonlyArray<Requirement> = [
-    requireAppConfig,
-    requiredAppScripts,
-    requireIcons,
-    requireRescription,
-    requireTsconfig,
-];
+import { requirements } from './allRequirements';
+import type { ProjectType } from './requirements/Requirement';
 
 // --- Helpers ---
 

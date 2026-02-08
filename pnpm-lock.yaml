@@ -248,6 +248,10 @@ importers:
         version: 5.9.3
 
   packages/connect:
+    dependencies:
+      '@minimalistic-apps/type-utils':
+        specifier: workspace:*
+        version: link:../type-utils
     devDependencies:
       '@minimalistic-apps/tsconfig':
         specifier: workspace:*
@@ -340,6 +344,9 @@ importers:
       '@minimalistic-apps/components':
         specifier: workspace:*
         version: link:../components
+      '@minimalistic-apps/type-utils':
+        specifier: workspace:*
+        version: link:../type-utils
       '@napi-rs/canvas':
         specifier: ^0.1.65
         version: 0.1.90
