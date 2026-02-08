@@ -7,28 +7,37 @@ import { configTs } from './requirements/configTs/configTs';
 import { generatedIcons } from './requirements/generatedIcons/generatedIcons';
 import { matchingDescription } from './requirements/matchingDescription/matchingDescription';
 import { requiredScripts } from './requirements/requiredScripts/requiredScripts';
+import { tsconfigExtends } from './requirements/tsconfigExtends/tsconfigExtends';
 
 // --- Requirements ---
 
-const requirements: ReadonlyArray<AppRequirement> = [
+const TSCONFIG_PACKAGE_NAME = 'tsconfig';
+
+const appRequirements: ReadonlyArray<AppRequirement> = [
     configTs,
     requiredScripts,
     generatedIcons,
     matchingDescription,
 ];
 
+const projectRequirements: ReadonlyArray<AppRequirement> = [tsconfigExtends];
+
 // --- Helpers ---
 
-const getAppDirs = ({ appsDir }: { readonly appsDir: string }): ReadonlyArray<string> =>
-    readdirSync(appsDir, { withFileTypes: true })
+const getSubDirs = ({ parentDir }: { readonly parentDir: string }): ReadonlyArray<string> =>
+    readdirSync(parentDir, { withFileTypes: true })
         .filter(entry => entry.isDirectory())
-        .map(entry => join(appsDir, entry.name));
+        .map(entry => join(parentDir, entry.name));
 
 // --- Main ---
 
 const workspaceRoot = resolve(process.cwd());
 const appsDir = join(workspaceRoot, 'apps');
-const appDirs = getAppDirs({ appsDir });
+const packagesDir = join(workspaceRoot, 'packages');
+const appDirs = getSubDirs({ parentDir: appsDir });
+const packageDirs = getSubDirs({ parentDir: packagesDir }).filter(
+    dir => !dir.endsWith(`/${TSCONFIG_PACKAGE_NAME}`),
+);
 
 if (appDirs.length === 0) {
     console.error('No apps found in', appsDir);
@@ -38,11 +47,21 @@ if (appDirs.length === 0) {
 const errors: Array<string> = [];
 
 for (const appDir of appDirs) {
-    for (const requirement of requirements) {
+    for (const requirement of [...appRequirements, ...projectRequirements]) {
         const requirementErrors = requirement.verify({ appDir });
 
         for (const error of requirementErrors) {
             errors.push(`${appDir} [${requirement.name}]: ${error}`);
+        }
+    }
+}
+
+for (const packageDir of packageDirs) {
+    for (const requirement of projectRequirements) {
+        const requirementErrors = requirement.verify({ appDir: packageDir });
+
+        for (const error of requirementErrors) {
+            errors.push(`${packageDir} [${requirement.name}]: ${error}`);
         }
     }
 }
@@ -58,4 +77,6 @@ if (errors.length > 0) {
     process.exit(1);
 }
 
-console.log(`✓ All ${appDirs.length} app(s) pass the standard checks.`);
+console.log(
+    `✓ All ${appDirs.length} app(s) and ${packageDirs.length} package(s) pass the standard checks.`,
+);

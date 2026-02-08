@@ -1,9 +1,4 @@
 {
-    "extends": "@minimalistic-apps/tsconfig/base.json",
-    "compilerOptions": {
-        "composite": true,
-        "declaration": true,
-        "declarationMap": true
-    },
+    "extends": "@minimalistic-apps/tsconfig/library.json",
     "include": ["src"]
 }

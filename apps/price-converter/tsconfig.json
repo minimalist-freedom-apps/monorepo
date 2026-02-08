@@ -1,12 +1,4 @@
 {
     "extends": "@minimalistic-apps/tsconfig/app.json",
-    "compilerOptions": {
-        "types": ["@testing-library/jest-dom"]
-    },
-    "include": ["src", "config.ts", "../../packages/evolu/src/createEnsureEvolu.ts"],
-    "references": [
-        {
-            "path": "./tsconfig.node.json"
-        }
-    ]
+    "include": ["src", "config.ts"]
 }

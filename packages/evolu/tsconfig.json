@@ -1,8 +1,9 @@
 {
     "extends": "@minimalistic-apps/tsconfig/library.json",
     "compilerOptions": {
+        // Evolu requires rootDir to resolve the "." export map entry in its package.json
         "rootDir": "./src",
         "jsx": "react-jsx"
     },
-    "include": ["src/**/*"]
+    "include": ["src"]
 }

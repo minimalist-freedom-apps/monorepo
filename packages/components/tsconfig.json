@@ -1,9 +1,6 @@
 {
-    "extends": "@minimalistic-apps/tsconfig/base.json",
+    "extends": "@minimalistic-apps/tsconfig/library.json",
     "compilerOptions": {
-        "composite": true,
-        "declaration": true,
-        "declarationMap": true,
         "jsx": "react-jsx"
     },
     "include": ["src"]

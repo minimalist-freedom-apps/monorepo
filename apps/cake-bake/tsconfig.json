@@ -1,9 +1,4 @@
 {
     "extends": "@minimalistic-apps/tsconfig/app.json",
-    "include": ["src", "config.ts"],
-    "references": [
-        {
-            "path": "./tsconfig.node.json"
-        }
-    ]
+    "include": ["src", "config.ts"]
 }
