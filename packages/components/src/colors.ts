@@ -17,10 +17,6 @@ interface ColorScheme {
     readonly transparent: string;
 }
 
-/**
- * Minimalist Freedom Apps brand color from style guidelines.
- * @see https://github.com/Minimalist-Apps/style-guidelines
- */
 export const BRAND_COLOR = '#087d89';
 
 export const COLORS: Record<Theme, ColorScheme> = {
