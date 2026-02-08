@@ -1,4 +1,5 @@
 export { exhaustive } from './exhaustive.js';
+export type { IntervalId } from './native-types.js';
 export { isNonEmpty as isNonEmptyString } from './string.js';
 export {
     typedObjectEntries,

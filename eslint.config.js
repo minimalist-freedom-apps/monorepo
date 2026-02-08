@@ -32,6 +32,12 @@ export default [
         },
     },
     {
-        ignores: ['**/node_modules/**', '**/dist/**', '**/.turbo/**'],
+        ignores: [
+            '**/node_modules/**',
+            '**/dist/**',
+            '**/.turbo/**',
+            '**/android/**',
+            '**/capacitor.config.ts',
+        ],
     },
 ];

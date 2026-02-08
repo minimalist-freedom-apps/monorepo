@@ -13,6 +13,9 @@ dist-ssr
 *.local
 *.tsbuildinfo
 
+# Capacitor Android
+apps/*/android
+
 # Editor directories and files
 .vscode/*
 !.vscode/extensions.json

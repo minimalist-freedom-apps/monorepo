@@ -1,4 +1,5 @@
 import { Alert, Row, Text } from '@minimalistic-apps/components';
+import type { IntervalId } from '@minimalistic-apps/type-utils';
 import { type FC, useEffect, useRef, useState } from 'react';
 import type { FetchAndStoreRatesDep } from '../converter/fetchAndStoreRates';
 
@@ -42,7 +43,7 @@ export const RatesLoadingPure = (
     { error, lastUpdated }: RatesLoadingStateProps,
 ) => {
     const [timeAgo, setTimeAgo] = useState<string>('');
-    const intervalRef = useRef<number | null>(null);
+    const intervalRef = useRef<IntervalId | null>(null);
 
     useEffect(() => {
         fetchAndStoreRates();

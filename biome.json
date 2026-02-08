@@ -47,6 +47,7 @@
             "includes": [
                 "**/vite.config.ts",
                 "**/vitest.config.ts",
+                "**/capacitor.config.ts",
                 "eslint.config.js"
             ],
             "linter": {

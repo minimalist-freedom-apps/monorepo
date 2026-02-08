@@ -8,14 +8,18 @@
         "dev": "vite",
         "build": "vite build",
         "preview": "vite preview",
-        "typecheck": "tsc --noEmit"
+        "typecheck": "tsc --noEmit",
+        "build:android": "vite build && npx cap sync android"
     },
     "dependencies": {
+        "@capacitor/core": "^7.2.0",
         "@minimalistic-apps/components": "workspace:*",
         "react": "^19.0.0",
         "react-dom": "^19.0.0"
     },
     "devDependencies": {
+        "@capacitor/android": "^7.2.0",
+        "@capacitor/cli": "^7.2.0",
         "@types/react": "^19.0.0",
         "@types/react-dom": "^19.0.0",
         "@vitejs/plugin-react": "^4.3.0",
