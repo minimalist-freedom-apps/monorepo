@@ -8,9 +8,6 @@ import {
 import { useState } from 'react';
 import { calculateCircle } from './calculateCircle';
 
-const formatResult = (value: number): string =>
-    String(Math.round(value * 100) / 100);
-
 export const Circle = () => {
     const [amount, setAmount] = useState('');
     const [originalDiameter, setOriginalDiameter] = useState('');
@@ -46,7 +43,7 @@ export const Circle = () => {
                     denominator={
                         result !== null ? (
                             <Text strong large>
-                                {formatResult(result)}
+                                {result.toFixed(2)}
                             </Text>
                         ) : (
                             <Text large secondary>

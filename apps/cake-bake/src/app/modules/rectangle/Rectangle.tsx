@@ -8,9 +8,6 @@ import {
 import { useState } from 'react';
 import { calculateRectangle } from './calculateRectangle';
 
-const formatResult = (value: number): string =>
-    String(Math.round(value * 100) / 100);
-
 export const Rectangle = () => {
     const [amount, setAmount] = useState('');
     const [originalA, setOriginalA] = useState('');
@@ -58,7 +55,7 @@ export const Rectangle = () => {
                     denominator={
                         result !== null ? (
                             <Text strong large>
-                                {formatResult(result)}
+                                {result.toFixed(2)}
                             </Text>
                         ) : (
                             <Text large secondary>
