@@ -31,13 +31,7 @@ export const requireAndroidSetup: Requirement = {
             return ['android/ directory still missing after cap add'];
         }
 
-        console.log('  Configuring android build…');
-
-        try {
-            execSync('../../scripts/configure-android.sh', { cwd: appDir, stdio: 'inherit' });
-        } catch {
-            return ['configure-android.sh failed — check output above'];
-        }
+        console.log('  Android build configuration: using committed Gradle files (no script run)');
 
         const targetPath = join(androidDir, 'keystore.properties');
 
