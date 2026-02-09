@@ -48,7 +48,7 @@ export const Rectangle = () => {
                     denominator={
                         result !== null ? (
                             <Text strong large>
-                                {result.toFixed(2)}
+                                {result.toFixed()}
                             </Text>
                         ) : (
                             <Text large secondary>
