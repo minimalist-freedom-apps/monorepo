@@ -28,10 +28,9 @@ const buildExpectedScripts = ({
     ],
     ['dev:android:sign', '../../scripts/sign-apk.sh'],
     ['build', 'vite build'],
-    ['build:android', null],
+    ['build:android', '../../scripts/build-android.sh'],
     ['preview', 'vite preview'],
     ['typecheck', 'tsc --noEmit'],
-    ['generate:icons', 'generate-icons'],
 ];
 
 export const requiredAppScripts: Requirement = {
