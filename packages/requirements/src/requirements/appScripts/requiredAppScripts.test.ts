@@ -56,7 +56,6 @@ describe(requiredAppScripts.name, () => {
                 'build:android': '../../scripts/build-android.sh',
                 preview: 'vite preview',
                 typecheck: 'tsc --noEmit',
-                'capacitor:sync:after': '../../scripts/configure-android.sh',
             });
         });
 

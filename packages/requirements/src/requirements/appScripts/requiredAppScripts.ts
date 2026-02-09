@@ -11,7 +11,6 @@ const expectedScripts: ReadonlyArray<readonly [name: string, value: string]> = [
     ['build:android', '../../scripts/build-android.sh'],
     ['preview', 'vite preview'],
     ['typecheck', 'tsc --noEmit'],
-    ['capacitor:sync:after', '../../scripts/configure-android.sh'],
 ];
 
 export const requiredAppScripts: Requirement = {
