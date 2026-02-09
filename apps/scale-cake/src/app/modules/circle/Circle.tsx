@@ -34,7 +34,7 @@ export const Circle = () => {
                     denominator={
                         result !== null ? (
                             <Text strong large>
-                                {result.toFixed(2)}
+                                {result.toFixed(0)}
                             </Text>
                         ) : (
                             <Text large secondary>
