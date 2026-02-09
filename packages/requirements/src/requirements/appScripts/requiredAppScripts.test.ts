@@ -7,17 +7,20 @@ import { requiredAppScripts } from './requiredAppScripts';
 
 const createTempDir = (): string => mkdtempSync(join(tmpdir(), 'req-scripts-'));
 
-const writePackageJson = ({
-    dir,
-    content,
-}: {
+interface WritePackageJsonProps {
     readonly dir: string;
     readonly content: Record<string, unknown>;
-}): void => {
+}
+
+const writePackageJson = ({ dir, content }: WritePackageJsonProps): void => {
     writeFileSync(join(dir, 'package.json'), `${JSON.stringify(content, null, 4)}\n`);
 };
 
-const readPackageJson = ({ dir }: { readonly dir: string }): Record<string, unknown> =>
+interface ReadPackageJsonProps {
+    readonly dir: string;
+}
+
+const readPackageJson = ({ dir }: ReadPackageJsonProps): Record<string, unknown> =>
     JSON.parse(readFileSync(join(dir, 'package.json'), 'utf-8'));
 
 describe(requiredAppScripts.name, () => {

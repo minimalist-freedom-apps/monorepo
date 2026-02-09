@@ -7,13 +7,15 @@ import type { ProjectType } from './requirements/Requirement';
 
 // --- Helpers ---
 
+interface FixProjectsProps {
+    readonly projectDirs: ReadonlyArray<string>;
+    readonly projectType: ProjectType;
+}
+
 const fixProjects = async ({
     projectDirs,
     projectType,
-}: {
-    readonly projectDirs: ReadonlyArray<string>;
-    readonly projectType: ProjectType;
-}): Promise<ReadonlyArray<string>> => {
+}: FixProjectsProps): Promise<ReadonlyArray<string>> => {
     const errors: Array<string> = [];
 
     for (const dir of projectDirs) {

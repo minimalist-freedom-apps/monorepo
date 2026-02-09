@@ -42,13 +42,12 @@ const ANDROID_FOREGROUND_SIZE: Record<AndroidDensity, number> = {
 
 // --- Helpers ---
 
-const renderOnBackground = ({
-    emoji,
-    size,
-}: {
+interface RenderOnBackgroundProps {
     readonly emoji: string;
     readonly size: number;
-}): Buffer => {
+}
+
+const renderOnBackground = ({ emoji, size }: RenderOnBackgroundProps): Buffer => {
     const canvas = createCanvas(size, size);
     const ctx = canvas.getContext('2d');
 
@@ -64,15 +63,17 @@ const renderOnBackground = ({
     return canvas.toBuffer('image/png');
 };
 
+interface RenderOnTransparentProps {
+    readonly emoji: string;
+    readonly canvasSize: number;
+    readonly emojiSize: number;
+}
+
 const renderOnTransparent = ({
     emoji,
     canvasSize,
     emojiSize,
-}: {
-    readonly emoji: string;
-    readonly canvasSize: number;
-    readonly emojiSize: number;
-}): Buffer => {
+}: RenderOnTransparentProps): Buffer => {
     const canvas = createCanvas(canvasSize, canvasSize);
     const ctx = canvas.getContext('2d');
 
@@ -85,28 +86,25 @@ const renderOnTransparent = ({
     return canvas.toBuffer('image/png');
 };
 
-const writeIcon = async ({
-    buffer,
-    dir,
-    filename,
-}: {
+interface WriteIconProps {
     readonly buffer: Buffer;
     readonly dir: string;
     readonly filename: string;
-}): Promise<void> => {
+}
+
+const writeIcon = async ({ buffer, dir, filename }: WriteIconProps): Promise<void> => {
     await mkdir(dir, { recursive: true });
     await writeFile(join(dir, filename), buffer);
 };
 
 // --- Web icons ---
 
-const generateWebIcons = async ({
-    emoji,
-    outputDir,
-}: {
+interface GenerateWebIconsProps {
     readonly emoji: string;
     readonly outputDir: string;
-}): Promise<void> => {
+}
+
+const generateWebIcons = async ({ emoji, outputDir }: GenerateWebIconsProps): Promise<void> => {
     const favicon = renderOnBackground({
         emoji,
         size: FAVICON_SIZE,
@@ -129,13 +127,15 @@ const generateWebIcons = async ({
 
 // --- Android icons ---
 
+interface GenerateAndroidIconsProps {
+    readonly emoji: string;
+    readonly resDir: string;
+}
+
 const generateAndroidIcons = async ({
     emoji,
     resDir,
-}: {
-    readonly emoji: string;
-    readonly resDir: string;
-}): Promise<void> => {
+}: GenerateAndroidIconsProps): Promise<void> => {
     for (const density of ANDROID_DENSITIES) {
         const launcherSize = ANDROID_LAUNCHER_SIZE[density];
         const foregroundSize = ANDROID_FOREGROUND_SIZE[density];

@@ -7,13 +7,15 @@ import type { ProjectType } from './requirements/Requirement';
 
 // --- Helpers ---
 
+interface VerifyProjectsProps {
+    readonly projectDirs: ReadonlyArray<string>;
+    readonly projectType: ProjectType;
+}
+
 const verifyProjects = ({
     projectDirs,
     projectType,
-}: {
-    readonly projectDirs: ReadonlyArray<string>;
-    readonly projectType: ProjectType;
-}): ReadonlyArray<string> => {
+}: VerifyProjectsProps): ReadonlyArray<string> => {
     const errors: Array<string> = [];
 
     for (const dir of projectDirs) {

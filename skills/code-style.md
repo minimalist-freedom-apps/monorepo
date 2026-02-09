@@ -25,5 +25,36 @@ const calculateNewAmount = (isLoading: boolean) => { }
 
 **Good**
 ```tsx
-const calculateNewAmount = ({ isLoading }: { isLoading: boolean }) => { }
+interface CalculateNewAmountProps {
+    readonly isLoading: boolean;
+}
+
+const calculateNewAmount = ({ isLoading }: CalculateNewAmountProps) => { }
+```
+
+### Extract inline object parameter types
+- Never define object types inline in function parameters. Always extract them into a named interface (e.g. `FunctionNameProps`).
+
+**Bad**
+```tsx
+const writePackageJson = ({
+    dir,
+    content,
+}: {
+    readonly dir: string;
+    readonly content: Record<string, unknown>;
+}): void => { }
+```
+
+**Good**
+```tsx
+interface WritePackageJsonProps {
+    readonly dir: string;
+    readonly content: Record<string, unknown>;
+}
+
+const writePackageJson = ({
+    dir,
+    content,
+}: WritePackageJsonProps): void => { }
 ```

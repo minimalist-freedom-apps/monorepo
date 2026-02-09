@@ -17,9 +17,9 @@ export const requireIcons: Requirement = {
             return ['missing config.ts — cannot generate icons'];
         }
 
-        const { config }: { readonly config: AppConfig } = await import(
-            pathToFileURL(configPath).href
-        );
+        const { config } = (await import(pathToFileURL(configPath).href)) as {
+            readonly config: AppConfig;
+        };
 
         await generateIcons({
             emoji: config.appIconEmoji,

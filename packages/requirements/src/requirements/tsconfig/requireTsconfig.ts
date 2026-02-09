@@ -7,7 +7,11 @@ const TSCONFIG_PACKAGE = '@minimalist-apps/tsconfig';
 const stripJsonComments = (jsonc: string): string =>
     jsonc.replace(/\/\/.*$/gm, '').replace(/\/\*[\s\S]*?\*\//g, '');
 
-const checkExtends = ({ filePath }: { readonly filePath: string }): string | undefined => {
+interface CheckExtendsProps {
+    readonly filePath: string;
+}
+
+const checkExtends = ({ filePath }: CheckExtendsProps): string | undefined => {
     if (!existsSync(filePath)) {
         return `missing ${basename(filePath)}`;
     }
