@@ -1,0 +1,7 @@
+<?xml version='1.0' encoding='utf-8'?>
+<resources>
+    <string name="app_name">Scale Cake</string>
+    <string name="title_activity_main">Scale Cake</string>
+    <string name="package_name">com.minimalist.scalecake</string>
+    <string name="custom_url_scheme">com.minimalist.scalecake</string>
+</resources>
