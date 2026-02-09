@@ -1,16 +1,11 @@
 #!/usr/bin/env tsx
 
-import { readdirSync } from 'node:fs';
 import { basename, join, resolve } from 'node:path';
+import { getSubDirs, green, red } from '@minimalist-apps/cli';
 import { requirements } from './allRequirements';
 import type { ProjectType } from './requirements/Requirement';
 
 // --- Helpers ---
-
-const getSubDirs = ({ parentDir }: { readonly parentDir: string }): ReadonlyArray<string> =>
-    readdirSync(parentDir, { withFileTypes: true })
-        .filter(entry => entry.isDirectory())
-        .map(entry => join(parentDir, entry.name));
 
 const verifyProjects = ({
     projectDirs,
@@ -57,16 +52,18 @@ const errors: Array<string> = [
 ];
 
 if (errors.length > 0) {
-    console.error('App standard verification failed:\n');
+    console.error(red('App standard verification failed:\n'));
 
     for (const error of errors) {
-        console.error(`  ✗ ${error}`);
+        console.error(red(`  ✗ ${error}`));
     }
 
-    console.error(`\n${errors.length} error(s) found.`);
+    console.error(red(`\n${errors.length} error(s) found.`));
     process.exit(1);
 }
 
 console.log(
-    `✓ All ${appDirs.length} app(s) and ${packageDirs.length} package(s) pass the standard checks.`,
+    green(
+        `✓ All ${appDirs.length} app(s) and ${packageDirs.length} package(s) pass the standard checks.`,
+    ),
 );

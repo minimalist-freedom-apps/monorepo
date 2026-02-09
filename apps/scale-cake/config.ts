@@ -5,4 +5,5 @@ export const config: AppConfig = {
     appShortName: 'Scale Cake',
     appDescription: 'Cake ingredient calculator — scale recipes by pan diameter',
     appIconEmoji: '🎂',
+    devPort: 5174,
 };

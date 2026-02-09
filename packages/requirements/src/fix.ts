@@ -1,16 +1,11 @@
 #!/usr/bin/env tsx
 
-import { readdirSync } from 'node:fs';
 import { basename, join, resolve } from 'node:path';
+import { getSubDirs, green, red } from '@minimalist-apps/cli';
 import { requirements } from './allRequirements';
 import type { ProjectType } from './requirements/Requirement';
 
 // --- Helpers ---
-
-const getSubDirs = ({ parentDir }: { readonly parentDir: string }): ReadonlyArray<string> =>
-    readdirSync(parentDir, { withFileTypes: true })
-        .filter(entry => entry.isDirectory())
-        .map(entry => join(parentDir, entry.name));
 
 const fixProjects = async ({
     projectDirs,
@@ -58,14 +53,14 @@ const errors: Array<string> = [
 ];
 
 if (errors.length > 0) {
-    console.error('\nFix had errors:\n');
+    console.error(red('\nFix had errors:\n'));
 
     for (const error of errors) {
-        console.error(`  ✗ ${error}`);
+        console.error(red(`  ✗ ${error}`));
     }
 
-    console.error(`\n${errors.length} error(s) found.`);
+    console.error(red(`\n${errors.length} error(s) found.`));
     process.exit(1);
 }
 
-console.log(`\n✓ Fixed ${appDirs.length} app(s) and ${packageDirs.length} package(s).`);
+console.log(green(`\n✓ Fixed ${appDirs.length} app(s) and ${packageDirs.length} package(s).`));

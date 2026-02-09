@@ -216,6 +216,18 @@ importers:
         specifier: ^5.3.0
         version: 5.9.3
 
+  packages/cli:
+    devDependencies:
+      '@minimalist-apps/tsconfig':
+        specifier: workspace:*
+        version: link:../tsconfig
+      '@types/node':
+        specifier: ^22.0.0
+        version: 22.19.10
+      typescript:
+        specifier: ^5.3.0
+        version: 5.9.3
+
   packages/components:
     dependencies:
       '@ant-design/icons':
@@ -341,6 +353,9 @@ importers:
 
   packages/requirements:
     dependencies:
+      '@minimalist-apps/cli':
+        specifier: workspace:*
+        version: link:../cli
       '@minimalist-apps/components':
         specifier: workspace:*
         version: link:../components

@@ -15,6 +15,10 @@ dist-ssr
 
 # Capacitor Android
 apps/*/android
+*.apk
+
+# Signing
+keystore.properties
 
 # Editor directories and files
 .vscode/*

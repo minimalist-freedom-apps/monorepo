@@ -5,4 +5,5 @@ export const config: AppConfig = {
     appShortName: 'Price Converter',
     appDescription: 'Minimalist Bitcoin Price Converter',
     appIconEmoji: '💱',
+    devPort: 5173,
 };

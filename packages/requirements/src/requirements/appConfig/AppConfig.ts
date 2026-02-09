@@ -3,4 +3,5 @@ export interface AppConfig {
     readonly appShortName: string;
     readonly appDescription: string;
     readonly appIconEmoji: string;
+    readonly devPort: number;
 }
