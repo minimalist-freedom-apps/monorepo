@@ -38,8 +38,10 @@ android {
         }
     }
     applicationVariants.all { variant ->
-        variant.outputs.all {
-            outputFileName = "${variant.applicationId}-v${variant.versionName}.apk"
+        if (variant.buildType.name == 'release') {
+            variant.outputs.all {
+                outputFileName = "${variant.applicationId}-v${variant.versionName}.apk"
+            }
         }
     }
 }
