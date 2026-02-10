@@ -15,6 +15,7 @@ This file defines global rules. Detailed skills live in `/skills`.
 
 ## Skills
 See the following files:
+- [android-build.md](skills/android-build.md)
 - [app-requirements.md](skills/app-requirements.md)
 - [assertions.md](skills/assertions.md)
 - [branded-types.md](skills/branded-types.md)
@@ -35,5 +36,4 @@ See the following files:
 - [tsconfig.md](skills/tsconfig.md)
 - [typescript.md](skills/typescript.md)
 - [variable-shadowing.md](skills/variable-shadowing.md)
-- [verification.md](skills/verification.md)
 - [verification.md](skills/verification.md)
