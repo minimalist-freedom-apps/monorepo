@@ -4,4 +4,6 @@ export interface AppConfig {
     readonly appDescription: string;
     readonly appIconEmoji: string;
     readonly devPort: number;
+    readonly appId: string;
+    readonly androidColor: string;
 }

@@ -1,4 +1,16 @@
-apply plugin: 'com.android.application'
+interface GenerateAppBuildGradleProps {
+    readonly appId: string;
+}
+
+/**
+ * Generates the app-level build.gradle content.
+ *
+ * - Version name and version code are derived from ../../package.json at Gradle build time.
+ * - Release APK filenames are suffixed with the version.
+ * - App name and colors come from generated strings.xml and colors.xml (driven by config.ts).
+ */
+export const generateAppBuildGradle = ({ appId }: GenerateAppBuildGradleProps): string =>
+    `apply plugin: 'com.android.application'
 
 // Read version from package.json (single source of truth)
 def packageJsonFile = file('../../package.json')
@@ -13,10 +25,10 @@ def patchPart = versionParts.size() > 2 ? versionParts[2].toInteger() : 0
 def computedVersionCode = major * 10000 + minor * 100 + patchPart
 
 android {
-    namespace "com.minimalist.priceconverter"
+    namespace "${appId}"
     compileSdk rootProject.ext.compileSdkVersion
     defaultConfig {
-        applicationId "com.minimalist.priceconverter"
+        applicationId "${appId}"
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
         versionCode computedVersionCode
@@ -39,7 +51,7 @@ android {
     }
     applicationVariants.all { variant ->
         variant.outputs.all {
-            outputFileName = "${variant.applicationId}-v${variant.versionName}.apk"
+            outputFileName = "\${variant.applicationId}-v\${variant.versionName}.apk"
         }
     }
 }
@@ -72,3 +84,4 @@ try {
 } catch(Exception e) {
     logger.info("google-services.json not found, google-services plugin not applied. Push Notifications won't work")
 }
+`;

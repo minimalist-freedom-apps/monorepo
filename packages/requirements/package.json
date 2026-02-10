@@ -13,6 +13,7 @@
         }
     },
     "dependencies": {
+        "@minimalist-apps/android-build": "workspace:*",
         "@minimalist-apps/cli": "workspace:*",
         "@minimalist-apps/components": "workspace:*",
         "@minimalist-apps/type-utils": "workspace:*",

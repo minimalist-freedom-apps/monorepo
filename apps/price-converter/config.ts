@@ -6,4 +6,6 @@ export const config: AppConfig = {
     appDescription: 'Minimalist Bitcoin Price Converter',
     appIconEmoji: '💱',
     devPort: 5173,
+    appId: 'com.minimalist.priceconverter',
+    androidColor: '#FF6200',
 };

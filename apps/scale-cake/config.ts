@@ -6,4 +6,6 @@ export const config: AppConfig = {
     appDescription: 'Cake ingredient calculator — scale recipes by pan diameter',
     appIconEmoji: '🎂',
     devPort: 5174,
+    appId: 'com.minimalist.scalecake',
+    androidColor: '#E91E63',
 };
