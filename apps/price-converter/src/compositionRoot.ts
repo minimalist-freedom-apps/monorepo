@@ -102,9 +102,11 @@ export const createCompositionRoot = (): Main => {
         ensureEvolu,
         removeFiatAmount,
     });
+    const getSelectedCurrencyCodes = () => selectCurrencyCodes(selectedCurrencies.getState());
+
     const recalculateFromBtc = createRecalculateFromBtc({
         store,
-        getSelectedCurrencies,
+        getSelectedCurrencyCodes,
     });
     const recalculateFromCurrency = createRecalculateFromCurrency({
         store,

@@ -55,6 +55,8 @@ export const createCompositionRoot = (): Deps => {
 }
 ```
 
+Composition root MUST BE synchronous!
+
 ### Never create services inside other services
 
 All service creation must happen in the composition root. Never call `createXxx` inside another service factory.

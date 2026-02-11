@@ -12,6 +12,7 @@ import { type FiatAmount, formatFiatWithCommas } from '@minimalist-apps/fiat';
 import { type FC, useEffect, useState } from 'react';
 import type { BtcMode } from '../../state/State';
 import type { SetFocusedCurrencyDep } from '../../state/setFocusedCurrency';
+import { isValidNumberInput } from './isValidNumberInput';
 import { parseFormattedNumber } from './parseFormattedNumber';
 
 const formatInputValue = (
@@ -69,6 +70,10 @@ export const CurrencyInputPure = (
     }, [value, code, mode, focusedCurrency]);
 
     const handleChange = (newValue: string) => {
+        if (!isValidNumberInput(newValue)) {
+            return;
+        }
+
         setInputValue(newValue);
 
         const numberValue = parseFormattedNumber(newValue);
