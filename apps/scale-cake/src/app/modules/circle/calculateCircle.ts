@@ -1,8 +1,14 @@
-export const calculateCircle = (
-    amount: number,
-    originalDiameter: number,
-    newDiameter: number,
-): number | null => {
+interface CalculateCircleProps {
+    readonly amount: number;
+    readonly originalDiameter: number;
+    readonly newDiameter: number;
+}
+
+export const calculateCircle = ({
+    amount,
+    originalDiameter,
+    newDiameter,
+}: CalculateCircleProps): number | null => {
     if (originalDiameter === 0) {
         return null;
     }

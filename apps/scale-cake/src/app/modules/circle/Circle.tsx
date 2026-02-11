@@ -16,7 +16,13 @@ export const Circle = () => {
         Number.isFinite(parsedOriginal) &&
         Number.isFinite(parsedNew);
 
-    const result = canCalculate ? calculateCircle(parsedAmount, parsedOriginal, parsedNew) : null;
+    const result = canCalculate
+        ? calculateCircle({
+              amount: parsedAmount,
+              originalDiameter: parsedOriginal,
+              newDiameter: parsedNew,
+          })
+        : null;
 
     return (
         <Card title="Circle">

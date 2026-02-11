@@ -1,9 +1,12 @@
 import { createConnect } from '@minimalist-apps/connect';
 import { createCurrentDateTime } from '@minimalist-apps/datetime';
-import { createEnsureEvoluOwner, createSubscribableQuery } from '@minimalist-apps/evolu';
+import {
+    createEnsureEvolu,
+    createEnsureEvoluOwner,
+    createSubscribableQuery,
+} from '@minimalist-apps/evolu';
 import { createLocalStorage } from '@minimalist-apps/local-storage';
 import { createWindow } from '@minimalist-apps/window';
-import { createEnsureEvolu } from '../../../packages/evolu/src/createEnsureEvolu';
 import { AddCurrencyButtonPure } from './app/AddCurrencyScreen/AddCurrencyButton';
 import { AddCurrencyScreenPure } from './app/AddCurrencyScreen/AddCurrencyScreen';
 import { AppPure } from './app/App';
@@ -75,7 +78,12 @@ export const createCompositionRoot = (): Main => {
 
     // Evolu
     const ensureEvoluOwner = createEnsureEvoluOwner({ store });
-    const ensureEvolu = createEnsureEvolu({ ensureEvoluOwner }, Schema);
+    const ensureEvolu = createEnsureEvolu({
+        deps: { ensureEvoluOwner },
+        schema: Schema,
+        appName: 'price-converter',
+        shardPath: ['minimalist-apps', 'price-converter'],
+    });
     const getSelectedCurrencies = createGetSelectedCurrencies({ ensureEvolu });
 
     // HACK: We need this to subscribe query, in next Evolu this won't be necessary.

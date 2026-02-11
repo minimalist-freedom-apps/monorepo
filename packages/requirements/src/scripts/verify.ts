@@ -24,8 +24,12 @@ if (appDirs.length === 0 && filter === undefined) {
 }
 
 const errors: Array<string> = [
-    ...verifyProjects({ projectDirs: appDirs, projectType: 'app', filteredRequirements }),
-    ...verifyProjects({ projectDirs: packageDirs, projectType: 'package', filteredRequirements }),
+    ...(await verifyProjects({ projectDirs: appDirs, projectType: 'app', filteredRequirements })),
+    ...(await verifyProjects({
+        projectDirs: packageDirs,
+        projectType: 'package',
+        filteredRequirements,
+    })),
 ];
 
 if (errors.length > 0) {

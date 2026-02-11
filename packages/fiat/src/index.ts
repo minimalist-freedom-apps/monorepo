@@ -7,4 +7,4 @@ export {
     getTerritoryNamesForCurrency,
     type Territory,
 } from './territories';
-export { FiatAmount, type FiatCurrency } from './types';
+export { asFiatAmount, FiatAmount, type FiatCurrency } from './types';

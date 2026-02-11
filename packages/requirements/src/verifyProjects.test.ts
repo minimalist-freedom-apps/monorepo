@@ -29,8 +29,8 @@ describe(verifyProjects.name, () => {
         rmSync(appDir, { recursive: true, force: true });
     });
 
-    test('returns no errors when all requirements pass', () => {
-        const errors = verifyProjects({
+    test('returns no errors when all requirements pass', async () => {
+        const errors = await verifyProjects({
             projectDirs: [appDir],
             projectType: 'app',
             filteredRequirements: [createMockRequirement({ name: 'passing-req' })],
@@ -39,8 +39,8 @@ describe(verifyProjects.name, () => {
         expect(errors).toEqual([]);
     });
 
-    test('returns errors from a failing requirement', () => {
-        const errors = verifyProjects({
+    test('returns errors from a failing requirement', async () => {
+        const errors = await verifyProjects({
             projectDirs: [appDir],
             projectType: 'app',
             filteredRequirements: [
@@ -54,8 +54,8 @@ describe(verifyProjects.name, () => {
         expect(errors).toEqual([`${appDir} [failing-req]: something is wrong`]);
     });
 
-    test('collects errors from multiple requirements', () => {
-        const errors = verifyProjects({
+    test('collects errors from multiple requirements', async () => {
+        const errors = await verifyProjects({
             projectDirs: [appDir],
             projectType: 'app',
             filteredRequirements: [
@@ -76,10 +76,10 @@ describe(verifyProjects.name, () => {
         ]);
     });
 
-    test('collects errors across multiple project dirs', () => {
+    test('collects errors across multiple project dirs', async () => {
         const secondDir = createTempDir();
 
-        const errors = verifyProjects({
+        const errors = await verifyProjects({
             projectDirs: [appDir, secondDir],
             projectType: 'app',
             filteredRequirements: [
@@ -95,8 +95,8 @@ describe(verifyProjects.name, () => {
         rmSync(secondDir, { recursive: true, force: true });
     });
 
-    test('skips requirements that do not apply', () => {
-        const errors = verifyProjects({
+    test('skips requirements that do not apply', async () => {
+        const errors = await verifyProjects({
             projectDirs: [appDir],
             projectType: 'app',
             filteredRequirements: [
@@ -111,10 +111,10 @@ describe(verifyProjects.name, () => {
         expect(errors).toEqual([]);
     });
 
-    test('applies is called with correct projectType and dirName', () => {
+    test('applies is called with correct projectType and dirName', async () => {
         const appliesCalls: Array<{ projectType: string; dirName: string }> = [];
 
-        verifyProjects({
+        await verifyProjects({
             projectDirs: [appDir],
             projectType: 'package',
             filteredRequirements: [
@@ -133,8 +133,8 @@ describe(verifyProjects.name, () => {
         expect(appliesCalls[0]?.projectType).toBe('package');
     });
 
-    test('returns no errors when project dirs are empty', () => {
-        const errors = verifyProjects({
+    test('returns no errors when project dirs are empty', async () => {
+        const errors = await verifyProjects({
             projectDirs: [],
             projectType: 'app',
             filteredRequirements: [
@@ -148,8 +148,8 @@ describe(verifyProjects.name, () => {
         expect(errors).toEqual([]);
     });
 
-    test('collects multiple errors from a single requirement', () => {
-        const errors = verifyProjects({
+    test('collects multiple errors from a single requirement', async () => {
+        const errors = await verifyProjects({
             projectDirs: [appDir],
             projectType: 'app',
             filteredRequirements: [

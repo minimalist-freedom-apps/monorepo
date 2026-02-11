@@ -54,7 +54,7 @@ describe(calculateCircle.name, () => {
     ];
 
     test.each(testCases)('$description', ({ amount, originalDiameter, newDiameter, expected }) => {
-        const result = calculateCircle(amount, originalDiameter, newDiameter);
+        const result = calculateCircle({ amount, originalDiameter, newDiameter });
 
         if (expected === null) {
             expect(result).toBeNull();

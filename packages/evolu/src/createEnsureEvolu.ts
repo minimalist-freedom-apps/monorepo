@@ -7,6 +7,7 @@ import {
     type EvoluSchema,
     type Mnemonic,
     mnemonicToOwnerSecret,
+    type NonEmptyReadonlyArray,
     type ShardOwner,
     SimpleName,
     type SyncOwner,
@@ -17,27 +18,36 @@ import { evoluWebDeps } from '@evolu/web';
 import type { EnsureEvoluOwnerDep } from '@minimalist-apps/evolu';
 
 export type EvoluStorage<S extends EvoluSchema> = {
-    evolu: Evolu<S>;
-    shardOwner: ShardOwner;
-    updateRelayUrls: (urls: string[]) => Promise<void>;
-    dispose: () => Promise<void>;
+    readonly evolu: Evolu<S>;
+    readonly shardOwner: ShardOwner;
+    readonly updateRelayUrls: (urls: ReadonlyArray<string>) => Promise<void>;
+    readonly dispose: () => Promise<void>;
 };
 
-const createEvoluStorage = <S extends EvoluSchema>(
-    mnemonic: Mnemonic,
-    schema: ValidateSchema<S> extends never ? S : ValidateSchema<S>,
-): EvoluStorage<S> => {
+interface CreateEvoluStorageProps<S extends EvoluSchema> {
+    readonly mnemonic: Mnemonic;
+    readonly schema: ValidateSchema<S> extends never ? S : ValidateSchema<S>;
+    readonly appName: string;
+    readonly shardPath: NonEmptyReadonlyArray<string | number>;
+}
+
+const createEvoluStorage = <S extends EvoluSchema>({
+    mnemonic,
+    schema,
+    appName,
+    shardPath,
+}: CreateEvoluStorageProps<S>): EvoluStorage<S> => {
     const ownerSecret = mnemonicToOwnerSecret(mnemonic);
     const appOwner = createAppOwner(ownerSecret);
 
     const evolu = createEvolu(evoluWebDeps)(schema, {
-        name: SimpleName.orThrow('price-converter'),
+        name: SimpleName.orThrow(appName),
         transports: [],
     });
 
     let unuseOwner: UnuseOwner = () => {};
 
-    const updateRelayUrls = async (urls: string[]) => {
+    const updateRelayUrls = async (urls: ReadonlyArray<string>) => {
         const owner = await evolu.appOwner;
 
         const syncOwner: SyncOwner = {
@@ -56,7 +66,7 @@ const createEvoluStorage = <S extends EvoluSchema>(
         unuseOwner = evolu.useOwner(syncOwner);
     };
 
-    const shardOwner = deriveShardOwner(appOwner, ['minimalist-apps', 'price-converter']);
+    const shardOwner = deriveShardOwner(appOwner, shardPath);
 
     const unuseShardOwner = evolu.useOwner(shardOwner);
 
@@ -78,17 +88,29 @@ export interface EnsureEvoluDep<S extends EvoluSchema> {
     readonly ensureEvolu: EnsureEvoluStorage<S>;
 }
 
-type EnsureEvoluDeps = EnsureEvoluOwnerDep;
+interface CreateEnsureEvoluProps<S extends EvoluSchema> {
+    readonly deps: EnsureEvoluOwnerDep;
+    readonly schema: ValidateSchema<S> extends never ? S : ValidateSchema<S>;
+    readonly appName: string;
+    readonly shardPath: NonEmptyReadonlyArray<string | number>;
+}
 
-export const createEnsureEvolu = <S extends EvoluSchema>(
-    deps: EnsureEvoluDeps,
-    schema: ValidateSchema<S> extends never ? S : ValidateSchema<S>,
-): EnsureEvoluStorage<S> => {
+export const createEnsureEvolu = <S extends EvoluSchema>({
+    deps,
+    schema,
+    appName,
+    shardPath,
+}: CreateEnsureEvoluProps<S>): EnsureEvoluStorage<S> => {
     let storage: EvoluStorage<S> | null = null;
 
     return () => {
         if (storage === null) {
-            storage = createEvoluStorage(deps.ensureEvoluOwner(), schema);
+            storage = createEvoluStorage({
+                mnemonic: deps.ensureEvoluOwner(),
+                schema,
+                appName,
+                shardPath,
+            });
         }
 
         return storage;
