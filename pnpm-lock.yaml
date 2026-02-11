@@ -101,6 +101,9 @@ importers:
       '@minimalist-apps/mobile-native':
         specifier: workspace:*
         version: link:../../packages/mobile-native
+      '@minimalist-apps/number':
+        specifier: workspace:*
+        version: link:../../packages/number
       '@minimalist-apps/type-utils':
         specifier: workspace:*
         version: link:../../packages/type-utils
@@ -366,6 +369,15 @@ importers:
       '@minimalist-apps/tsconfig':
         specifier: workspace:*
         version: link:../tsconfig
+
+  packages/number:
+    devDependencies:
+      '@minimalist-apps/tsconfig':
+        specifier: workspace:*
+        version: link:../tsconfig
+      typescript:
+        specifier: ^5.3.0
+        version: 5.9.3
 
   packages/requirements:
     dependencies:

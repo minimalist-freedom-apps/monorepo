@@ -26,6 +26,7 @@
         "@minimalist-apps/local-storage": "workspace:*",
         "@minimalist-apps/connect": "workspace:*",
         "@minimalist-apps/mini-store": "workspace:*",
+        "@minimalist-apps/number": "workspace:*",
         "@minimalist-apps/mobile-native": "workspace:*",
         "@minimalist-apps/type-utils": "workspace:*",
         "@minimalist-apps/window": "workspace:*",

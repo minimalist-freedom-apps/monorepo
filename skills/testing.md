@@ -60,3 +60,9 @@ pnpm test --filter @evolu/common -- Task
 # Run a single test by name (-t flag)
 pnpm test --filter @evolu/common -- -t "yields and returns ok"
 ```
+
+### Data-provider pattern for simple tests
+
+When tests are simple input/output assertions (no setup, no deps, single function call), use `test.each` with a data array instead of repeating test boilerplate. Keep the human-readable description as the second tuple element so it appears in test output via `%s`.
+
+Only use this for simple tests — not for tests that need setup, mocking, or multi-step assertions.

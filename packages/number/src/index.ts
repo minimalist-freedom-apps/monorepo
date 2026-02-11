@@ -1,0 +1,1 @@
+export { isValidNumberInput } from './isValidNumberInput';
