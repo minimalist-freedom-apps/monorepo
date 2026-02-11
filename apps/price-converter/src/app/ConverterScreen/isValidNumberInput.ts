@@ -1,7 +1,12 @@
 export const isValidNumberInput = (value: string): boolean => {
-    if (value === '') {
+    const normalizedValue = value.trim();
+
+    if (normalizedValue === '' || normalizedValue === '-' || normalizedValue.endsWith(',')) {
         return true;
     }
 
-    return /^-?[\d,]*\.?[\d]*$/.test(value);
+    const normalizedValue2 = normalizedValue.replace(/,/g, '');
+
+    // return /^-?[\d,]*\.?[\d]*$/.test(normalizedValue);
+    return !Number.isNaN(Number(normalizedValue2));
 };
