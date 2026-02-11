@@ -7,6 +7,5 @@ export const isValidNumberInput = (value: string): boolean => {
 
     const normalizedValue2 = normalizedValue.replace(/,/g, '');
 
-    // return /^-?[\d,]*\.?[\d]*$/.test(normalizedValue);
     return !Number.isNaN(Number(normalizedValue2));
 };

@@ -9,10 +9,10 @@ import {
 } from '@minimalist-apps/bitcoin';
 import { Input } from '@minimalist-apps/components';
 import { type FiatAmount, formatFiatWithCommas } from '@minimalist-apps/fiat';
+import { isValidNumberInput } from '@minimalist-apps/number';
 import { type FC, useEffect, useState } from 'react';
 import type { BtcMode } from '../../state/State';
 import type { SetFocusedCurrencyDep } from '../../state/setFocusedCurrency';
-import { isValidNumberInput } from './isValidNumberInput';
 import { parseFormattedNumber } from './parseFormattedNumber';
 
 const formatInputValue = (
