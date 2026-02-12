@@ -1,4 +1,4 @@
-import type { EvoluSchema, Query, QueryRows, Row } from '@evolu/common';
+import type { EvoluSchema, Query, Row } from '@evolu/common';
 import type { Subscribable } from '@minimalist-apps/connect';
 import type { EnsureEvoluDep } from './createEnsureEvolu';
 
@@ -7,10 +7,11 @@ import type { EnsureEvoluDep } from './createEnsureEvolu';
  * a component subscribes (mounts). This ensures `ensureEvolu()` is not
  * called at composition root time — only when the UI actually needs data.
  */
-export const createSubscribableQuery = <S extends EvoluSchema, R extends Row>(
+export const createSubscribableQuery = <S extends EvoluSchema, R extends Row, MappedRow>(
     deps: EnsureEvoluDep<S>,
     query: Query<R>,
-): Subscribable<QueryRows<R>> => ({
+    mapRows: (rows: ReadonlyArray<R>) => ReadonlyArray<MappedRow>,
+): Subscribable<ReadonlyArray<MappedRow>> => ({
     subscribe: listener => {
         const { evolu } = deps.ensureEvolu();
         const unsubscribe = evolu.subscribeQuery(query)(listener);
@@ -24,6 +25,6 @@ export const createSubscribableQuery = <S extends EvoluSchema, R extends Row>(
     getState: () => {
         const { evolu } = deps.ensureEvolu();
 
-        return evolu.getQueryRows(query);
+        return mapRows(evolu.getQueryRows(query));
     },
 });

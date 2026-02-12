@@ -7,7 +7,7 @@ import type { ChangeBtcAmountDep } from '../../converter/changeBtcAmount';
 import type { ChangeFiatAmountDep } from '../../converter/changeFiatAmount';
 import type { RemoveCurrencyDep } from '../../converter/removeCurrency';
 import type { ReorderCurrencyDep } from '../../converter/reorderCurrency';
-import type { OrderedCurrency } from '../../state/evolu/getSelectedCurrencies';
+import type { SelectedCurrency } from '../../state/SelectedCurrency/SelectedCurrency';
 import type { CurrencyValues } from '../../state/State';
 import type { AddCurrencyButtonDep } from '../AddCurrencyScreen/AddCurrencyButton';
 import type { RatesLoadingDep } from '../RatesLoading';
@@ -16,7 +16,7 @@ import type { CurrencyRowDep } from './CurrencyFiatRow';
 export type ConverterScreenStateProps = {
     readonly satsAmount: AmountSats;
     readonly fiatAmounts: Readonly<CurrencyValues>;
-    readonly orderedCurrencies: ReadonlyArray<OrderedCurrency>;
+    readonly orderedCurrencies: ReadonlyArray<SelectedCurrency>;
 };
 
 type ConverterScreenDeps = ChangeBtcAmountDep &
