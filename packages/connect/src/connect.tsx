@@ -51,23 +51,31 @@ export const createConnect = <Stores extends SubscribableRecord>(
         const ConnectedComponent: React.FC<unknown> = ownProps => {
             const cacheRef = useRef<
                 | {
-                      readonly storeStates: ReadonlyArray<unknown>;
+                      readonly version: number;
                       readonly mapped: unknown;
                   }
                 | undefined
             >(undefined);
 
-            const getSnapshot = useCallback(() => {
-                const currentStoreStates = storeEntries.map(([, s]) => s.getState());
+            const versionRef = useRef(0);
 
-                if (
-                    cacheRef.current !== undefined &&
-                    currentStoreStates.every((state, i) =>
-                        Object.is(state, cacheRef.current?.storeStates[i]),
-                    )
-                ) {
+            const subscribeWithVersion = useCallback(
+                (callback: Listener) =>
+                    subscribe(() => {
+                        versionRef.current += 1;
+                        callback();
+                    }),
+                [],
+            );
+
+            const getSnapshot = useCallback(() => {
+                const currentVersion = versionRef.current;
+
+                if (cacheRef.current !== undefined && cacheRef.current.version === currentVersion) {
                     return cacheRef.current.mapped;
                 }
+
+                const currentStoreStates = storeEntries.map(([, s]) => s.getState());
 
                 const states: Record<string, unknown> = {};
 
@@ -77,12 +85,12 @@ export const createConnect = <Stores extends SubscribableRecord>(
 
                 const mapped = mapStateToProps(states as StoreStates<Stores>);
 
-                cacheRef.current = { storeStates: currentStoreStates, mapped };
+                cacheRef.current = { version: currentVersion, mapped };
 
                 return mapped;
             }, []);
 
-            const stateProps = useSyncExternalStore(subscribe, getSnapshot);
+            const stateProps = useSyncExternalStore(subscribeWithVersion, getSnapshot);
             const props = {
                 ...(stateProps as object),
                 ...(ownProps as object),
