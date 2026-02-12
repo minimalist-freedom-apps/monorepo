@@ -27,7 +27,7 @@ import { createMain, type Main } from './createMain';
 import { createFetchRatesCompositionRoot } from './rates/fetchRatesCompositionRoot';
 import { createAddCurrency } from './state/addCurrency';
 import { createStore } from './state/createStore';
-import { createGetSelectedCurrencies } from './state/evolu/getSelectedCurrencies';
+import { createGetSelectedCurrencies } from './state/evolu/createGetSelectedCurrencies';
 import { Schema } from './state/evolu/schema';
 import { createLoadInitialState } from './state/localStorage/loadInitialState';
 import { createPersistStore } from './state/localStorage/persistStore';
@@ -96,7 +96,7 @@ export const createCompositionRoot = (): Main => {
     const addCurrency = createAddCurrency({
         store,
         ensureEvolu,
-        getOrderedCurrencies: selectedCurrencies.get,
+        getOrderedCurrencies: selectedCurrencies.getState,
     });
     const removeCurrency = createRemoveCurrency({
         ensureEvolu,
@@ -104,7 +104,7 @@ export const createCompositionRoot = (): Main => {
     });
     const reorderCurrency = createReorderCurrency({
         ensureEvolu,
-        getOrderedCurrencies: selectedCurrencies.get,
+        getOrderedCurrencies: selectedCurrencies.getState,
     });
     const getSelectedCurrencyCodes = () => selectedCurrencies.getState().map(c => c.code);
 
