@@ -41,14 +41,14 @@ export const ConverterScreenPure = (
         deps.changeFiatAmount({ code, value: FiatAmount(code).from(value) });
     };
 
-    const handleReorder = (event: ReorderEvent) => {
-        deps.reorderCurrency({
-            activeId: event.activeId,
-            overId: event.overId,
+    const handleReorder = async (event: ReorderEvent) => {
+        await deps.reorderCurrency({
+            active: event.activeId as CurrencyCode,
+            over: event.overId as CurrencyCode,
         });
     };
 
-    const sortableItems = orderedCurrencies.map(c => ({ ...c, id: c.id }));
+    const sortableItems = orderedCurrencies.map(c => ({ ...c, id: c.code }));
 
     return (
         <Screen gap={12}>

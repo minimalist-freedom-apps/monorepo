@@ -3,8 +3,11 @@ import { satsToBtc } from '@minimalist-apps/bitcoin';
 import { generateIndexBetween } from '@minimalist-apps/fractional-indexing';
 import { bitcoinToFiat } from '../converter/bitcoinToFiat';
 import type { StoreDep } from './createStore';
-import type { EnsureEvoluDep } from './evolu/schema';
+import type { GetSelectedCurrenciesDep } from './evolu/createGetSelectedCurrencies';
+import type { EnsureEvoluStorageDep } from './evolu/schema';
 import type { SelectedCurrency } from './SelectedCurrency/SelectedCurrency';
+
+type AddCurrencyAllDeps = StoreDep & EnsureEvoluStorageDep & GetSelectedCurrenciesDep;
 
 export interface AddCurrencyParams {
     readonly code: CurrencyCode;
@@ -15,14 +18,6 @@ export type AddCurrency = (params: AddCurrencyParams) => void;
 export interface AddCurrencyDep {
     readonly addCurrency: AddCurrency;
 }
-
-export type GetOrderedCurrencies = () => ReadonlyArray<SelectedCurrency>;
-
-interface AddCurrencyDeps {
-    readonly getOrderedCurrencies: GetOrderedCurrencies;
-}
-
-type AddCurrencyAllDeps = StoreDep & EnsureEvoluDep & AddCurrencyDeps;
 
 export const createAddCurrency =
     (deps: AddCurrencyAllDeps): AddCurrency =>
@@ -44,7 +39,7 @@ export const createAddCurrency =
         const newOrder = generateIndexBetween(lastIndex, null);
 
         // Upsert currency into Evolu (will insert if not exists, update if exists)
-        const { evolu, shardOwner } = deps.ensureEvolu();
+        const { evolu, shardOwner } = deps.ensureEvoluStorage();
         evolu.upsert(
             'currency',
             {

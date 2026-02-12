@@ -1,5 +1,5 @@
 import { type CurrencyCode, createIdFromString, sqliteTrue } from '@evolu/common';
-import type { EnsureEvoluDep } from '../state/evolu/schema';
+import type { EnsureEvoluStorageDep } from '../state/evolu/schema';
 import type { RemoveFiatAmountDep } from '../state/removeFiatAmount';
 
 export interface RemoveCurrencyParams {
@@ -12,12 +12,12 @@ export interface RemoveCurrencyDep {
     readonly removeCurrency: RemoveCurrency;
 }
 
-type RemoveCurrencyDeps = EnsureEvoluDep & RemoveFiatAmountDep;
+type RemoveCurrencyDeps = EnsureEvoluStorageDep & RemoveFiatAmountDep;
 
 export const createRemoveCurrency =
     (deps: RemoveCurrencyDeps): RemoveCurrency =>
     ({ code }) => {
-        const { evolu, shardOwner } = deps.ensureEvolu();
+        const { evolu, shardOwner } = deps.ensureEvoluStorage();
         evolu.upsert(
             'currency',
             {

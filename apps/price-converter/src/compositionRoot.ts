@@ -28,6 +28,7 @@ import { createFetchRatesCompositionRoot } from './rates/fetchRatesCompositionRo
 import { createAddCurrency } from './state/addCurrency';
 import { createStore } from './state/createStore';
 import { createGetSelectedCurrencies } from './state/evolu/createGetSelectedCurrencies';
+import { createSelectedCurrenciesStore } from './state/evolu/createSelectedCurrenciesStore';
 import { Schema } from './state/evolu/schema';
 import { createLoadInitialState } from './state/localStorage/loadInitialState';
 import { createPersistStore } from './state/localStorage/persistStore';
@@ -62,14 +63,6 @@ export const createCompositionRoot = (): Main => {
         localStorage,
     });
 
-    // Todo: remove, part of the Evolu query dependency hack.
-    //
-    // Restore persisted state (mnemonic, rates, etc.) BEFORE Evolu initializes.
-    // ensureEvoluOwner reads the mnemonic from the store — if we don't load it
-    // first, a brand new mnemonic is created on every page refresh, losing all
-    // data from the previous session.
-    loadInitialState();
-
     const persistStore = createPersistStore({ store, localStorage });
 
     const statePersistence = createStatePersistence({
@@ -80,33 +73,37 @@ export const createCompositionRoot = (): Main => {
 
     // Evolu
     const ensureEvoluOwner = createEnsureEvoluOwner({ store });
-    const ensureEvolu = createEnsureEvolu({
+    const ensureEvoluStorage = createEnsureEvolu({
         deps: { ensureEvoluOwner },
         schema: Schema,
         appName: 'price-converter',
         shardPath: ['minimalist-apps', 'price-converter'],
     });
-    const selectedCurrencies = createGetSelectedCurrencies({ ensureEvolu });
 
-    const connect = createConnect({ store, selectedCurrencies: selectedCurrencies.subscribable });
+    const selectedCurrenciesStore = createSelectedCurrenciesStore({
+        ensureEvoluStorage,
+    });
+    const getSelectedCurrencies = createGetSelectedCurrencies({ ensureEvoluStorage });
+
+    const connect = createConnect({ store, selectedCurrencies: selectedCurrenciesStore });
 
     // Fetch Rates
     const fetchRates = createFetchRatesCompositionRoot();
 
     const addCurrency = createAddCurrency({
         store,
-        ensureEvolu,
-        getOrderedCurrencies: selectedCurrencies.getState,
+        ensureEvoluStorage,
+        getSelectedCurrencies,
     });
     const removeCurrency = createRemoveCurrency({
-        ensureEvolu,
+        ensureEvoluStorage,
         removeFiatAmount,
     });
     const reorderCurrency = createReorderCurrency({
-        ensureEvolu,
-        getOrderedCurrencies: selectedCurrencies.getState,
+        ensureEvoluStorage,
+        getSelectedCurrencies,
     });
-    const getSelectedCurrencyCodes = () => selectedCurrencies.getState().map(c => c.code);
+    const getSelectedCurrencyCodes = () => selectedCurrenciesStore.getState().map(c => c.code);
 
     const recalculateFromBtc = createRecalculateFromBtc({
         store,

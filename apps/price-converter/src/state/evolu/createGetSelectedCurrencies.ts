@@ -1,36 +1,22 @@
-import type { Subscribable } from '@minimalist-apps/connect';
-import { createSubscribableQuery } from '@minimalist-apps/evolu';
 import { mapSelectedCurrencyFromEvolu } from '../SelectedCurrency/mapSelectedCurrencyFromEvolu';
 import type { SelectedCurrency } from '../SelectedCurrency/SelectedCurrency';
 import { allSelectedCurrenciesQuery } from './allSelectedCurrenciesQuery';
-import type { EnsureEvoluDep } from './schema';
+import type { EnsureEvoluStorageDep } from './schema';
 
-export interface GetSelectedCurrencies {
-    readonly subscribable: Subscribable<ReadonlyArray<SelectedCurrency>>;
-    readonly getState: () => ReadonlyArray<SelectedCurrency>;
-    readonly get: () => Promise<ReadonlyArray<SelectedCurrency>>;
-}
+export type GetSelectedCurrencies = () => Promise<ReadonlyArray<SelectedCurrency>>;
 
-type GetSelectedCurrenciesDeps = EnsureEvoluDep;
+type GetSelectedCurrenciesDeps = EnsureEvoluStorageDep;
 
 export interface GetSelectedCurrenciesDep {
     readonly getSelectedCurrencies: GetSelectedCurrencies;
 }
 
-export const createGetSelectedCurrencies = (
-    deps: GetSelectedCurrenciesDeps,
-): GetSelectedCurrencies => {
-    const query = allSelectedCurrenciesQuery(deps.ensureEvolu());
-    const subscribable = createSubscribableQuery(deps, query, mapSelectedCurrencyFromEvolu);
+export const createGetSelectedCurrencies =
+    (deps: GetSelectedCurrenciesDeps): GetSelectedCurrencies =>
+    async () => {
+        const storage = deps.ensureEvoluStorage();
+        const query = allSelectedCurrenciesQuery(storage);
+        const result = await storage.evolu.loadQuery(query);
 
-    return {
-        subscribable,
-        getState: subscribable.getState,
-        get: async (): Promise<ReadonlyArray<SelectedCurrency>> => {
-            const { evolu } = deps.ensureEvolu();
-            const result = await evolu.loadQuery(query);
-
-            return mapSelectedCurrencyFromEvolu(result);
-        },
+        return mapSelectedCurrencyFromEvolu(result);
     };
-};

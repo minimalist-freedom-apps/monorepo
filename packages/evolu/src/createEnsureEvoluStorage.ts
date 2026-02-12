@@ -85,7 +85,7 @@ const createEvoluStorage = <S extends EvoluSchema>({
 export type EnsureEvoluStorage<S extends EvoluSchema> = () => EvoluStorage<S>;
 
 export interface EnsureEvoluDep<S extends EvoluSchema> {
-    readonly ensureEvolu: EnsureEvoluStorage<S>;
+    readonly ensureEvoluStorage: EnsureEvoluStorage<S>;
 }
 
 interface CreateEnsureEvoluProps<S extends EvoluSchema> {
@@ -95,7 +95,7 @@ interface CreateEnsureEvoluProps<S extends EvoluSchema> {
     readonly shardPath: NonEmptyReadonlyArray<string | number>;
 }
 
-export const createEnsureEvolu = <S extends EvoluSchema>({
+export const createEnsureEvoluStorage = <S extends EvoluSchema>({
     deps,
     schema,
     appName,

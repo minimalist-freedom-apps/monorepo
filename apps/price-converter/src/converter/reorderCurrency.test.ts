@@ -1,7 +1,7 @@
 import { CurrencyCode, getOrThrow } from '@evolu/common';
 import { asFractionalIndex } from '@minimalist-apps/fractional-indexing';
 import { describe, expect, test, vi } from 'vitest';
-import type { EnsureEvoluDep } from '../state/evolu/schema.js';
+import type { EnsureEvoluStorageDep } from '../state/evolu/schema.js';
 import type { SelectedCurrency } from '../state/SelectedCurrency/SelectedCurrency.js';
 import { createReorderCurrency } from './reorderCurrency.js';
 
@@ -24,7 +24,7 @@ const createTestDeps = (orderedCurrencies: ReadonlyArray<SelectedCurrency>) => {
         ensureEvolu: (() => ({
             evolu,
             shardOwner,
-        })) as unknown as EnsureEvoluDep['ensureEvolu'],
+        })) as unknown as EnsureEvoluStorageDep['ensureEvoluStorage'],
         getOrderedCurrencies: () => orderedCurrencies,
         upsert,
         shardOwner,
@@ -157,7 +157,7 @@ describe(createReorderCurrency.name, () => {
             ensureEvolu: (() => ({
                 evolu: { upsert },
                 shardOwner: { id: 'owner' },
-            })) as unknown as EnsureEvoluDep['ensureEvolu'],
+            })) as unknown as EnsureEvoluStorageDep['ensureEvoluStorage'],
             getOrderedCurrencies,
         };
         const reorderCurrency = createReorderCurrency(deps);
