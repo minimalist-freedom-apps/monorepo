@@ -11,13 +11,14 @@ import type { FetchAndStoreRatesDep } from '../converter/fetchAndStoreRates';
 import type { NavigateDep } from '../state/navigate';
 import type { BtcMode } from '../state/State';
 import type { SetBtcModeDep } from '../state/setBtcMode';
+import type { DebugHeaderDep } from './DebugHeader';
 
 export type AppHeaderStateProps = {
     readonly loading: boolean;
     readonly mode: BtcMode;
 };
 
-type AppHeaderDeps = FetchAndStoreRatesDep & NavigateDep & SetBtcModeDep;
+type AppHeaderDeps = FetchAndStoreRatesDep & NavigateDep & SetBtcModeDep & DebugHeaderDep;
 
 export type AppHeaderDep = {
     readonly AppHeader: FC;
@@ -38,6 +39,7 @@ export const AppHeaderPure = (deps: AppHeaderDeps, { loading, mode }: AppHeaderS
 
     return (
         <AppHeader title={config.appShortName} onTitleClick={handleHome}>
+            <deps.DebugHeader />
             <strong>₿</strong>
             <Switch disableStateBgColorChange checked={mode === 'sats'} onChange={handleToggle} />
             <strong>丰</strong>

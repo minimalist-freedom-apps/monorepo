@@ -11,7 +11,9 @@ import { type AppLayoutProps, AppLayoutPure } from './app/AppLayout';
 import { ConverterScreenPure } from './app/ConverterScreen/ConverterScreen';
 import { CurrencyRowPure } from './app/ConverterScreen/CurrencyFiatRow';
 import { CurrencyInputPure } from './app/ConverterScreen/CurrencyInput';
+import { DebugHeaderPure } from './app/DebugHeader';
 import { RatesLoadingPure } from './app/RatesLoading';
+import { DebugSettingsPure } from './app/SettingsScreen/DebugSettings';
 import { MnemonicSettingsPure } from './app/SettingsScreen/MnemonicSettings';
 import { SettingsScreenPure } from './app/SettingsScreen/SettingsScreen';
 import { ThemeSettingsPure } from './app/SettingsScreen/ThemeSettings';
@@ -36,6 +38,7 @@ import { createStatePersistence } from './state/localStorage/statePersistence';
 import { createNavigate } from './state/navigate';
 import { createRemoveFiatAmount } from './state/removeFiatAmount';
 import { createSetBtcMode } from './state/setBtcMode';
+import { createSetDebugMode } from './state/setDebugMode';
 import { createSetFiatAmount } from './state/setFiatAmount';
 import { createSetFocusedCurrency } from './state/setFocusedCurrency';
 import { createSetSatsAmount } from './state/setSatsAmount';
@@ -50,6 +53,7 @@ export const createCompositionRoot = (): Main => {
     // Store
     const store = createStore();
     const setTheme = createSetTheme({ store });
+    const setDebugMode = createSetDebugMode({ store });
     const navigate = createNavigate({ store });
     const setSatsAmount = createSetSatsAmount({ store });
     const setFiatAmount = createSetFiatAmount({ store });
@@ -74,7 +78,12 @@ export const createCompositionRoot = (): Main => {
     // Evolu
     const ensureEvoluOwner = createEnsureEvoluOwner({ store });
     const ensureEvoluStorage = createEnsureEvolu({
-        deps: { ensureEvoluOwner },
+        deps: {
+            ensureEvoluOwner,
+            onShardOwnerCreated: shardOwner => {
+                store.setState({ evoluOwnerId: shardOwner.id });
+            },
+        },
         schema: Schema,
         appName: 'price-converter',
         shardPath: ['minimalist-apps', 'price-converter'],
@@ -83,6 +92,7 @@ export const createCompositionRoot = (): Main => {
     const selectedCurrenciesStore = createSelectedCurrenciesStore({
         ensureEvoluStorage,
     });
+
     const getSelectedCurrencies = createGetSelectedCurrencies({ ensureEvoluStorage });
 
     const connect = createConnect({ store, selectedCurrencies: selectedCurrenciesStore });
@@ -189,6 +199,14 @@ export const createCompositionRoot = (): Main => {
         setTheme,
     });
 
+    const DebugSettings = connect(
+        DebugSettingsPure,
+        ({ store }) => ({ debugMode: store.debugMode }),
+        {
+            setDebugMode,
+        },
+    );
+
     const MnemonicSettings = connect(MnemonicSettingsPure, ({ store }) => ({
         evoluMnemonic: store.evoluMnemonic,
     }));
@@ -196,6 +214,7 @@ export const createCompositionRoot = (): Main => {
     const SettingsScreen = () =>
         SettingsScreenPure({
             ThemeSettings,
+            DebugSettings,
             MnemonicSettings,
         });
 
@@ -211,6 +230,11 @@ export const createCompositionRoot = (): Main => {
         },
     );
 
+    const DebugHeader = connect(DebugHeaderPure, ({ store }) => ({
+        debugMode: store.debugMode,
+        ownerId: store.evoluOwnerId,
+    }));
+
     const AppHeader = connect(
         AppHeaderPure,
         ({ store }) => ({
@@ -221,6 +245,7 @@ export const createCompositionRoot = (): Main => {
             fetchAndStoreRates,
             setBtcMode,
             navigate,
+            DebugHeader,
         },
     );
 

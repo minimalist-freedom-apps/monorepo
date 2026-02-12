@@ -8,10 +8,31 @@ interface CodeProps {
     readonly children: string;
     readonly onClick?: () => void;
     readonly copyable?: boolean;
+    readonly inline?: boolean;
 }
 
-export const Code = ({ children, onClick, copyable = false }: CodeProps) => {
+export const Code = ({ children, onClick, copyable = false, inline = false }: CodeProps) => {
     const theme = useTheme();
+
+    if (inline) {
+        return (
+            <Typography.Text
+                copyable={copyable}
+                onClick={onClick}
+                style={{
+                    cursor: onClick ? 'pointer' : 'default',
+                    margin: 0,
+                    padding: '2px 6px',
+                    borderRadius: 6,
+                    fontFamily: 'monospace',
+                    whiteSpace: 'pre-wrap',
+                    backgroundColor: COLORS[theme].elevation2,
+                }}
+            >
+                {children}
+            </Typography.Text>
+        );
+    }
 
     return (
         <AntCard
