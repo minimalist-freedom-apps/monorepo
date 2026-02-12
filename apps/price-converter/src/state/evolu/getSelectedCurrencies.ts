@@ -1,54 +1,13 @@
-import type { CurrencyCode, Query, Row } from '@evolu/common';
 import { sqliteTrue } from '@evolu/common';
-import {
-    asFractionalIndex,
-    compareFractionalIndex,
-    type FractionalIndex,
-} from '@minimalist-apps/fractional-indexing';
+import type { Subscribable } from '@minimalist-apps/connect';
+import { createSubscribableQuery } from '@minimalist-apps/evolu';
+import { mapSelectedCurrencyFromEvolu } from '../SelectedCurrency/mapSelectedCurrencyFromEvolu';
+import type { SelectedCurrency } from '../SelectedCurrency/SelectedCurrency';
 import type { EnsureEvoluDep } from './schema';
 
-export interface SelectedCurrencyRow extends Row {
-    readonly id: string;
-    readonly currency: CurrencyCode | null;
-    readonly order: FractionalIndex | null;
-}
-
-export interface OrderedCurrency {
-    readonly id: string;
-    readonly code: CurrencyCode;
-    readonly order: FractionalIndex;
-}
-
-export const selectCurrencyCodes = (
-    rows: ReadonlyArray<SelectedCurrencyRow>,
-): ReadonlyArray<CurrencyCode> =>
-    rows.flatMap(row => (row.currency === null ? [] : [row.currency]));
-
-/**
- * Select currencies with their order info, sorted by fractional index.
- * Currencies without an order are placed at the end with a synthetic key.
- */
-export const selectOrderedCurrencies = (
-    rows: ReadonlyArray<SelectedCurrencyRow>,
-): ReadonlyArray<OrderedCurrency> =>
-    rows
-        .flatMap(row =>
-            row.currency === null
-                ? []
-                : [
-                      {
-                          id: row.id,
-                          code: row.currency,
-                          order: row.order ?? asFractionalIndex('~'),
-                      },
-                  ],
-        )
-        .toSorted((a, b) => compareFractionalIndex(a.order, b.order));
-
 export interface GetSelectedCurrencies {
-    /** @deprecated With new Evolu, this wont be needed */
-    readonly query: Query<SelectedCurrencyRow>;
-    readonly get: () => Promise<CurrencyCode[]>;
+    readonly subscribable: Subscribable<ReadonlyArray<SelectedCurrency>>;
+    readonly get: () => Promise<ReadonlyArray<SelectedCurrency>>;
 }
 
 type GetSelectedCurrenciesDeps = EnsureEvoluDep;
@@ -61,7 +20,7 @@ export const createGetSelectedCurrencies = (
     deps: GetSelectedCurrenciesDeps,
 ): GetSelectedCurrencies => {
     const { evolu, shardOwner } = deps.ensureEvolu();
-    const query: Query<SelectedCurrencyRow> = evolu.createQuery(db =>
+    const query = evolu.createQuery(db =>
         db
             .selectFrom('currency')
             .select(['id', 'currency', 'order'])
@@ -69,11 +28,12 @@ export const createGetSelectedCurrencies = (
             .where('ownerId', '=', shardOwner.id),
     );
 
-    const get = async (): Promise<CurrencyCode[]> => {
-        const result = await evolu.loadQuery(query);
+    return {
+        subscribable: createSubscribableQuery(deps, query, mapSelectedCurrencyFromEvolu),
+        get: async (): Promise<ReadonlyArray<SelectedCurrency>> => {
+            const result = await evolu.loadQuery(query);
 
-        return result.filter(row => row.currency !== null).map(row => row.currency as CurrencyCode);
+            return mapSelectedCurrencyFromEvolu(result);
+        },
     };
-
-    return { query, get };
 };

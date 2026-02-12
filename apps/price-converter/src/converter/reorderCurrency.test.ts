@@ -1,8 +1,8 @@
 import { CurrencyCode, getOrThrow } from '@evolu/common';
 import { asFractionalIndex } from '@minimalist-apps/fractional-indexing';
 import { describe, expect, test, vi } from 'vitest';
-import type { OrderedCurrency } from '../state/evolu/getSelectedCurrencies.js';
 import type { EnsureEvoluDep } from '../state/evolu/schema.js';
+import type { SelectedCurrency } from '../state/SelectedCurrency/SelectedCurrency.js';
 import { createReorderCurrency } from './reorderCurrency.js';
 
 const USD = getOrThrow(CurrencyCode.from('USD'));
@@ -10,13 +10,12 @@ const EUR = getOrThrow(CurrencyCode.from('EUR'));
 const GBP = getOrThrow(CurrencyCode.from('GBP'));
 const JPY = getOrThrow(CurrencyCode.from('JPY'));
 
-const createTestCurrency = (code: CurrencyCode, order: string): OrderedCurrency => ({
-    id: code,
+const createTestCurrency = (code: CurrencyCode, order: string): SelectedCurrency => ({
     code,
     order: asFractionalIndex(order),
 });
 
-const createTestDeps = (orderedCurrencies: ReadonlyArray<OrderedCurrency>) => {
+const createTestDeps = (orderedCurrencies: ReadonlyArray<SelectedCurrency>) => {
     const upsert = vi.fn();
     const shardOwner = { id: 'test-owner' };
     const evolu = { upsert };
@@ -42,7 +41,7 @@ describe(createReorderCurrency.name, () => {
         const deps = createTestDeps(currencies);
         const reorderCurrency = createReorderCurrency(deps);
 
-        reorderCurrency({ activeId: USD, overId: GBP });
+        reorderCurrency({ active: USD, over: GBP });
 
         expect(deps.upsert).toHaveBeenCalledOnce();
         const [table, row] = deps.upsert.mock.calls[0];
@@ -63,7 +62,7 @@ describe(createReorderCurrency.name, () => {
         const deps = createTestDeps(currencies);
         const reorderCurrency = createReorderCurrency(deps);
 
-        reorderCurrency({ activeId: GBP, overId: USD });
+        reorderCurrency({ active: GBP, over: USD });
 
         expect(deps.upsert).toHaveBeenCalledOnce();
         const [table, row] = deps.upsert.mock.calls[0];
@@ -83,7 +82,7 @@ describe(createReorderCurrency.name, () => {
         const deps = createTestDeps(currencies);
         const reorderCurrency = createReorderCurrency(deps);
 
-        reorderCurrency({ activeId: EUR, overId: USD });
+        reorderCurrency({ active: EUR, over: USD });
 
         expect(deps.upsert).toHaveBeenCalledOnce();
         const [table, row] = deps.upsert.mock.calls[0];
@@ -103,7 +102,7 @@ describe(createReorderCurrency.name, () => {
         const deps = createTestDeps(currencies);
         const reorderCurrency = createReorderCurrency(deps);
 
-        reorderCurrency({ activeId: USD, overId: GBP });
+        reorderCurrency({ active: USD, over: GBP });
 
         expect(deps.upsert).toHaveBeenCalledOnce();
         const [table, row] = deps.upsert.mock.calls[0];
@@ -115,32 +114,12 @@ describe(createReorderCurrency.name, () => {
         expect(row.order > 'a2').toBe(true);
     });
 
-    test('does nothing when activeId is not found', () => {
-        const currencies = [createTestCurrency(USD, 'a0'), createTestCurrency(EUR, 'a1')];
-        const deps = createTestDeps(currencies);
-        const reorderCurrency = createReorderCurrency(deps);
-
-        reorderCurrency({ activeId: 'UNKNOWN', overId: USD });
-
-        expect(deps.upsert).not.toHaveBeenCalled();
-    });
-
-    test('does nothing when overId is not found', () => {
-        const currencies = [createTestCurrency(USD, 'a0'), createTestCurrency(EUR, 'a1')];
-        const deps = createTestDeps(currencies);
-        const reorderCurrency = createReorderCurrency(deps);
-
-        reorderCurrency({ activeId: USD, overId: 'UNKNOWN' });
-
-        expect(deps.upsert).not.toHaveBeenCalled();
-    });
-
     test('passes shardOwner id to upsert', () => {
         const currencies = [createTestCurrency(USD, 'a0'), createTestCurrency(EUR, 'a1')];
         const deps = createTestDeps(currencies);
         const reorderCurrency = createReorderCurrency(deps);
 
-        reorderCurrency({ activeId: USD, overId: EUR });
+        reorderCurrency({ active: USD, over: EUR });
 
         expect(deps.upsert).toHaveBeenCalledOnce();
         const [, , options] = deps.upsert.mock.calls[0];
@@ -158,7 +137,7 @@ describe(createReorderCurrency.name, () => {
         const reorderCurrency = createReorderCurrency(deps);
 
         // Move EUR (index 1) to where JPY is (index 3)
-        reorderCurrency({ activeId: EUR, overId: JPY });
+        reorderCurrency({ active: EUR, over: JPY });
 
         expect(deps.upsert).toHaveBeenCalledOnce();
         const [, row] = deps.upsert.mock.calls[0];
@@ -183,7 +162,7 @@ describe(createReorderCurrency.name, () => {
         };
         const reorderCurrency = createReorderCurrency(deps);
 
-        reorderCurrency({ activeId: USD, overId: EUR });
+        reorderCurrency({ active: USD, over: EUR });
 
         expect(getOrderedCurrencies).toHaveBeenCalledOnce();
     });

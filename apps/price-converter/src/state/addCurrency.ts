@@ -3,8 +3,8 @@ import { satsToBtc } from '@minimalist-apps/bitcoin';
 import { generateIndexBetween } from '@minimalist-apps/fractional-indexing';
 import { bitcoinToFiat } from '../converter/bitcoinToFiat';
 import type { StoreDep } from './createStore';
-import type { OrderedCurrency } from './evolu/getSelectedCurrencies';
 import type { EnsureEvoluDep } from './evolu/schema';
+import type { SelectedCurrency } from './SelectedCurrency/SelectedCurrency';
 
 export interface AddCurrencyParams {
     readonly code: CurrencyCode;
@@ -16,7 +16,7 @@ export interface AddCurrencyDep {
     readonly addCurrency: AddCurrency;
 }
 
-export type GetOrderedCurrencies = () => ReadonlyArray<OrderedCurrency>;
+export type GetOrderedCurrencies = () => ReadonlyArray<SelectedCurrency>;
 
 interface AddCurrencyDeps {
     readonly getOrderedCurrencies: GetOrderedCurrencies;
@@ -38,7 +38,7 @@ export const createAddCurrency =
         // Compute order: place at end of list
         const orderedCurrencies = deps.getOrderedCurrencies();
         const lastItem = orderedCurrencies[orderedCurrencies.length - 1] as
-            | OrderedCurrency
+            | SelectedCurrency
             | undefined;
         const lastIndex = lastItem !== undefined ? lastItem.order : null;
         const newOrder = generateIndexBetween(lastIndex, null);

@@ -1,10 +1,6 @@
 import { createConnect } from '@minimalist-apps/connect';
 import { createCurrentDateTime } from '@minimalist-apps/datetime';
-import {
-    createEnsureEvolu,
-    createEnsureEvoluOwner,
-    createSubscribableQuery,
-} from '@minimalist-apps/evolu';
+import { createEnsureEvolu, createEnsureEvoluOwner } from '@minimalist-apps/evolu';
 import { createLocalStorage } from '@minimalist-apps/local-storage';
 import { createWindow } from '@minimalist-apps/window';
 import { AddCurrencyButtonPure } from './app/AddCurrencyScreen/AddCurrencyButton';
@@ -31,11 +27,7 @@ import { createMain, type Main } from './createMain';
 import { createFetchRatesCompositionRoot } from './rates/fetchRatesCompositionRoot';
 import { createAddCurrency } from './state/addCurrency';
 import { createStore } from './state/createStore';
-import {
-    createGetSelectedCurrencies,
-    selectCurrencyCodes,
-    selectOrderedCurrencies,
-} from './state/evolu/getSelectedCurrencies';
+import { createGetSelectedCurrencies } from './state/evolu/getSelectedCurrencies';
 import { Schema } from './state/evolu/schema';
 import { createLoadInitialState } from './state/localStorage/loadInitialState';
 import { createPersistStore } from './state/localStorage/persistStore';
@@ -94,23 +86,17 @@ export const createCompositionRoot = (): Main => {
         appName: 'price-converter',
         shardPath: ['minimalist-apps', 'price-converter'],
     });
-    const getSelectedCurrencies = createGetSelectedCurrencies({ ensureEvolu });
-    const selectedCurrencies = createSubscribableQuery(
-        { ensureEvolu },
-        getSelectedCurrencies.query,
-    );
+    const selectedCurrencies = createGetSelectedCurrencies({ ensureEvolu });
 
-    const connect = createConnect({ store, selectedCurrencies });
+    const connect = createConnect({ store, selectedCurrencies: selectedCurrencies.subscribable });
 
     // Fetch Rates
     const fetchRates = createFetchRatesCompositionRoot();
 
-    // Converter - This is juicy business logic
-    const getOrderedCurrenciesFn = () => selectOrderedCurrencies(selectedCurrencies.getState());
     const addCurrency = createAddCurrency({
         store,
         ensureEvolu,
-        getOrderedCurrencies: getOrderedCurrenciesFn,
+        getOrderedCurrencies: selectedCurrencies.get,
     });
     const removeCurrency = createRemoveCurrency({
         ensureEvolu,
@@ -118,9 +104,9 @@ export const createCompositionRoot = (): Main => {
     });
     const reorderCurrency = createReorderCurrency({
         ensureEvolu,
-        getOrderedCurrencies: getOrderedCurrenciesFn,
+        getOrderedCurrencies: selectedCurrencies.get,
     });
-    const getSelectedCurrencyCodes = () => selectCurrencyCodes(selectedCurrencies.getState());
+    const getSelectedCurrencyCodes = () => selectedCurrencies.getState().map(c => c.code);
 
     const recalculateFromBtc = createRecalculateFromBtc({
         store,
@@ -186,7 +172,7 @@ export const createCompositionRoot = (): Main => {
         ({ store, selectedCurrencies }) => ({
             satsAmount: store.satsAmount,
             fiatAmounts: store.fiatAmounts,
-            orderedCurrencies: selectOrderedCurrencies(selectedCurrencies),
+            orderedCurrencies: selectedCurrencies,
         }),
         {
             // Services
@@ -220,7 +206,7 @@ export const createCompositionRoot = (): Main => {
         AddCurrencyScreenPure,
         ({ store, selectedCurrencies }) => ({
             rates: store.rates,
-            selectedCurrencies: selectCurrencyCodes(selectedCurrencies),
+            selectedCurrencies: selectedCurrencies.map(c => c.code),
         }),
         {
             addCurrency,
