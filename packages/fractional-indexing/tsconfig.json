@@ -1,0 +1,4 @@
+{
+    "extends": "@minimalist-apps/tsconfig/library.json",
+    "include": ["src"]
+}

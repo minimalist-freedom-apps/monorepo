@@ -30,6 +30,8 @@ export { Mnemonic } from './Mnemonic';
 export { Screen } from './Screen';
 export { SearchInput } from './SearchInput';
 export { SettingsRow } from './SettingsRow';
+export type { ReorderEvent, SortableItem } from './SortableList';
+export { SortableList } from './SortableList';
 export { Switch } from './Switch';
 export { ThemeProvider, useTheme } from './ThemeProvider';
 export { Paragraph, Text, Title } from './Typography';

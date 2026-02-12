@@ -26,6 +26,7 @@ import { createFetchAndStoreRates } from './converter/fetchAndStoreRates';
 import { createRecalculateFromBtc } from './converter/recalculateFromBtc';
 import { createRecalculateFromCurrency } from './converter/recalculateFromCurrency';
 import { createRemoveCurrency } from './converter/removeCurrency';
+import { createReorderCurrency } from './converter/reorderCurrency';
 import { createMain, type Main } from './createMain';
 import { createFetchRatesCompositionRoot } from './rates/fetchRatesCompositionRoot';
 import { createAddCurrency } from './state/addCurrency';
@@ -33,6 +34,7 @@ import { createStore } from './state/createStore';
 import {
     createGetSelectedCurrencies,
     selectCurrencyCodes,
+    selectOrderedCurrencies,
 } from './state/evolu/getSelectedCurrencies';
 import { Schema } from './state/evolu/schema';
 import { createLoadInitialState } from './state/localStorage/loadInitialState';
@@ -97,10 +99,19 @@ export const createCompositionRoot = (): Main => {
     const fetchRates = createFetchRatesCompositionRoot();
 
     // Converter - This is juicy business logic
-    const addCurrency = createAddCurrency({ store, ensureEvolu });
+    const getOrderedCurrenciesFn = () => selectOrderedCurrencies(selectedCurrencies.getState());
+    const addCurrency = createAddCurrency({
+        store,
+        ensureEvolu,
+        getOrderedCurrencies: getOrderedCurrenciesFn,
+    });
     const removeCurrency = createRemoveCurrency({
         ensureEvolu,
         removeFiatAmount,
+    });
+    const reorderCurrency = createReorderCurrency({
+        ensureEvolu,
+        getOrderedCurrencies: getOrderedCurrenciesFn,
     });
     const getSelectedCurrencyCodes = () => selectCurrencyCodes(selectedCurrencies.getState());
 
@@ -168,13 +179,14 @@ export const createCompositionRoot = (): Main => {
         ({ store, selectedCurrencies }) => ({
             satsAmount: store.satsAmount,
             fiatAmounts: store.fiatAmounts,
-            selectedCurrencies: selectCurrencyCodes(selectedCurrencies),
+            orderedCurrencies: selectOrderedCurrencies(selectedCurrencies),
         }),
         {
             // Services
             changeBtcAmount,
             changeFiatAmount,
             removeCurrency,
+            reorderCurrency,
 
             // Components
             AddCurrencyButton,

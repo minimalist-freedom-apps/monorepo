@@ -1,7 +1,9 @@
 import { type CurrencyCode, createIdFromString } from '@evolu/common';
 import { satsToBtc } from '@minimalist-apps/bitcoin';
+import { generateIndexBetween } from '@minimalist-apps/fractional-indexing';
 import { bitcoinToFiat } from '../converter/bitcoinToFiat';
 import type { StoreDep } from './createStore';
+import type { OrderedCurrency } from './evolu/getSelectedCurrencies';
 import type { EnsureEvoluDep } from './evolu/schema';
 
 export interface AddCurrencyParams {
@@ -14,10 +16,16 @@ export interface AddCurrencyDep {
     readonly addCurrency: AddCurrency;
 }
 
-type AddCurrencyDeps = StoreDep & EnsureEvoluDep;
+export type GetOrderedCurrencies = () => ReadonlyArray<OrderedCurrency>;
+
+interface AddCurrencyDeps {
+    readonly getOrderedCurrencies: GetOrderedCurrencies;
+}
+
+type AddCurrencyAllDeps = StoreDep & EnsureEvoluDep & AddCurrencyDeps;
 
 export const createAddCurrency =
-    (deps: AddCurrencyDeps): AddCurrency =>
+    (deps: AddCurrencyAllDeps): AddCurrency =>
     ({ code }) => {
         const { fiatAmounts, satsAmount, rates } = deps.store.getState();
 
@@ -27,6 +35,14 @@ export const createAddCurrency =
 
         const btcAmount = satsToBtc(satsAmount);
 
+        // Compute order: place at end of list
+        const orderedCurrencies = deps.getOrderedCurrencies();
+        const lastItem = orderedCurrencies[orderedCurrencies.length - 1] as
+            | OrderedCurrency
+            | undefined;
+        const lastIndex = lastItem !== undefined ? lastItem.order : null;
+        const newOrder = generateIndexBetween(lastIndex, null);
+
         // Upsert currency into Evolu (will insert if not exists, update if exists)
         const { evolu, shardOwner } = deps.ensureEvolu();
         evolu.upsert(
@@ -34,6 +50,7 @@ export const createAddCurrency =
             {
                 id: createIdFromString<'CurrencyId'>(code),
                 currency: code,
+                order: newOrder,
             },
             { ownerId: shardOwner.id },
         );

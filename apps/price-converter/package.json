@@ -23,6 +23,7 @@
         "@minimalist-apps/datetime": "workspace:*",
         "@minimalist-apps/evolu": "workspace:*",
         "@minimalist-apps/fiat": "workspace:*",
+        "@minimalist-apps/fractional-indexing": "workspace:*",
         "@minimalist-apps/local-storage": "workspace:*",
         "@minimalist-apps/connect": "workspace:*",
         "@minimalist-apps/mini-store": "workspace:*",

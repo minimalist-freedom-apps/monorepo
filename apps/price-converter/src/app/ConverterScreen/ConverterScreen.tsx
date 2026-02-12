@@ -1,11 +1,13 @@
 import type { CurrencyCode } from '@evolu/common';
 import type { AmountSats } from '@minimalist-apps/bitcoin';
-import { Screen } from '@minimalist-apps/components';
+import { type ReorderEvent, Screen, SortableList } from '@minimalist-apps/components';
 import { FiatAmount } from '@minimalist-apps/fiat';
 import type { FC } from 'react';
 import type { ChangeBtcAmountDep } from '../../converter/changeBtcAmount';
 import type { ChangeFiatAmountDep } from '../../converter/changeFiatAmount';
 import type { RemoveCurrencyDep } from '../../converter/removeCurrency';
+import type { ReorderCurrencyDep } from '../../converter/reorderCurrency';
+import type { OrderedCurrency } from '../../state/evolu/getSelectedCurrencies';
 import type { CurrencyValues } from '../../state/State';
 import type { AddCurrencyButtonDep } from '../AddCurrencyScreen/AddCurrencyButton';
 import type { RatesLoadingDep } from '../RatesLoading';
@@ -14,12 +16,13 @@ import type { CurrencyRowDep } from './CurrencyFiatRow';
 export type ConverterScreenStateProps = {
     readonly satsAmount: AmountSats;
     readonly fiatAmounts: Readonly<CurrencyValues>;
-    readonly selectedCurrencies: ReadonlyArray<CurrencyCode>;
+    readonly orderedCurrencies: ReadonlyArray<OrderedCurrency>;
 };
 
 type ConverterScreenDeps = ChangeBtcAmountDep &
     ChangeFiatAmountDep &
     RemoveCurrencyDep &
+    ReorderCurrencyDep &
     AddCurrencyButtonDep &
     CurrencyRowDep &
     RatesLoadingDep;
@@ -28,7 +31,7 @@ export type ConverterScreenDep = { ConverterScreen: FC };
 
 export const ConverterScreenPure = (
     deps: ConverterScreenDeps,
-    { satsAmount, fiatAmounts, selectedCurrencies }: ConverterScreenStateProps,
+    { satsAmount, fiatAmounts, orderedCurrencies }: ConverterScreenStateProps,
 ) => {
     const handleBtcChange = (value: AmountSats) => {
         deps.changeBtcAmount(value);
@@ -37,6 +40,15 @@ export const ConverterScreenPure = (
     const handleFiatChange = (code: CurrencyCode, value: number) => {
         deps.changeFiatAmount({ code, value: FiatAmount(code).from(value) });
     };
+
+    const handleReorder = (event: ReorderEvent) => {
+        deps.reorderCurrency({
+            activeId: event.activeId,
+            overId: event.overId,
+        });
+    };
+
+    const sortableItems = orderedCurrencies.map(c => ({ ...c, id: c.id }));
 
     return (
         <Screen gap={12}>
@@ -48,15 +60,18 @@ export const ConverterScreenPure = (
                 onChange={(value: number) => handleBtcChange(value as AmountSats)}
             />
 
-            {selectedCurrencies.map((code: CurrencyCode) => (
-                <deps.CurrencyRow
-                    key={code}
-                    code={code}
-                    value={fiatAmounts[code] ?? 0}
-                    onChange={(value: number) => handleFiatChange(code, value)}
-                    onRemove={() => deps.removeCurrency({ code })}
-                />
-            ))}
+            <SortableList
+                items={sortableItems}
+                onReorder={handleReorder}
+                renderItem={item => (
+                    <deps.CurrencyRow
+                        code={item.code}
+                        value={fiatAmounts[item.code] ?? 0}
+                        onChange={(value: number) => handleFiatChange(item.code, value)}
+                        onRemove={() => deps.removeCurrency({ code: item.code })}
+                    />
+                )}
+            />
 
             <deps.AddCurrencyButton />
         </Screen>
