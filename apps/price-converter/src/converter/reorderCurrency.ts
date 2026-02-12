@@ -1,30 +1,26 @@
 import { type CurrencyCode, createIdFromString } from '@evolu/common';
 import { type FractionalIndex, generateIndexBetween } from '@minimalist-apps/fractional-indexing';
-import type { GetOrderedCurrencies } from '../state/addCurrency';
-import type { EnsureEvoluDep } from '../state/evolu/schema';
+import type { GetSelectedCurrenciesDep } from '../state/evolu/createGetSelectedCurrencies';
+import type { EnsureEvoluStorageDep } from '../state/evolu/schema';
 import type { SelectedCurrency } from '../state/SelectedCurrency/SelectedCurrency';
+
+type ReorderCurrencyAllDeps = EnsureEvoluStorageDep & GetSelectedCurrenciesDep;
 
 export interface ReorderCurrencyParams {
     readonly active: CurrencyCode;
     readonly over: CurrencyCode;
 }
 
-export type ReorderCurrency = (params: ReorderCurrencyParams) => void;
+export type ReorderCurrency = (params: ReorderCurrencyParams) => Promise<void>;
 
 export interface ReorderCurrencyDep {
     readonly reorderCurrency: ReorderCurrency;
 }
 
-interface ReorderCurrencyDeps {
-    readonly getOrderedCurrencies: GetOrderedCurrencies;
-}
-
-type ReorderCurrencyAllDeps = EnsureEvoluDep & ReorderCurrencyDeps;
-
 export const createReorderCurrency =
     (deps: ReorderCurrencyAllDeps): ReorderCurrency =>
-    ({ active, over }) => {
-        const orderedCurrencies = deps.getOrderedCurrencies();
+    async ({ active, over }) => {
+        const orderedCurrencies = await deps.getSelectedCurrencies();
 
         const oldIndex = orderedCurrencies.findIndex(c => c.code === active);
         const newIndex = orderedCurrencies.findIndex(c => c.code === over);
@@ -43,7 +39,7 @@ export const createReorderCurrency =
 
         const newOrder = generateIndexBetween(prevKey, nextKey);
 
-        const { evolu, shardOwner } = deps.ensureEvolu();
+        const { evolu, shardOwner } = deps.ensureEvoluStorage();
         const movedCurrency = orderedCurrencies[oldIndex];
 
         evolu.upsert(
