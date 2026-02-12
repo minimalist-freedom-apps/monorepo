@@ -169,7 +169,7 @@ export const createCompositionRoot = (): Main => {
         ({ store, selectedCurrencies }) => ({
             satsAmount: store.satsAmount,
             fiatAmounts: store.fiatAmounts,
-            orderedCurrencies: selectedCurrencies,
+            selectedCurrencies,
         }),
         {
             // Services

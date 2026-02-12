@@ -35,8 +35,8 @@ export const AddCurrencyScreenPure = (
 
     const filteredCurrencies = filterCurrencies(availableCurrencies, searchTerm);
 
-    const handleSelect = (code: string) => {
-        deps.addCurrency({ code: code as CurrencyCode });
+    const handleSelect = async (code: string) => {
+        await deps.addCurrency({ code: code as CurrencyCode });
         deps.navigate('Converter');
     };
 

@@ -16,7 +16,7 @@ import type { CurrencyRowDep } from './CurrencyFiatRow';
 export type ConverterScreenStateProps = {
     readonly satsAmount: AmountSats;
     readonly fiatAmounts: Readonly<CurrencyValues>;
-    readonly orderedCurrencies: ReadonlyArray<SelectedCurrency>;
+    readonly selectedCurrencies: ReadonlyArray<SelectedCurrency>;
 };
 
 type ConverterScreenDeps = ChangeBtcAmountDep &
@@ -31,7 +31,7 @@ export type ConverterScreenDep = { ConverterScreen: FC };
 
 export const ConverterScreenPure = (
     deps: ConverterScreenDeps,
-    { satsAmount, fiatAmounts, orderedCurrencies }: ConverterScreenStateProps,
+    { satsAmount, fiatAmounts, selectedCurrencies }: ConverterScreenStateProps,
 ) => {
     const handleBtcChange = (value: AmountSats) => {
         deps.changeBtcAmount(value);
@@ -48,7 +48,7 @@ export const ConverterScreenPure = (
         });
     };
 
-    const sortableItems = orderedCurrencies.map(c => ({ ...c, id: c.code }));
+    const sortableItems = selectedCurrencies.map(c => ({ ...c, id: c.code }));
 
     return (
         <Screen gap={12}>
