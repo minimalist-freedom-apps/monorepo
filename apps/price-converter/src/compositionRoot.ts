@@ -70,6 +70,14 @@ export const createCompositionRoot = (): Main => {
         localStorage,
     });
 
+    // Todo: remove, part of the Evolu query dependency hack.
+    //
+    // Restore persisted state (mnemonic, rates, etc.) BEFORE Evolu initializes.
+    // ensureEvoluOwner reads the mnemonic from the store — if we don't load it
+    // first, a brand new mnemonic is created on every page refresh, losing all
+    // data from the previous session.
+    loadInitialState();
+
     const persistStore = createPersistStore({ store, localStorage });
 
     const statePersistence = createStatePersistence({
@@ -87,11 +95,10 @@ export const createCompositionRoot = (): Main => {
         shardPath: ['minimalist-apps', 'price-converter'],
     });
     const getSelectedCurrencies = createGetSelectedCurrencies({ ensureEvolu });
-
-    // HACK: We need this to subscribe query, in next Evolu this won't be necessary.
-    //       But now, we cannot create static query.
-    const { evolu } = ensureEvolu();
-    const selectedCurrencies = createSubscribableQuery(evolu, getSelectedCurrencies.query);
+    const selectedCurrencies = createSubscribableQuery(
+        { ensureEvolu },
+        getSelectedCurrencies.query,
+    );
 
     const connect = createConnect({ store, selectedCurrencies });
 
