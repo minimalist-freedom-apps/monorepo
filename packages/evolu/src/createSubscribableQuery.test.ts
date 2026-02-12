@@ -13,7 +13,7 @@ const createMockDeps = () => {
     };
 
     return {
-        deps: { ensureEvolu: () => ({ evolu }) },
+        deps: { ensureEvoluStorage: () => ({ evolu }) },
         query: 'test-query',
         evolu,
         unsubscribe,
@@ -28,7 +28,11 @@ type Any = any;
 describe(createSubscribableQuery.name, () => {
     test('getState delegates to evolu.getQueryRows', () => {
         const { deps, query, evolu, rows } = createMockDeps();
-        const subscribable = createSubscribableQuery(deps as Any, query as Any);
+        const subscribable = createSubscribableQuery(
+            deps as Any,
+            query as Any,
+            value => value as Any,
+        );
 
         const result = subscribable.getState();
 
@@ -38,7 +42,11 @@ describe(createSubscribableQuery.name, () => {
 
     test('subscribe registers listener via subscribeQuery', () => {
         const { deps, query, subscribeQueryListener } = createMockDeps();
-        const subscribable = createSubscribableQuery(deps as Any, query as Any);
+        const subscribable = createSubscribableQuery(
+            deps as Any,
+            query as Any,
+            value => value as Any,
+        );
         const listener = vi.fn();
 
         subscribable.subscribe(listener);
@@ -48,7 +56,11 @@ describe(createSubscribableQuery.name, () => {
 
     test('subscribe returns unsubscribe from subscribeQuery', () => {
         const { deps, query, unsubscribe } = createMockDeps();
-        const subscribable = createSubscribableQuery(deps as Any, query as Any);
+        const subscribable = createSubscribableQuery(
+            deps as Any,
+            query as Any,
+            value => value as Any,
+        );
         const listener = vi.fn();
 
         const result = subscribable.subscribe(listener);
@@ -58,7 +70,11 @@ describe(createSubscribableQuery.name, () => {
 
     test('subscribe calls loadQuery to trigger initial data load', () => {
         const { deps, query, evolu } = createMockDeps();
-        const subscribable = createSubscribableQuery(deps as Any, query as Any);
+        const subscribable = createSubscribableQuery(
+            deps as Any,
+            query as Any,
+            value => value as Any,
+        );
         const listener = vi.fn();
 
         subscribable.subscribe(listener);
@@ -68,7 +84,11 @@ describe(createSubscribableQuery.name, () => {
 
     test('subscribe calls listener when loadQuery resolves', async () => {
         const { deps, query } = createMockDeps();
-        const subscribable = createSubscribableQuery(deps as Any, query as Any);
+        const subscribable = createSubscribableQuery(
+            deps as Any,
+            query as Any,
+            value => value as Any,
+        );
         const listener = vi.fn();
 
         subscribable.subscribe(listener);
@@ -101,25 +121,29 @@ describe(createSubscribableQuery.name, () => {
             }),
             getQueryRows: vi.fn(() => []),
         };
-        const deps = { ensureEvolu: () => ({ evolu }) };
-        const subscribable = createSubscribableQuery(deps as Any, 'q' as Any);
+        const deps = { ensureEvoluStorage: () => ({ evolu }) };
+        const subscribable = createSubscribableQuery(
+            deps as Any,
+            'q' as Any,
+            value => value as Any,
+        );
 
         subscribable.subscribe(vi.fn());
 
         expect(callOrder).toEqual(['subscribeQuery', 'loadQuery']);
     });
 
-    test('defers ensureEvolu call to subscribe time', () => {
+    test('defers ensureEvoluStorage call to subscribe time', () => {
         const evolu = {
             subscribeQuery: vi.fn(() => vi.fn(() => vi.fn())),
             loadQuery: vi.fn(() => Promise.resolve([])),
             getQueryRows: vi.fn(() => []),
         };
-        const ensureEvolu = vi.fn(() => ({ evolu }));
-        const deps = { ensureEvolu };
+        const ensureEvoluStorage = vi.fn(() => ({ evolu }));
+        const deps = { ensureEvoluStorage };
 
-        createSubscribableQuery(deps as Any, 'q' as Any);
+        createSubscribableQuery(deps as Any, 'q' as Any, value => value as Any);
 
-        expect(ensureEvolu).not.toHaveBeenCalled();
+        expect(ensureEvoluStorage).not.toHaveBeenCalled();
     });
 });

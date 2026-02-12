@@ -13,7 +13,7 @@ export interface AddCurrencyParams {
     readonly code: CurrencyCode;
 }
 
-export type AddCurrency = (params: AddCurrencyParams) => void;
+export type AddCurrency = (params: AddCurrencyParams) => Promise<void>;
 
 export interface AddCurrencyDep {
     readonly addCurrency: AddCurrency;
@@ -21,7 +21,7 @@ export interface AddCurrencyDep {
 
 export const createAddCurrency =
     (deps: AddCurrencyAllDeps): AddCurrency =>
-    ({ code }) => {
+    async ({ code }) => {
         const { fiatAmounts, satsAmount, rates } = deps.store.getState();
 
         if (rates[code] === undefined) {
@@ -31,7 +31,7 @@ export const createAddCurrency =
         const btcAmount = satsToBtc(satsAmount);
 
         // Compute order: place at end of list
-        const orderedCurrencies = deps.getOrderedCurrencies();
+        const orderedCurrencies = await deps.getSelectedCurrencies();
         const lastItem = orderedCurrencies[orderedCurrencies.length - 1] as
             | SelectedCurrency
             | undefined;
