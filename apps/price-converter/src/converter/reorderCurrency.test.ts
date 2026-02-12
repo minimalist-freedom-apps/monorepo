@@ -1,9 +1,9 @@
-import { CurrencyCode, getOrThrow } from '@evolu/common';
+import { CurrencyCode, getOrThrow, type ShardOwner } from '@evolu/common';
 import { asFractionalIndex } from '@minimalist-apps/fractional-indexing';
 import { describe, expect, test, vi } from 'vitest';
-import type { EnsureEvoluStorageDep } from '../state/evolu/schema.js';
+import type { EvoluStorage } from '../state/evolu/schema.js';
 import type { SelectedCurrency } from '../state/SelectedCurrency/SelectedCurrency.js';
-import { createReorderCurrency } from './reorderCurrency.js';
+import { createReorderCurrency, type ReorderCurrencyDeps } from './reorderCurrency.js';
 
 const USD = getOrThrow(CurrencyCode.from('USD'));
 const EUR = getOrThrow(CurrencyCode.from('EUR'));
@@ -15,36 +15,37 @@ const createTestCurrency = (code: CurrencyCode, order: string): SelectedCurrency
     order: asFractionalIndex(order),
 });
 
-const createTestDeps = (orderedCurrencies: ReadonlyArray<SelectedCurrency>) => {
-    const upsert = vi.fn();
-    const shardOwner = { id: 'test-owner' };
-    const evolu = { upsert };
+const createTestDeps = (
+    orderedCurrencies: ReadonlyArray<SelectedCurrency>,
+    evoluStorage: EvoluStorage,
+): ReorderCurrencyDeps => ({
+    ensureEvoluStorage: () => evoluStorage,
+    getSelectedCurrencies: async () => orderedCurrencies,
+});
 
-    return {
-        ensureEvolu: (() => ({
-            evolu,
-            shardOwner,
-        })) as unknown as EnsureEvoluStorageDep['ensureEvoluStorage'],
-        getOrderedCurrencies: () => orderedCurrencies,
-        upsert,
-        shardOwner,
-    };
-};
+const mockEvoluStorage = (upsert: EvoluStorage['evolu']['upsert']): EvoluStorage => ({
+    evolu: { upsert } as EvoluStorage['evolu'],
+    shardOwner: { id: 'test-owner' } as ShardOwner,
+    updateRelayUrls: vi.fn(),
+    dispose: vi.fn(),
+});
 
 describe(createReorderCurrency.name, () => {
-    test('moves item down in list', () => {
+    test('moves item down in list', async () => {
         const currencies = [
             createTestCurrency(USD, 'a0'),
             createTestCurrency(EUR, 'a1'),
             createTestCurrency(GBP, 'a2'),
         ];
-        const deps = createTestDeps(currencies);
+        const upsert = vi.fn();
+        const evoluStorage = mockEvoluStorage(upsert);
+        const deps = createTestDeps(currencies, evoluStorage);
         const reorderCurrency = createReorderCurrency(deps);
 
-        reorderCurrency({ active: USD, over: GBP });
+        await reorderCurrency({ active: USD, over: GBP });
 
-        expect(deps.upsert).toHaveBeenCalledOnce();
-        const [table, row] = deps.upsert.mock.calls[0];
+        expect(upsert).toHaveBeenCalledOnce();
+        const [table, row] = upsert.mock.calls[0];
         expect(table).toBe('currency');
         expect(row.currency).toBe(USD);
 
@@ -53,19 +54,21 @@ describe(createReorderCurrency.name, () => {
         expect(row.order > 'a2').toBe(true);
     });
 
-    test('moves item up in list', () => {
+    test('moves item up in list', async () => {
         const currencies = [
             createTestCurrency(USD, 'a0'),
             createTestCurrency(EUR, 'a1'),
             createTestCurrency(GBP, 'a2'),
         ];
-        const deps = createTestDeps(currencies);
+        const upsert = vi.fn();
+        const evoluStorage = mockEvoluStorage(upsert);
+        const deps = createTestDeps(currencies, evoluStorage);
         const reorderCurrency = createReorderCurrency(deps);
 
-        reorderCurrency({ active: GBP, over: USD });
+        await reorderCurrency({ active: GBP, over: USD });
 
-        expect(deps.upsert).toHaveBeenCalledOnce();
-        const [table, row] = deps.upsert.mock.calls[0];
+        expect(upsert).toHaveBeenCalledOnce();
+        const [table, row] = upsert.mock.calls[0];
         expect(table).toBe('currency');
         expect(row.currency).toBe(GBP);
 
@@ -73,19 +76,21 @@ describe(createReorderCurrency.name, () => {
         expect(row.order < 'a0').toBe(true);
     });
 
-    test('moves item to the beginning of list', () => {
+    test('moves item to the beginning of list', async () => {
         const currencies = [
             createTestCurrency(USD, 'a0'),
             createTestCurrency(EUR, 'a1'),
             createTestCurrency(GBP, 'a2'),
         ];
-        const deps = createTestDeps(currencies);
+        const upsert = vi.fn();
+        const evoluStorage = mockEvoluStorage(upsert);
+        const deps = createTestDeps(currencies, evoluStorage);
         const reorderCurrency = createReorderCurrency(deps);
 
-        reorderCurrency({ active: EUR, over: USD });
+        await reorderCurrency({ active: EUR, over: USD });
 
-        expect(deps.upsert).toHaveBeenCalledOnce();
-        const [table, row] = deps.upsert.mock.calls[0];
+        expect(upsert).toHaveBeenCalledOnce();
+        const [table, row] = upsert.mock.calls[0];
         expect(table).toBe('currency');
         expect(row.currency).toBe(EUR);
 
@@ -93,19 +98,21 @@ describe(createReorderCurrency.name, () => {
         expect(row.order < 'a0').toBe(true);
     });
 
-    test('moves item to the end of list', () => {
+    test('moves item to the end of list', async () => {
         const currencies = [
             createTestCurrency(USD, 'a0'),
             createTestCurrency(EUR, 'a1'),
             createTestCurrency(GBP, 'a2'),
         ];
-        const deps = createTestDeps(currencies);
+        const upsert = vi.fn();
+        const evoluStorage = mockEvoluStorage(upsert);
+        const deps = createTestDeps(currencies, evoluStorage);
         const reorderCurrency = createReorderCurrency(deps);
 
-        reorderCurrency({ active: USD, over: GBP });
+        await reorderCurrency({ active: USD, over: GBP });
 
-        expect(deps.upsert).toHaveBeenCalledOnce();
-        const [table, row] = deps.upsert.mock.calls[0];
+        expect(upsert).toHaveBeenCalledOnce();
+        const [table, row] = upsert.mock.calls[0];
         expect(table).toBe('currency');
         expect(row.currency).toBe(USD);
 
@@ -114,33 +121,37 @@ describe(createReorderCurrency.name, () => {
         expect(row.order > 'a2').toBe(true);
     });
 
-    test('passes shardOwner id to upsert', () => {
+    test('passes shardOwner id to upsert', async () => {
         const currencies = [createTestCurrency(USD, 'a0'), createTestCurrency(EUR, 'a1')];
-        const deps = createTestDeps(currencies);
+        const upsert = vi.fn();
+        const evoluStorage = mockEvoluStorage(upsert);
+        const deps = createTestDeps(currencies, evoluStorage);
         const reorderCurrency = createReorderCurrency(deps);
 
-        reorderCurrency({ active: USD, over: EUR });
+        await reorderCurrency({ active: USD, over: EUR });
 
-        expect(deps.upsert).toHaveBeenCalledOnce();
-        const [, , options] = deps.upsert.mock.calls[0];
+        expect(upsert).toHaveBeenCalledOnce();
+        const [, , options] = upsert.mock.calls[0];
         expect(options).toEqual({ ownerId: 'test-owner' });
     });
 
-    test('maintains correct ordering with four items when middle item moves', () => {
+    test('maintains correct ordering with four items when middle item moves', async () => {
         const currencies = [
             createTestCurrency(USD, 'a0'),
             createTestCurrency(EUR, 'a1'),
             createTestCurrency(GBP, 'a2'),
             createTestCurrency(JPY, 'a3'),
         ];
-        const deps = createTestDeps(currencies);
+        const upsert = vi.fn();
+        const evoluStorage = mockEvoluStorage(upsert);
+        const deps = createTestDeps(currencies, evoluStorage);
         const reorderCurrency = createReorderCurrency(deps);
 
         // Move EUR (index 1) to where JPY is (index 3)
-        reorderCurrency({ active: EUR, over: JPY });
+        await reorderCurrency({ active: EUR, over: JPY });
 
-        expect(deps.upsert).toHaveBeenCalledOnce();
-        const [, row] = deps.upsert.mock.calls[0];
+        expect(upsert).toHaveBeenCalledOnce();
+        const [, row] = upsert.mock.calls[0];
         expect(row.currency).toBe(EUR);
 
         // After removing EUR, without=[USD(a0), GBP(a2), JPY(a3)]
@@ -149,21 +160,18 @@ describe(createReorderCurrency.name, () => {
         expect(row.order > 'a3').toBe(true);
     });
 
-    test('fetches ordered currencies from deps, not from params', () => {
+    test('fetches selected currencies from deps, not from params', async () => {
         const currencies = [createTestCurrency(USD, 'a0'), createTestCurrency(EUR, 'a1')];
-        const getOrderedCurrencies = vi.fn(() => currencies);
-        const upsert = vi.fn();
-        const deps = {
-            ensureEvolu: (() => ({
-                evolu: { upsert },
-                shardOwner: { id: 'owner' },
-            })) as unknown as EnsureEvoluStorageDep['ensureEvoluStorage'],
-            getOrderedCurrencies,
-        };
-        const reorderCurrency = createReorderCurrency(deps);
 
-        reorderCurrency({ active: USD, over: EUR });
+        const getSelectedCurrencies = vi.fn(async () => currencies);
 
-        expect(getOrderedCurrencies).toHaveBeenCalledOnce();
+        const reorderCurrency = createReorderCurrency({
+            ensureEvoluStorage: () => mockEvoluStorage(vi.fn()),
+            getSelectedCurrencies,
+        });
+
+        await reorderCurrency({ active: USD, over: EUR });
+
+        expect(getSelectedCurrencies).toHaveBeenCalledOnce();
     });
 });

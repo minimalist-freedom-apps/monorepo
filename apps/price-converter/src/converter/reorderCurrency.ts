@@ -4,7 +4,7 @@ import type { GetSelectedCurrenciesDep } from '../state/evolu/createGetSelectedC
 import type { EnsureEvoluStorageDep } from '../state/evolu/schema';
 import type { SelectedCurrency } from '../state/SelectedCurrency/SelectedCurrency';
 
-type ReorderCurrencyAllDeps = EnsureEvoluStorageDep & GetSelectedCurrenciesDep;
+export type ReorderCurrencyDeps = EnsureEvoluStorageDep & GetSelectedCurrenciesDep;
 
 export interface ReorderCurrencyParams {
     readonly active: CurrencyCode;
@@ -18,7 +18,7 @@ export interface ReorderCurrencyDep {
 }
 
 export const createReorderCurrency =
-    (deps: ReorderCurrencyAllDeps): ReorderCurrency =>
+    (deps: ReorderCurrencyDeps): ReorderCurrency =>
     async ({ active, over }) => {
         const orderedCurrencies = await deps.getSelectedCurrencies();
 
