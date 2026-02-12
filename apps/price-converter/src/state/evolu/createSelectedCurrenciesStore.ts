@@ -13,8 +13,5 @@ export interface SelectedCurrenciesStoreDep {
 
 export const createSelectedCurrenciesStore = (
     deps: EnsureEvoluStorageDep,
-): SelectedCurrenciesStore => {
-    const query = allSelectedCurrenciesQuery(deps.ensureEvoluStorage());
-
-    return createSubscribableQuery(deps, query, mapSelectedCurrencyFromEvolu);
-};
+): SelectedCurrenciesStore =>
+    createSubscribableQuery(deps, allSelectedCurrenciesQuery, mapSelectedCurrencyFromEvolu);

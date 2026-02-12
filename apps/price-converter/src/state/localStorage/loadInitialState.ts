@@ -19,17 +19,22 @@ export const createLoadInitialState =
         const savedRatesResult = deps.localStorage.load<CurrencyMap>(STORAGE_KEYS.RATES);
         const savedTimestampResult = deps.localStorage.load<number>(STORAGE_KEYS.TIMESTAMP);
         const savedModeResult = deps.localStorage.load<BtcMode>(STORAGE_KEYS.MODE);
+        const savedDebugModeResult = deps.localStorage.load<boolean>(STORAGE_KEYS.DEBUG_MODE);
         const savedMnemonicResult = deps.localStorage.load<Mnemonic>(STORAGE_KEYS.EVOLU_MNEMONIC);
 
         const savedRates = savedRatesResult.ok ? savedRatesResult.value : null;
         const savedTimestamp = savedTimestampResult.ok ? savedTimestampResult.value : null;
         const savedBtcMode: BtcMode = savedModeResult.ok ? (savedModeResult.value ?? 'btc') : 'btc';
+        const savedDebugMode = savedDebugModeResult.ok
+            ? (savedDebugModeResult.value ?? false)
+            : false;
         const savedMnemonic = savedMnemonicResult.ok ? savedMnemonicResult.value : null;
 
         deps.store.setState({
             ...(savedRates !== null && { rates: savedRates }),
             ...(savedTimestamp !== null && { lastUpdated: savedTimestamp }),
             ...{ btcMode: savedBtcMode },
+            ...{ debugMode: savedDebugMode },
             ...(savedMnemonic && { evoluMnemonic: savedMnemonic }),
         });
     };

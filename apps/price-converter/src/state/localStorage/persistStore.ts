@@ -23,6 +23,7 @@ export const createPersistStore =
             deps.localStorage.save(STORAGE_KEYS.RATES, state.rates);
             deps.localStorage.save(STORAGE_KEYS.TIMESTAMP, state.lastUpdated);
             deps.localStorage.save(STORAGE_KEYS.MODE, state.btcMode);
+            deps.localStorage.save(STORAGE_KEYS.DEBUG_MODE, state.debugMode);
 
             if (state.evoluMnemonic !== null) {
                 deps.localStorage.save(STORAGE_KEYS.EVOLU_MNEMONIC, state.evoluMnemonic);

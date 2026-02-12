@@ -17,7 +17,9 @@ export const createStore = (): Store<State> => {
         currentScreen: 'Converter',
         focusedCurrency: null,
         theme: 'dark',
+        debugMode: false,
         evoluMnemonic: null,
+        evoluOwnerId: null,
     };
 
     return createMiniStore(initialState);

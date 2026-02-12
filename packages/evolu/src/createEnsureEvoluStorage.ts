@@ -88,8 +88,12 @@ export interface EnsureEvoluDep<S extends EvoluSchema> {
     readonly ensureEvoluStorage: EnsureEvoluStorage<S>;
 }
 
+export interface OnShardOwnerCreatedDep {
+    readonly onShardOwnerCreated: (shardOwner: ShardOwner) => void;
+}
+
 interface CreateEnsureEvoluProps<S extends EvoluSchema> {
-    readonly deps: EnsureEvoluOwnerDep;
+    readonly deps: EnsureEvoluOwnerDep & OnShardOwnerCreatedDep;
     readonly schema: ValidateSchema<S> extends never ? S : ValidateSchema<S>;
     readonly appName: string;
     readonly shardPath: NonEmptyReadonlyArray<string | number>;
@@ -111,6 +115,8 @@ export const createEnsureEvoluStorage = <S extends EvoluSchema>({
                 appName,
                 shardPath,
             });
+
+            deps.onShardOwnerCreated(storage.shardOwner);
         }
 
         return storage;
