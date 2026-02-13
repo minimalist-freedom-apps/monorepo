@@ -66,3 +66,19 @@ pnpm test --filter @evolu/common -- -t "yields and returns ok"
 When tests are simple input/output assertions (no setup, no deps, single function call), use `test.each` with a data array instead of repeating test boilerplate. Keep the human-readable description as the second tuple element so it appears in test output via `%s`.
 
 Only use this for simple tests — not for tests that need setup, mocking, or multi-step assertions.
+
+## Test Helper Dependency Exposure
+
+When writing test component factories/helpers:
+
+- Do not return internally created stubs (`deps`, `onChange`, mocks) from helper return values.
+- Helpers may create internal defaults for convenience, but those defaults are private implementation details.
+- If a test needs to assert calls on dependencies (`onChange`, spies, injected deps), the test must create them explicitly and pass them into the helper as arguments.
+
+## Test-driven development
+
+- Write a failing test before implementing a new feature or fixing a bug
+- Keep test code cleaner than production code — good tests let you refactor production code; nothing protects messy tests
+- **MANDATORY: Every new service, function, or module MUST have a corresponding test file** — never create production code without test coverage. No exceptions.
+- When creating a `createX` factory or any service, create `X.test.ts` alongside it before considering the task complete
+- Untested code is unfinished code — a feature is not done until its tests exist and pass
