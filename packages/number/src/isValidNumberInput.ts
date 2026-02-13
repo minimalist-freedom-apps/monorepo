@@ -1,3 +1,5 @@
+import { stripCommas } from './stripCommas';
+
 export const isValidNumberInput = (value: string): boolean => {
     const normalizedValue = value.trim();
 
@@ -5,7 +7,5 @@ export const isValidNumberInput = (value: string): boolean => {
         return true;
     }
 
-    const normalizedValue2 = normalizedValue.replace(/,/g, '');
-
-    return !Number.isNaN(Number(normalizedValue2));
+    return !Number.isNaN(Number(stripCommas(normalizedValue)));
 };

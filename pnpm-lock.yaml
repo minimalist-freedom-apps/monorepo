@@ -230,6 +230,9 @@ importers:
       '@evolu/common':
         specifier: ^7.4.1
         version: 7.4.1
+      '@minimalist-apps/number':
+        specifier: workspace:*
+        version: link:../number
     devDependencies:
       '@minimalist-apps/tsconfig':
         specifier: workspace:*
@@ -342,6 +345,9 @@ importers:
       '@evolu/common':
         specifier: ^7.4.1
         version: 7.4.1
+      '@minimalist-apps/number':
+        specifier: workspace:*
+        version: link:../number
     devDependencies:
       '@minimalist-apps/tsconfig':
         specifier: workspace:*

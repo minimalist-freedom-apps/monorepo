@@ -10,6 +10,8 @@ import type { EnsureEvoluDep, EvoluStorage } from './createEnsureEvoluStorage';
 export const createSubscribableQuery = <S extends EvoluSchema, R extends Row, MappedRow>(
     deps: EnsureEvoluDep<S>,
     queryFactory: (storage: EvoluStorage<S>) => Query<R>,
+
+    // Todo: This breaks the reference identity, mapping creates new objects triggering more updates.
     mapRows: (rows: ReadonlyArray<R>) => ReadonlyArray<MappedRow>,
 ): Subscribable<ReadonlyArray<MappedRow>> => ({
     subscribe: listener => {

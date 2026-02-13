@@ -15,7 +15,8 @@
         "typecheck": "tsc --noEmit"
     },
     "dependencies": {
-        "@evolu/common": "^7.4.1"
+        "@evolu/common": "^7.4.1",
+        "@minimalist-apps/number": "workspace:*"
     },
     "devDependencies": {
         "@minimalist-apps/tsconfig": "workspace:*",
