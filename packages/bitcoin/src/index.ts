@@ -1,4 +1,4 @@
 export { btcToSats, satsToBtc } from './conversion';
-export { formatBtcWithCommas } from './formatBtcWithCommas';
+export { formatBtcToSatcommaNotation as formatBtcWithCommas } from './formatBtcToSatcommaNotation';
 export { formatSats } from './formatSats';
 export { AmountBtc, AmountSats } from './types';

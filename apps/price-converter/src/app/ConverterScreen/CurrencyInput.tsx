@@ -9,11 +9,11 @@ import {
 } from '@minimalist-apps/bitcoin';
 import { Input } from '@minimalist-apps/components';
 import { type FiatAmount, formatFiatWithCommas } from '@minimalist-apps/fiat';
-import { isValidNumberInput } from '@minimalist-apps/number';
+import { isValidNumberInput, parseFormattedNumber, stripCommas } from '@minimalist-apps/number';
 import { type FC, useEffect, useRef, useState } from 'react';
 import type { BtcMode } from '../../state/State';
 import type { SetFocusedCurrencyDep } from '../../state/setFocusedCurrency';
-import { parseFormattedNumber } from './parseFormattedNumber';
+import { normalizeBtcInput } from './normalizeBtcInput';
 
 const formatInputValue = (
     value: number,
@@ -33,7 +33,7 @@ const formatInputValue = (
     return formatFiatWithCommas(value as FiatAmount<CurrencyCode>);
 };
 
-const isZeroInput = (value: string): boolean => value.replace(/,/g, '').trim() === '0';
+const isZeroInput = (value: string): boolean => stripCommas(value).trim() === '0';
 
 const isInvalidTrailingCommaZeroInput = (value: string): boolean => /^0,+$/.test(value.trim());
 
@@ -41,72 +41,6 @@ const isIncompleteNumberInput = (value: string): boolean => {
     const normalizedValue = value.trim();
 
     return normalizedValue === '' || normalizedValue === '-' || normalizedValue.endsWith('.');
-};
-
-const limitBtcDecimalDigits = (decimals: string): string => {
-    let result = decimals;
-
-    while (result.length > 8) {
-        const duplicateIndex = result.search(/(\d)\1/u);
-
-        if (duplicateIndex >= 0) {
-            result = result.slice(0, duplicateIndex + 1) + result.slice(duplicateIndex + 2);
-        } else {
-            result = result.slice(0, -1);
-        }
-    }
-
-    return result;
-};
-
-const formatGroupedBtcDecimal = (decimals: string): string => {
-    const paddedDecimals = decimals.padEnd(8, '0');
-    let groupedDecimalPart = '';
-    let count = 0;
-
-    for (let i = paddedDecimals.length - 1; i >= 0; i--) {
-        if (count === 3 && i < paddedDecimals.length - 1) {
-            groupedDecimalPart = `,${groupedDecimalPart}`;
-            count = 0;
-        }
-
-        groupedDecimalPart = paddedDecimals[i] + groupedDecimalPart;
-        count++;
-    }
-
-    while (groupedDecimalPart.endsWith(',000')) {
-        groupedDecimalPart = groupedDecimalPart.slice(0, -4);
-    }
-
-    return groupedDecimalPart.replace(/0+$/u, '').replace(/,+$/u, '');
-};
-
-const normalizeBtcModeInput = (value: string): { display: string; numeric: string } => {
-    const normalized = value.trim().replace(/,/g, '');
-    const isNegative = normalized.startsWith('-');
-    const unsigned = isNegative ? normalized.slice(1) : normalized;
-    const [rawIntPart, rawDecimalPart] = unsigned.split('.');
-    const intPart = rawIntPart.replace(/^0+(?=\d)/u, '');
-    const intPartWithCommas = intPart.replace(/\B(?=(\d{3})+(?!\d))/g, ',');
-
-    if (!rawDecimalPart) {
-        const display = `${isNegative ? '-' : ''}${intPartWithCommas}`;
-
-        return { display, numeric: `${isNegative ? '-' : ''}${intPart}` };
-    }
-
-    const limitedDecimalPart = limitBtcDecimalDigits(rawDecimalPart);
-    const groupedDecimalPart = formatGroupedBtcDecimal(limitedDecimalPart);
-    const display =
-        groupedDecimalPart === ''
-            ? `${isNegative ? '-' : ''}${intPartWithCommas}`
-            : `${isNegative ? '-' : ''}${intPartWithCommas}.${groupedDecimalPart}`;
-    const numeric =
-        limitedDecimalPart === ''
-            ? `${isNegative ? '-' : ''}${intPart}`
-            : `${isNegative ? '-' : ''}${intPart}.${limitedDecimalPart}`;
-
-    return { display, numeric };
 };
 
 const persistedStableInputByCurrencyAndMode = new Map<string, string>();
@@ -224,17 +158,17 @@ export const CurrencyInputPure = (
         const numberValue = parseFormattedNumber(newValue);
 
         if (code === 'BTC' && mode === 'btc' && !isZeroInput(newValue)) {
-            const normalizedBtcInput = normalizeBtcModeInput(newValue);
-            const normalizedBtcValue = parseFormattedNumber(normalizedBtcInput.numeric);
+            const normalizedBtcValue = normalizeBtcInput(newValue);
+            const parsedBtcValue = parseFormattedNumber(normalizedBtcValue.numeric);
 
-            setInputValue(normalizedBtcInput.display);
+            setInputValue(normalizedBtcValue.display);
             persistedStableInputByCurrencyAndMode.set(
                 getPersistedInputKey(code, mode),
-                normalizedBtcInput.display,
+                normalizedBtcValue.display,
             );
 
-            if (!Number.isNaN(normalizedBtcValue)) {
-                onChange(btcToSats(normalizedBtcValue as AmountBtc));
+            if (!Number.isNaN(parsedBtcValue)) {
+                onChange(btcToSats(parsedBtcValue as AmountBtc));
             }
 
             return;

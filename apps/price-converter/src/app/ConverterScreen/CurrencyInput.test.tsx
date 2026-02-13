@@ -41,35 +41,28 @@ describe(CurrencyInputPure.name, () => {
     });
 
     test('switch SATS -> BTC & BTC -> SATS reformats focused BTC input', () => {
+        const deps: CurrencyInputPureDeps = {
+            setFocusedCurrency: () => {},
+        };
+        const TestCurrencyInput = (props: CurrencyInputProps) => CurrencyInputPure(deps, props);
+
         const props: CurrencyInputProps = {
             onChange: () => {},
             mode: 'sats',
             focusedCurrency: 'BTC',
-            value: 123_456_789,
+            value: 12345678912345678,
             code: 'BTC',
         };
 
-        const initialSats = createCurrencyInput(props);
+        const { rerender } = render(<TestCurrencyInput {...props} />);
 
-        const { rerender } = render(<initialSats.TestCurrencyInput />);
+        expect(screen.getByDisplayValue('12,345,678,912,345,678')).toBeInTheDocument();
 
-        expect(screen.getByDisplayValue('123,456,789')).toBeInTheDocument();
+        rerender(<TestCurrencyInput {...props} mode="btc" />);
+        expect(screen.getByDisplayValue('123,456,789.12,345,678')).toBeInTheDocument();
 
-        const updatedBtc = createCurrencyInput({
-            ...props,
-            mode: 'btc',
-        });
-
-        rerender(<updatedBtc.TestCurrencyInput />);
-        expect(screen.getByDisplayValue('1.23,456,789')).toBeInTheDocument();
-
-        const updatedSats = createCurrencyInput({
-            ...props,
-            mode: 'sats',
-        });
-
-        rerender(<updatedSats.TestCurrencyInput />);
-        expect(screen.getByDisplayValue('123,456,789')).toBeInTheDocument();
+        rerender(<TestCurrencyInput {...props} mode="sats" />);
+        expect(screen.getByDisplayValue('12,345,678,912,345,678')).toBeInTheDocument();
     });
 
     test.each([

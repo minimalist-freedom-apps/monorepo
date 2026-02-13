@@ -1,8 +1,8 @@
 import { describe, expect, test } from 'vitest';
-import { formatBtcWithCommas } from './formatBtcWithCommas.js';
+import { formatBtcToSatcommaNotation } from './formatBtcToSatcommaNotation.js';
 import type { AmountBtc } from './types.js';
 
-describe(formatBtcWithCommas.name, () => {
+describe(formatBtcToSatcommaNotation.name, () => {
     const testCases: Array<{
         readonly input: number;
         readonly expected: string;
@@ -17,7 +17,7 @@ describe(formatBtcWithCommas.name, () => {
         // Integers and large numbers trails zeros
         { input: 1, expected: '1.00,000,000' },
         { input: 100, expected: '100.00,000,000' },
-        { input: 21000000, expected: '21000000.00,000,000' },
+        { input: 21000000, expected: '21,000,000.00,000,000' },
 
         // Negative numbers
         { input: -0.00001, expected: '-0.00,001,000' },
@@ -25,6 +25,6 @@ describe(formatBtcWithCommas.name, () => {
     ];
 
     test.each(testCases)('formats $input to $expected', ({ input, expected }) => {
-        expect(formatBtcWithCommas(input as AmountBtc)).toBe(expected);
+        expect(formatBtcToSatcommaNotation(input as AmountBtc)).toBe(expected);
     });
 });
