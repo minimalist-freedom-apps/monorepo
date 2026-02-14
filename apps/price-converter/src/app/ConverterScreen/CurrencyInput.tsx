@@ -48,6 +48,22 @@ const persistedStableInputByCurrencyAndMode = new Map<string, string>();
 const getPersistedInputKey = (currencyCode: CurrencyCode | 'BTC', displayMode: BtcMode): string =>
     `${currencyCode}:${displayMode}`;
 
+const normalizeBtcInputPreservingMidEdit = (value: string) => {
+    const normalizedValue = stripCommas(value.trim());
+    const isNegative = normalizedValue.startsWith('-');
+    const unsignedValue = isNegative ? normalizedValue.slice(1) : normalizedValue;
+    const [rawIntegerPart = '', rawDecimalPart = ''] = unsignedValue.split('.');
+    const normalizedIntegerPart = rawIntegerPart.replace(/^0+(?=\d)/u, '');
+    const limitedDecimalPart = rawDecimalPart.slice(0, 8);
+    const sign = isNegative ? '-' : '';
+    const numeric =
+        limitedDecimalPart === ''
+            ? `${sign}${normalizedIntegerPart}`
+            : `${sign}${normalizedIntegerPart}.${limitedDecimalPart}`;
+
+    return normalizeBtcInput(numeric);
+};
+
 type InputSelection = {
     readonly start: number;
     readonly end: number;
@@ -204,8 +220,6 @@ export const CurrencyInputPure = (
     }, [value, code, mode, focusedCurrency, inputValue]);
 
     const handleChange = (newValue: string, selection?: InputSelection) => {
-        console.log('__newValue', newValue, selection);
-
         const currentInput = inputRef.current?.input;
         const fallbackSelection =
             currentInput?.selectionStart != null && currentInput.selectionEnd != null
@@ -247,7 +261,11 @@ export const CurrencyInputPure = (
         const numberValue = parseFormattedNumber(newValue);
 
         if (code === 'BTC' && mode === 'btc' && !isZeroInput(newValue)) {
-            const normalizedBtcValue = normalizeBtcInput(newValue);
+            const isCaretAtEnd =
+                effectiveSelection === undefined || effectiveSelection.start === newValue.length;
+            const normalizedBtcValue = isCaretAtEnd
+                ? normalizeBtcInput(newValue)
+                : normalizeBtcInputPreservingMidEdit(newValue);
             const parsedBtcValue = parseFormattedNumber(normalizedBtcValue.numeric);
 
             queueSelectionRestore(newValue, normalizedBtcValue.display, effectiveSelection);
