@@ -12,12 +12,14 @@ export {
     type Theme,
 } from './colors';
 export { Divider } from './Divider';
+export { Dropdown } from './Dropdown';
 export type { FlexProps } from './Flex';
 export { Column, Flex, Row } from './Flex';
 export { FloatButton } from './FloatButton';
 export { Fraction } from './Fraction';
 export {
     DeleteOutlined,
+    MenuOutlined,
     PlusOutlined,
     ReloadOutlined,
     SettingOutlined,
@@ -26,6 +28,7 @@ export type { InputRef } from './Input';
 export { Input } from './Input';
 export { Layout } from './Layout';
 export { List } from './List';
+export { Menu, type MenuItems } from './Menu';
 export { Mnemonic } from './Mnemonic';
 export { Modal } from './Modal';
 export { Screen } from './Screen';

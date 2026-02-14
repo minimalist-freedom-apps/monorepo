@@ -31,7 +31,8 @@ const Header = ({ children }: HeaderProps) => (
     <AntHeader
         style={{
             paddingTop: 'env(safe-area-inset-top, 0px)',
-            height: 'calc(64px + env(safe-area-inset-top, 0px))',
+            minHeight: 'calc(64px + env(safe-area-inset-top, 0px))',
+            height: 'auto',
         }}
     >
         {children}
