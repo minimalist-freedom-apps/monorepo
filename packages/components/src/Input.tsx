@@ -8,11 +8,11 @@ export type InputRef = AntInputRef;
 
 interface InputProps {
     readonly value: string;
-    readonly onChange: (value: string) => void;
+    readonly onChange: (value: string, selection?: { start: number; end: number }) => void;
     readonly onFocus?: () => void;
     readonly placeholder?: string;
     readonly inputMode?: 'decimal' | 'numeric' | 'text';
-    readonly inputRef?: RefObject<InputRef>;
+    readonly inputRef?: RefObject<InputRef | null>;
     readonly monospace?: boolean;
     readonly size?: 'small' | 'medium' | 'large';
     readonly textAlign?: 'center' | 'left' | 'right';
@@ -48,7 +48,14 @@ export const Input = ({
     const { token } = theme.useToken();
 
     const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
-        onChange(e.target.value);
+        const { selectionStart, selectionEnd } = e.target;
+
+        onChange(
+            e.target.value,
+            selectionStart == null || selectionEnd == null
+                ? undefined
+                : { start: selectionStart, end: selectionEnd },
+        );
     };
 
     const input = (

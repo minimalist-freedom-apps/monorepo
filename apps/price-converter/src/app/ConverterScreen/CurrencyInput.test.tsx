@@ -167,4 +167,70 @@ describe(CurrencyInputPure.name, () => {
         fireEvent.change(input, { target: { value } });
         expect(input).toHaveValue(finalValue);
     });
+
+    test.each([
+        {
+            it: "adding a ',' after adding digit to the end shifts cursor right to stay after the same digit",
+            initial: { value: '123', start: 3, end: 3 },
+            change: { value: '1234', start: 4, end: 4 },
+            final: { value: '1,234', start: 5, end: 5 },
+        },
+        {
+            it: "adding a ',' after adding digit in the middle shifts cursor right to stay after the same digit",
+            initial: { value: '666', start: 2, end: 2 },
+            change: { value: '6676', start: 3, end: 3 },
+            final: { value: '6,676', start: 4, end: 4 },
+        },
+        {
+            it: 'selection with comma will reformat with comma, but cursor moves after the replaced digit',
+            // user selected ",2"
+            initial: { value: '1,234,567', start: 1, end: 3 },
+            // "writes the "9" that replaces the ",2"
+            change: { value: '1934,567', start: 2, end: 2 },
+            // deleted "," is brought back by formatting but cursor stays after "9"
+            final: { value: '1,934,567', start: 3, end: 3 },
+        },
+        {
+            it: 'adding a same digit that forces the precision drop and formatting shift',
+            // Bitcoin MAX format (full precision)
+            initial: { value: '12,345,678.12,345,678', start: 11, end: 11 },
+            // user add "1" right in front of `.` =>  "12,345,678.|12,345,678"
+            change: { value: '12,345,678.112,345,678', start: 12, end: 12 },
+            // Cursors is moved after written 1 => "12,345,678.1|1,234,567" and last precision value is dropped
+            final: { value: '12,345,678.11,234,567', start: 12, end: 12 },
+        },
+    ])('$it', ({ initial, change, final }) => {
+        const { TestCurrencyInput } = createCurrencyInput({
+            code: 'BTC' as CurrencyCode,
+            focusedCurrency: 'BTC' as CurrencyCode,
+        });
+
+        render(<TestCurrencyInput />);
+        const input = screen.getByRole('textbox') as HTMLInputElement;
+
+        // 1) initialize input with current state (value + selection)
+        fireEvent.change(input, {
+            target: {
+                value: initial.value,
+                selectionStart: initial.start,
+                selectionEnd: initial.end,
+            },
+        });
+
+        expect(input).toHaveValue(initial.value);
+
+        // 2) simulate user edit (changed raw value after typing/replacing)
+        fireEvent.change(input, {
+            target: {
+                value: change.value,
+                selectionStart: change.start,
+                selectionEnd: change.end,
+            },
+        });
+
+        // 3) assert final formatted value + caret selection
+        expect(input).toHaveValue(final.value);
+        expect(input.selectionStart).toBe(final.start);
+        expect(input.selectionEnd).toBe(final.end);
+    });
 });

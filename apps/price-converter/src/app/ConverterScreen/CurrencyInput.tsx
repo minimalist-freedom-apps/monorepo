@@ -204,6 +204,8 @@ export const CurrencyInputPure = (
     }, [value, code, mode, focusedCurrency, inputValue]);
 
     const handleChange = (newValue: string, selection?: InputSelection) => {
+        console.log('__newValue', newValue, selection);
+
         const currentInput = inputRef.current?.input;
         const fallbackSelection =
             currentInput?.selectionStart != null && currentInput.selectionEnd != null
