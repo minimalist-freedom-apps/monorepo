@@ -11,8 +11,8 @@ import { Input, type InputRef } from '@minimalist-apps/components';
 import { type FiatAmount, formatFiatWithCommas } from '@minimalist-apps/fiat';
 import { isValidNumberInput, parseFormattedNumber, stripCommas } from '@minimalist-apps/number';
 import { type FC, useEffect, useRef, useState } from 'react';
-import type { BtcMode } from '../../state/State';
-import type { SetFocusedCurrencyDep } from '../../state/setFocusedCurrency';
+import type { BtcMode } from '../../../apps/price-converter/src/state/State';
+import type { SetFocusedCurrencyDep } from '../../../apps/price-converter/src/state/setFocusedCurrency';
 import { normalizeBtcInput, normalizeBtcInputPreservingMidEdit } from './normalizeBtcInput';
 
 const formatInputValue = (
