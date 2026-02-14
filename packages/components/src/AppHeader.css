@@ -1,0 +1,19 @@
+.mf-app-header-actions-full {
+    display: block;
+    flex: 0 0 auto;
+}
+
+.mf-app-header-actions-compact {
+    display: none;
+    flex: 0 0 auto;
+}
+
+@media (max-width: 360px) {
+    .mf-app-header-actions-full {
+        display: none;
+    }
+
+    .mf-app-header-actions-compact {
+        display: block;
+    }
+}

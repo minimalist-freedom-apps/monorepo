@@ -3,6 +3,7 @@ import {
     Button,
     Dropdown,
     Menu,
+    type MenuClickInfo,
     type MenuItems,
     MenuOutlined,
     ReloadOutlined,
@@ -11,13 +12,12 @@ import {
     Switch,
 } from '@minimalist-apps/components';
 import { exhaustive } from '@minimalist-apps/type-utils';
-import type { FC } from 'react';
+import { type FC, useRef, useState } from 'react';
 import { config } from '../../config';
 import type { FetchAndStoreRatesDep } from '../converter/fetchAndStoreRates';
 import type { NavigateDep } from '../state/navigate';
 import type { BtcMode } from '../state/State';
 import type { SetBtcModeDep } from '../state/setBtcMode';
-import type { DebugHeaderDep } from './DebugHeader';
 
 type BurgerMenuKey = 'mode' | 'refresh' | 'settings';
 
@@ -26,13 +26,16 @@ export type AppHeaderStateProps = {
     readonly mode: BtcMode;
 };
 
-type AppHeaderDeps = FetchAndStoreRatesDep & NavigateDep & SetBtcModeDep & DebugHeaderDep;
+type AppHeaderDeps = FetchAndStoreRatesDep & NavigateDep & SetBtcModeDep;
 
 export type AppHeaderDep = {
     readonly AppHeader: FC;
 };
 
 export const AppHeaderPure = (deps: AppHeaderDeps, { loading, mode }: AppHeaderStateProps) => {
+    const [isCompactMenuOpen, setIsCompactMenuOpen] = useState(false);
+    const keepCompactMenuOpenRef = useRef(false);
+
     const handleToggle = (checked: boolean) => {
         deps.setBtcMode(checked ? 'sats' : 'btc');
     };
@@ -46,7 +49,7 @@ export const AppHeaderPure = (deps: AppHeaderDeps, { loading, mode }: AppHeaderS
     };
 
     const modeSwitcher = (
-        <Row gap={4}>
+        <Row gap={8}>
             <strong>₿</strong>
             <Switch disableStateBgColorChange checked={mode === 'sats'} onChange={handleToggle} />
             <strong>丰</strong>
@@ -66,43 +69,62 @@ export const AppHeaderPure = (deps: AppHeaderDeps, { loading, mode }: AppHeaderS
         <Button variant="text" icon={<SettingOutlined />} onClick={handleSettings} />
     );
 
-    const handleCompactMenuClick = ({ key }: { readonly key: BurgerMenuKey }) => {
+    const handleCompactMenuClick = ({ key, closeOnClick }: MenuClickInfo<BurgerMenuKey>) => {
         switch (key) {
             case 'mode':
-                handleToggle(mode !== 'sats');
-
-                return;
+                break;
 
             case 'refresh':
                 deps.fetchAndStoreRates();
 
-                return;
+                break;
 
             case 'settings':
                 handleSettings();
 
-                return;
+                break;
 
             default:
-                return exhaustive(key);
+                exhaustive(key);
         }
+
+        if (closeOnClick === true) {
+            setIsCompactMenuOpen(false);
+
+            return;
+        }
+
+        keepCompactMenuOpenRef.current = true;
+    };
+
+    const handleCompactMenuOpenChange = (open: boolean) => {
+        if (!open && keepCompactMenuOpenRef.current) {
+            keepCompactMenuOpenRef.current = false;
+
+            return;
+        }
+
+        setIsCompactMenuOpen(open);
     };
 
     const compactMenuItems: MenuItems<BurgerMenuKey> = [
         {
             key: 'mode',
-            icon: <strong>{mode === 'sats' ? '丰' : '₿'}</strong>,
-            label: mode === 'sats' ? 'Switch to BTC mode' : 'Switch to SATS mode',
+            icon: null,
+            label: <Row gap={8}>{modeSwitcher}</Row>,
+            closeOnClick: false,
         },
         {
             key: 'refresh',
             icon: <ReloadOutlined />,
             label: loading ? 'Refreshing rates…' : 'Refresh rates',
+            closeOnClick: true,
         },
         {
             key: 'settings',
             icon: <SettingOutlined />,
             label: 'Settings',
+            closeOnClick: true,
         },
     ];
 
@@ -110,7 +132,6 @@ export const AppHeaderPure = (deps: AppHeaderDeps, { loading, mode }: AppHeaderS
         <AppHeader
             title={config.appShortName}
             onTitleClick={handleHome}
-            secondary={<deps.DebugHeader />}
             actions={
                 <>
                     {modeSwitcher}
@@ -122,6 +143,8 @@ export const AppHeaderPure = (deps: AppHeaderDeps, { loading, mode }: AppHeaderS
                 <Dropdown
                     trigger={['click']}
                     placement="bottomRight"
+                    open={isCompactMenuOpen}
+                    onOpenChange={handleCompactMenuOpenChange}
                     dropdownRender={() => (
                         <Menu
                             selectable={false}

@@ -6,11 +6,12 @@ type AntMenuClickInfo = Parameters<NonNullable<AntMenuProps['onClick']>>[0];
 type AntMenuItem = AntMenuItems[number];
 
 export type MenuItems<Key extends string = string> = ReadonlyArray<
-    AntMenuItem & { readonly key: Key }
+    AntMenuItem & { readonly key: Key; readonly closeOnClick: boolean }
 >;
 
 export type MenuClickInfo<Key extends string = string> = Omit<AntMenuClickInfo, 'key'> & {
     readonly key: Key;
+    readonly closeOnClick: boolean;
 };
 
 interface MenuProps<Key extends string = string> {
@@ -24,17 +25,25 @@ export const Menu = <Key extends string = string>({
     selectable = true,
     onClick,
 }: MenuProps<Key>) => {
+    const antMenuItems = items.map(({ closeOnClick, ...item }) => item);
+
     const handleClick =
         onClick === undefined
             ? undefined
             : (info: AntMenuClickInfo) => {
-                  onClick(info as MenuClickInfo<Key>);
+                  const clickedItem = items.find(item => item.key === info.key);
+
+                  onClick({
+                      ...(info as Omit<MenuClickInfo<Key>, 'closeOnClick'>),
+                      closeOnClick: clickedItem?.closeOnClick ?? true,
+                  });
               };
 
     return (
         <AntMenu
-            items={items as unknown as AntMenuItems}
+            items={antMenuItems}
             selectable={selectable}
+            className="mf-menu"
             {...(handleClick !== undefined ? { onClick: handleClick } : {})}
         />
     );
