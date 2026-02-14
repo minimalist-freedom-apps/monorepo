@@ -9,20 +9,37 @@ interface TextProps {
     readonly strong?: boolean;
     readonly nowrap?: boolean;
     readonly flexShrink?: number;
-    readonly large?: boolean;
+    readonly size?: 'small' | 'medium' | 'large';
     readonly secondary?: boolean;
     readonly onClick?: () => void;
+    readonly padding?: {
+        readonly top?: number;
+        readonly right?: number;
+        readonly bottom?: number;
+        readonly left?: number;
+    };
 }
+
+const textSizeMap = {
+    small: '0.875rem',
+    medium: '1rem',
+    large: '1.5rem',
+} as const;
 
 const buildTextStyle = (
     nowrap: boolean,
     flexShrink: number | undefined,
-    large: boolean,
+    size: TextProps['size'],
+    padding: TextProps['padding'],
 ): Record<string, never> | { readonly style: React.CSSProperties } => {
     const style: React.CSSProperties = {
         ...(nowrap ? { whiteSpace: 'nowrap' } : {}),
         ...(flexShrink !== undefined ? { flexShrink } : {}),
-        ...(large ? { fontSize: '1.5rem' } : {}),
+        ...(size !== undefined ? { fontSize: textSizeMap[size] } : {}),
+        ...(padding?.top !== undefined ? { paddingTop: padding.top } : {}),
+        ...(padding?.right !== undefined ? { paddingRight: padding.right } : {}),
+        ...(padding?.bottom !== undefined ? { paddingBottom: padding.bottom } : {}),
+        ...(padding?.left !== undefined ? { paddingLeft: padding.left } : {}),
     };
 
     return typedObjectKeys(style).length > 0 ? { style } : {};
@@ -33,15 +50,16 @@ export const Text = ({
     strong = false,
     nowrap = false,
     flexShrink,
-    large = false,
+    size = 'medium',
     secondary = false,
     onClick,
+    padding,
 }: TextProps) => (
     <AntText
         strong={strong}
         onClick={onClick}
         {...(secondary ? { type: 'secondary' as const } : {})}
-        {...buildTextStyle(nowrap, flexShrink, large)}
+        {...buildTextStyle(nowrap, flexShrink, size, padding)}
     >
         {children}
     </AntText>

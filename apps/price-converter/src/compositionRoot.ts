@@ -11,6 +11,7 @@ import { AppHeaderPure } from './app/AppHeader';
 import { type AppLayoutProps, AppLayoutPure } from './app/AppLayout';
 import { ConverterScreenPure } from './app/ConverterScreen/ConverterScreen';
 import { CurrencyRowPure } from './app/ConverterScreen/CurrencyFiatRow';
+import { type MoscowTimeOwnProps, MoscowTimePure } from './app/ConverterScreen/MoscowTime';
 import { DebugHeaderPure } from './app/DebugHeader';
 import { RatesLoadingPure } from './app/RatesLoading';
 import { DebugSettingsPure } from './app/SettingsScreen/DebugSettings';
@@ -153,6 +154,11 @@ export const createCompositionRoot = (): Main => {
         },
     );
 
+    const MoscowTime = connect(MoscowTimePure, ({ store }, ownProps: MoscowTimeOwnProps) => ({
+        btcMode: store.btcMode,
+        rateBtcPerFiat: ownProps.code === 'BTC' ? undefined : store.rates[ownProps.code]?.rate,
+    }));
+
     const CurrencyRow = connect(
         CurrencyRowPure,
         ({ store }) => ({
@@ -160,6 +166,7 @@ export const createCompositionRoot = (): Main => {
         }),
         {
             CurrencyInput,
+            MoscowTime,
         },
     );
 

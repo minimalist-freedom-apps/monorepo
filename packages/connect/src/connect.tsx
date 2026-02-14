@@ -18,12 +18,18 @@ type StoreStates<Stores extends SubscribableRecord> = {
 export type Connect<States> = {
     <RenderProps, StateProps>(
         render: (props: RenderProps) => React.ReactNode,
-        mapStateToProps: (states: States) => StateProps,
+        mapStateToProps: (
+            states: States,
+            ownProps: Omit<RenderProps, keyof StateProps>,
+        ) => StateProps,
     ): React.FC<Omit<RenderProps, keyof StateProps>>;
 
     <Deps, RenderProps, StateProps>(
         render: (deps: Deps, props: RenderProps) => React.ReactNode,
-        mapStateToProps: (states: States) => StateProps,
+        mapStateToProps: (
+            states: States,
+            ownProps: Omit<RenderProps, keyof StateProps>,
+        ) => StateProps,
         deps: Deps,
     ): React.FC<Omit<RenderProps, keyof StateProps>>;
 };
@@ -45,13 +51,14 @@ export const createConnect = <Stores extends SubscribableRecord>(
 
     const connect = (
         render: (...args: readonly unknown[]) => React.ReactNode,
-        mapStateToProps: (states: StoreStates<Stores>) => unknown,
+        mapStateToProps: (states: StoreStates<Stores>, ownProps: unknown) => unknown,
         deps?: unknown,
     ): React.FC<unknown> => {
         const ConnectedComponent: React.FC<unknown> = ownProps => {
             const cacheRef = useRef<
                 | {
                       readonly version: number;
+                      readonly ownProps: unknown;
                       readonly mapped: unknown;
                   }
                 | undefined
@@ -71,7 +78,11 @@ export const createConnect = <Stores extends SubscribableRecord>(
             const getSnapshot = useCallback(() => {
                 const currentVersion = versionRef.current;
 
-                if (cacheRef.current !== undefined && cacheRef.current.version === currentVersion) {
+                if (
+                    cacheRef.current !== undefined &&
+                    cacheRef.current.version === currentVersion &&
+                    cacheRef.current.ownProps === ownProps
+                ) {
                     return cacheRef.current.mapped;
                 }
 
@@ -83,12 +94,12 @@ export const createConnect = <Stores extends SubscribableRecord>(
                     states[storeEntries[i][0] as string] = currentStoreStates[i];
                 }
 
-                const mapped = mapStateToProps(states as StoreStates<Stores>);
+                const mapped = mapStateToProps(states as StoreStates<Stores>, ownProps);
 
-                cacheRef.current = { version: currentVersion, mapped };
+                cacheRef.current = { version: currentVersion, ownProps, mapped };
 
                 return mapped;
-            }, []);
+            }, [ownProps]);
 
             const stateProps = useSyncExternalStore(subscribeWithVersion, getSnapshot);
             const props = {

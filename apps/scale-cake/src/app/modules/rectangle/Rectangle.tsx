@@ -47,17 +47,17 @@ export const Rectangle = () => {
                     }
                     denominator={
                         result !== null ? (
-                            <Text strong large>
+                            <Text strong size="large">
                                 {result.toFixed()}
                             </Text>
                         ) : (
-                            <Text large secondary>
+                            <Text size="large" secondary>
                                 ?
                             </Text>
                         )
                     }
                 />
-                <Text strong large>
+                <Text strong size="large">
                     =
                 </Text>
                 <Fraction
