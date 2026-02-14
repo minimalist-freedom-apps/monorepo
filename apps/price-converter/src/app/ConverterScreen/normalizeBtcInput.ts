@@ -6,6 +6,25 @@ interface NormalizeBtcInputResult {
     readonly numeric: string;
 }
 
+type ParsedBtcInput = {
+    readonly sign: '' | '-';
+    readonly integerPart: string;
+    readonly decimalPart: string;
+};
+
+const parseBtcInput = (value: string): ParsedBtcInput => {
+    const normalized = stripCommas(value.trim());
+    const isNegative = normalized.startsWith('-');
+    const unsigned = isNegative ? normalized.slice(1) : normalized;
+    const [rawIntPart = '', rawDecimalPart = ''] = unsigned.split('.');
+
+    return {
+        sign: isNegative ? '-' : '',
+        integerPart: rawIntPart.replace(/^0+(?=\d)/u, ''),
+        decimalPart: rawDecimalPart,
+    };
+};
+
 const limitBtcDecimalDigits = (decimals: string): string => {
     let result = decimals;
 
@@ -31,33 +50,36 @@ const formatGroupedBtcInputDecimal = (decimals: string): string => {
         .replace(/,+$/u, '');
 };
 
-export const normalizeBtcInput = (value: string): NormalizeBtcInputResult => {
-    const normalized = stripCommas(value.trim());
-    const isNegative = normalized.startsWith('-');
-    const unsigned = isNegative ? normalized.slice(1) : normalized;
-    const [rawIntPart, rawDecimalPart] = unsigned.split('.');
-    const intPart = rawIntPart.replace(/^0+(?=\d)/u, '');
-    const sign = isNegative ? '-' : '';
-    const intPartWithCommas = addThousandSeparators(intPart);
-
-    if (!rawDecimalPart) {
-        return {
-            display: `${sign}${intPartWithCommas}`,
-            numeric: `${sign}${intPart}`,
-        };
-    }
-
-    const limitedDecimalPart = limitBtcDecimalDigits(rawDecimalPart);
-    const groupedDecimalPart = formatGroupedBtcInputDecimal(limitedDecimalPart);
+const buildBtcInputResult = (
+    sign: '' | '-',
+    integerPart: string,
+    decimalPart: string,
+): NormalizeBtcInputResult => {
+    const integerPartWithCommas = addThousandSeparators(integerPart);
+    const groupedDecimalPart = formatGroupedBtcInputDecimal(decimalPart);
 
     return {
         display:
             groupedDecimalPart === ''
-                ? `${sign}${intPartWithCommas}`
-                : `${sign}${intPartWithCommas}.${groupedDecimalPart}`,
+                ? `${sign}${integerPartWithCommas}`
+                : `${sign}${integerPartWithCommas}.${groupedDecimalPart}`,
         numeric:
-            limitedDecimalPart === ''
-                ? `${sign}${intPart}`
-                : `${sign}${intPart}.${limitedDecimalPart}`,
+            decimalPart === '' ? `${sign}${integerPart}` : `${sign}${integerPart}.${decimalPart}`,
     };
+};
+
+export const normalizeBtcInput = (value: string): NormalizeBtcInputResult => {
+    const parsed = parseBtcInput(value);
+
+    return buildBtcInputResult(
+        parsed.sign,
+        parsed.integerPart,
+        limitBtcDecimalDigits(parsed.decimalPart),
+    );
+};
+
+export const normalizeBtcInputPreservingMidEdit = (value: string): NormalizeBtcInputResult => {
+    const parsed = parseBtcInput(value);
+
+    return buildBtcInputResult(parsed.sign, parsed.integerPart, parsed.decimalPart.slice(0, 8));
 };
