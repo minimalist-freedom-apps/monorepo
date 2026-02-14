@@ -369,9 +369,6 @@ importers:
       '@minimalist-apps/connect':
         specifier: workspace:*
         version: link:../connect
-      '@minimalist-apps/mini-store':
-        specifier: workspace:*
-        version: link:../mini-store
     devDependencies:
       '@minimalist-apps/tsconfig':
         specifier: workspace:*

@@ -17,8 +17,7 @@
     "dependencies": {
         "@evolu/common": "^7.4.1",
         "@evolu/web": "^2.4.0",
-        "@minimalist-apps/connect": "workspace:*",
-        "@minimalist-apps/mini-store": "workspace:*"
+        "@minimalist-apps/connect": "workspace:*"
     },
     "devDependencies": {
         "@minimalist-apps/tsconfig": "workspace:*",

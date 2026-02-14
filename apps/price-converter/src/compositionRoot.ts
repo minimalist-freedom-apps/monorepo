@@ -1,7 +1,10 @@
 import { createConnect } from '@minimalist-apps/connect';
 import { CurrencyInputPure } from '@minimalist-apps/currency-input';
 import { createCurrentDateTime } from '@minimalist-apps/datetime';
-import { createEnsureEvolu, createEnsureEvoluOwner } from '@minimalist-apps/evolu';
+import {
+    createEnsureEvolu,
+    createEnsureEvoluOwner as createEnsureEvoluMnemonic,
+} from '@minimalist-apps/evolu';
 import { createLocalStorage } from '@minimalist-apps/local-storage';
 import { createWindow } from '@minimalist-apps/window';
 import { AddCurrencyButtonPure } from './app/AddCurrencyScreen/AddCurrencyButton';
@@ -77,7 +80,10 @@ export const createCompositionRoot = (): Main => {
     });
 
     // Evolu
-    const ensureEvoluOwner = createEnsureEvoluOwner({ store });
+    const ensureEvoluOwner = createEnsureEvoluMnemonic({
+        getPersistedMnemonic: () => store.getState().evoluMnemonic,
+        persistMnemonic: mnemonic => store.setState({ evoluMnemonic: mnemonic }),
+    });
     const ensureEvoluStorage = createEnsureEvolu({
         deps: {
             ensureEvoluOwner,
