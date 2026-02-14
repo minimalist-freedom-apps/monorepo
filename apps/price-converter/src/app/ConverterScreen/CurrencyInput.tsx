@@ -7,7 +7,7 @@ import {
     formatSats,
     satsToBtc,
 } from '@minimalist-apps/bitcoin';
-import { Input } from '@minimalist-apps/components';
+import { Input, type InputRef } from '@minimalist-apps/components';
 import { type FiatAmount, formatFiatWithCommas } from '@minimalist-apps/fiat';
 import { isValidNumberInput, parseFormattedNumber, stripCommas } from '@minimalist-apps/number';
 import { type FC, useEffect, useRef, useState } from 'react';
@@ -48,6 +48,45 @@ const persistedStableInputByCurrencyAndMode = new Map<string, string>();
 const getPersistedInputKey = (currencyCode: CurrencyCode | 'BTC', displayMode: BtcMode): string =>
     `${currencyCode}:${displayMode}`;
 
+type InputSelection = {
+    readonly start: number;
+    readonly end: number;
+};
+
+const mapOffsetToFormattedIndex = (formattedValue: string, offsetWithoutCommas: number): number => {
+    if (offsetWithoutCommas <= 0) {
+        return 0;
+    }
+
+    let normalizedCharsSeen = 0;
+
+    for (let index = 0; index < formattedValue.length; index += 1) {
+        if (formattedValue[index] !== ',') {
+            normalizedCharsSeen += 1;
+        }
+
+        if (normalizedCharsSeen >= offsetWithoutCommas) {
+            return index + 1;
+        }
+    }
+
+    return formattedValue.length;
+};
+
+const remapSelectionAfterFormatting = (
+    rawValue: string,
+    formattedValue: string,
+    selection: InputSelection,
+): InputSelection => {
+    const normalizedStart = stripCommas(rawValue.slice(0, selection.start)).length;
+    const normalizedEnd = stripCommas(rawValue.slice(0, selection.end)).length;
+
+    return {
+        start: mapOffsetToFormattedIndex(formattedValue, normalizedStart),
+        end: mapOffsetToFormattedIndex(formattedValue, normalizedEnd),
+    };
+};
+
 export type CurrencyInputOwnProps = {
     readonly value: number;
     readonly code: CurrencyCode | 'BTC';
@@ -87,6 +126,43 @@ export const CurrencyInputPure = (
     const previousModeRef = useRef(mode);
     const previousValueRef = useRef(value);
     const previousFocusedCurrencyRef = useRef(focusedCurrency);
+    const inputRef = useRef<InputRef>(null);
+    const pendingSelectionRef = useRef<InputSelection | null>(null);
+
+    const queueSelectionRestore = (
+        rawValue: string,
+        formattedValue: string,
+        selection?: InputSelection,
+    ) => {
+        if (selection === undefined) {
+            return;
+        }
+
+        pendingSelectionRef.current = remapSelectionAfterFormatting(
+            rawValue,
+            formattedValue,
+            selection,
+        );
+    };
+
+    useEffect(() => {
+        void inputValue;
+
+        const pendingSelection = pendingSelectionRef.current;
+
+        if (pendingSelection === null) {
+            return;
+        }
+
+        const inputElement = inputRef.current?.input;
+
+        if (inputElement == null) {
+            return;
+        }
+
+        pendingSelectionRef.current = null;
+        inputElement.setSelectionRange(pendingSelection.start, pendingSelection.end);
+    }, [inputValue]);
 
     useEffect(() => {
         const modeChanged = previousModeRef.current !== mode;
@@ -127,12 +203,23 @@ export const CurrencyInputPure = (
         setInputValue(formattedValue);
     }, [value, code, mode, focusedCurrency, inputValue]);
 
-    const handleChange = (newValue: string) => {
+    const handleChange = (newValue: string, selection?: InputSelection) => {
+        const currentInput = inputRef.current?.input;
+        const fallbackSelection =
+            currentInput?.selectionStart != null && currentInput.selectionEnd != null
+                ? {
+                      start: currentInput.selectionStart,
+                      end: currentInput.selectionEnd,
+                  }
+                : undefined;
+        const effectiveSelection = selection ?? fallbackSelection;
+
         if (!isValidNumberInput(newValue)) {
             return;
         }
 
         if (isInvalidTrailingCommaZeroInput(newValue)) {
+            queueSelectionRestore(newValue, '0', effectiveSelection);
             setInputValue('0');
             persistedStableInputByCurrencyAndMode.set(getPersistedInputKey(code, mode), '0');
             onChange(0);
@@ -161,6 +248,7 @@ export const CurrencyInputPure = (
             const normalizedBtcValue = normalizeBtcInput(newValue);
             const parsedBtcValue = parseFormattedNumber(normalizedBtcValue.numeric);
 
+            queueSelectionRestore(newValue, normalizedBtcValue.display, effectiveSelection);
             setInputValue(normalizedBtcValue.display);
             persistedStableInputByCurrencyAndMode.set(
                 getPersistedInputKey(code, mode),
@@ -177,6 +265,7 @@ export const CurrencyInputPure = (
         if (!isZeroInput(newValue)) {
             const formattedValue = formatInputValue(numberValue, code, mode);
 
+            queueSelectionRestore(newValue, formattedValue, effectiveSelection);
             setInputValue(formattedValue);
             persistedStableInputByCurrencyAndMode.set(
                 getPersistedInputKey(code, mode),
@@ -203,6 +292,7 @@ export const CurrencyInputPure = (
             value={inputValue}
             onChange={handleChange}
             onFocus={handleFocus}
+            inputRef={inputRef}
             label={`${code} amount`}
             monospace
             size="large"
