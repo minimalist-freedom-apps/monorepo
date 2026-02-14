@@ -1,7 +1,8 @@
-import { Alert, Row, Text } from '@minimalist-apps/components';
+import { Alert, Flex, Row, Text } from '@minimalist-apps/components';
 import type { IntervalId } from '@minimalist-apps/type-utils';
 import { type FC, useEffect, useRef, useState } from 'react';
 import type { FetchAndStoreRatesDep } from '../converter/fetchAndStoreRates';
+import type { DebugHeaderDep } from './DebugHeader';
 
 const getTimeAgo = (timestamp: number): string => {
     const now = Date.now();
@@ -32,14 +33,14 @@ export type RatesLoadingStateProps = {
     readonly lastUpdated: number | null;
 };
 
-type RatesLoadingDeps = FetchAndStoreRatesDep;
+type RatesLoadingDeps = FetchAndStoreRatesDep & DebugHeaderDep;
 
 export type RatesLoadingDep = {
     readonly RatesLoading: FC;
 };
 
 export const RatesLoadingPure = (
-    { fetchAndStoreRates }: RatesLoadingDeps,
+    { DebugHeader, fetchAndStoreRates }: RatesLoadingDeps,
     { error, lastUpdated }: RatesLoadingStateProps,
 ) => {
     const [timeAgo, setTimeAgo] = useState<string>('');
@@ -66,9 +67,13 @@ export const RatesLoadingPure = (
     }, [lastUpdated]);
 
     return (
-        <Row justify={error ? 'space-between' : 'end'} align="end">
-            {timeAgo && <Text>{timeAgo}</Text>}
-            {error && <Alert message={error} type="error" />}
+        <Row justify="space-between" align="end">
+            <Flex>
+                <DebugHeader />
+                &nbsp;
+                {error && <Alert message={error} type="error" />}
+            </Flex>
+            <Flex>{timeAgo && <Text>{timeAgo}</Text>}</Flex>
         </Row>
     );
 };

@@ -170,6 +170,11 @@ export const createCompositionRoot = (): Main => {
         },
     );
 
+    const DebugHeader = connect(DebugHeaderPure, ({ store }) => ({
+        debugMode: store.debugMode,
+        ownerId: store.evoluOwnerId,
+    }));
+
     const RatesLoading = connect(
         RatesLoadingPure,
         ({ store }) => ({
@@ -178,6 +183,7 @@ export const createCompositionRoot = (): Main => {
         }),
         {
             fetchAndStoreRates,
+            DebugHeader,
         },
     );
 
@@ -236,11 +242,6 @@ export const createCompositionRoot = (): Main => {
             navigate,
         },
     );
-
-    const DebugHeader = connect(DebugHeaderPure, ({ store }) => ({
-        debugMode: store.debugMode,
-        ownerId: store.evoluOwnerId,
-    }));
 
     const AppHeader = connect(
         AppHeaderPure,
