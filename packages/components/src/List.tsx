@@ -1,7 +1,7 @@
-import { typedObjectKeys } from '@minimalist-apps/type-utils';
 import { Empty as AntEmpty } from 'antd';
 import type { CSSProperties, FocusEvent, KeyboardEvent, MouseEvent, ReactNode } from 'react';
 import { Column } from './Flex';
+import { buildSpacingStyle, type Spacing } from './spacing';
 
 interface ListItem {
     readonly key: string;
@@ -12,12 +12,7 @@ interface ListProps<T extends ListItem> {
     readonly renderItem: (item: T) => ReactNode;
     readonly emptyText?: string;
     readonly onItemClick?: (item: T) => void;
-    readonly rowPadding?: {
-        readonly top?: number;
-        readonly right?: number;
-        readonly bottom?: number;
-        readonly left?: number;
-    };
+    readonly rowPadding?: Spacing;
 }
 
 const interactiveStyle = {
@@ -49,17 +44,8 @@ const defaultRowPadding = {
 
 const buildRowPaddingStyle = (
     rowPadding: ListProps<ListItem>['rowPadding'],
-): Record<string, never> | CSSProperties => {
-    const padding = rowPadding ?? defaultRowPadding;
-    const style: CSSProperties = {
-        ...(padding.top !== undefined ? { paddingTop: padding.top } : {}),
-        ...(padding.right !== undefined ? { paddingRight: padding.right } : {}),
-        ...(padding.bottom !== undefined ? { paddingBottom: padding.bottom } : {}),
-        ...(padding.left !== undefined ? { paddingLeft: padding.left } : {}),
-    };
-
-    return typedObjectKeys(style).length > 0 ? style : {};
-};
+): Record<string, never> | CSSProperties =>
+    buildSpacingStyle({ padding: rowPadding ?? defaultRowPadding });
 
 export const List = <T extends ListItem>({
     items,

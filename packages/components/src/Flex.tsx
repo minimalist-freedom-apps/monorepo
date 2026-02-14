@@ -1,5 +1,6 @@
 import { Flex as AntFlex } from 'antd';
 import type { ReactNode } from 'react';
+import { buildSpacingStyle, type Spacing } from './spacing';
 
 export interface FlexProps {
     readonly children: ReactNode;
@@ -9,6 +10,8 @@ export interface FlexProps {
     readonly align?: 'start' | 'center' | 'end' | 'stretch';
     readonly justify?: 'start' | 'center' | 'end' | 'space-between' | 'space-around';
     readonly direction?: 'row' | 'column';
+    readonly margin?: Spacing;
+    readonly padding?: Spacing;
     readonly style?: React.CSSProperties;
 }
 
@@ -20,20 +23,29 @@ export const Flex = ({
     align = 'stretch',
     justify = 'start',
     direction = 'row',
+    margin,
+    padding,
     style,
-}: FlexProps) => (
-    <AntFlex
-        gap={gap}
-        flex={flex}
-        wrap={wrap ? 'wrap' : undefined}
-        align={align}
-        justify={justify}
-        vertical={direction === 'column'}
-        style={style}
-    >
-        {children}
-    </AntFlex>
-);
+}: FlexProps) => {
+    const spacingStyle = buildSpacingStyle({
+        ...(margin ? { margin } : {}),
+        ...(padding ? { padding } : {}),
+    });
+
+    return (
+        <AntFlex
+            gap={gap}
+            flex={flex}
+            wrap={wrap ? 'wrap' : undefined}
+            align={align}
+            justify={justify}
+            vertical={direction === 'column'}
+            style={{ ...spacingStyle, ...style }}
+        >
+            {children}
+        </AntFlex>
+    );
+};
 
 export const Row = (props: FlexProps) => (
     <Flex {...props} direction="row" align={props.align ?? 'center'} />

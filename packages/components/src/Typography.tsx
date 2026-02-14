@@ -1,6 +1,7 @@
 import { typedObjectKeys } from '@minimalist-apps/type-utils';
 import { Typography } from 'antd';
-import type { ReactNode } from 'react';
+import type { CSSProperties, ReactNode } from 'react';
+import { buildSpacingStyle, type Spacing } from './spacing';
 
 const { Text: AntText, Title: AntTitle, Paragraph: AntParagraph } = Typography;
 
@@ -12,12 +13,8 @@ interface TextProps {
     readonly size?: 'small' | 'medium' | 'large';
     readonly secondary?: boolean;
     readonly onClick?: () => void;
-    readonly padding?: {
-        readonly top?: number;
-        readonly right?: number;
-        readonly bottom?: number;
-        readonly left?: number;
-    };
+    readonly margin?: Spacing;
+    readonly padding?: Spacing;
 }
 
 const textSizeMap = {
@@ -30,16 +27,17 @@ const buildTextStyle = (
     nowrap: boolean,
     flexShrink: number | undefined,
     size: TextProps['size'],
+    margin: TextProps['margin'],
     padding: TextProps['padding'],
 ): Record<string, never> | { readonly style: React.CSSProperties } => {
-    const style: React.CSSProperties = {
+    const style: CSSProperties = {
         ...(nowrap ? { whiteSpace: 'nowrap' } : {}),
         ...(flexShrink !== undefined ? { flexShrink } : {}),
         ...(size !== undefined ? { fontSize: textSizeMap[size] } : {}),
-        ...(padding?.top !== undefined ? { paddingTop: padding.top } : {}),
-        ...(padding?.right !== undefined ? { paddingRight: padding.right } : {}),
-        ...(padding?.bottom !== undefined ? { paddingBottom: padding.bottom } : {}),
-        ...(padding?.left !== undefined ? { paddingLeft: padding.left } : {}),
+        ...buildSpacingStyle({
+            ...(margin ? { margin } : {}),
+            ...(padding ? { padding } : {}),
+        }),
     };
 
     return typedObjectKeys(style).length > 0 ? { style } : {};
@@ -53,13 +51,14 @@ export const Text = ({
     size = 'medium',
     secondary = false,
     onClick,
+    margin,
     padding,
 }: TextProps) => (
     <AntText
         strong={strong}
         onClick={onClick}
         {...(secondary ? { type: 'secondary' as const } : {})}
-        {...buildTextStyle(nowrap, flexShrink, size, padding)}
+        {...buildTextStyle(nowrap, flexShrink, size, margin, padding)}
     >
         {children}
     </AntText>
