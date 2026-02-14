@@ -3,7 +3,7 @@ import { Button, Flex, List, Row, Screen, SearchInput, Text } from '@minimalist-
 import { CURRENCY_TERRITORIES } from '@minimalist-apps/fiat';
 import { typedObjectValues } from '@minimalist-apps/type-utils';
 import type { FC } from 'react';
-import { useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import type { CurrencyEntity, CurrencyMap } from '../../rates/FetchRates';
 import type { AddCurrencyDep } from '../../state/addCurrency';
 import type { NavigateDep } from '../../state/navigate';
@@ -25,6 +25,7 @@ export const AddCurrencyScreenPure = (
     { rates, selectedCurrencies }: AddCurrencyScreenStateProps,
 ) => {
     const [searchTerm, setSearchTerm] = useState('');
+    const listContainerRef = useRef<HTMLDivElement>(null);
 
     const availableCurrencies = typedObjectValues(rates)
         .filter(
@@ -49,6 +50,28 @@ export const AddCurrencyScreenPure = (
         ...item,
     }));
 
+    useEffect(() => {
+        const listContainer = listContainerRef.current;
+
+        if (!listContainer) {
+            return;
+        }
+
+        const handleFocusIn = (event: FocusEvent) => {
+            if (event.target !== listContainer) {
+                return;
+            }
+
+            listContainer.querySelector<HTMLButtonElement>('button[type="button"]')?.focus();
+        };
+
+        listContainer.addEventListener('focusin', handleFocusIn);
+
+        return () => {
+            listContainer.removeEventListener('focusin', handleFocusIn);
+        };
+    }, []);
+
     return (
         <Screen gap={12}>
             <Button onClick={handleBack} variant="text" style={{ alignSelf: 'start' }}>
@@ -58,20 +81,23 @@ export const AddCurrencyScreenPure = (
                 value={searchTerm}
                 onChange={setSearchTerm}
                 placeholder="Search currencies..."
+                autoFocus
             />
             <div
+                ref={listContainerRef}
                 style={{
                     maxHeight: 'calc(100vh - 200px)',
                     overflow: 'auto',
-                    paddingRight: '8px',
+                    outline: 'none',
                 }}
             >
                 <List
                     items={listItems}
+                    rowPadding={{ left: 12, right: 12 }}
                     emptyText="No currencies found"
                     onItemClick={item => handleSelect(item.code)}
                     renderItem={item => (
-                        <Row gap={12} justify="space-between">
+                        <Row gap={12} justify="space-between" margin={{}}>
                             <Flex flex="1" style={{ minWidth: 0 }}>
                                 <Row gap={4} wrap>
                                     {item.name}&nbsp;&nbsp;

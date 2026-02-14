@@ -44,6 +44,25 @@ const createTestComponent = (selectedCurrencies: ReadonlyArray<CurrencyCode> = [
 };
 
 describe(AddCurrencyScreenPure.name, () => {
+    test('focuses search input on open', () => {
+        const { AddCurrencyScreen } = createTestComponent();
+
+        render(<AddCurrencyScreen />);
+
+        expect(screen.getByPlaceholderText('Search currencies...')).toHaveFocus();
+    });
+
+    test('tabs from search input directly to first currency row', async () => {
+        const user = userEvent.setup();
+        const { AddCurrencyScreen } = createTestComponent();
+
+        render(<AddCurrencyScreen />);
+
+        await user.tab();
+
+        expect(screen.getByRole('button', { name: /Euro/i })).toHaveFocus();
+    });
+
     test('displays flag emojis for each currency', () => {
         const { AddCurrencyScreen } = createTestComponent();
 

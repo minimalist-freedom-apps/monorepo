@@ -27,6 +27,7 @@ export { Input } from './Input';
 export { Layout } from './Layout';
 export { List } from './List';
 export { Mnemonic } from './Mnemonic';
+export { Modal } from './Modal';
 export { Screen } from './Screen';
 export { SearchInput } from './SearchInput';
 export { SettingsRow } from './SettingsRow';

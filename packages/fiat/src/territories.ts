@@ -74,7 +74,7 @@ export const CURRENCY_TERRITORIES = {
         { flag: '🇫🇴', name: 'Faroe Islands' },
         { flag: '🇬🇱', name: 'Greenland' },
     ],
-    [asCurrencyCodeUnsafe('DOP')]: [{ flag: '🇩�', name: 'Dominican Republic' }],
+    [asCurrencyCodeUnsafe('DOP')]: [{ flag: '🇩🇴', name: 'Dominican Republic' }],
     [asCurrencyCodeUnsafe('DZD')]: [{ flag: '🇩🇿', name: 'Algeria' }],
     [asCurrencyCodeUnsafe('EGP')]: [{ flag: '🇪🇬', name: 'Egypt' }],
     [asCurrencyCodeUnsafe('ERN')]: [{ flag: '🇪🇷', name: 'Eritrea' }],
