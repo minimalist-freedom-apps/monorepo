@@ -46,6 +46,7 @@ export const createAddCurrency =
                 id: createIdFromString<'CurrencyId'>(code),
                 currency: code,
                 order: newOrder,
+                isDeleted: 0,
             },
             { ownerId: shardOwner.id },
         );
