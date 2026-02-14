@@ -304,6 +304,7 @@ export const CurrencyInputPure = (
             onChange={handleChange}
             onFocus={handleFocus}
             inputRef={inputRef}
+            inputMode="decimal"
             label={`${code} amount`}
             monospace
             size="large"

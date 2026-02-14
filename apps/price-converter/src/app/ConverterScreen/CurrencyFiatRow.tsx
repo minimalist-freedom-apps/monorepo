@@ -1,9 +1,11 @@
 import type { CurrencyCode } from '@evolu/common';
-import { Button, Column, Modal, Row, Text } from '@minimalist-apps/components';
+import { Button, Column, Row, Text } from '@minimalist-apps/components';
 import type { CurrencyInputDep } from '@minimalist-apps/currency-input';
 import { type FC, useState } from 'react';
 import type { BtcMode } from '../../state/State';
+import { BtcEasterEggModal } from './BtcEasterEggModal';
 import type { MoscowTimeDep } from './MoscowTime';
+import { RemoveCurrencyModal } from './RemoveCurrencyModal';
 
 export type CurrencyRowOwnProps = {
     readonly code: CurrencyCode | 'BTC';
@@ -27,6 +29,7 @@ export const CurrencyRowPure = (
     { btcMode, code, value, onChange, onRemove }: CurrencyRowStateProps & CurrencyRowOwnProps,
 ) => {
     const [isRemoveModalOpen, setIsRemoveModalOpen] = useState(false);
+    const [isBtcEasterEggOpen, setIsBtcEasterEggOpen] = useState(false);
 
     const closeRemoveModal = () => {
         setIsRemoveModalOpen(false);
@@ -38,6 +41,14 @@ export const CurrencyRowPure = (
         if (onRemove) {
             onRemove();
         }
+    };
+
+    const openBtcEasterEgg = () => {
+        setIsBtcEasterEggOpen(true);
+    };
+
+    const closeBtcEasterEgg = () => {
+        setIsBtcEasterEggOpen(false);
     };
 
     return (
@@ -58,19 +69,26 @@ export const CurrencyRowPure = (
                         🗑️
                     </Button>
                 )}
+                {!onRemove && code === 'BTC' && (
+                    <Button
+                        onClick={openBtcEasterEgg}
+                        style={{
+                            width: 24,
+                            minWidth: 24,
+                            paddingInline: 0,
+                            border: 'none',
+                            background: 'transparent',
+                        }}
+                    />
+                )}
             </Row>
-            <Modal
+            <RemoveCurrencyModal
                 open={isRemoveModalOpen}
-                title="Remove currency?"
-                okText="Remove"
-                cancelText="Cancel"
+                code={code}
                 onOk={confirmRemove}
                 onCancel={closeRemoveModal}
-                okDanger
-                centered
-            >
-                <Text>Do you want to remove {code}?</Text>
-            </Modal>
+            />
+            <BtcEasterEggModal open={isBtcEasterEggOpen} onOk={closeBtcEasterEgg} />
             <deps.MoscowTime code={code} />
         </Column>
     );
