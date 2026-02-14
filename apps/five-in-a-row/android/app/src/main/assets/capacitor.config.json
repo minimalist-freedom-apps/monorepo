@@ -1,0 +1,8 @@
+{
+    "appId": "com.minimalist.scalecake",
+    "appName": "Scale Cake",
+    "webDir": "dist",
+    "server": {
+        "cleartext": true
+    }
+}

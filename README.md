@@ -4,7 +4,6 @@
 ## Apps
 - 🚧 [**Price Converter**](apps/price-converter/README.md) - Converts Fiat Shitcoins to Bitcoin/Sats
 - [**Scale Cake**](apps/scale-cake/README.md) - Scale your cake recipes to size of your plate
-- [**Five in a Row**](apps/five-in-a-row/README.md) - Simple local two-player X/O board game
 
 ## Development
 See: [Development](docs/development.md)
