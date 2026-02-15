@@ -1,10 +1,10 @@
 export {
-    createEnsureEvoluMnemonic as createEnsureEvoluOwner,
-    type EnsureEvoluMnemonic as EnsureEvoluOwner,
+    createEnsureEvoluMnemonic,
+    type EnsureEvoluMnemonic,
     type EnsureEvoluOwnerDep,
 } from './createEnsureEvoluMnemonic';
 export {
-    createEnsureEvoluStorage as createEnsureEvolu,
+    createEnsureEvoluStorage,
     type EnsureEvoluDep,
     type EvoluStorage,
     type OnShardOwnerCreatedDep,

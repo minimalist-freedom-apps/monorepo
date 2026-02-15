@@ -1,10 +1,7 @@
 import { createConnect } from '@minimalist-apps/connect';
 import { CurrencyInputPure } from '@minimalist-apps/currency-input';
 import { createCurrentDateTime } from '@minimalist-apps/datetime';
-import {
-    createEnsureEvolu,
-    createEnsureEvoluOwner as createEnsureEvoluMnemonic,
-} from '@minimalist-apps/evolu';
+import { createEnsureEvoluMnemonic, createEnsureEvoluStorage } from '@minimalist-apps/evolu';
 import { createLocalStorage } from '@minimalist-apps/local-storage';
 import { createEvoluSettingsCompositionRoot } from '@minimalist-apps/module-evolu-settings';
 import { createWindow } from '@minimalist-apps/window';
@@ -86,7 +83,7 @@ export const createCompositionRoot = (): Main => {
         getPersistedMnemonic: () => store.getState().evoluMnemonic,
         persistMnemonic: setMnemonic,
     });
-    const ensureEvoluStorage = createEnsureEvolu({
+    const ensureEvoluStorage = createEnsureEvoluStorage({
         deps: {
             ensureEvoluOwner,
             onShardOwnerCreated: shardOwner => {
@@ -110,6 +107,7 @@ export const createCompositionRoot = (): Main => {
     const { BackupMnemonic, RestoreMnemonic } = createEvoluSettingsCompositionRoot({
         connect,
         setMnemonic,
+        restoreMnemonic: () => {}, // Todo: implement
     });
 
     // Fetch Rates

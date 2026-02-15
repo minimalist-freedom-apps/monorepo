@@ -10,6 +10,7 @@ interface ModalProps {
     readonly okText?: string;
     readonly cancelText?: string;
     readonly okDanger?: boolean;
+    readonly okDisabled?: boolean;
     readonly centered?: boolean;
     readonly showCancel?: boolean;
     readonly closable?: boolean;
@@ -27,6 +28,7 @@ export const Modal = ({
     okText,
     cancelText,
     okDanger = false,
+    okDisabled = false,
     centered = false,
     showCancel = true,
     closable = true,
@@ -44,6 +46,7 @@ export const Modal = ({
         {...(!showCancel ? { cancelButtonProps: { style: { display: 'none' } } } : {})}
         okButtonProps={{
             ...(okDanger ? { danger: true } : {}),
+            ...(okDisabled ? { disabled: true } : {}),
             style: { boxShadow: 'none' },
         }}
         centered={centered}

@@ -67,7 +67,7 @@ export const CurrencyRowPure = (
                                 setIsRemoveModalOpen(true);
                             }}
                             variant="text"
-                            danger
+                            intent="danger"
                             size="small"
                             style={{ paddingInline: 0 }}
                         >

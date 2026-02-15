@@ -43,7 +43,7 @@ export const Circle = () => {
                                 {result.toFixed(0)}
                             </Text>
                         ) : (
-                            <Text size="large" secondary>
+                            <Text size="large" intent="secondary">
                                 ?
                             </Text>
                         )

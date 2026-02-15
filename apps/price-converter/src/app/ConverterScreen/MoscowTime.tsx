@@ -21,7 +21,7 @@ export type MoscowTimeDep = {
 };
 
 export const MoscowTimePure = ({ code, btcMode, rateBtcPerFiat }: MoscowTimeProps) => (
-    <Text secondary size="small" padding={{ left: 24 }}>
+    <Text intent="secondary" size="small" padding={{ left: 24 }}>
         <span style={{ fontFamily: 'monospace', whiteSpace: 'pre' }}>
             {code === 'BTC' || rateBtcPerFiat === undefined ? (
                 <> &nbsp;</>

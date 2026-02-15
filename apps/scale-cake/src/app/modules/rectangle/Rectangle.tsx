@@ -51,7 +51,7 @@ export const Rectangle = () => {
                                 {result.toFixed()}
                             </Text>
                         ) : (
-                            <Text size="large" secondary>
+                            <Text size="large" intent="secondary">
                                 ?
                             </Text>
                         )

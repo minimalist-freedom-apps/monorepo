@@ -7,6 +7,7 @@ interface TextareaProps {
     readonly placeholder?: string;
     readonly rows?: number;
     readonly disabled?: boolean;
+    readonly status?: 'warning' | 'error';
     readonly style?: React.CSSProperties;
 }
 
@@ -16,6 +17,7 @@ export const Textarea = ({
     placeholder,
     rows = 4,
     disabled = false,
+    status,
     style,
 }: TextareaProps) => {
     const handleChange = (event: ChangeEvent<HTMLTextAreaElement>) => {
@@ -29,6 +31,7 @@ export const Textarea = ({
             placeholder={placeholder}
             rows={rows}
             disabled={disabled}
+            {...(status !== undefined ? { status } : {})}
             style={{
                 resize: 'vertical',
                 ...style,

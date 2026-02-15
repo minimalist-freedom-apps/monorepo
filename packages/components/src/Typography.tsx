@@ -1,7 +1,8 @@
-import { typedObjectKeys } from '@minimalist-apps/type-utils';
+import { exhaustive, typedObjectKeys } from '@minimalist-apps/type-utils';
 import { Typography } from 'antd';
 import type { CSSProperties, ReactNode } from 'react';
 import { type FontSize, fontSizeMap } from './fontSize';
+import type { Intent } from './intent';
 import { buildSpacingStyle, type Spacing } from './spacing';
 
 const { Text: AntText, Title: AntTitle, Paragraph: AntParagraph } = Typography;
@@ -13,11 +14,30 @@ interface TextProps {
     readonly flexShrink?: number;
     readonly align?: CSSProperties['textAlign'];
     readonly size?: FontSize;
-    readonly secondary?: boolean;
+    readonly intent?: Intent;
     readonly onClick?: () => void;
     readonly margin?: Spacing;
     readonly padding?: Spacing;
 }
+
+const buildTextType = (
+    intent: Intent | undefined,
+): undefined | 'secondary' | 'warning' | 'danger' => {
+    switch (intent) {
+        case 'secondary':
+            return 'secondary';
+        case 'warning':
+            return 'warning';
+        case 'danger':
+            return 'danger';
+        case 'primary':
+        case undefined:
+            return undefined;
+        default: {
+            return exhaustive(intent);
+        }
+    }
+};
 
 const buildTextStyle = (
     nowrap: boolean,
@@ -48,20 +68,24 @@ export const Text = ({
     flexShrink,
     align,
     size = 'medium',
-    secondary = false,
+    intent,
     onClick,
     margin,
     padding,
-}: TextProps) => (
-    <AntText
-        strong={strong}
-        onClick={onClick}
-        {...(secondary ? { type: 'secondary' as const } : {})}
-        {...buildTextStyle(nowrap, flexShrink, align, size, margin, padding)}
-    >
-        {children}
-    </AntText>
-);
+}: TextProps) => {
+    const textType = buildTextType(intent);
+
+    return (
+        <AntText
+            strong={strong}
+            onClick={onClick}
+            {...(textType !== undefined ? { type: textType } : {})}
+            {...buildTextStyle(nowrap, flexShrink, align, size, margin, padding)}
+        >
+            {children}
+        </AntText>
+    );
+};
 
 interface TitleProps {
     readonly children: ReactNode;

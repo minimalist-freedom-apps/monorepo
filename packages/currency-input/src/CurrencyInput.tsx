@@ -307,10 +307,10 @@ export const CurrencyInputPure = (
             onFocus={handleFocus}
             inputRef={inputRef}
             inputMode="decimal"
-            label={label}
             monospace
             size="medium"
             fontSize="medium"
+            {...(label === undefined ? {} : { label })}
             {...(fontSize === undefined ? {} : { fontSize })}
             className="minimalist-input-with-small-placeholder"
         />

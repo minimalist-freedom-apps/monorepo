@@ -17,6 +17,7 @@ interface EvoluSettingsStates {
 export interface EvoluSettingsCompositionRootDeps {
     readonly connect: Connect<EvoluSettingsStates>;
     readonly setMnemonic: (mnemonic: Mnemonic) => void;
+    readonly restoreMnemonic: (mnemonic: Mnemonic) => void;
 }
 
 export const createEvoluSettingsCompositionRoot = (
@@ -25,7 +26,9 @@ export const createEvoluSettingsCompositionRoot = (
     const BackupMnemonic = deps.connect(BackupMnemonicPure, ({ store }) => ({
         evoluMnemonic: store.evoluMnemonic,
     }));
-    const RestoreMnemonic = deps.connect(RestoreMnemonicPure, () => ({}));
+    const RestoreMnemonic = deps.connect(RestoreMnemonicPure, () => ({}), {
+        restoreMnemonic: deps.restoreMnemonic,
+    });
 
     return { BackupMnemonic, RestoreMnemonic };
 };
