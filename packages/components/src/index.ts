@@ -2,7 +2,7 @@ import 'antd/dist/reset.css';
 
 export { Alert } from './Alert';
 export { AppHeader } from './AppHeader';
-export { Button } from './Button';
+export { Button, type ButtonIntent } from './Button';
 export { Card } from './Card';
 export { Code } from './Code';
 export {

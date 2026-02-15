@@ -28,7 +28,9 @@ export const RestoreMnemonic = () => {
                     style={{ width: '100%', resize: 'vertical' }}
                 />
             </Modal>
-            <Button onClick={() => setIsRestoreModalOpen(true)}>Restore Backup</Button>
+            <Button onClick={() => setIsRestoreModalOpen(true)} intent="warning">
+                Restore Backup
+            </Button>
         </SettingsRow>
     );
 };

@@ -1,5 +1,8 @@
-import { Button as AntButton } from 'antd';
+import { exhaustive } from '@minimalist-apps/type-utils';
+import { Button as AntButton, theme } from 'antd';
 import type { ReactNode } from 'react';
+
+export type ButtonIntent = 'warning' | 'danger' | 'primary' | 'secondary';
 
 interface ButtonProps {
     readonly children?: ReactNode;
@@ -7,11 +10,58 @@ interface ButtonProps {
     readonly loading?: boolean;
     readonly disabled?: boolean;
     readonly icon?: ReactNode;
-    readonly danger?: boolean;
-    readonly variant?: 'primary' | 'text' | 'default';
+    readonly intent?: ButtonIntent;
+    readonly variant?: 'text' | 'default';
     readonly size?: 'small' | 'middle' | 'large';
     readonly style?: React.CSSProperties;
 }
+
+const buildIntentStyle = (
+    intent: ButtonIntent | undefined,
+    isTextVariant: boolean,
+    token: ReturnType<typeof theme.useToken>['token'],
+): React.CSSProperties => {
+    if (intent === undefined) {
+        return {};
+    }
+
+    switch (intent) {
+        case 'warning':
+            return isTextVariant
+                ? { color: token.colorWarning }
+                : {
+                      color: token.colorTextLightSolid,
+                      backgroundColor: token.colorWarning,
+                      borderColor: token.colorWarning,
+                  };
+        case 'secondary':
+            return isTextVariant
+                ? { color: token.colorTextSecondary }
+                : {
+                      color: token.colorText,
+                      backgroundColor: token.colorBgContainerDisabled,
+                      borderColor: token.colorBgContainerDisabled,
+                  };
+        case 'primary':
+            return isTextVariant ? {} : {};
+        case 'danger':
+            return isTextVariant ? {} : {};
+        default: {
+            return exhaustive(intent);
+        }
+    }
+};
+
+const buildStyles = (
+    intent: ButtonIntent | undefined,
+    isTextVariant: boolean,
+    token: ReturnType<typeof theme.useToken>['token'],
+    style: React.CSSProperties | undefined,
+): React.CSSProperties => ({
+    boxShadow: 'none',
+    ...buildIntentStyle(intent, isTextVariant, token),
+    ...style,
+});
 
 export const Button = ({
     children,
@@ -19,12 +69,16 @@ export const Button = ({
     loading = false,
     disabled = false,
     icon,
-    danger = false,
+    intent,
     variant = 'default',
     size = 'middle',
     style,
 }: ButtonProps) => {
-    const type = variant === 'primary' ? 'primary' : variant === 'text' ? 'text' : 'default';
+    const { token } = theme.useToken();
+    const isTextVariant = variant === 'text';
+    const type = isTextVariant ? 'text' : 'primary';
+
+    const isDanger = intent === 'danger';
 
     return (
         <AntButton
@@ -33,9 +87,9 @@ export const Button = ({
             loading={loading}
             disabled={disabled}
             icon={icon}
-            danger={danger}
+            danger={isDanger}
             size={size}
-            style={style}
+            style={buildStyles(intent, isTextVariant, token, style)}
         >
             {children}
         </AntButton>
