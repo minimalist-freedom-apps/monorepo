@@ -3,6 +3,7 @@ import { CurrencyInputPure } from '@minimalist-apps/currency-input';
 import { createCurrentDateTime } from '@minimalist-apps/datetime';
 import { createEnsureEvoluMnemonic, createEnsureEvoluStorage } from '@minimalist-apps/evolu';
 import { createLocalStorage } from '@minimalist-apps/local-storage';
+import { toGetter } from '@minimalist-apps/mini-store';
 import { createEvoluSettingsCompositionRoot } from '@minimalist-apps/module-evolu-settings';
 import { createWindow } from '@minimalist-apps/window';
 import { AddCurrencyButtonPure } from './app/AddCurrencyScreen/AddCurrencyButton';
@@ -38,6 +39,7 @@ import { createPersistStore } from './state/localStorage/persistStore';
 import { createStatePersistence } from './state/localStorage/statePersistence';
 import { createNavigate } from './state/navigate';
 import { createRemoveFiatAmount } from './state/removeFiatAmount';
+import { selectEvoluMnemonic } from './state/State';
 import { createSetBtcMode } from './state/setBtcMode';
 import { createSetDebugMode } from './state/setDebugMode';
 import { createSetFiatAmount } from './state/setFiatAmount';
@@ -79,8 +81,10 @@ export const createCompositionRoot = (): Main => {
     });
 
     // Evolu
+    const getPersistedMnemonic = toGetter(store.getState, selectEvoluMnemonic);
+
     const ensureEvoluOwner = createEnsureEvoluMnemonic({
-        getPersistedMnemonic: () => store.getState().evoluMnemonic,
+        getPersistedMnemonic,
         persistMnemonic: setMnemonic,
     });
     const ensureEvoluStorage = createEnsureEvoluStorage({
@@ -106,7 +110,6 @@ export const createCompositionRoot = (): Main => {
     // Modules
     const { BackupMnemonic, RestoreMnemonic } = createEvoluSettingsCompositionRoot({
         connect,
-        setMnemonic,
         restoreMnemonic: () => {}, // Todo: implement
     });
 

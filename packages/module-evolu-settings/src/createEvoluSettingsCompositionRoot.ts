@@ -6,18 +6,19 @@ import {
     RestoreMnemonic as RestoreMnemonicPure,
 } from './RestoreMnemonic.js';
 
-interface EvoluSettingsStoreState {
+interface StoreWithMnemonic {
     readonly evoluMnemonic: Mnemonic | null;
 }
 
 interface EvoluSettingsStates {
-    readonly store: EvoluSettingsStoreState;
+    readonly store: StoreWithMnemonic;
 }
+
+export type RestoreMnemonic = (mnemonic: Mnemonic) => void;
 
 export interface EvoluSettingsCompositionRootDeps {
     readonly connect: Connect<EvoluSettingsStates>;
-    readonly setMnemonic: (mnemonic: Mnemonic) => void;
-    readonly restoreMnemonic: (mnemonic: Mnemonic) => void;
+    readonly restoreMnemonic: RestoreMnemonic;
 }
 
 export const createEvoluSettingsCompositionRoot = (
@@ -26,6 +27,7 @@ export const createEvoluSettingsCompositionRoot = (
     const BackupMnemonic = deps.connect(BackupMnemonicPure, ({ store }) => ({
         evoluMnemonic: store.evoluMnemonic,
     }));
+
     const RestoreMnemonic = deps.connect(RestoreMnemonicPure, () => ({}), {
         restoreMnemonic: deps.restoreMnemonic,
     });

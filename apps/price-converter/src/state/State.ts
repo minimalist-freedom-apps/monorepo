@@ -27,3 +27,5 @@ export interface State {
     readonly evoluMnemonic: Mnemonic | null;
     readonly evoluOwnerId: OwnerId | null;
 }
+
+export const selectEvoluMnemonic = (state: State) => state.evoluMnemonic;
