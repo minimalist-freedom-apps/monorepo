@@ -38,6 +38,7 @@ export { Notification } from './Notification';
 export { Screen } from './Screen';
 export { SearchInput } from './SearchInput';
 export { SettingsRow } from './SettingsRow';
+export { Slider } from './Slider';
 export type { ReorderEvent, SortableItem } from './SortableList';
 export { SortableList } from './SortableList';
 export { Switch } from './Switch';
