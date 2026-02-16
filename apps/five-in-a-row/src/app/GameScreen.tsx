@@ -1,13 +1,6 @@
-import { Button, Column, Row, Title } from '@minimalist-apps/components';
-import type { GameBoard, Player, Winner } from './game';
-
-const ringEmoji = '🇴';
-const crossEmoji = '❌';
-
-const emojiMap: Record<Player, string> = {
-    cross: crossEmoji,
-    ring: ringEmoji,
-};
+import { Button, Card, Column, Row, Title } from '@minimalist-apps/components';
+import { GridCell } from './GridCell';
+import { emojiMap, type GameBoard, type Player, type Winner } from './game';
 
 interface BuildStatusTextProps {
     readonly winner: Winner | null;
@@ -25,26 +18,6 @@ const buildStatusText = ({ winner, currentPlayer, boardIsFull }: BuildStatusText
     }
 
     return `Turn: ${emojiMap[currentPlayer]}`;
-};
-
-interface BuildCellFontSizeProps {
-    readonly boardSize: number;
-}
-
-const buildCellFontSize = ({ boardSize }: BuildCellFontSizeProps): number => {
-    if (boardSize <= 8) {
-        return 28;
-    }
-
-    if (boardSize <= 14) {
-        return 20;
-    }
-
-    if (boardSize <= 22) {
-        return 15;
-    }
-
-    return 12;
 };
 
 interface GameScreenProps {
@@ -72,7 +45,9 @@ export const GameScreen = ({
     return (
         <Column gap={12}>
             <Row justify="space-between" align="center">
-                <Title level={5}>{statusText}</Title>
+                <Card padding={{ top: 8, bottom: 8, left: 16, right: 16 }}>
+                    <Title level={5}>{statusText}</Title>
+                </Card>
                 <Button onClick={onReset}>Restart</Button>
             </Row>
 
@@ -90,33 +65,17 @@ export const GameScreen = ({
                         const column = index % boardSize;
                         const cellKey = `${row}-${column}`;
                         const isWinningCell = winningCellIndexes.has(index);
+                        const isDisabled = winner !== null || cell !== null;
 
                         return (
-                            <button
-                                type="button"
+                            <GridCell
                                 key={cellKey}
-                                onClick={() => onCellClick(index)}
-                                style={{
-                                    aspectRatio: '1 / 1',
-                                    width: '100%',
-                                    borderStyle: 'solid',
-                                    borderWidth: 1,
-                                    borderColor: 'var(--color-border)',
-                                    backgroundColor: isWinningCell
-                                        ? 'var(--color-primary)'
-                                        : 'var(--color-elevation1)',
-                                    color: 'var(--color-textPrimary)',
-                                    fontSize: buildCellFontSize({ boardSize }),
-                                    cursor:
-                                        winner === null && cell === null ? 'pointer' : 'default',
-                                    padding: 0,
-                                    lineHeight: 1,
-                                }}
-                                disabled={winner !== null || cell !== null}
-                                aria-label={`cell-${index + 1}`}
-                            >
-                                {cell !== null ? emojiMap[cell] : ''}
-                            </button>
+                                index={index}
+                                cell={cell}
+                                isWinningCell={isWinningCell}
+                                disabled={isDisabled}
+                                onCellClick={onCellClick}
+                            />
                         );
                     })}
                 </div>

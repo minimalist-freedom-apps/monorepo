@@ -53,8 +53,8 @@ const buildTextStyle = (
         ...(align !== undefined ? { textAlign: align } : {}),
         ...(size !== undefined ? { fontSize: fontSizeMap[size] } : {}),
         ...buildSpacingStyle({
-            ...(margin ? { margin } : {}),
-            ...(padding ? { padding } : {}),
+            ...(margin !== undefined ? { margin } : {}),
+            ...(padding !== undefined ? { padding } : {}),
         }),
     };
 
