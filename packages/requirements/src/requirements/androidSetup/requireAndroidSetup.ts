@@ -1,5 +1,5 @@
-import { copyFileSync, existsSync, mkdirSync, writeFileSync } from 'node:fs';
-import { join, resolve } from 'node:path';
+import { copyFileSync, existsSync, mkdirSync, readdirSync, rmSync, writeFileSync } from 'node:fs';
+import { join, relative, resolve } from 'node:path';
 import { pathToFileURL } from 'node:url';
 import {
     generateAppBuildGradle,
@@ -9,6 +9,35 @@ import {
 } from '@minimalist-apps/android-build';
 import type { AppConfig } from '../appConfig/AppConfig';
 import type { Requirement } from '../Requirement';
+
+const getSplashPngPaths = (rootDir: string): ReadonlyArray<string> => {
+    if (!existsSync(rootDir)) {
+        return [];
+    }
+
+    const splashPngPaths: Array<string> = [];
+
+    const walk = (dir: string): void => {
+        const entries = readdirSync(dir, { withFileTypes: true });
+
+        for (const entry of entries) {
+            const entryPath = join(dir, entry.name);
+
+            if (entry.isDirectory()) {
+                walk(entryPath);
+                continue;
+            }
+
+            if (entry.isFile() && entry.name === 'splash.png') {
+                splashPngPaths.push(entryPath);
+            }
+        }
+    };
+
+    walk(rootDir);
+
+    return splashPngPaths;
+};
 
 export const requireAndroidSetup: Requirement = {
     name: 'android setup',
@@ -67,6 +96,14 @@ export const requireAndroidSetup: Requirement = {
         writeFileSync(stylesPath, generateStylesXml());
         console.log('  ✓ styles.xml generated (brand-color splash screen)');
 
+        const resDir = join(androidDir, 'app', 'src', 'main', 'res');
+
+        for (const splashFilePath of getSplashPngPaths(resDir)) {
+            rmSync(splashFilePath, { force: true });
+        }
+
+        console.log('  ✓ default Capacitor splash PNG assets removed');
+
         return [];
     },
     verify: ({ appDir }) => {
@@ -89,6 +126,13 @@ export const requireAndroidSetup: Requirement = {
             if (!existsSync(join(androidDir, file))) {
                 errors.push(`missing android/${file} — run requirements-fix`);
             }
+        }
+
+        const resDir = join(androidDir, 'app', 'src', 'main', 'res');
+
+        for (const splashFilePath of getSplashPngPaths(resDir)) {
+            const androidRelativePath = relative(androidDir, splashFilePath);
+            errors.push(`unexpected android/${androidRelativePath} — run requirements-fix`);
         }
 
         return errors;
