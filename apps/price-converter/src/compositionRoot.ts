@@ -1,3 +1,4 @@
+import { Notification } from '@minimalist-apps/components';
 import { createConnect } from '@minimalist-apps/connect';
 import { CurrencyInputPure } from '@minimalist-apps/currency-input';
 import { createCurrentDateTime } from '@minimalist-apps/datetime';
@@ -252,6 +253,7 @@ export const createCompositionRoot = (): Main => {
         {
             addCurrency,
             navigate,
+            notification: Notification,
         },
     );
 

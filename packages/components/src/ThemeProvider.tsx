@@ -1,7 +1,8 @@
 import type { ThemeConfig } from 'antd';
-import { ConfigProvider, theme } from 'antd';
+import { ConfigProvider, message, theme } from 'antd';
 import { createContext, type ReactNode, useContext, useEffect } from 'react';
 import { COLORS, injectColorVariables, type Theme } from './colors';
+import { setNotificationApi } from './Notification';
 
 const ThemeContext = createContext<Theme>('dark');
 
@@ -81,6 +82,16 @@ interface ThemeProviderProps {
     readonly mode?: Theme;
 }
 
+const NotificationContextBridge = () => {
+    const [messageApi, contextHolder] = message.useMessage();
+
+    useEffect(() => {
+        setNotificationApi(messageApi);
+    }, [messageApi]);
+
+    return contextHolder;
+};
+
 export const ThemeProvider = ({ children, mode = 'dark' }: ThemeProviderProps) => {
     useEffect(() => {
         injectColorVariables(mode);
@@ -89,6 +100,7 @@ export const ThemeProvider = ({ children, mode = 'dark' }: ThemeProviderProps) =
     return (
         <ThemeContext.Provider value={mode}>
             <ConfigProvider theme={mode === 'dark' ? darkTheme : lightTheme}>
+                <NotificationContextBridge />
                 {children}
             </ConfigProvider>
         </ThemeContext.Provider>

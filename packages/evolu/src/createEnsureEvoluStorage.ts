@@ -22,7 +22,6 @@ export type EvoluStorage<S extends EvoluSchema> = {
     readonly shardOwner: ShardOwner;
     readonly updateRelayUrls: (urls: ReadonlyArray<string>) => Promise<void>;
     readonly dispose: () => Promise<void>;
-    // readonly restoreAppOwner: (mnemonic: Mnemonic) => Promise<void>;
 };
 
 interface CreateEvoluStorageProps<S extends EvoluSchema> {

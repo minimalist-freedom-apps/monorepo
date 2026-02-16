@@ -1,4 +1,5 @@
 import type { CurrencyCode } from '@evolu/common';
+import type { NotificationDep } from '@minimalist-apps/components';
 import { Button, Flex, List, Row, Screen, SearchInput, Text } from '@minimalist-apps/components';
 import { CURRENCY_TERRITORIES } from '@minimalist-apps/fiat';
 import { typedObjectValues } from '@minimalist-apps/type-utils';
@@ -14,7 +15,7 @@ export type AddCurrencyScreenStateProps = {
     readonly selectedCurrencies: ReadonlyArray<CurrencyCode>;
 };
 
-type AddCurrencyScreenDeps = AddCurrencyDep & NavigateDep;
+type AddCurrencyScreenDeps = AddCurrencyDep & NavigateDep & NotificationDep;
 
 export type AddCurrencyScreenDep = {
     readonly AddCurrencyScreen: FC;
@@ -39,10 +40,12 @@ export const AddCurrencyScreenPure = (
     const handleSelect = async (code: string) => {
         const result = await deps.addCurrency({ code: code as CurrencyCode });
 
-        if (result.ok) {
+        if (result.ok === true) {
             deps.navigate('Converter');
         } else {
-            alert('Failed to add currency.');
+            console.error(result.error);
+
+            deps.notification.error('Failed to add currency.');
         }
     };
 
