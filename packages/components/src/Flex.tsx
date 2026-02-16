@@ -28,8 +28,8 @@ export const Flex = ({
     style,
 }: FlexProps) => {
     const spacingStyle = buildSpacingStyle({
-        ...(margin ? { margin } : {}),
-        ...(padding ? { padding } : {}),
+        ...(margin !== undefined ? { margin } : {}),
+        ...(padding !== undefined ? { padding } : {}),
     });
 
     return (

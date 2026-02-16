@@ -1,5 +1,13 @@
 export type Player = 'cross' | 'ring';
 
+export const ringEmoji = '🔵';
+export const crossEmoji = '❌';
+
+export const emojiMap: Record<Player, string> = {
+    cross: crossEmoji,
+    ring: ringEmoji,
+};
+
 export type GameBoard = Array<Player | null>;
 
 export interface Winner {

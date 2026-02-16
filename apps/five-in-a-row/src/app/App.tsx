@@ -21,14 +21,14 @@ export const App = () => {
     const [currentScreen, setCurrentScreen] = useState<Screen>('Game');
     const [boardSize, setBoardSize] = useState(10);
     const [board, setBoard] = useState<GameBoard>(() => createEmptyBoard({ size: 10 }));
-    const [currentPlayer, setCurrentPlayer] = useState<Player>('cross');
+    const [currentPlayer, setCurrentPlayer] = useState<Player>('ring');
     const [winner, setWinner] = useState<Winner | null>(null);
 
     const boardIsFull = isBoardFull({ board });
 
     const resetBoard = ({ size }: { readonly size: number }) => {
         setBoard(createEmptyBoard({ size }));
-        setCurrentPlayer('cross');
+        setCurrentPlayer('ring');
         setWinner(null);
     };
 
@@ -109,7 +109,9 @@ export const App = () => {
                         onOpenSettings={() => setCurrentScreen('Settings')}
                     />
                 </Layout.Header>
-                <Layout.Content maxWidth={760}>{renderScreen()}</Layout.Content>
+                <Layout.Content maxWidth={760} style={{ minWidth: 360 }}>
+                    {renderScreen()}
+                </Layout.Content>
             </Layout>
         </ThemeProvider>
     );

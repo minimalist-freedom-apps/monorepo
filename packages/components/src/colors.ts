@@ -10,6 +10,7 @@ interface ColorScheme {
     readonly textPrimary: string;
     readonly textSecondary: string;
     readonly border: string;
+    readonly borderContrast: string;
     readonly error: string;
     readonly fadedColor: string;
     readonly fadedColorLight: string;
@@ -31,6 +32,7 @@ export const COLORS: Record<Theme, ColorScheme> = {
         textPrimary: '#ffffff',
         textSecondary: '#959595FF',
         border: '#333333',
+        borderContrast: '#4d4d4d',
         error: '#ff4d4f',
         fadedColor: '#777777FF',
         fadedColorLight: '#999999FF',
@@ -48,6 +50,7 @@ export const COLORS: Record<Theme, ColorScheme> = {
         textPrimary: '#1e1e1e',
         textSecondary: '#666666',
         border: '#e0e0e0',
+        borderContrast: '#bfbfbf',
         error: '#ff4d4f',
         fadedColor: '#cccccc',
         fadedColorLight: '#e0e0e0',
