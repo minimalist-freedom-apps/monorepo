@@ -1,4 +1,5 @@
 import type { CurrencyCode } from '@evolu/common';
+import type { NotificationApi } from '@minimalist-apps/components';
 import { render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { describe, expect, test, vi } from 'vitest';
@@ -33,14 +34,21 @@ const createTestRates = (): CurrencyMap =>
 const createTestComponent = (selectedCurrencies: ReadonlyArray<CurrencyCode> = []) => {
     const navigate = vi.fn();
     const addCurrency = vi.fn();
-    const deps = { navigate, addCurrency };
+    const notification: NotificationApi = {
+        success: vi.fn(),
+        error: vi.fn(),
+        info: vi.fn(),
+        warning: vi.fn(),
+        loading: vi.fn(),
+    };
+    const deps = { navigate, addCurrency, notification };
     const rates = createTestRates();
 
     const AddCurrencyScreen = () => (
         <>{AddCurrencyScreenPure(deps, { rates, selectedCurrencies })}</>
     );
 
-    return { navigate, addCurrency, AddCurrencyScreen };
+    return { navigate, addCurrency, notification, AddCurrencyScreen };
 };
 
 describe(AddCurrencyScreenPure.name, () => {
@@ -107,10 +115,25 @@ describe(AddCurrencyScreenPure.name, () => {
         const user = userEvent.setup();
         const { addCurrency, navigate, AddCurrencyScreen } = createTestComponent();
 
+        addCurrency.mockResolvedValueOnce({ ok: true });
+
         render(<AddCurrencyScreen />);
         await user.click(screen.getByText('Japanese yen'));
 
         expect(addCurrency).toHaveBeenCalledWith({ code: 'JPY' });
         expect(navigate).toHaveBeenCalledWith('Converter');
+    });
+
+    test('shows error notification when adding currency fails', async () => {
+        const user = userEvent.setup();
+        const { addCurrency, navigate, notification, AddCurrencyScreen } = createTestComponent();
+
+        addCurrency.mockResolvedValueOnce({ ok: false });
+
+        render(<AddCurrencyScreen />);
+        await user.click(screen.getByText('Japanese yen'));
+
+        expect(notification.error).toHaveBeenCalledWith('Failed to add currency.');
+        expect(navigate).not.toHaveBeenCalledWith('Converter');
     });
 });

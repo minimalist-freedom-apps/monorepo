@@ -52,19 +52,19 @@ export const createAddCurrency =
 
         const { evolu, shardOwner } = await deps.ensureEvoluStorage();
 
-        try {
-            evolu.upsert(
-                'currency',
-                {
-                    id: createIdFromString<'CurrencyId'>(code),
-                    currency: code,
-                    order: newOrder,
-                    isDeleted: 0,
-                },
-                { ownerId: shardOwner.id },
-            );
-        } catch (error) {
-            return err(AddCurrencyUpdateError({ caused: error }));
+        const result = evolu.upsert(
+            'currency',
+            {
+                id: createIdFromString<'CurrencyId'>(code),
+                currency: code,
+                order: newOrder,
+                isDeleted: 0,
+            },
+            { ownerId: shardOwner.id },
+        );
+
+        if (!result.ok) {
+            return err(AddCurrencyUpdateError({ caused: result.error }));
         }
 
         deps.store.setState({

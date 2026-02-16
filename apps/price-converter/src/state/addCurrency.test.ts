@@ -6,8 +6,8 @@ import type { EvoluStorage } from './evolu/schema.js';
 
 const USD = getOrThrow(CurrencyCode.from('USD'));
 
-const mockEvoluStorage = (upsert: EvoluStorage['evolu']['upsert']): EvoluStorage => ({
-    evolu: { upsert } as EvoluStorage['evolu'],
+const mockEvoluStorage = (upsert: unknown): EvoluStorage => ({
+    evolu: { upsert: upsert as EvoluStorage['evolu']['upsert'] } as EvoluStorage['evolu'],
     shardOwner: { id: 'test-owner' } as ShardOwner,
     updateRelayUrls: vi.fn(),
     dispose: vi.fn(),
@@ -15,7 +15,7 @@ const mockEvoluStorage = (upsert: EvoluStorage['evolu']['upsert']): EvoluStorage
 
 describe(createAddCurrency.name, () => {
     test('clears soft-delete flag when re-adding previously removed currency', async () => {
-        const upsert = vi.fn();
+        const upsert = vi.fn(() => ({ ok: true }));
         const store = {
             getState: () => ({
                 rates: {
@@ -40,7 +40,10 @@ describe(createAddCurrency.name, () => {
         await addCurrency({ code: USD });
 
         expect(upsert).toHaveBeenCalledOnce();
-        const [, row] = upsert.mock.calls[0];
-        expect(row.isDeleted).toBe(0);
+        expect(upsert).toHaveBeenCalledWith(
+            'currency',
+            expect.objectContaining({ isDeleted: 0 }),
+            expect.objectContaining({ ownerId: 'test-owner' }),
+        );
     });
 });

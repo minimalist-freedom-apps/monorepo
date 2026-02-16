@@ -33,6 +33,8 @@ export { List } from './List';
 export { Menu, type MenuClickInfo, type MenuItems } from './Menu';
 export { Mnemonic } from './Mnemonic';
 export { Modal } from './Modal';
+export type { NotificationApi, NotificationDep } from './Notification';
+export { Notification } from './Notification';
 export { Screen } from './Screen';
 export { SearchInput } from './SearchInput';
 export { SettingsRow } from './SettingsRow';
