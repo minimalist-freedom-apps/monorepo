@@ -17,25 +17,38 @@ const buildStatusText = ({ winner, currentPlayer, boardIsFull }: BuildStatusText
         return 'Draw';
     }
 
-    return `Turn: ${emojiMap[currentPlayer]}`;
+    return emojiMap[currentPlayer];
 };
 
-interface GameScreenProps {
+export interface GameScreenStateProps {
     readonly winner: Winner | null;
     readonly currentPlayer: Player;
     readonly boardIsFull: boolean;
     readonly board: GameBoard;
     readonly boardSize: number;
+    readonly canUndo: boolean;
+    readonly canRedo: boolean;
+}
+
+export interface GameScreenDep {
+    readonly onUndo: () => void;
+    readonly onRedo: () => void;
     readonly onReset: () => void;
     readonly onCellClick: (index: number) => void;
 }
 
-export const GameScreen = ({
+export type GameScreenProps = GameScreenStateProps & GameScreenDep;
+
+export const GameScreenPure = ({
     winner,
     currentPlayer,
     boardIsFull,
     board,
     boardSize,
+    canUndo,
+    canRedo,
+    onUndo,
+    onRedo,
     onReset,
     onCellClick,
 }: GameScreenProps) => {
@@ -48,7 +61,15 @@ export const GameScreen = ({
                 <Card padding={{ top: 8, bottom: 8, left: 16, right: 16 }}>
                     <Title level={5}>{statusText}</Title>
                 </Card>
-                <Button onClick={onReset}>Restart</Button>
+                <Row gap={8}>
+                    <Button onClick={onUndo} disabled={!canUndo}>
+                        Undo
+                    </Button>
+                    <Button onClick={onRedo} disabled={!canRedo}>
+                        Redo
+                    </Button>
+                    <Button onClick={onReset}>Restart</Button>
+                </Row>
             </Row>
 
             <div style={{ overflow: 'auto' }}>

@@ -1,12 +1,8 @@
 import { setupMobileNative } from '@minimalist-apps/mobile-native';
-import React from 'react';
-import ReactDOM from 'react-dom/client';
-import { App } from './app/App';
+import { createCompositionRoot } from './compositionRoot';
 
 setupMobileNative();
 
-ReactDOM.createRoot(document.getElementById('root')!).render(
-    <React.StrictMode>
-        <App />
-    </React.StrictMode>,
-);
+const main = createCompositionRoot();
+
+main();

@@ -10,6 +10,16 @@ interface SettingsScreenProps {
     readonly onBoardSizeChange: (size: number) => void;
 }
 
+export interface SettingsScreenStateProps {
+    readonly themeMode: Theme;
+    readonly boardSize: number;
+}
+
+export interface SettingsScreenDep {
+    readonly onThemeToggle: (checked: boolean) => void;
+    readonly onBoardSizeChange: (size: number) => void;
+}
+
 export const SettingsScreen = ({
     themeMode,
     onThemeToggle,
