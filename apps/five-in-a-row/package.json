@@ -16,9 +16,12 @@
     "dependencies": {
         "@capacitor/core": "^7.2.0",
         "@capacitor/status-bar": "^7.0.0",
+        "@minimalist-apps/connect": "workspace:*",
         "@minimalist-apps/components": "workspace:*",
+        "@minimalist-apps/mini-store": "workspace:*",
         "@minimalist-apps/mobile-native": "workspace:*",
         "@minimalist-apps/type-utils": "workspace:*",
+        "@minimalist-apps/undo": "workspace:*",
         "react": "^19.0.0",
         "react-dom": "^19.0.0"
     },
