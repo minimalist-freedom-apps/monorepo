@@ -1,7 +1,7 @@
 import React from 'react';
 import ReactDOM from 'react-dom/client';
 import type { AppDep } from './app/App';
-import type { StatePersistenceDep } from './state/localStorage/statePersistence';
+import type { StatePersistenceDep } from './localStorage/statePersistence';
 
 export type Main = () => void;
 

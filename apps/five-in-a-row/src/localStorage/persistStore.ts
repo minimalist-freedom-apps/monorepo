@@ -1,7 +1,13 @@
 import type { LocalStorageDep } from '@minimalist-apps/local-storage';
-import { type GameStore, selectBoardSize } from '../../app/gameStore';
-import type { StoreDep } from '../createStore';
-import { selectThemeMode } from '../State';
+import {
+    type GameStoreDep,
+    selectBoardSize,
+    selectBotLevel,
+    selectGameMode,
+    selectOpeningProtocol,
+} from '../app/game/store/createGameStore';
+import { selectThemeMode } from '../appStore/AppState';
+import type { AppStoreDep } from '../appStore/createAppStore';
 import { STORAGE_KEYS } from './storageKeys';
 
 type Unsubscribe = () => void;
@@ -12,10 +18,7 @@ export interface PersistStoreDep {
     readonly persistStore: PersistStore;
 }
 
-type PersistStoreDeps = StoreDep &
-    LocalStorageDep & {
-        readonly gameStore: GameStore;
-    };
+type PersistStoreDeps = AppStoreDep & LocalStorageDep & GameStoreDep;
 
 export const createPersistStore =
     (deps: PersistStoreDeps): PersistStore =>
@@ -27,7 +30,13 @@ export const createPersistStore =
 
         const unsubscribeGameStore = deps.gameStore.subscribe(() => {
             const boardSize = selectBoardSize(deps.gameStore.getState());
+            const gameMode = selectGameMode(deps.gameStore.getState());
+            const openingProtocol = selectOpeningProtocol(deps.gameStore.getState());
+            const botLevel = selectBotLevel(deps.gameStore.getState());
             deps.localStorage.save(STORAGE_KEYS.BOARD_SIZE, boardSize);
+            deps.localStorage.save(STORAGE_KEYS.GAME_MODE, gameMode);
+            deps.localStorage.save(STORAGE_KEYS.OPENING_PROTOCOL, openingProtocol);
+            deps.localStorage.save(STORAGE_KEYS.BOT_LEVEL, botLevel);
         });
 
         return () => {

@@ -2,6 +2,8 @@ import { typedObjectEntries } from '@minimalist-apps/type-utils';
 
 export type Theme = 'dark' | 'light';
 
+export const isTheme = (value: unknown): value is Theme => value === 'dark' || value === 'light';
+
 interface ColorScheme {
     readonly primary: string;
     readonly elevation1: string;

@@ -1,7 +1,7 @@
 import { Layout, type Theme, ThemeProvider } from '@minimalist-apps/components';
 import { exhaustive } from '@minimalist-apps/type-utils';
 import type { FC } from 'react';
-import type { Screen } from '../state/State';
+import type { Screen } from '../appStore/AppState';
 
 export type AppStateProps = {
     readonly themeMode: Theme;
