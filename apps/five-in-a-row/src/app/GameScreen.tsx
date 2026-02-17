@@ -1,4 +1,12 @@
-import { Button, Card, Column, Row, Title } from '@minimalist-apps/components';
+import {
+    Button,
+    Card,
+    Column,
+    RedoOutlined,
+    Row,
+    Title,
+    UndoOutlined,
+} from '@minimalist-apps/components';
 import { GridCell } from './GridCell';
 import { emojiMap, type GameBoard, type Player, type Winner } from './game';
 
@@ -62,12 +70,8 @@ export const GameScreenPure = ({
                     <Title level={3}>{statusText}</Title>
                 </Card>
                 <Row gap={8}>
-                    <Button onClick={onUndo} disabled={!canUndo}>
-                        Undo
-                    </Button>
-                    <Button onClick={onRedo} disabled={!canRedo}>
-                        Redo
-                    </Button>
+                    <Button onClick={onUndo} disabled={!canUndo} icon={<UndoOutlined />} />
+                    <Button onClick={onRedo} disabled={!canRedo} icon={<RedoOutlined />} />
                     <Button onClick={onReset}>Restart</Button>
                 </Row>
             </Row>
