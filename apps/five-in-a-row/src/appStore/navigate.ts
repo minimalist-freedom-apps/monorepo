@@ -1,8 +1,8 @@
-import type { StoreDep } from './createStore';
-import type { Screen } from './State';
+import type { Screen } from './AppState';
+import type { AppStoreDep } from './createAppStore';
 
 export const createNavigate =
-    (deps: StoreDep) =>
+    (deps: AppStoreDep) =>
     (screen: Screen): void => {
         deps.store.setState({ currentScreen: screen });
     };

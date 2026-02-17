@@ -1,11 +1,11 @@
 import type { Store } from '@minimalist-apps/mini-store';
 import { createStore as createMiniStore } from '@minimalist-apps/mini-store';
-import type { State } from './State';
+import type { AppState } from './AppState';
 
-export type StoreDep = { readonly store: Store<State> };
+export type AppStoreDep = { readonly store: Store<AppState> };
 
-export const createStore = (): Store<State> => {
-    const initialState: State = {
+export const createAppStore = (): Store<AppState> => {
+    const initialState: AppState = {
         themeMode: 'dark',
         currentScreen: 'Game',
     };

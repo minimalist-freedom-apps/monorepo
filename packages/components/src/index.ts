@@ -10,6 +10,7 @@ export {
     BRAND_COLOR,
     COLORS,
     injectColorVariables,
+    isTheme,
     type Theme,
 } from './colors';
 export { Divider } from './Divider';

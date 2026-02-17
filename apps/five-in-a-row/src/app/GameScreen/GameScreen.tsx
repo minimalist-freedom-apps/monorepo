@@ -7,8 +7,8 @@ import {
     Title,
     UndoOutlined,
 } from '@minimalist-apps/components';
+import { emojiMap, type GameBoard, type Player, type Winner } from '../game/game';
 import { GridCell } from './GridCell';
-import { emojiMap, type GameBoard, type Player, type Winner } from './game';
 
 interface BuildStatusTextProps {
     readonly winner: Winner | null;
@@ -45,21 +45,18 @@ export interface GameScreenDep {
     readonly onCellClick: (index: number) => void;
 }
 
-export type GameScreenProps = GameScreenStateProps & GameScreenDep;
-
-export const GameScreenPure = ({
-    winner,
-    currentPlayer,
-    boardIsFull,
-    board,
-    boardSize,
-    canUndo,
-    canRedo,
-    onUndo,
-    onRedo,
-    onReset,
-    onCellClick,
-}: GameScreenProps) => {
+export const GameScreenPure = (
+    deps: GameScreenDep,
+    {
+        winner,
+        currentPlayer,
+        boardIsFull,
+        board,
+        boardSize,
+        canUndo,
+        canRedo,
+    }: GameScreenStateProps,
+) => {
     const statusText = buildStatusText({ winner, currentPlayer, boardIsFull });
     const winningCellIndexes = new Set(winner?.cellIndexes ?? []);
 
@@ -70,9 +67,9 @@ export const GameScreenPure = ({
                     <Title level={3}>{statusText}</Title>
                 </Card>
                 <Row gap={8}>
-                    <Button onClick={onUndo} disabled={!canUndo} icon={<UndoOutlined />} />
-                    <Button onClick={onRedo} disabled={!canRedo} icon={<RedoOutlined />} />
-                    <Button onClick={onReset}>Restart</Button>
+                    <Button onClick={deps.onUndo} disabled={!canUndo} icon={<UndoOutlined />} />
+                    <Button onClick={deps.onRedo} disabled={!canRedo} icon={<RedoOutlined />} />
+                    <Button onClick={deps.onReset}>Restart</Button>
                 </Row>
             </Row>
 
@@ -99,7 +96,7 @@ export const GameScreenPure = ({
                                 cell={cell}
                                 isWinningCell={isWinningCell}
                                 disabled={isDisabled}
-                                onCellClick={onCellClick}
+                                onCellClick={deps.onCellClick}
                             />
                         );
                     })}

@@ -1,5 +1,5 @@
 import { useRef } from 'react';
-import { emojiMap, type Player } from './game';
+import { emojiMap, type Player } from '../game/game';
 import { useElementRect } from './useElementRect';
 
 const toFontSize = (rect: DOMRectReadOnly | null): number =>
