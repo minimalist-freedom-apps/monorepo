@@ -22,8 +22,10 @@ export {
     DeleteOutlined,
     MenuOutlined,
     PlusOutlined,
+    RedoOutlined,
     ReloadOutlined,
     SettingOutlined,
+    UndoOutlined,
 } from './Icons';
 export type { InputRef } from './Input';
 export { Input } from './Input';
