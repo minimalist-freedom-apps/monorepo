@@ -19,7 +19,7 @@ export interface GameState {
     readonly lastMoveIndex: number | null;
 }
 
-const directions: ReadonlyArray<readonly [number, number]> = [
+export const DIRECTIONS: ReadonlyArray<readonly [number, number]> = [
     [1, 0],
     [0, 1],
     [1, 1],
@@ -28,15 +28,30 @@ const directions: ReadonlyArray<readonly [number, number]> = [
 
 const winLength = 5;
 
+export interface Coordinates {
+    readonly x: number;
+    readonly y: number;
+}
+
+interface BuildCoordinatesProps {
+    readonly index: number;
+    readonly size: number;
+}
+
+export const buildCoordinates = ({ index, size }: BuildCoordinatesProps): Coordinates => ({
+    x: index % size,
+    y: Math.floor(index / size),
+});
+
 interface CellCoordinatesProps {
     readonly x: number;
     readonly y: number;
     readonly size: number;
 }
 
-const buildCellIndex = ({ x, y, size }: CellCoordinatesProps): number => y * size + x;
+export const buildCellIndex = ({ x, y, size }: CellCoordinatesProps): number => y * size + x;
 
-const isInsideBoard = ({ x, y, size }: CellCoordinatesProps): boolean =>
+export const isInsideBoard = ({ x, y, size }: CellCoordinatesProps): boolean =>
     x >= 0 && y >= 0 && x < size && y < size;
 
 interface CollectCellsInDirectionProps {
@@ -120,7 +135,7 @@ export const findWinner = ({ board, size, lastMoveIndex }: FindWinnerProps): Win
     const startY = Math.floor(lastMoveIndex / size);
     const targetLineLength = buildTargetLineLength({ size });
 
-    for (const [directionX, directionY] of directions) {
+    for (const [directionX, directionY] of DIRECTIONS) {
         const backwardCells = collectCellsInDirection({
             board,
             size,

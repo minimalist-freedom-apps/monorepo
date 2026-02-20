@@ -1,30 +1,13 @@
-import { buildNextSnapshot } from '../../buildNextSnapshot';
-import type { GameState, Player } from '../../game';
-import { isBoardFull } from '../../game';
+import { buildNextSnapshot } from '../../../buildNextSnapshot';
+import type { Coordinates, GameState, Player } from '../../../game';
+import { buildCellIndex, buildCoordinates, isBoardFull, isInsideBoard } from '../../../game';
+import { buildPlayerLineScore } from './buildPlayerLineScore';
 
+// Very large terminal score used by minimax when a win/loss is reached.
 const winScore = 1_000_000;
+
+// Search ply after the root move. Keep this low for responsive gameplay on larger boards.
 const searchDepth = 2;
-const directions: ReadonlyArray<Coordinates> = [
-    { x: 1, y: 0 },
-    { x: 0, y: 1 },
-    { x: 1, y: 1 },
-    { x: 1, y: -1 },
-];
-
-interface Coordinates {
-    readonly x: number;
-    readonly y: number;
-}
-
-interface BuildCoordinatesProps {
-    readonly index: number;
-    readonly boardSize: number;
-}
-
-const buildCoordinates = ({ index, boardSize }: BuildCoordinatesProps): Coordinates => ({
-    x: index % boardSize,
-    y: Math.floor(index / boardSize),
-});
 
 interface BuildCenterIndexProps {
     readonly boardSize: number;
@@ -36,40 +19,6 @@ const buildCenterIndex = ({ boardSize }: BuildCenterIndexProps): number => {
     return center * boardSize + center;
 };
 
-interface BuildIndexFromCoordinatesProps {
-    readonly x: number;
-    readonly y: number;
-    readonly boardSize: number;
-}
-
-const buildIndexFromCoordinates = ({ x, y, boardSize }: BuildIndexFromCoordinatesProps): number =>
-    y * boardSize + x;
-
-interface IsInsideBoardProps {
-    readonly x: number;
-    readonly y: number;
-    readonly boardSize: number;
-}
-
-const isInsideBoard = ({ x, y, boardSize }: IsInsideBoardProps): boolean =>
-    x >= 0 && y >= 0 && x < boardSize && y < boardSize;
-
-interface BuildCellValueProps {
-    readonly snapshot: GameState;
-    readonly x: number;
-    readonly y: number;
-}
-
-const buildCellValue = ({ snapshot, x, y }: BuildCellValueProps): Player | null => {
-    if (!isInsideBoard({ x, y, boardSize: snapshot.boardSize })) {
-        return null;
-    }
-
-    const index = buildIndexFromCoordinates({ x, y, boardSize: snapshot.boardSize });
-
-    return snapshot.board[index];
-};
-
 interface BuildOpponentPlayerProps {
     readonly player: Player;
 }
@@ -77,104 +26,12 @@ interface BuildOpponentPlayerProps {
 const buildOpponentPlayer = ({ player }: BuildOpponentPlayerProps): Player =>
     player === 'cross' ? 'ring' : 'cross';
 
-interface BuildPatternScoreProps {
-    readonly runLength: number;
-    readonly openEnds: number;
-}
-
-const buildPatternScore = ({ runLength, openEnds }: BuildPatternScoreProps): number => {
-    if (openEnds === 0) {
-        return 0;
-    }
-
-    if (runLength >= 5) {
-        return 200_000;
-    }
-
-    if (runLength === 4) {
-        if (openEnds === 2) {
-            return 50_000;
-        }
-
-        return 10_000;
-    }
-
-    if (runLength === 3) {
-        if (openEnds === 2) {
-            return 2_000;
-        }
-
-        return 300;
-    }
-
-    if (runLength === 2) {
-        if (openEnds === 2) {
-            return 120;
-        }
-
-        return 25;
-    }
-
-    if (runLength === 1 && openEnds === 2) {
-        return 8;
-    }
-
-    return 1;
-};
-
-interface BuildPlayerLineScoreProps {
-    readonly snapshot: GameState;
-    readonly player: Player;
-}
-
-const buildPlayerLineScore = ({ snapshot, player }: BuildPlayerLineScoreProps): number => {
-    let totalScore = 0;
-
-    for (let y = 0; y < snapshot.boardSize; y += 1) {
-        for (let x = 0; x < snapshot.boardSize; x += 1) {
-            if (buildCellValue({ snapshot, x, y }) !== player) {
-                continue;
-            }
-
-            for (const direction of directions) {
-                const previousX = x - direction.x;
-                const previousY = y - direction.y;
-
-                if (buildCellValue({ snapshot, x: previousX, y: previousY }) === player) {
-                    continue;
-                }
-
-                let runLength = 0;
-                let nextX = x;
-                let nextY = y;
-
-                while (buildCellValue({ snapshot, x: nextX, y: nextY }) === player) {
-                    runLength += 1;
-                    nextX += direction.x;
-                    nextY += direction.y;
-                }
-
-                const headX = nextX;
-                const headY = nextY;
-                const tailX = x - direction.x;
-                const tailY = y - direction.y;
-                const openHead = buildCellValue({ snapshot, x: headX, y: headY }) === null;
-                const openTail = buildCellValue({ snapshot, x: tailX, y: tailY }) === null;
-                const openEnds = Number(openHead) + Number(openTail);
-
-                totalScore += buildPatternScore({ runLength, openEnds });
-            }
-        }
-    }
-
-    return totalScore;
-};
-
 interface EvaluateHeuristicScoreProps {
     readonly snapshot: GameState;
     readonly maximizingPlayer: Player;
 }
 
+// Non-terminal leaf evaluation: our pressure minus opponent pressure.
 const evaluateHeuristicScore = ({
     snapshot,
     maximizingPlayer,
@@ -190,6 +47,18 @@ interface BuildPreferredMovesNearLastMoveProps {
     readonly snapshot: GameState;
 }
 
+const OFFSETS: ReadonlyArray<Coordinates> = [
+    { x: 1, y: 0 },
+    { x: -1, y: 0 },
+    { x: 0, y: 1 },
+    { x: 0, y: -1 },
+    { x: 1, y: 1 },
+    { x: -1, y: 1 },
+    { x: 1, y: -1 },
+    { x: -1, y: -1 },
+];
+
+// Prioritize local tactical answers around the latest move before global move scan.
 const buildPreferredMovesNearLastMove = ({
     snapshot,
 }: BuildPreferredMovesNearLastMoveProps): ReadonlyArray<number> => {
@@ -199,30 +68,20 @@ const buildPreferredMovesNearLastMove = ({
 
     const { x: lastMoveX, y: lastMoveY } = buildCoordinates({
         index: snapshot.lastMoveIndex,
-        boardSize: snapshot.boardSize,
+        size: snapshot.boardSize,
     });
 
     const moves: Array<number> = [];
-    const offsets: ReadonlyArray<Coordinates> = [
-        { x: 1, y: 0 },
-        { x: -1, y: 0 },
-        { x: 0, y: 1 },
-        { x: 0, y: -1 },
-        { x: 1, y: 1 },
-        { x: -1, y: 1 },
-        { x: 1, y: -1 },
-        { x: -1, y: -1 },
-    ];
 
-    for (const offset of offsets) {
+    for (const offset of OFFSETS) {
         const x = lastMoveX + offset.x;
         const y = lastMoveY + offset.y;
 
-        if (!isInsideBoard({ x, y, boardSize: snapshot.boardSize })) {
+        if (!isInsideBoard({ x, y, size: snapshot.boardSize })) {
             continue;
         }
 
-        const index = buildIndexFromCoordinates({ x, y, boardSize: snapshot.boardSize });
+        const index = buildCellIndex({ x, y, size: snapshot.boardSize });
 
         if (snapshot.board[index] === null) {
             moves.push(index);
@@ -236,6 +95,7 @@ interface BuildAvailableMovesProps {
     readonly snapshot: GameState;
 }
 
+// Deterministic move ordering improves alpha-beta pruning and keeps opening sensible.
 const buildAvailableMoves = ({ snapshot }: BuildAvailableMovesProps): ReadonlyArray<number> => {
     const preferredNearLastMove = buildPreferredMovesNearLastMove({ snapshot });
     const seen = new Set<number>(preferredNearLastMove);
@@ -268,6 +128,7 @@ interface EvaluateTerminalScoreProps {
     readonly depth: number;
 }
 
+// Terminal scoring prefers faster wins and slower losses via depth adjustment.
 const evaluateTerminalScore = ({
     snapshot,
     maximizingPlayer,
@@ -297,6 +158,8 @@ interface MinimaxProps {
     readonly beta: number;
 }
 
+// Depth-limited minimax with alpha-beta pruning.
+// Maximizing/minimizing side is inferred from snapshot.currentPlayer.
 const minimax = ({
     snapshot,
     maximizingPlayer,
@@ -390,6 +253,7 @@ const minimax = ({
 };
 
 export const alphaBetaPruning = (state: GameState): number | null => {
+    // No legal move when game already ended or board is full.
     if (state.winner !== null || isBoardFull({ board: state.board })) {
         return null;
     }
@@ -405,6 +269,7 @@ export const alphaBetaPruning = (state: GameState): number | null => {
     let alpha = Number.NEGATIVE_INFINITY;
     const beta = Number.POSITIVE_INFINITY;
 
+    // Root search: choose the move with highest minimax score.
     for (const move of moves) {
         const nextSnapshot = buildNextSnapshot({ snapshot: state, index: move });
 
