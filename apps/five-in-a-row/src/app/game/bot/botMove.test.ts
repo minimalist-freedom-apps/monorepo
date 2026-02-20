@@ -1,5 +1,6 @@
 import { describe, expect, test } from 'vitest';
-import { createEmptyBoard, type GameState } from '../game';
+import { createEmptyBoard } from '../createRootSnapshot';
+import type { GameState } from '../game';
 import { botMove } from './botMove';
 
 interface CreateStateProps {
