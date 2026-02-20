@@ -1,58 +1,84 @@
-## Dependency injection
+# Dependency injection
 
-Follow Evolu's convention-based DI approach without frameworks:
+Some parts of the codebase use the Dependency Injection (DI) pattern. Instead of importing dependencies directly, pass them to the service as parameters. This allows better testability and separation of concerns.
 
-### Define dependencies 
+## Skill boundaries
+
+Use this skill mainly for packages that directly mention this skill.
+
+## Service definition standard
+
+The unified pattern for defining services is as follows.
+
+Define in this order for consistency:
+
+### 1: Service dependencies
+
+Use the same key (`serviceName`) everywhere. This is important so `Dep`, `Deps`, and composition root wiring stay consistent.
+
 ```ts
-type MyServiceDeps = TimeDep & OtherDep;
+export type ServiceNameDeps = OtherServiceDep | AnotherServiceDep;
 ```
 
-### Define service type (prefer interface)
+### 2. Service shape:
 
 ```ts
-type MyService = (eventTimestamp: number) => number;
+export type ServiceParams = {
+    id: string;
+    // ...
+};
+
+// Usually a function, but it can also be an object with multiple methods.
+export type ServiceName = (params: ServiceParams) => ServiceResult;
 ```
 
-### Define dependency interfaces
+### 3. Dependency shape for other services:
 
 ```ts
-export type MyServiceDep = { myService: MyService }
+export type ServiceNameDeps = {
+    serviceName: ServiceName;
+};
 ```
 
-### Use currying for functions with dependencies
+### 4. Service factory:
+
+Do not repeat `ServiceParams` in factory (`(params)` only). It is inferred from `ServiceName`.
+
+Service factory:
+
+File shall be named: `createServiceName.ts`.
 
 ```ts
-const createMyService =
-    (deps: MyServiceDeps): MyService =>
-    ({ param1, param2 }): number => {
-        const currentTime = deps.time.now();
-        const eventTimestamp = depends.other.getEventTimestamp(param1, param2);
-
-        return eventTimestamp - currentTime;
+export const createServiceName =
+    (deps: ServiceNameDeps): ServiceName =>
+    params => {
+        // params is inferred from ServiceName type
+        return deps.serviceName(params);
     };
 ```
 
-### 3. Create factory functions
+## Composition root
+
+This is the place where the tree of dependencies is created and wired together.
+
+- We have top-level composition roots for Desktop, Web, and Native.
+- There may be some module/package level composition roots. Think of them as simply another
+  service factory, but the service in this case is the whole module/package.
+
+Composition root:
 
 ```ts
-export const createTime = (): Time => ({
-    now: () => Date.now(),
-});
-```
+// Composition root may have its own dependencies
+type CompositionRootDeps = ADep;
 
-### 4. Composition root pattern
-Dependency composition happens in the app's entry point (composition root)
+export const createCompositionRoot = (deps: CompositionRootDeps) => {
+    const otherService = createOtherService(deps);
+    const serviceName = createServiceName({ otherService });
 
-
-```ts
-export const createCompositionRoot = (): Deps => {
-    const createTime = createTime();
-
-    const myService = createMyService({
-        time: createTime(),
-        other: createOtherService({otherDep, someOtherDep}),
-    });
-}
+    return {
+        serviceName, // expose only `serviceName`; `otherService` is module-private in this case
+    };
+};
 ```
 
 Composition root MUST BE synchronous!

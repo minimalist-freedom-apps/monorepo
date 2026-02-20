@@ -1,20 +1,21 @@
-import { Button, Row, SettingsRow, Switch } from '@minimalist-apps/components';
-import type { BotLevel, GameMode } from '../game/store/createGameStore';
-import type { SetBotLevelDeps } from '../game/store/setBotLevel';
+import { SettingsRow, Switch } from '@minimalist-apps/components';
+import type { FC } from 'react';
+import type { GameMode } from '../game/store/createGameStore';
 import type { SetGameModeDeps } from '../game/store/setGameMode';
 
-const botLevels: ReadonlyArray<BotLevel> = ['Easy', 'Medium', 'Hard', 'Torment', 'Impossible'];
+export type GameModeSettingsDep = {
+    readonly GameModeSettings: FC;
+};
 
 export interface GameModeSettingsStateProps {
     readonly gameMode: GameMode;
-    readonly botLevel: BotLevel;
 }
 
-export type GameModeSettingsDeps = SetGameModeDeps & SetBotLevelDeps;
+export type GameModeSettingsDeps = SetGameModeDeps;
 
 export const GameModeSettingsPure = (
     deps: GameModeSettingsDeps,
-    { gameMode, botLevel }: GameModeSettingsStateProps,
+    { gameMode }: GameModeSettingsStateProps,
 ) => (
     <>
         <SettingsRow label="2 Players Mode">
@@ -26,21 +27,5 @@ export const GameModeSettingsPure = (
                 }}
             />
         </SettingsRow>
-        {gameMode === 'bot' ? (
-            <SettingsRow label="Bot Difficulty" direction="column">
-                <Row gap={8} wrap>
-                    {botLevels.map(level => (
-                        <Button
-                            disabled
-                            key={level}
-                            variant={botLevel === level ? 'default' : 'text'}
-                            onClick={() => deps.setBotLevel(level)}
-                        >
-                            {level}
-                        </Button>
-                    ))}
-                </Row>
-            </SettingsRow>
-        ) : null}
     </>
 );

@@ -79,13 +79,9 @@ describe(createGameStore.name, () => {
         const store = createGameStore({ initialBoardSize: 10 });
 
         store.setGameMode('bot');
-        store.setOpeningProtocol('swap2');
-        store.setBotLevel('Impossible');
 
         const view = selectGameViewState(store.getState());
 
         expect(view.gameMode).toBe('bot');
-        expect(view.openingProtocol).toBe('swap2');
-        expect(view.botLevel).toBe('Impossible');
     });
 });

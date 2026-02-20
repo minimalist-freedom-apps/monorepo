@@ -1,6 +1,11 @@
 import { Column, SettingsRow, Slider, Text } from '@minimalist-apps/components';
+import type { FC } from 'react';
 import type { GameMode } from '../game/store/createGameStore';
 import type { SetBoardSizeDeps } from '../game/store/setBoardSize';
+
+export type BoardSizeSettingsDep = {
+    readonly BoardSizeSettings: FC;
+};
 
 const minBoardSize = 3;
 const maxBoardSize = 30;

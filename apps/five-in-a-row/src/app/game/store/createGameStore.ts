@@ -29,33 +29,16 @@ interface GameSnapshot {
 interface GameStoreState {
     readonly history: UndoState<GameSnapshot>;
     readonly gameMode: GameMode;
-    readonly openingProtocol: OpeningProtocol;
-    readonly botLevel: BotLevel;
     readonly botPlayer: Player;
 }
 
 export type GameMode = 'human' | 'bot';
-
-export type OpeningProtocol = 'none' | 'swap' | 'swap2';
-export const OPENING_PROTOCOLS: ReadonlyArray<OpeningProtocol> = ['none', 'swap', 'swap2'];
-
-export type BotLevel = 'Easy' | 'Medium' | 'Hard' | 'Torment' | 'Impossible';
 
 export const isValidBoardSize = (value: unknown): value is number =>
     typeof value === 'number' && Number.isInteger(value) && value >= 3 && value <= 30;
 
 export const isGameMode = (value: unknown): value is GameMode =>
     value === 'human' || value === 'bot';
-
-export const isOpeningProtocol = (value: unknown): value is OpeningProtocol =>
-    value === 'none' || value === 'swap' || value === 'swap2';
-
-export const isBotLevel = (value: unknown): value is BotLevel =>
-    value === 'Easy' ||
-    value === 'Medium' ||
-    value === 'Hard' ||
-    value === 'Torment' ||
-    value === 'Impossible';
 
 export interface GameViewState {
     readonly boardSize: number;
@@ -66,8 +49,6 @@ export interface GameViewState {
     readonly canUndo: boolean;
     readonly canRedo: boolean;
     readonly gameMode: GameMode;
-    readonly openingProtocol: OpeningProtocol;
-    readonly botLevel: BotLevel;
 }
 
 export interface GameStore extends Store<GameStoreState> {
@@ -75,8 +56,6 @@ export interface GameStore extends Store<GameStoreState> {
     readonly reset: () => void;
     readonly setBoardSize: (size: number) => void;
     readonly setGameMode: (mode: GameMode) => void;
-    readonly setOpeningProtocol: (protocol: OpeningProtocol) => void;
-    readonly setBotLevel: (level: BotLevel) => void;
     readonly undo: () => void;
     readonly redo: () => void;
 }
@@ -165,16 +144,11 @@ export const selectGameViewState = (state: GameStoreState): GameViewState => {
         canUndo: canUndo({ state: state.history }),
         canRedo: canRedo({ state: state.history }),
         gameMode: state.gameMode,
-        openingProtocol: state.openingProtocol,
-        botLevel: state.botLevel,
     };
 };
 
 export const selectBoardSize = ({ history }: GameStoreState): number => history.present.boardSize;
 export const selectGameMode = ({ gameMode }: GameStoreState): GameMode => gameMode;
-export const selectOpeningProtocol = ({ openingProtocol }: GameStoreState): OpeningProtocol =>
-    openingProtocol;
-export const selectBotLevel = ({ botLevel }: GameStoreState): BotLevel => botLevel;
 
 export const createGameStore = ({
     initialBoardSize,
@@ -190,8 +164,6 @@ export const createGameStore = ({
             }),
         ),
         gameMode,
-        openingProtocol: 'none',
-        botLevel: 'Easy',
         botPlayer: 'cross',
     });
 
@@ -237,27 +209,6 @@ export const createGameStore = ({
         });
     };
 
-    const setOpeningProtocol = (protocol: OpeningProtocol) => {
-        const state = store.getState();
-
-        store.setState({
-            openingProtocol: protocol,
-            botPlayer: 'cross',
-            history: createUndoState(
-                createSnapshot({
-                    boardSize: clampBoardSize({
-                        size: state.history.present.boardSize,
-                        gameMode: state.gameMode,
-                    }),
-                }),
-            ),
-        });
-    };
-
-    const setBotLevel = (level: BotLevel) => {
-        store.setState({ botLevel: level });
-    };
-
     const undoMove = () => {
         const { history } = store.getState();
 
@@ -276,8 +227,6 @@ export const createGameStore = ({
         reset,
         setBoardSize,
         setGameMode,
-        setOpeningProtocol,
-        setBotLevel,
         undo: undoMove,
         redo: redoMove,
     };

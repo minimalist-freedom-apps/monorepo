@@ -6,15 +6,11 @@ import { GameScreenPure } from './app/GameScreen/GameScreen';
 import {
     createGameStore,
     selectBoardSize,
-    selectBotLevel,
     selectGameMode,
     selectGameViewState,
-    selectOpeningProtocol,
 } from './app/game/store/createGameStore';
 import { createSetBoardSize } from './app/game/store/setBoardSize';
-import { createSetBotLevel } from './app/game/store/setBotLevel';
 import { createSetGameMode } from './app/game/store/setGameMode';
-import { createSetOpeningProtocol } from './app/game/store/setOpeningProtocol';
 import {
     type BoardSizeSettingsDeps,
     BoardSizeSettingsPure,
@@ -25,11 +21,6 @@ import {
     GameModeSettingsPure,
     type GameModeSettingsStateProps,
 } from './app/SettingsScreen/GameModeSettings';
-import {
-    type OpeningProtocolSettingsDeps,
-    OpeningProtocolSettingsPure,
-    type OpeningProtocolSettingsStateProps,
-} from './app/SettingsScreen/OpeningProtocolSettings';
 import { SettingsScreenPure } from './app/SettingsScreen/SettingsScreen';
 import { ThemeModeSettingsPure } from './app/SettingsScreen/ThemeModeSettings';
 import { selectCurrentScreen, selectThemeMode } from './appStore/AppState';
@@ -50,8 +41,6 @@ export const createCompositionRoot = (): Main => {
     const setThemeMode = createSetThemeMode({ store });
 
     const setBoardSize = createSetBoardSize({ gameStore });
-    const setOpeningProtocol = createSetOpeningProtocol({ gameStore });
-    const setBotLevel = createSetBotLevel({ gameStore });
     const setGameMode = createSetGameMode({ gameStore });
 
     const loadInitialState = createLoadInitialState({ store, gameStore, localStorage });
@@ -87,11 +76,9 @@ export const createCompositionRoot = (): Main => {
             GameModeSettingsPure(deps, props),
         ({ gameStore }) => ({
             gameMode: selectGameMode(gameStore),
-            botLevel: selectBotLevel(gameStore),
         }),
         {
             setGameMode,
-            setBotLevel,
         },
     );
 
@@ -107,23 +94,11 @@ export const createCompositionRoot = (): Main => {
         },
     );
 
-    const OpeningProtocolSettings = connect(
-        (deps: OpeningProtocolSettingsDeps, props: OpeningProtocolSettingsStateProps) =>
-            OpeningProtocolSettingsPure(deps, props),
-        ({ gameStore }) => ({
-            openingProtocol: selectOpeningProtocol(gameStore),
-        }),
-        {
-            setOpeningProtocol,
-        },
-    );
-
     const SettingsScreen = () =>
         SettingsScreenPure({
             ThemeModeSettings,
             GameModeSettings,
             BoardSizeSettings,
-            OpeningProtocolSettings,
         });
 
     const App = connect(
