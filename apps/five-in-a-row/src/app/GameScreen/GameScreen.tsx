@@ -4,6 +4,7 @@ import {
     Column,
     RedoOutlined,
     Row,
+    Spinner,
     Title,
     UndoOutlined,
 } from '@minimalist-apps/components';
@@ -40,6 +41,7 @@ export interface GameScreenStateProps {
     readonly boardSize: number;
     readonly canUndo: boolean;
     readonly canRedo: boolean;
+    readonly isBotThinking: boolean;
 }
 
 export type GameScreenDep = UndoMoveDeps & RedoMoveDeps & ResetGameDeps & PlayerMoveDep;
@@ -54,6 +56,7 @@ export const GameScreenPure = (
         boardSize,
         canUndo,
         canRedo,
+        isBotThinking,
     }: GameScreenStateProps,
 ) => {
     const statusText = buildStatusText({ winner, currentPlayer, boardIsFull });
@@ -63,12 +66,28 @@ export const GameScreenPure = (
         <Column gap={12}>
             <Row justify="space-between" align="center">
                 <Card padding={{ top: 4, bottom: 4, left: 16, right: 16 }}>
-                    <Title level={3}>{statusText}</Title>
+                    <div style={{ height: 45, display: 'flex', alignItems: 'center' }}>
+                        {isBotThinking ? (
+                            <Spinner size="large" />
+                        ) : (
+                            <Title level={3}>{statusText}</Title>
+                        )}
+                    </div>
                 </Card>
                 <Row gap={8}>
-                    <Button onClick={deps.undoMove} disabled={!canUndo} icon={<UndoOutlined />} />
-                    <Button onClick={deps.redoMove} disabled={!canRedo} icon={<RedoOutlined />} />
-                    <Button onClick={deps.resetGame}>Restart</Button>
+                    <Button
+                        onClick={deps.undoMove}
+                        disabled={!canUndo || isBotThinking}
+                        icon={<UndoOutlined />}
+                    />
+                    <Button
+                        onClick={deps.redoMove}
+                        disabled={!canRedo || isBotThinking}
+                        icon={<RedoOutlined />}
+                    />
+                    <Button onClick={deps.resetGame} disabled={isBotThinking}>
+                        Restart
+                    </Button>
                 </Row>
             </Row>
 
@@ -86,7 +105,7 @@ export const GameScreenPure = (
                         const column = index % boardSize;
                         const cellKey = `${row}-${column}`;
                         const isWinningCell = winningCellIndexes.has(index);
-                        const isDisabled = winner !== null || cell !== null;
+                        const isDisabled = winner !== null || cell !== null || isBotThinking;
 
                         return (
                             <GridCell

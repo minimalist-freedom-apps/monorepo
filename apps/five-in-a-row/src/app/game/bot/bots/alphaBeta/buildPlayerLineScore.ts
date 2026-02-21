@@ -22,6 +22,10 @@ const buildCellValue = ({ snapshot, x, y }: BuildCellValueProps): Player | null 
     return snapshot.board[index];
 };
 
+const isOpenCell = ({ snapshot, x, y }: BuildCellValueProps): boolean =>
+    isInsideBoard({ x, y, size: snapshot.boardSize }) &&
+    buildCellValue({ snapshot, x, y }) === null;
+
 interface BuildPatternScoreProps {
     readonly runLength: number;
     readonly openEnds: number;
@@ -105,8 +109,8 @@ export const buildPlayerLineScore = ({ snapshot, player }: BuildPlayerLineScoreP
                 const headY = nextY;
                 const tailX = x - direction[0];
                 const tailY = y - direction[1];
-                const openHead = buildCellValue({ snapshot, x: headX, y: headY }) === null;
-                const openTail = buildCellValue({ snapshot, x: tailX, y: tailY }) === null;
+                const openHead = isOpenCell({ snapshot, x: headX, y: headY });
+                const openTail = isOpenCell({ snapshot, x: tailX, y: tailY });
                 const openEnds = Number(openHead) + Number(openTail);
 
                 totalScore += buildPatternScore({ runLength, openEnds });

@@ -40,7 +40,7 @@ describe(botMove.name, () => {
         expect(moveIndex).toBe(12);
     });
 
-    test('returns index next to opponent last move', () => {
+    test('returns best scoring response after opponent opening move', () => {
         const board = createEmptyBoard({ size: 5 });
         board[6] = 'ring';
 
@@ -54,6 +54,6 @@ describe(botMove.name, () => {
 
         const moveIndex = botMove(state);
 
-        expect(moveIndex).toBe(7);
+        expect(moveIndex).toBe(12);
     });
 });

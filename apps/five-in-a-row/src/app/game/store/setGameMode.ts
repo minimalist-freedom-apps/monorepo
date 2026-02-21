@@ -1,5 +1,6 @@
 import { createUndoState } from '@minimalist-apps/undo';
 import { createRootSnapshot } from '../createRootSnapshot';
+import { getNextPlayer, startingPlayer } from '../game';
 import { clampBoardSize, type GameMode, type GameStore } from './createGameStore';
 
 export type SetGameMode = (mode: GameMode) => void;
@@ -23,7 +24,7 @@ export const createSetGameMode =
 
         deps.gameStore.setState({
             gameMode: mode,
-            botPlayer: 'cross',
+            botPlayer: getNextPlayer({ player: startingPlayer }),
             history: createUndoState(createRootSnapshot({ boardSize: size })),
         });
     };

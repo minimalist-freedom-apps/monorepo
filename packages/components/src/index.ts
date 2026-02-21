@@ -44,6 +44,7 @@ export { SettingsRow } from './SettingsRow';
 export { Slider } from './Slider';
 export type { ReorderEvent, SortableItem } from './SortableList';
 export { SortableList } from './SortableList';
+export { Spinner } from './Spinner';
 export { Switch } from './Switch';
 export { buildSpacingStyle, type Spacing } from './spacing';
 export { Textarea } from './Textarea';

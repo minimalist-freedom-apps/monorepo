@@ -1,4 +1,4 @@
-import type { GameBoard, GameState } from './game';
+import { type GameBoard, type GameState, startingPlayer } from './game';
 
 interface CreateEmptyBoardProps {
     readonly size: number;
@@ -14,7 +14,7 @@ interface CreateSnapshotProps {
 export const createRootSnapshot = ({ boardSize }: CreateSnapshotProps): GameState => ({
     boardSize,
     board: createEmptyBoard({ size: boardSize }),
-    currentPlayer: 'ring',
+    currentPlayer: startingPlayer,
     winner: null,
     moveCount: 0,
     lastMoveIndex: null,

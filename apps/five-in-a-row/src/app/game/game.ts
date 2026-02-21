@@ -1,5 +1,7 @@
 export type Player = 'cross' | 'ring';
 
+export const startingPlayer: Player = 'cross';
+
 export const ringEmoji = '🔵';
 export const crossEmoji = '❌';
 

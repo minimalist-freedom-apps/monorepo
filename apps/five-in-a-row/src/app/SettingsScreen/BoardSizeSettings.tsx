@@ -31,7 +31,11 @@ export const BoardSizeSettingsPure = (
                 onChange={deps.setBoardSize}
             />
             <Text>{`${boardSize} × ${boardSize}`}</Text>
-            {gameMode === 'bot' ? <Text>Bot mode supports up to 15 × 15.</Text> : null}
+            {gameMode === 'bot' ? (
+                <Text>
+                    Bot mode supports only up to 15 × 15. Bot is very slow on bigger boards.
+                </Text>
+            ) : null}
         </Column>
     </SettingsRow>
 );

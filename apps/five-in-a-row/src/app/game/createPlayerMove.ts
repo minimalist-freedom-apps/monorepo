@@ -1,5 +1,5 @@
-import { botMove } from './bot/botMove';
-import { isBoardFull } from './game';
+import { botMoveInWorker } from './bot/botMoveInWorker';
+import type { GameState } from './game';
 import type { GameStoreDep } from './store/createGameStore';
 import type { PlayMoveDep } from './store/playMove';
 
@@ -13,28 +13,40 @@ export type PlayerMoveDep = {
     readonly playerMove: PlayerMove;
 };
 
-type PlayerMoveDeps = GameStoreDep & PlayMoveDep;
+export interface ShouldPlayBotDep {
+    readonly getShouldPlayBot: () => boolean;
+}
+
+export interface CurrentSnapshotDep {
+    readonly getCurrentSnapshot: () => GameState;
+}
+
+type PlayerMoveDeps = GameStoreDep & PlayMoveDep & ShouldPlayBotDep & CurrentSnapshotDep;
 
 export const createPlayerMove =
     (deps: PlayerMoveDeps): PlayerMove =>
     ({ index }) => {
         deps.playMove({ index });
 
-        const state = deps.gameStore.getState();
-        const snapshot = state.history.present;
-        const shouldPlayBot =
-            state.gameMode === 'bot' &&
-            snapshot.winner === null &&
-            !isBoardFull({ board: snapshot.board }) &&
-            snapshot.currentPlayer === state.botPlayer;
+        const snapshot = deps.getCurrentSnapshot();
 
-        if (!shouldPlayBot) {
+        if (deps.getShouldPlayBot() === false) {
             return;
         }
 
-        const botIndex = botMove(snapshot);
+        deps.gameStore.setState({ isBotThinking: true });
 
-        if (botIndex !== null && botIndex !== -1) {
-            deps.playMove({ index: botIndex });
-        }
+        void botMoveInWorker({ state: snapshot })
+            .then(botIndex => {
+                if (deps.getShouldPlayBot() === false) {
+                    return;
+                }
+
+                if (botIndex !== null && botIndex !== -1) {
+                    deps.playMove({ index: botIndex });
+                }
+            })
+            .finally(() => {
+                deps.gameStore.setState({ isBotThinking: false });
+            });
     };

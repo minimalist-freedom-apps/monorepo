@@ -1,5 +1,6 @@
 import { createConnect } from '@minimalist-apps/connect';
 import { createLocalStorage } from '@minimalist-apps/local-storage';
+import { toGetter } from '@minimalist-apps/mini-store';
 import { AppPure } from './app/App';
 import { AppHeader as AppHeaderPure } from './app/AppHeader';
 import { GameScreenPure } from './app/GameScreen/GameScreen';
@@ -7,8 +8,10 @@ import { createPlayerMove } from './app/game/createPlayerMove';
 import {
     createGameStore,
     selectBoardSize,
+    selectCurrentSnapshot,
     selectGameMode,
     selectGameViewState,
+    selectShouldPlayBot,
 } from './app/game/store/createGameStore';
 import { createPlayMove } from './app/game/store/playMove';
 import { createRedoMove } from './app/game/store/redoMove';
@@ -48,7 +51,14 @@ export const createCompositionRoot = (): Main => {
     const setBoardSize = createSetBoardSize({ gameStore });
     const setGameMode = createSetGameMode({ gameStore });
     const playMove = createPlayMove({ gameStore });
-    const playerMove = createPlayerMove({ gameStore, playMove });
+    const getShouldPlayBot = toGetter(gameStore.getState, selectShouldPlayBot);
+    const getCurrentSnapshot = toGetter(gameStore.getState, selectCurrentSnapshot);
+    const playerMove = createPlayerMove({
+        gameStore,
+        playMove,
+        getShouldPlayBot,
+        getCurrentSnapshot,
+    });
     const resetGame = createResetGame({ gameStore });
     const undoMove = createUndoMove({ gameStore });
     const redoMove = createRedoMove({ gameStore });
@@ -114,6 +124,7 @@ export const createCompositionRoot = (): Main => {
             ThemeModeSettings,
             GameModeSettings,
             BoardSizeSettings,
+            onBack: () => navigate('Game'),
         });
 
     const App = connect(

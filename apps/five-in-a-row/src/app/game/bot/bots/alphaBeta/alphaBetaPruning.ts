@@ -4,10 +4,10 @@ import { buildCellIndex, buildCoordinates, isBoardFull, isInsideBoard } from '..
 import { buildPlayerLineScore } from './buildPlayerLineScore';
 
 // Very large terminal score used by minimax when a win/loss is reached.
-const winScore = 1_000_000;
+const WIN_SCORE = 1_000_000;
 
 // Search ply after the root move. Keep this low for responsive gameplay on larger boards.
-const searchDepth = 2;
+const SEARCH_DEPTH = 2;
 
 interface BuildCenterIndexProps {
     readonly boardSize: number;
@@ -136,10 +136,10 @@ const evaluateTerminalScore = ({
 }: EvaluateTerminalScoreProps): number | null => {
     if (snapshot.winner !== null) {
         if (snapshot.winner.player === maximizingPlayer) {
-            return winScore - depth;
+            return WIN_SCORE - depth;
         }
 
-        return depth - winScore;
+        return depth - WIN_SCORE;
     }
 
     if (isBoardFull({ board: snapshot.board })) {
@@ -280,7 +280,7 @@ export const alphaBetaPruning = (state: GameState): number | null => {
         const score = minimax({
             snapshot: nextSnapshot,
             maximizingPlayer: state.currentPlayer,
-            depthLeft: searchDepth,
+            depthLeft: SEARCH_DEPTH,
             depth: 1,
             alpha,
             beta,

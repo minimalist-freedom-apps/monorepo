@@ -6,6 +6,7 @@ export const isTheme = (value: unknown): value is Theme => value === 'dark' || v
 
 interface ColorScheme {
     readonly primary: string;
+    readonly primaryHighlighted: string;
     readonly elevation1: string;
     readonly elevation0: string;
     readonly elevation2: string;
@@ -25,6 +26,7 @@ export const BRAND_COLOR = '#087d89';
 export const COLORS: Record<Theme, ColorScheme> = {
     dark: {
         primary: BRAND_COLOR,
+        primaryHighlighted: '#087D89',
 
         // background elevations
         elevation0: '#121212',
@@ -43,6 +45,7 @@ export const COLORS: Record<Theme, ColorScheme> = {
     },
     light: {
         primary: BRAND_COLOR,
+        primaryHighlighted: '#0A8F9D',
 
         // background elevations
         elevation0: '#f5f5f5',

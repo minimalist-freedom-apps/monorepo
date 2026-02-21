@@ -13,7 +13,7 @@ interface ButtonProps {
     readonly icon?: ReactNode;
     readonly intent?: ButtonIntent;
     readonly variant?: 'text' | 'default';
-    readonly size?: 'small' | 'middle' | 'large';
+    readonly size?: 'small' | 'medium' | 'large';
     readonly style?: React.CSSProperties;
 }
 
@@ -72,7 +72,7 @@ export const Button = ({
     icon,
     intent,
     variant = 'default',
-    size = 'middle',
+    size = 'medium',
     style,
 }: ButtonProps) => {
     const { token } = theme.useToken();
@@ -89,7 +89,7 @@ export const Button = ({
             disabled={disabled}
             icon={icon}
             danger={isDanger}
-            size={size}
+            size={size === 'medium' ? 'middle' : size}
             style={buildStyles(intent, isTextVariant, token, style)}
         >
             {children}

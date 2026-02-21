@@ -27,8 +27,8 @@ describe(createGameStore.name, () => {
         playMove({ index: 1 });
 
         expect(selectGameViewState(gameStore.getState()).board).toEqual([
-            'ring',
             'cross',
+            'ring',
             null,
             null,
             null,
@@ -41,7 +41,7 @@ describe(createGameStore.name, () => {
         undoMove();
 
         expect(selectGameViewState(gameStore.getState()).board).toEqual([
-            'ring',
+            'cross',
             null,
             null,
             null,
@@ -55,8 +55,8 @@ describe(createGameStore.name, () => {
         redoMove();
 
         expect(selectGameViewState(gameStore.getState()).board).toEqual([
-            'ring',
             'cross',
+            'ring',
             null,
             null,
             null,
@@ -80,7 +80,7 @@ describe(createGameStore.name, () => {
 
         const view = selectGameViewState(gameStore.getState());
 
-        expect(view.board).toEqual(['ring', null, 'cross', null, null, null, null, null, null]);
+        expect(view.board).toEqual(['cross', null, 'ring', null, null, null, null, null, null]);
         expect(view.canRedo).toBe(false);
     });
 
@@ -113,7 +113,7 @@ describe(createGameStore.name, () => {
         playMove({ index: 0 });
 
         expect(selectGameViewState(gameStore.getState()).board).toEqual([
-            'ring',
+            'cross',
             null,
             null,
             null,

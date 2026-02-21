@@ -1,4 +1,4 @@
-import { SettingsRow, Switch } from '@minimalist-apps/components';
+import { Button, Row, SettingsRow } from '@minimalist-apps/components';
 import type { FC } from 'react';
 import type { GameMode } from '../game/store/createGameStore';
 import type { SetGameModeDeps } from '../game/store/setGameMode';
@@ -17,14 +17,22 @@ export const GameModeSettingsPure = (
     deps: GameModeSettingsDeps,
     { gameMode }: GameModeSettingsStateProps,
 ) => (
-    <>
-        <SettingsRow label="2 Players Mode">
-            <Switch
-                checked={gameMode === 'human'}
-                onChange={() => {
-                    deps.setGameMode(gameMode === 'human' ? 'bot' : 'human');
-                }}
-            />
-        </SettingsRow>
-    </>
+    <SettingsRow label="Game Mode">
+        <Row gap={8}>
+            <Button
+                intent={gameMode === 'human' ? 'primary' : 'secondary'}
+                onClick={() => deps.setGameMode('human')}
+                size="medium"
+            >
+                2 payers
+            </Button>
+            <Button
+                intent={gameMode === 'bot' ? 'primary' : 'secondary'}
+                onClick={() => deps.setGameMode('bot')}
+                size="medium"
+            >
+                Bot 🤖
+            </Button>
+        </Row>
+    </SettingsRow>
 );
