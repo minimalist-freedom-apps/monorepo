@@ -7,5 +7,5 @@ export const allSelectedCurrenciesQuery = (storage: EvoluStorage) =>
             .selectFrom('currency')
             .select(['id', 'currency', 'order'])
             .where('isDeleted', 'is not', sqliteTrue)
-            .where('ownerId', '=', storage.shardOwner.id),
+            .where('ownerId', '=', storage.activeOwner.id),
     );

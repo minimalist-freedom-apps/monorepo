@@ -50,7 +50,7 @@ export const createAddCurrency =
         const lastIndex = lastItem !== undefined ? lastItem.order : null;
         const newOrder = generateIndexBetween(lastIndex, null);
 
-        const { evolu, shardOwner } = await deps.ensureEvoluStorage();
+        const { evolu, activeOwner } = await deps.ensureEvoluStorage();
 
         const result = evolu.upsert(
             'currency',
@@ -60,7 +60,7 @@ export const createAddCurrency =
                 order: newOrder,
                 isDeleted: 0,
             },
-            { ownerId: shardOwner.id },
+            { ownerId: activeOwner.id },
         );
 
         if (!result.ok) {

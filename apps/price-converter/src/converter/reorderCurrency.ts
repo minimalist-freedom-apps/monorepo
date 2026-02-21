@@ -39,7 +39,7 @@ export const createReorderCurrency =
 
         const newOrder = generateIndexBetween(prevKey, nextKey);
 
-        const { evolu, shardOwner } = await deps.ensureEvoluStorage();
+        const { evolu, activeOwner: shardOwner } = await deps.ensureEvoluStorage();
         const movedCurrency = orderedCurrencies[oldIndex];
 
         evolu.upsert(

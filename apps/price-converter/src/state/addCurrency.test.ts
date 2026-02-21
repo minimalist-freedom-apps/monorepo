@@ -8,7 +8,7 @@ const USD = getOrThrow(CurrencyCode.from('USD'));
 
 const mockEvoluStorage = (upsert: unknown): EvoluStorage => ({
     evolu: { upsert: upsert as EvoluStorage['evolu']['upsert'] } as EvoluStorage['evolu'],
-    shardOwner: { id: 'test-owner' } as ShardOwner,
+    activeOwner: { id: 'test-owner' } as ShardOwner,
     updateRelayUrls: vi.fn(),
     dispose: vi.fn(),
 });

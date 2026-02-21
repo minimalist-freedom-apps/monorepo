@@ -25,7 +25,7 @@ const createTestDeps = (
 
 const mockEvoluStorage = (upsert: EvoluStorage['evolu']['upsert']): EvoluStorage => ({
     evolu: { upsert } as EvoluStorage['evolu'],
-    shardOwner: { id: 'test-owner' } as ShardOwner,
+    activeOwner: { id: 'test-owner' } as ShardOwner,
     updateRelayUrls: vi.fn(),
     dispose: vi.fn(),
 });

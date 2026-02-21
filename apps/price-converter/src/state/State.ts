@@ -24,5 +24,5 @@ export interface State extends ThemeState, EvoluState {
     readonly currentScreen: Screen;
     readonly focusedCurrency: CurrencyCode | 'BTC' | null;
     readonly debugMode: boolean;
-    readonly evoluOwnerId: OwnerId | null;
+    readonly activeOwnerId: OwnerId | null;
 }
