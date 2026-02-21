@@ -3,6 +3,7 @@
 
 ## Apps
 - 🚧 [**Price Converter**](apps/price-converter/README.md) - Converts Fiat Shitcoins to Bitcoin/Sats
+- [**Chat**](apps/chat/README.md) - Minimalist chat app
 - [**Scale Cake**](apps/scale-cake/README.md) - Scale your cake recipes to size of your plate
 
 ## Development
