@@ -229,6 +229,9 @@ importers:
       '@minimalist-apps/fractional-indexing':
         specifier: workspace:*
         version: link:../../packages/fractional-indexing
+      '@minimalist-apps/fragment-evolu':
+        specifier: workspace:*
+        version: link:../../packages/module-evolu-settings
       '@minimalist-apps/fragment-theme':
         specifier: workspace:*
         version: link:../../packages/fragment-theme
@@ -241,9 +244,6 @@ importers:
       '@minimalist-apps/mobile-native':
         specifier: workspace:*
         version: link:../../packages/mobile-native
-      '@minimalist-apps/module-evolu-settings':
-        specifier: workspace:*
-        version: link:../../packages/module-evolu-settings
       '@minimalist-apps/number':
         specifier: workspace:*
         version: link:../../packages/number
@@ -623,6 +623,9 @@ importers:
       '@minimalist-apps/connect':
         specifier: workspace:*
         version: link:../connect
+      '@minimalist-apps/mini-store':
+        specifier: workspace:*
+        version: link:../mini-store
       react:
         specifier: ^19.0.0
         version: 19.2.4

@@ -1,6 +1,6 @@
 import { Column } from '@minimalist-apps/components';
+import type { BackupMnemonicDep, RestoreMnemonicDep } from '@minimalist-apps/fragment-evolu';
 import type { ThemeModeSettingsDep } from '@minimalist-apps/fragment-theme';
-import type { BackupMnemonicDep, RestoreMnemonicDep } from '@minimalist-apps/module-evolu-settings';
 import type { FC } from 'react';
 import type { DebugSettingsDep } from './DebugSettings';
 
