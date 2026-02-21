@@ -229,6 +229,9 @@ importers:
       '@minimalist-apps/fractional-indexing':
         specifier: workspace:*
         version: link:../../packages/fractional-indexing
+      '@minimalist-apps/fragment-theme':
+        specifier: workspace:*
+        version: link:../../packages/fragment-theme
       '@minimalist-apps/local-storage':
         specifier: workspace:*
         version: link:../../packages/local-storage

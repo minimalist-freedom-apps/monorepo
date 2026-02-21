@@ -1,7 +1,7 @@
 import type { Connect } from '@minimalist-apps/connect';
 import { createSetThemeMode } from './createSetThemeMode';
 import { selectThemeMode } from './selectThemeMode';
-import { ThemeModeSettingsPure } from './ThemeModeSettingsPure';
+import { ThemeModeSettingsPure } from './ThemeModeSettings';
 import type { ThemeState, ThemeStoreDep } from './themeState';
 
 type ThemeFragmentCompositionRootDeps<State extends ThemeState> = ThemeStoreDep<State> & {

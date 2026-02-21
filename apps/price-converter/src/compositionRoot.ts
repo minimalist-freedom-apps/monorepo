@@ -3,6 +3,10 @@ import { createConnect } from '@minimalist-apps/connect';
 import { CurrencyInputPure } from '@minimalist-apps/currency-input';
 import { createCurrentDateTime } from '@minimalist-apps/datetime';
 import { createEnsureEvoluMnemonic, createEnsureEvoluStorage } from '@minimalist-apps/evolu';
+import {
+    createThemeFragmentCompositionRoot,
+    selectThemeMode,
+} from '@minimalist-apps/fragment-theme';
 import { createLocalStorage } from '@minimalist-apps/local-storage';
 import { toGetter } from '@minimalist-apps/mini-store';
 import { createEvoluSettingsCompositionRoot } from '@minimalist-apps/module-evolu-settings';
@@ -19,7 +23,6 @@ import { DebugHeaderPure } from './app/DebugHeader';
 import { RatesLoadingPure } from './app/RatesLoading';
 import { DebugSettingsPure } from './app/SettingsScreen/DebugSettings';
 import { SettingsScreenPure } from './app/SettingsScreen/SettingsScreen';
-import { ThemeSettingsPure } from './app/SettingsScreen/ThemeSettings';
 import { ThemeWrapperPure } from './app/ThemeWrapper';
 import { createChangeBtcAmount } from './converter/changeBtcAmount';
 import { createChangeFiatAmount } from './converter/changeFiatAmount';
@@ -47,7 +50,6 @@ import { createSetFiatAmount } from './state/setFiatAmount';
 import { createSetFocusedCurrency } from './state/setFocusedCurrency';
 import { createSetMnemonic } from './state/setMnemonic';
 import { createSetSatsAmount } from './state/setSatsAmount';
-import { createSetTheme } from './state/setTheme';
 
 export const createCompositionRoot = (): Main => {
     // Low Level
@@ -57,7 +59,6 @@ export const createCompositionRoot = (): Main => {
 
     // Store
     const store = createStore();
-    const setTheme = createSetTheme({ store });
     const setDebugMode = createSetDebugMode({ store });
     const navigate = createNavigate({ store });
     const setSatsAmount = createSetSatsAmount({ store });
@@ -107,6 +108,8 @@ export const createCompositionRoot = (): Main => {
     const getSelectedCurrencies = createGetSelectedCurrencies({ ensureEvoluStorage });
 
     const connect = createConnect({ store, selectedCurrencies: selectedCurrenciesStore });
+
+    const { ThemeModeSettings } = createThemeFragmentCompositionRoot({ connect, store });
 
     // Modules
     const { BackupMnemonic, RestoreMnemonic } = createEvoluSettingsCompositionRoot({
@@ -224,10 +227,6 @@ export const createCompositionRoot = (): Main => {
         },
     );
 
-    const ThemeSettings = connect(ThemeSettingsPure, ({ store }) => ({ theme: store.theme }), {
-        setTheme,
-    });
-
     const DebugSettings = connect(
         DebugSettingsPure,
         ({ store }) => ({ debugMode: store.debugMode }),
@@ -238,7 +237,7 @@ export const createCompositionRoot = (): Main => {
 
     const SettingsScreen = () =>
         SettingsScreenPure({
-            ThemeSettings,
+            ThemeModeSettings,
             DebugSettings,
             BackupMnemonic,
             RestoreMnemonic,
@@ -274,7 +273,7 @@ export const createCompositionRoot = (): Main => {
     const AppLayout = (props: AppLayoutProps) => AppLayoutPure({ AppHeader }, props);
 
     const ThemeWrapper = connect(ThemeWrapperPure, ({ store }) => ({
-        themeMode: store.theme,
+        themeMode: selectThemeMode(store),
     }));
 
     const App = connect(AppPure, ({ store }) => ({ currentScreen: store.currentScreen }), {

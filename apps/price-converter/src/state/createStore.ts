@@ -16,7 +16,7 @@ export const createStore = (): Store<State> => {
         btcMode: 'btc',
         currentScreen: 'Converter',
         focusedCurrency: null,
-        theme: 'dark',
+        themeMode: 'dark',
         debugMode: false,
         evoluMnemonic: null,
         evoluOwnerId: null,

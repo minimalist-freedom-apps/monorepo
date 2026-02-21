@@ -1,7 +1,7 @@
 import type { CurrencyCode, Mnemonic, OwnerId } from '@evolu/common';
 import type { AmountSats } from '@minimalist-apps/bitcoin';
-import type { Theme } from '@minimalist-apps/components';
 import type { FiatAmount } from '@minimalist-apps/fiat';
+import type { ThemeState } from '@minimalist-apps/fragment-theme';
 import type { CurrencyMap } from '../rates/FetchRates';
 
 export type BtcMode = 'btc' | 'sats';
@@ -12,7 +12,7 @@ export type CurrencyValues = {
 
 export type Screen = 'Converter' | 'AddCurrency' | 'Settings';
 
-export interface State {
+export interface State extends ThemeState {
     readonly rates: CurrencyMap;
     readonly satsAmount: AmountSats;
     readonly fiatAmounts: Readonly<CurrencyValues>;
@@ -22,7 +22,6 @@ export interface State {
     readonly btcMode: BtcMode;
     readonly currentScreen: Screen;
     readonly focusedCurrency: CurrencyCode | 'BTC' | null;
-    readonly theme: Theme;
     readonly debugMode: boolean;
     readonly evoluMnemonic: Mnemonic | null;
     readonly evoluOwnerId: OwnerId | null;
