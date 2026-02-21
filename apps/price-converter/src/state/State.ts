@@ -1,6 +1,7 @@
-import type { CurrencyCode, Mnemonic, OwnerId } from '@evolu/common';
+import type { CurrencyCode, OwnerId } from '@evolu/common';
 import type { AmountSats } from '@minimalist-apps/bitcoin';
 import type { FiatAmount } from '@minimalist-apps/fiat';
+import type { EvoluState } from '@minimalist-apps/fragment-evolu';
 import type { ThemeState } from '@minimalist-apps/fragment-theme';
 import type { CurrencyMap } from '../rates/FetchRates';
 
@@ -12,7 +13,7 @@ export type CurrencyValues = {
 
 export type Screen = 'Converter' | 'AddCurrency' | 'Settings';
 
-export interface State extends ThemeState {
+export interface State extends ThemeState, EvoluState {
     readonly rates: CurrencyMap;
     readonly satsAmount: AmountSats;
     readonly fiatAmounts: Readonly<CurrencyValues>;
@@ -23,8 +24,5 @@ export interface State extends ThemeState {
     readonly currentScreen: Screen;
     readonly focusedCurrency: CurrencyCode | 'BTC' | null;
     readonly debugMode: boolean;
-    readonly evoluMnemonic: Mnemonic | null;
     readonly evoluOwnerId: OwnerId | null;
 }
-
-export const selectEvoluMnemonic = (state: State) => state.evoluMnemonic;
