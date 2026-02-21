@@ -7,6 +7,6 @@ export {
     createEnsureEvoluStorage,
     type EnsureEvoluDep,
     type EvoluStorage,
-    type OnShardOwnerCreatedDep,
+    type OnOwnerUsedDep as OnShardOwnerCreatedDep,
 } from './createEnsureEvoluStorage';
 export { createSubscribableQuery } from './createSubscribableQuery';

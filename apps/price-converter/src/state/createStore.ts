@@ -19,7 +19,7 @@ export const createStore = (): Store<State> => {
         themeMode: 'dark',
         debugMode: false,
         evoluMnemonic: null,
-        evoluOwnerId: null,
+        activeOwnerId: null,
     };
 
     return createMiniStore(initialState);
