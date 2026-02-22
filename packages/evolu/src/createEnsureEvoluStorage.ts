@@ -87,7 +87,7 @@ const createEvoluStorage = async <S extends EvoluSchema>({
 
 export type EnsureEvoluStorage<S extends EvoluSchema> = () => Promise<EvoluStorage<S>>;
 
-export interface EnsureEvoluDep<S extends EvoluSchema> {
+export interface EnsureEvoluStorageDep<S extends EvoluSchema> {
     readonly ensureEvoluStorage: EnsureEvoluStorage<S>;
 }
 

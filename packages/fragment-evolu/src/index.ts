@@ -1,5 +1,7 @@
 export type { BackupMnemonicDep } from './BackupMnemonic';
 export { createEvoluFragmentCompositionRoot } from './createEvoluFragmentCompositionRoot';
+export type { RestoreMnemonicDep as RestoreMnemonicServiceDep } from './createRestoreMnemonic';
+export { createRestoreMnemonic } from './createRestoreMnemonic';
 export type { SetEvoluMnemonicDep } from './createSetEvoluMnemonic';
 export { createSetEvoluMnemonic } from './createSetEvoluMnemonic';
 export type { EvoluState } from './evoluState';
