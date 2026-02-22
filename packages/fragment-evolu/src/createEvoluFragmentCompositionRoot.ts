@@ -14,21 +14,15 @@ import type { EvoluState, EvoluStoreDep } from './evoluState';
 import { type RestoreMnemonicDep, RestoreMnemonic as RestoreMnemonicPure } from './RestoreMnemonic';
 import { selectEvoluMnemonic } from './selectEvoluMnemonic';
 
-type EvoluFragmentCompositionRootDeps<
-    State extends EvoluState,
-    Schema extends EvoluSchema,
-> = EvoluStoreDep<State> & {
-    readonly connect: Connect<{ readonly store: State }>;
+type EvoluFragmentCompositionRootDeps<Schema extends EvoluSchema> = EvoluStoreDep & {
+    readonly connect: Connect<{ readonly store: EvoluState }>;
     readonly onOwnerUsed: (owner: Owner) => void;
     readonly schema: ValidateSchema<Schema> extends never ? Schema : ValidateSchema<Schema>;
     readonly appName: string;
 };
 
-export const createEvoluFragmentCompositionRoot = <
-    Schema extends EvoluSchema,
-    State extends EvoluState,
->(
-    deps: EvoluFragmentCompositionRootDeps<State, Schema>,
+export const createEvoluFragmentCompositionRoot = <Schema extends EvoluSchema>(
+    deps: EvoluFragmentCompositionRootDeps<Schema>,
 ): BackupMnemonicDep & RestoreMnemonicDep & EnsureEvoluStorageDep<Schema> => {
     const setEvoluMnemonic = createSetEvoluMnemonic({ store: deps.store });
 

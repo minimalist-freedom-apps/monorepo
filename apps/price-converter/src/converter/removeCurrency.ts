@@ -17,7 +17,7 @@ type RemoveCurrencyDeps = EnsureEvoluStorageDep & RemoveFiatAmountDep;
 export const createRemoveCurrency =
     (deps: RemoveCurrencyDeps): RemoveCurrency =>
     async ({ code }) => {
-        const { evolu, activeOwner: shardOwner } = await deps.ensureEvoluStorage();
+        const { evolu, activeOwner } = await deps.ensureEvoluStorage();
         evolu.upsert(
             'currency',
             {
@@ -25,7 +25,7 @@ export const createRemoveCurrency =
                 currency: code,
                 isDeleted: sqliteTrue,
             },
-            { ownerId: shardOwner.id },
+            { ownerId: activeOwner.id },
         );
 
         deps.removeFiatAmount(code);

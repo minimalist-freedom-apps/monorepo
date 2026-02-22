@@ -1,4 +1,4 @@
-import { CurrencyCode, getOrThrow, type ShardOwner } from '@evolu/common';
+import { CurrencyCode, getOrThrow, type Owner } from '@evolu/common';
 import { describe, expect, test, vi } from 'vitest';
 import { asRateBtcPerFiat } from '../converter/rate.js';
 import { createAddCurrency } from './addCurrency.js';
@@ -8,7 +8,7 @@ const USD = getOrThrow(CurrencyCode.from('USD'));
 
 const mockEvoluStorage = (upsert: unknown): EvoluStorage => ({
     evolu: { upsert: upsert as EvoluStorage['evolu']['upsert'] } as EvoluStorage['evolu'],
-    activeOwner: { id: 'test-owner' } as ShardOwner,
+    activeOwner: { id: 'test-owner' } as Owner,
     updateRelayUrls: vi.fn(),
     dispose: vi.fn(),
 });
