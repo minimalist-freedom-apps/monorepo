@@ -2,6 +2,11 @@ import { Notification } from '@minimalist-apps/components';
 import { createConnect } from '@minimalist-apps/connect';
 import { CurrencyInputPure } from '@minimalist-apps/currency-input';
 import { createCurrentDateTime } from '@minimalist-apps/datetime';
+import {
+    createDebugFragmentCompositionRoot,
+    DebugHeaderPure,
+    selectDebugMode,
+} from '@minimalist-apps/fragment-debug';
 import { createEvoluFragmentCompositionRoot } from '@minimalist-apps/fragment-evolu';
 import {
     createThemeFragmentCompositionRoot,
@@ -9,6 +14,7 @@ import {
 } from '@minimalist-apps/fragment-theme';
 import { createLocalStorage } from '@minimalist-apps/local-storage';
 import { createWindow } from '@minimalist-apps/window';
+import { createElement } from 'react';
 import { AddCurrencyButtonPure } from './app/AddCurrencyScreen/AddCurrencyButton';
 import { AddCurrencyScreenPure } from './app/AddCurrencyScreen/AddCurrencyScreen';
 import { AppPure } from './app/App';
@@ -17,9 +23,8 @@ import { type AppLayoutProps, AppLayoutPure } from './app/AppLayout';
 import { ConverterScreenPure } from './app/ConverterScreen/ConverterScreen';
 import { CurrencyRowPure } from './app/ConverterScreen/CurrencyFiatRow';
 import { type MoscowTimeOwnProps, MoscowTimePure } from './app/ConverterScreen/MoscowTime';
-import { DebugHeaderPure } from './app/DebugHeader';
+import { DebugRow } from './app/DebugRow';
 import { RatesLoadingPure } from './app/RatesLoading';
-import { DebugSettingsPure } from './app/SettingsScreen/DebugSettings';
 import { SettingsScreenPure } from './app/SettingsScreen/SettingsScreen';
 import { ThemeWrapperPure } from './app/ThemeWrapper';
 import { createChangeBtcAmount } from './converter/changeBtcAmount';
@@ -42,7 +47,6 @@ import { createStatePersistence } from './state/localStorage/statePersistence';
 import { createNavigate } from './state/navigate';
 import { createRemoveFiatAmount } from './state/removeFiatAmount';
 import { createSetBtcMode } from './state/setBtcMode';
-import { createSetDebugMode } from './state/setDebugMode';
 import { createSetFiatAmount } from './state/setFiatAmount';
 import { createSetFocusedCurrency } from './state/setFocusedCurrency';
 import { createSetSatsAmount } from './state/setSatsAmount';
@@ -55,7 +59,6 @@ export const createCompositionRoot = (): Main => {
 
     // Store
     const appStore = createAppStore();
-    const setDebugMode = createSetDebugMode({ appStore });
     const navigate = createNavigate({ appStore });
     const setSatsAmount = createSetSatsAmount({ appStore });
     const setFiatAmount = createSetFiatAmount({ appStore });
@@ -97,6 +100,18 @@ export const createCompositionRoot = (): Main => {
     // App
     const connect = createConnect({ store: appStore, selectedCurrencies: selectedCurrenciesStore });
     const { ThemeModeSettings } = createThemeFragmentCompositionRoot({ connect, store: appStore });
+    const { DebugSettings } = createDebugFragmentCompositionRoot({
+        connect: connectAppStore,
+        store: appStore,
+    });
+
+    const DebugHeader = connect(DebugHeaderPure, ({ store }) => ({
+        debugMode: selectDebugMode(store),
+        children:
+            store.activeOwnerId === null
+                ? null
+                : createElement(DebugRow, { ownerId: store.activeOwnerId }),
+    }));
 
     // Fetch Rates
     const fetchRates = createFetchRatesCompositionRoot();
@@ -170,11 +185,6 @@ export const createCompositionRoot = (): Main => {
         },
     );
 
-    const DebugHeader = connect(DebugHeaderPure, ({ store }) => ({
-        debugMode: store.debugMode,
-        ownerId: store.activeOwnerId,
-    }));
-
     const RatesLoading = connect(
         RatesLoadingPure,
         ({ store }) => ({
@@ -205,14 +215,6 @@ export const createCompositionRoot = (): Main => {
             AddCurrencyButton,
             CurrencyRow,
             RatesLoading,
-        },
-    );
-
-    const DebugSettings = connect(
-        DebugSettingsPure,
-        ({ store }) => ({ debugMode: store.debugMode }),
-        {
-            setDebugMode,
         },
     );
 

@@ -1,6 +1,6 @@
 import { SettingsRow, Switch } from '@minimalist-apps/components';
 import type { FC } from 'react';
-import type { SetDebugModeDep } from '../../state/setDebugMode';
+import type { SetDebugModeDep } from './createSetDebugMode';
 
 export type DebugSettingsStateProps = {
     readonly debugMode: boolean;

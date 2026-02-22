@@ -1,8 +1,8 @@
 import { Alert, Flex, Row, Text } from '@minimalist-apps/components';
+import type { DebugHeaderDep } from '@minimalist-apps/fragment-debug';
 import type { IntervalId } from '@minimalist-apps/type-utils';
 import { type FC, useEffect, useRef, useState } from 'react';
 import type { FetchAndStoreRatesDep } from '../converter/fetchAndStoreRates';
-import type { DebugHeaderDep } from './DebugHeader';
 
 const getTimeAgo = (timestamp: number): string => {
     const now = Date.now();

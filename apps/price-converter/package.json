@@ -25,6 +25,7 @@
         "@minimalist-apps/evolu": "workspace:*",
         "@minimalist-apps/fiat": "workspace:*",
         "@minimalist-apps/fractional-indexing": "workspace:*",
+        "@minimalist-apps/fragment-debug": "workspace:*",
         "@minimalist-apps/fragment-theme": "workspace:*",
         "@minimalist-apps/local-storage": "workspace:*",
         "@minimalist-apps/connect": "workspace:*",

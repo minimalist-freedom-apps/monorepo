@@ -1,11 +1,12 @@
 import { Card as AntCard, Typography } from 'antd';
+import type { ReactNode } from 'react';
 import { COLORS } from './colors';
 import { useTheme } from './ThemeProvider';
 
 const { Paragraph } = Typography;
 
 interface CodeProps {
-    readonly children: string;
+    readonly children: ReactNode;
     readonly onClick?: () => void;
     readonly copyable?: boolean;
     readonly inline?: boolean;

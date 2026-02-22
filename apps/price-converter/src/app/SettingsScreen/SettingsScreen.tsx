@@ -1,8 +1,8 @@
 import { Column } from '@minimalist-apps/components';
+import type { DebugSettingsDep } from '@minimalist-apps/fragment-debug';
 import type { BackupMnemonicDep, RestoreMnemonicDep } from '@minimalist-apps/fragment-evolu';
 import type { ThemeModeSettingsDep } from '@minimalist-apps/fragment-theme';
 import type { FC } from 'react';
-import type { DebugSettingsDep } from './DebugSettings';
 
 type SettingsScreenDeps = ThemeModeSettingsDep &
     DebugSettingsDep &

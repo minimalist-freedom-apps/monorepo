@@ -1,4 +1,4 @@
-import type { AppStoreDep } from './createAppStore';
+import type { DebugStoreDep } from './debugState';
 
 export type SetDebugMode = (debugMode: boolean) => void;
 
@@ -7,6 +7,7 @@ export interface SetDebugModeDep {
 }
 
 export const createSetDebugMode =
-    (deps: AppStoreDep): SetDebugMode =>
-    debugMode =>
-        deps.appStore.setState({ debugMode });
+    (deps: DebugStoreDep): SetDebugMode =>
+    (debugMode): void => {
+        deps.store.setState({ debugMode });
+    };
