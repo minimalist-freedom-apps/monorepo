@@ -2,14 +2,13 @@ import { Mnemonic } from '@evolu/common';
 import { Banner, Button, Column, Modal, SettingsRow, Textarea } from '@minimalist-apps/components';
 import type { FC } from 'react';
 import { useState } from 'react';
+import type { RestoreMnemonicDep as RestoreMnemonicServiceDep } from './createRestoreMnemonic';
 
 export type RestoreMnemonicDep = {
     readonly RestoreMnemonic: FC;
 };
 
-interface RestoreMnemonicDeps {
-    readonly restoreMnemonic: (mnemonic: Mnemonic) => void;
-}
+type RestoreMnemonicDeps = RestoreMnemonicServiceDep;
 
 export const RestoreMnemonic = (deps: RestoreMnemonicDeps) => {
     const [isRestoreModalOpen, setIsRestoreModalOpen] = useState(false);

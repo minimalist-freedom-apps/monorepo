@@ -5,7 +5,7 @@ export {
 } from './createEnsureEvoluMnemonic';
 export {
     createEnsureEvoluStorage,
-    type EnsureEvoluDep,
+    type EnsureEvoluStorageDep,
     type EvoluStorage,
     type OnOwnerUsedDep as OnShardOwnerCreatedDep,
 } from './createEnsureEvoluStorage';

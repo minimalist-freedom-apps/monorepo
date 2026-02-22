@@ -17,6 +17,7 @@
     "dependencies": {
         "@evolu/common": "^7.4.1",
         "@minimalist-apps/connect": "workspace:*",
+        "@minimalist-apps/evolu": "workspace:*",
         "@minimalist-apps/components": "workspace:*",
         "@minimalist-apps/mini-store": "workspace:*"
     },

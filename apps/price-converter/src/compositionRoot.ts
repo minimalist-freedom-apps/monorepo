@@ -4,12 +4,16 @@ import { CurrencyInputPure } from '@minimalist-apps/currency-input';
 import { createCurrentDateTime } from '@minimalist-apps/datetime';
 import { createEnsureEvoluMnemonic, createEnsureEvoluStorage } from '@minimalist-apps/evolu';
 import {
+    createEvoluFragmentCompositionRoot,
+    createSetEvoluMnemonic,
+    selectEvoluMnemonic,
+} from '@minimalist-apps/fragment-evolu';
+import {
     createThemeFragmentCompositionRoot,
     selectThemeMode,
 } from '@minimalist-apps/fragment-theme';
 import { createLocalStorage } from '@minimalist-apps/local-storage';
 import { toGetter } from '@minimalist-apps/mini-store';
-import { createEvoluSettingsCompositionRoot } from '@minimalist-apps/module-evolu-settings';
 import { createWindow } from '@minimalist-apps/window';
 import { AddCurrencyButtonPure } from './app/AddCurrencyScreen/AddCurrencyButton';
 import { AddCurrencyScreenPure } from './app/AddCurrencyScreen/AddCurrencyScreen';
@@ -43,12 +47,10 @@ import { createPersistStore } from './state/localStorage/persistStore';
 import { createStatePersistence } from './state/localStorage/statePersistence';
 import { createNavigate } from './state/navigate';
 import { createRemoveFiatAmount } from './state/removeFiatAmount';
-import { selectEvoluMnemonic } from './state/State';
 import { createSetBtcMode } from './state/setBtcMode';
 import { createSetDebugMode } from './state/setDebugMode';
 import { createSetFiatAmount } from './state/setFiatAmount';
 import { createSetFocusedCurrency } from './state/setFocusedCurrency';
-import { createSetMnemonic } from './state/setMnemonic';
 import { createSetSatsAmount } from './state/setSatsAmount';
 
 export const createCompositionRoot = (): Main => {
@@ -64,7 +66,7 @@ export const createCompositionRoot = (): Main => {
     const setSatsAmount = createSetSatsAmount({ store });
     const setFiatAmount = createSetFiatAmount({ store });
     const setFocusedCurrency = createSetFocusedCurrency({ store });
-    const setMnemonic = createSetMnemonic({ store });
+    const setMnemonic = createSetEvoluMnemonic({ store });
     const setBtcMode = createSetBtcMode({ store });
     const removeFiatAmount = createRemoveFiatAmount({ store });
 
@@ -92,8 +94,8 @@ export const createCompositionRoot = (): Main => {
     const ensureEvoluStorage = createEnsureEvoluStorage({
         deps: {
             ensureEvoluOwner,
-            onShardOwnerCreated: shardOwner => {
-                store.setState({ activeOwnerId: shardOwner.id });
+            onOwnerUsed: owner => {
+                store.setState({ activeOwnerId: owner.id });
             },
         },
         schema: Schema,
@@ -112,9 +114,10 @@ export const createCompositionRoot = (): Main => {
     const { ThemeModeSettings } = createThemeFragmentCompositionRoot({ connect, store });
 
     // Modules
-    const { BackupMnemonic, RestoreMnemonic } = createEvoluSettingsCompositionRoot({
+    const { BackupMnemonic, RestoreMnemonic } = createEvoluFragmentCompositionRoot({
         connect,
-        restoreMnemonic: () => {},
+        ensureEvoluStorage,
+        store,
     });
 
     // Fetch Rates

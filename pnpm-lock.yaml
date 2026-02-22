@@ -231,7 +231,7 @@ importers:
         version: link:../../packages/fractional-indexing
       '@minimalist-apps/fragment-evolu':
         specifier: workspace:*
-        version: link:../../packages/module-evolu-settings
+        version: link:../../packages/fragment-evolu
       '@minimalist-apps/fragment-theme':
         specifier: workspace:*
         version: link:../../packages/fragment-theme
@@ -546,6 +546,43 @@ importers:
         specifier: ^5.3.0
         version: 5.9.3
 
+  packages/fragment-evolu:
+    dependencies:
+      '@evolu/common':
+        specifier: ^7.4.1
+        version: 7.4.1
+      '@minimalist-apps/components':
+        specifier: workspace:*
+        version: link:../components
+      '@minimalist-apps/connect':
+        specifier: workspace:*
+        version: link:../connect
+      '@minimalist-apps/evolu':
+        specifier: workspace:*
+        version: link:../evolu
+      '@minimalist-apps/mini-store':
+        specifier: workspace:*
+        version: link:../mini-store
+      react:
+        specifier: ^19.0.0
+        version: 19.2.4
+      react-dom:
+        specifier: ^19.0.0
+        version: 19.2.4(react@19.2.4)
+    devDependencies:
+      '@minimalist-apps/tsconfig':
+        specifier: workspace:*
+        version: link:../tsconfig
+      '@types/react':
+        specifier: ^19.0.0
+        version: 19.2.13
+      '@types/react-dom':
+        specifier: ^19.0.0
+        version: 19.2.3(@types/react@19.2.13)
+      typescript:
+        specifier: ^5.3.0
+        version: 5.9.3
+
   packages/fragment-theme:
     dependencies:
       '@minimalist-apps/components':
@@ -611,40 +648,6 @@ importers:
       '@minimalist-apps/tsconfig':
         specifier: workspace:*
         version: link:../tsconfig
-
-  packages/module-evolu-settings:
-    dependencies:
-      '@evolu/common':
-        specifier: ^7.4.1
-        version: 7.4.1
-      '@minimalist-apps/components':
-        specifier: workspace:*
-        version: link:../components
-      '@minimalist-apps/connect':
-        specifier: workspace:*
-        version: link:../connect
-      '@minimalist-apps/mini-store':
-        specifier: workspace:*
-        version: link:../mini-store
-      react:
-        specifier: ^19.0.0
-        version: 19.2.4
-      react-dom:
-        specifier: ^19.0.0
-        version: 19.2.4(react@19.2.4)
-    devDependencies:
-      '@minimalist-apps/tsconfig':
-        specifier: workspace:*
-        version: link:../tsconfig
-      '@types/react':
-        specifier: ^19.0.0
-        version: 19.2.13
-      '@types/react-dom':
-        specifier: ^19.0.0
-        version: 19.2.3(@types/react@19.2.13)
-      typescript:
-        specifier: ^5.3.0
-        version: 5.9.3
 
   packages/number:
     devDependencies:
