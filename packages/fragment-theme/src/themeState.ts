@@ -5,6 +5,6 @@ export interface ThemeState {
     readonly themeMode: Theme;
 }
 
-export type ThemeStoreDep<State extends ThemeState> = {
-    readonly store: Store<State>;
+export type ThemeStoreDep = {
+    readonly store: Store<ThemeState>;
 };

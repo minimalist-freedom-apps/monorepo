@@ -1,5 +1,5 @@
 import type { Mnemonic } from '@evolu/common';
-import type { EvoluState, EvoluStoreDep } from './evoluState';
+import type { EvoluStoreDep } from './evoluState';
 
 export type SetEvoluMnemonic = (mnemonic: Mnemonic) => void;
 
@@ -8,7 +8,7 @@ export type SetEvoluMnemonicDep = {
 };
 
 export const createSetEvoluMnemonic =
-    <State extends EvoluState>(deps: EvoluStoreDep<State>): SetEvoluMnemonic =>
+    (deps: EvoluStoreDep): SetEvoluMnemonic =>
     (evoluMnemonic): void => {
-        deps.store.setState({ evoluMnemonic } as Partial<State>);
+        deps.store.setState({ evoluMnemonic });
     };

@@ -1,4 +1,4 @@
-import { CurrencyCode, getOrThrow, type ShardOwner } from '@evolu/common';
+import { CurrencyCode, getOrThrow, type Owner } from '@evolu/common';
 import { asFractionalIndex } from '@minimalist-apps/fractional-indexing';
 import { describe, expect, test, vi } from 'vitest';
 import type { EvoluStorage } from '../state/evolu/schema.js';
@@ -25,7 +25,7 @@ const createTestDeps = (
 
 const mockEvoluStorage = (upsert: EvoluStorage['evolu']['upsert']): EvoluStorage => ({
     evolu: { upsert } as EvoluStorage['evolu'],
-    activeOwner: { id: 'test-owner' } as ShardOwner,
+    activeOwner: { id: 'test-owner' } as Owner,
     updateRelayUrls: vi.fn(),
     dispose: vi.fn(),
 });
@@ -121,7 +121,7 @@ describe(createReorderCurrency.name, () => {
         expect(row.order > 'a2').toBe(true);
     });
 
-    test('passes shardOwner id to upsert', async () => {
+    test('passes activeOwner id to upsert', async () => {
         const currencies = [createTestCurrency(USD, 'a0'), createTestCurrency(EUR, 'a1')];
         const upsert = vi.fn();
         const evoluStorage = mockEvoluStorage(upsert);

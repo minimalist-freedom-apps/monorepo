@@ -5,6 +5,6 @@ export interface EvoluState {
     readonly evoluMnemonic: Mnemonic | null;
 }
 
-export type EvoluStoreDep<State extends EvoluState> = {
-    readonly store: Store<State>;
+export type EvoluStoreDep = {
+    readonly store: Store<EvoluState>;
 };
