@@ -1,4 +1,5 @@
-import { Button, AppHeader as CommonAppHeader, SettingOutlined } from '@minimalist-apps/components';
+import { AppHeader as CommonAppHeader } from '@minimalist-apps/components';
+import { SettingsButton } from '@minimalist-apps/fragment-settings';
 import { config } from '../../config';
 
 interface AppHeaderProps {
@@ -10,6 +11,6 @@ export const AppHeader = ({ onHome, onOpenSettings }: AppHeaderProps) => (
     <CommonAppHeader
         title={config.appShortName}
         onTitleClick={onHome}
-        actions={<Button variant="text" icon={<SettingOutlined />} onClick={onOpenSettings} />}
+        actions={<SettingsButton onOpenSettings={onOpenSettings} />}
     />
 );

@@ -11,6 +11,7 @@ import {
     SettingOutlined,
     Switch,
 } from '@minimalist-apps/components';
+import { SettingsButton } from '@minimalist-apps/fragment-settings';
 import { exhaustive } from '@minimalist-apps/type-utils';
 import { type FC, useRef, useState } from 'react';
 import { config } from '../../config';
@@ -65,9 +66,7 @@ export const AppHeaderPure = (deps: AppHeaderDeps, { loading, mode }: AppHeaderS
         />
     );
 
-    const settingsButton = (
-        <Button variant="text" icon={<SettingOutlined />} onClick={handleSettings} />
-    );
+    const settingsButton = <SettingsButton onOpenSettings={handleSettings} />;
 
     const handleCompactMenuClick = ({ key, closeOnClick }: MenuClickInfo<BurgerMenuKey>) => {
         switch (key) {

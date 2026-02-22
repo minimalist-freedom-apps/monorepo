@@ -18,6 +18,7 @@
         "@capacitor/status-bar": "^7.0.0",
         "@minimalist-apps/connect": "workspace:*",
         "@minimalist-apps/components": "workspace:*",
+        "@minimalist-apps/fragment-settings": "workspace:*",
         "@minimalist-apps/fragment-theme": "workspace:*",
         "@minimalist-apps/local-storage": "workspace:*",
         "@minimalist-apps/mini-store": "workspace:*",

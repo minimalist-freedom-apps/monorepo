@@ -1,4 +1,4 @@
-import { Button, Column } from '@minimalist-apps/components';
+import { SettingsScreenPure as SharedSettingsScreenPure } from '@minimalist-apps/fragment-settings';
 import type { ThemeModeSettingsDep } from '@minimalist-apps/fragment-theme';
 import type { BoardSizeSettingsDep } from './BoardSizeSettings';
 import type { GameModeSettingsDep } from './GameModeSettings';
@@ -10,12 +10,9 @@ type SettingsScreenDeps = ThemeModeSettingsDep &
     };
 
 export const SettingsScreenPure = (deps: SettingsScreenDeps) => (
-    <Column gap={12}>
-        <Button onClick={deps.onBack} variant="text" style={{ alignSelf: 'start' }}>
-            ← Back
-        </Button>
+    <SharedSettingsScreenPure onBack={deps.onBack}>
         <deps.ThemeModeSettings />
         <deps.GameModeSettings />
         <deps.BoardSizeSettings />
-    </Column>
+    </SharedSettingsScreenPure>
 );

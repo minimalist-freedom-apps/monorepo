@@ -74,6 +74,9 @@ importers:
       '@minimalist-apps/connect':
         specifier: workspace:*
         version: link:../../packages/connect
+      '@minimalist-apps/fragment-settings':
+        specifier: workspace:*
+        version: link:../../packages/fragment-settings
       '@minimalist-apps/fragment-theme':
         specifier: workspace:*
         version: link:../../packages/fragment-theme
@@ -138,6 +141,9 @@ importers:
       '@minimalist-apps/connect':
         specifier: workspace:*
         version: link:../../packages/connect
+      '@minimalist-apps/fragment-settings':
+        specifier: workspace:*
+        version: link:../../packages/fragment-settings
       '@minimalist-apps/fragment-theme':
         specifier: workspace:*
         version: link:../../packages/fragment-theme
@@ -235,6 +241,9 @@ importers:
       '@minimalist-apps/fragment-evolu':
         specifier: workspace:*
         version: link:../../packages/fragment-evolu
+      '@minimalist-apps/fragment-settings':
+        specifier: workspace:*
+        version: link:../../packages/fragment-settings
       '@minimalist-apps/fragment-theme':
         specifier: workspace:*
         version: link:../../packages/fragment-theme
@@ -597,6 +606,31 @@ importers:
       '@minimalist-apps/mini-store':
         specifier: workspace:*
         version: link:../mini-store
+      react:
+        specifier: ^19.0.0
+        version: 19.2.4
+      react-dom:
+        specifier: ^19.0.0
+        version: 19.2.4(react@19.2.4)
+    devDependencies:
+      '@minimalist-apps/tsconfig':
+        specifier: workspace:*
+        version: link:../tsconfig
+      '@types/react':
+        specifier: ^19.0.0
+        version: 19.2.13
+      '@types/react-dom':
+        specifier: ^19.0.0
+        version: 19.2.3(@types/react@19.2.13)
+      typescript:
+        specifier: ^5.3.0
+        version: 5.9.3
+
+  packages/fragment-settings:
+    dependencies:
+      '@minimalist-apps/components':
+        specifier: workspace:*
+        version: link:../components
       react:
         specifier: ^19.0.0
         version: 19.2.4

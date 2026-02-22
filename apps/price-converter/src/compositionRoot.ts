@@ -224,6 +224,7 @@ export const createCompositionRoot = (): Main => {
             DebugSettings,
             BackupMnemonic,
             RestoreMnemonic,
+            onBack: () => navigate('Converter'),
         });
 
     const AddCurrencyScreen = connect(
