@@ -17,8 +17,15 @@ export const createPersistStore =
     (deps: PersistStoreDeps): PersistStore =>
     () => {
         const unsubscribe = deps.store.subscribe(() => {
+            const state = deps.store.getState();
             const themeMode = selectThemeMode(deps.store.getState());
+
             deps.localStorage.save(STORAGE_KEYS.THEME_MODE, themeMode);
+            deps.localStorage.save(STORAGE_KEYS.DEBUG_MODE, state.debugMode);
+
+            if (state.evoluMnemonic !== null) {
+                deps.localStorage.save(STORAGE_KEYS.EVOLU_MNEMONIC, state.evoluMnemonic);
+            }
         });
 
         return () => {

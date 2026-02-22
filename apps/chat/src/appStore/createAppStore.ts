@@ -8,6 +8,9 @@ export const createAppStore = (): Store<AppState> => {
     const initialState: AppState = {
         themeMode: 'dark',
         currentScreen: 'Chat',
+        debugMode: false,
+        evoluMnemonic: null,
+        activeOwnerId: null,
     };
 
     return createMiniStore(initialState);
