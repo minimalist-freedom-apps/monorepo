@@ -15,7 +15,6 @@ import { AppPure } from './app/App';
 import { AppHeader as AppHeaderPure } from './app/AppHeader';
 import { ChatScreenPure } from './app/ChatScreen/ChatScreen';
 import { DebugRow } from './app/DebugRow';
-import { createOpenMlsGroupChat } from './app/openMls/createOpenMlsGroupChat';
 import { SettingsScreenPure } from './app/SettingsScreen/SettingsScreen';
 import { selectCurrentScreen } from './appStore/AppState';
 import { createAppStore } from './appStore/createAppStore';
@@ -56,7 +55,6 @@ export const createCompositionRoot = (): Main => {
             appName: 'chat-v1',
         });
 
-    const openMlsGroupChat = createOpenMlsGroupChat();
     const chatMessagesStore = createChatMessagesStore({ ensureEvoluStorage });
     const saveChatMessage = createSaveChatMessage({ ensureEvoluStorage });
 
@@ -68,15 +66,7 @@ export const createCompositionRoot = (): Main => {
         return mapChatMessagesFromEvolu(rows);
     };
 
-    const sendChatMessage = async (props: { readonly senderId: string; readonly text: string }) => {
-        const messages = await getEncryptedChatMessages();
-        const encryptedMessage = openMlsGroupChat.encryptMessage(props.text, messages);
-
-        await saveChatMessage({
-            senderId: props.senderId,
-            encryptedMessage,
-        });
-    };
+  
     const { DebugSettings } = createDebugFragmentCompositionRoot({
         connect: connectAppStore,
         store,

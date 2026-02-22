@@ -16,6 +16,7 @@ export const mapChatMessagesFromEvolu = (
         messages.push({
             id: row.id,
             senderId: row.senderId,
+            parentMessageId: row.parentMessageId,
             encryptedMessage: row.encryptedMessage,
             createdAt: row.createdAt,
         });

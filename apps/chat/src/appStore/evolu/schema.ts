@@ -1,16 +1,16 @@
-import { id, NonEmptyString100, NonEmptyString1000 } from '@evolu/common';
+import { id, NonEmptyString100, NonEmptyString1000, nullOr } from '@evolu/common';
 import type {
     EnsureEvoluStorageDep as EnsureEvoluStorageDepPackage,
     EvoluStorage as EvoluStoragePackage,
 } from '@minimalist-apps/evolu';
 
-const ChatMessageId = id('ChatMessageId');
-// biome-ignore lint/correctness/noUnusedVariables: Type alias for Evolu schema
-type ChatMessageId = typeof ChatMessageId.Type;
+export const ChatMessageId = id('ChatMessageId');
+export type ChatMessageId = typeof ChatMessageId.Type;
 
 const chatMessage = {
     id: ChatMessageId,
     senderId: NonEmptyString100,
+    parentMessageId: nullOr(ChatMessageId),
     encryptedMessage: NonEmptyString1000,
 };
 

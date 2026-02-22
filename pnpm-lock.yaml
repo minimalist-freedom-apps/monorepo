@@ -98,15 +98,15 @@ importers:
       '@minimalist-apps/mini-store':
         specifier: workspace:*
         version: link:../../packages/mini-store
+      '@minimalist-apps/mls':
+        specifier: workspace:*
+        version: link:../../packages/mls
       '@minimalist-apps/mobile-native':
         specifier: workspace:*
         version: link:../../packages/mobile-native
       '@minimalist-apps/type-utils':
         specifier: workspace:*
         version: link:../../packages/type-utils
-      openmls-wasm:
-        specifier: ^0.1.0
-        version: 0.1.0
       react:
         specifier: ^19.0.0
         version: 19.2.4
@@ -714,6 +714,19 @@ importers:
         version: link:../tsconfig
 
   packages/mini-store:
+    devDependencies:
+      '@minimalist-apps/tsconfig':
+        specifier: workspace:*
+        version: link:../tsconfig
+      typescript:
+        specifier: ^5.3.0
+        version: 5.9.3
+
+  packages/mls:
+    dependencies:
+      openmls-wasm:
+        specifier: ^0.1.0
+        version: 0.1.0
     devDependencies:
       '@minimalist-apps/tsconfig':
         specifier: workspace:*

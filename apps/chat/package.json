@@ -25,10 +25,10 @@
         "@minimalist-apps/fragment-settings": "workspace:*",
         "@minimalist-apps/fragment-theme": "workspace:*",
         "@minimalist-apps/local-storage": "workspace:*",
+        "@minimalist-apps/mls": "workspace:*",
         "@minimalist-apps/mini-store": "workspace:*",
         "@minimalist-apps/mobile-native": "workspace:*",
         "@minimalist-apps/type-utils": "workspace:*",
-        "openmls-wasm": "^0.1.0",
         "react": "^19.0.0",
         "react-dom": "^19.0.0"
     },
