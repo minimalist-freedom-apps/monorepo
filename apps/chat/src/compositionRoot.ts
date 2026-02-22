@@ -15,9 +15,14 @@ import { AppPure } from './app/App';
 import { AppHeader as AppHeaderPure } from './app/AppHeader';
 import { ChatScreenPure } from './app/ChatScreen/ChatScreen';
 import { DebugRow } from './app/DebugRow';
+import { createOpenMlsGroupChat } from './app/openMls/createOpenMlsGroupChat';
 import { SettingsScreenPure } from './app/SettingsScreen/SettingsScreen';
 import { selectCurrentScreen } from './appStore/AppState';
 import { createAppStore } from './appStore/createAppStore';
+import { allChatMessagesQuery } from './appStore/evolu/allChatMessagesQuery';
+import { createChatMessagesStore } from './appStore/evolu/createChatMessagesStore';
+import { createSaveChatMessage } from './appStore/evolu/createSaveChatMessage';
+import { mapChatMessagesFromEvolu } from './appStore/evolu/mapChatMessagesFromEvolu';
 import { Schema } from './appStore/evolu/schema';
 import { createNavigate } from './appStore/navigate';
 import { createMain, type Main } from './createMain';
@@ -42,13 +47,36 @@ export const createCompositionRoot = (): Main => {
     const connectAppStore = createConnect({ store });
 
     const { ThemeModeSettings } = createThemeFragmentCompositionRoot({ connect, store });
-    const { BackupMnemonic, RestoreMnemonic } = createEvoluFragmentCompositionRoot({
-        connect: connectAppStore,
-        store,
-        onOwnerUsed: owner => store.setState({ activeOwnerId: owner.id }),
-        schema: Schema,
-        appName: 'chat-v1',
-    });
+    const { BackupMnemonic, RestoreMnemonic, ensureEvoluStorage } =
+        createEvoluFragmentCompositionRoot({
+            connect: connectAppStore,
+            store,
+            onOwnerUsed: owner => store.setState({ activeOwnerId: owner.id }),
+            schema: Schema,
+            appName: 'chat-v1',
+        });
+
+    const openMlsGroupChat = createOpenMlsGroupChat();
+    const chatMessagesStore = createChatMessagesStore({ ensureEvoluStorage });
+    const saveChatMessage = createSaveChatMessage({ ensureEvoluStorage });
+
+    const getEncryptedChatMessages = async () => {
+        const storage = await ensureEvoluStorage();
+        const query = allChatMessagesQuery(storage);
+        const rows = await storage.evolu.loadQuery(query);
+
+        return mapChatMessagesFromEvolu(rows);
+    };
+
+    const sendChatMessage = async (props: { readonly senderId: string; readonly text: string }) => {
+        const messages = await getEncryptedChatMessages();
+        const encryptedMessage = openMlsGroupChat.encryptMessage(props.text, messages);
+
+        await saveChatMessage({
+            senderId: props.senderId,
+            encryptedMessage,
+        });
+    };
     const { DebugSettings } = createDebugFragmentCompositionRoot({
         connect: connectAppStore,
         store,
@@ -67,9 +95,18 @@ export const createCompositionRoot = (): Main => {
         onOpenSettings: () => navigate('Settings'),
     });
 
-    const ChatScreen = connect(ChatScreenPure, () => ({}), {
-        DebugHeader,
-    });
+    const connectChat = createConnect({ store, chatMessages: chatMessagesStore });
+
+    const ChatScreen = connectChat(
+        ChatScreenPure,
+        ({ chatMessages }) => ({
+            messages: openMlsGroupChat.decryptMessages(chatMessages),
+        }),
+        {
+            DebugHeader,
+            sendChatMessage,
+        },
+    );
 
     const SettingsScreen = () =>
         SettingsScreenPure({

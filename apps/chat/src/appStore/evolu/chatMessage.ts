@@ -1,0 +1,10 @@
+export type EncryptedChatMessage = {
+    readonly id: string;
+    readonly senderId: string;
+    readonly encryptedMessage: string;
+    readonly createdAt: string;
+};
+
+export type ChatMessage = EncryptedChatMessage & {
+    readonly text: string;
+};
