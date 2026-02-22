@@ -1,3 +1,4 @@
+import type { Mnemonic } from '@evolu/common';
 import { isTheme, type Theme } from '@minimalist-apps/components';
 import type { LocalStorageDep } from '@minimalist-apps/local-storage';
 import type { AppStoreDep } from '../appStore/createAppStore';
@@ -15,8 +16,18 @@ export const createLoadInitialState =
     (deps: LoadInitialStateDeps): LoadInitialState =>
     () => {
         const savedThemeResult = deps.localStorage.load<Theme>(STORAGE_KEYS.THEME_MODE);
+        const savedDebugModeResult = deps.localStorage.load<boolean>(STORAGE_KEYS.DEBUG_MODE);
+        const savedMnemonicResult = deps.localStorage.load<Mnemonic>(STORAGE_KEYS.EVOLU_MNEMONIC);
 
         if (savedThemeResult.ok && isTheme(savedThemeResult.value)) {
             deps.store.setState({ themeMode: savedThemeResult.value });
+        }
+
+        if (savedDebugModeResult.ok) {
+            deps.store.setState({ debugMode: savedDebugModeResult.value ?? false });
+        }
+
+        if (savedMnemonicResult.ok && savedMnemonicResult.value !== null) {
+            deps.store.setState({ evoluMnemonic: savedMnemonicResult.value });
         }
     };

@@ -68,12 +68,24 @@ importers:
       '@capacitor/status-bar':
         specifier: ^7.0.0
         version: 7.0.4(@capacitor/core@7.4.5)
+      '@evolu/common':
+        specifier: ^7.4.1
+        version: 7.4.1
       '@minimalist-apps/components':
         specifier: workspace:*
         version: link:../../packages/components
       '@minimalist-apps/connect':
         specifier: workspace:*
         version: link:../../packages/connect
+      '@minimalist-apps/evolu':
+        specifier: workspace:*
+        version: link:../../packages/evolu
+      '@minimalist-apps/fragment-debug':
+        specifier: workspace:*
+        version: link:../../packages/fragment-debug
+      '@minimalist-apps/fragment-evolu':
+        specifier: workspace:*
+        version: link:../../packages/fragment-evolu
       '@minimalist-apps/fragment-settings':
         specifier: workspace:*
         version: link:../../packages/fragment-settings

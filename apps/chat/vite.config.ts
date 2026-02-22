@@ -9,5 +9,11 @@ export default defineConfig({
         port: config.devPort,
         strictPort: true,
     },
+    optimizeDeps: {
+        exclude: ['@evolu/web', '@evolu/sqlite-wasm'],
+    },
+    worker: {
+        format: 'es',
+    },
     plugins: [react()],
 });
