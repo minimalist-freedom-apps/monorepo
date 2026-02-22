@@ -45,26 +45,30 @@ const createEvoluStorage = async <S extends EvoluSchema>({
 
     let unuseOwner: UnuseOwner = () => {};
 
-    const updateRelayUrls = async (urls: ReadonlyArray<string>) => {
+    const updateRelayUrls = async (urls?: ReadonlyArray<string>) => {
         const owner = await evolu.appOwner;
 
         const syncOwner: SyncOwner = {
             id: owner.id,
             encryptionKey: owner.encryptionKey,
             writeKey: owner.writeKey,
-            transports: urls.map(url =>
-                createOwnerWebSocketTransport({
-                    url,
-                    ownerId: owner.id,
-                }),
-            ),
+            ...(urls !== undefined
+                ? {
+                      transports: urls.map(url =>
+                          createOwnerWebSocketTransport({
+                              url,
+                              ownerId: owner.id,
+                          }),
+                      ),
+                  }
+                : {}),
         };
 
         unuseOwner();
         unuseOwner = evolu.useOwner(syncOwner);
     };
 
-    await updateRelayUrls([]); // init with default Evolu relay
+    await updateRelayUrls(['https://free.evoluhq.com']); // init with default Evolu relay
 
     // const shardOwner = deriveShardOwner(appOwner, shardPath);
 

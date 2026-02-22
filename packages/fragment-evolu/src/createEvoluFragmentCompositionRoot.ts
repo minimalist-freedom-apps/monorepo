@@ -1,4 +1,4 @@
-import type { EvoluSchema } from '@evolu/common';
+import type { EvoluSchema, Owner } from '@evolu/common';
 import type { Connect } from '@minimalist-apps/connect';
 import type { EnsureEvoluStorageDep } from '@minimalist-apps/evolu';
 import { type BackupMnemonicDep, BackupMnemonic as BackupMnemonicPure } from './BackupMnemonic';
@@ -11,9 +11,11 @@ import { selectEvoluMnemonic } from './selectEvoluMnemonic';
 type EvoluFragmentCompositionRootDeps<
     State extends EvoluState,
     Schema extends EvoluSchema,
-> = EvoluStoreDep<State> & {
-    readonly connect: Connect<{ readonly store: State }>;
-} & EnsureEvoluStorageDep<Schema>;
+> = EvoluStoreDep<State> &
+    EnsureEvoluStorageDep<Schema> & {
+        readonly connect: Connect<{ readonly store: State }>;
+        readonly onOwnerUsed: (owner: Owner) => void;
+    };
 
 export const createEvoluFragmentCompositionRoot = <
     Schema extends EvoluSchema,
@@ -26,6 +28,7 @@ export const createEvoluFragmentCompositionRoot = <
     const restoreMnemonic = createRestoreMnemonic({
         setEvoluMnemonic,
         ensureEvoluStorage: deps.ensureEvoluStorage,
+        onOwnerUsed: deps.onOwnerUsed,
     });
 
     const BackupMnemonic = deps.connect(BackupMnemonicPure, ({ store }) => ({

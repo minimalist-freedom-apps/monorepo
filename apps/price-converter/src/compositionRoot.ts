@@ -99,7 +99,7 @@ export const createCompositionRoot = (): Main => {
             },
         },
         schema: Schema,
-        appName: 'price-converter',
+        appName: 'price-converter-v2',
         // shardPath: ['minimalist-apps', 'price-converter'],
     });
 
@@ -118,6 +118,9 @@ export const createCompositionRoot = (): Main => {
         connect,
         ensureEvoluStorage,
         store,
+        onOwnerUsed: owner => {
+            store.setState({ activeOwnerId: owner.id });
+        },
     });
 
     // Fetch Rates
