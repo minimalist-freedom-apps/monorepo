@@ -1,5 +1,5 @@
 import type { CurrencyCode } from '@evolu/common';
-import type { StoreDep } from './createStore';
+import type { AppStoreDep } from './createAppStore';
 
 export type SetFocusedCurrency = (code: CurrencyCode | 'BTC') => void;
 
@@ -8,6 +8,6 @@ export interface SetFocusedCurrencyDep {
 }
 
 export const createSetFocusedCurrency =
-    (deps: StoreDep): SetFocusedCurrency =>
+    (deps: AppStoreDep): SetFocusedCurrency =>
     code =>
-        deps.store.setState({ focusedCurrency: code });
+        deps.appStore.setState({ focusedCurrency: code });

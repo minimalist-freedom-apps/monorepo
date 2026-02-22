@@ -1,8 +1,8 @@
 import type { Mnemonic } from '@evolu/common';
 import type { LocalStorageDep } from '@minimalist-apps/local-storage';
 import type { CurrencyMap } from '../../rates/FetchRates';
-import type { StoreDep } from '../../state/createStore';
 import type { BtcMode } from '../../state/State';
+import type { AppStoreDep } from '../createAppStore';
 import { STORAGE_KEYS } from './storageKeys';
 
 export type LoadInitialState = () => void;
@@ -11,7 +11,7 @@ export interface LoadInitialStateDep {
     readonly loadInitialState: LoadInitialState;
 }
 
-type LoadInitialStateDeps = StoreDep & LocalStorageDep;
+type LoadInitialStateDeps = AppStoreDep & LocalStorageDep;
 
 export const createLoadInitialState =
     (deps: LoadInitialStateDeps): LoadInitialState =>
@@ -30,7 +30,7 @@ export const createLoadInitialState =
             : false;
         const savedMnemonic = savedMnemonicResult.ok ? savedMnemonicResult.value : null;
 
-        deps.store.setState({
+        deps.appStore.setState({
             ...(savedRates !== null && { rates: savedRates }),
             ...(savedTimestamp !== null && { lastUpdated: savedTimestamp }),
             ...{ btcMode: savedBtcMode },

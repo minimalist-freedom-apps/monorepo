@@ -1,5 +1,5 @@
 import type { LocalStorageDep } from '@minimalist-apps/local-storage';
-import type { StoreDep } from '../../state/createStore';
+import type { AppStoreDep } from '../createAppStore';
 import { STORAGE_KEYS } from './storageKeys';
 
 type Unsubscribe = () => void;
@@ -10,13 +10,13 @@ export interface PersistStoreDep {
     readonly persistStore: PersistStore;
 }
 
-type PersistStoreDeps = LocalStorageDep & StoreDep;
+type PersistStoreDeps = LocalStorageDep & AppStoreDep;
 
 export const createPersistStore =
     (deps: PersistStoreDeps): PersistStore =>
     () => {
-        const unsubscribe = deps.store.subscribe(() => {
-            const state = deps.store.getState();
+        const unsubscribe = deps.appStore.subscribe(() => {
+            const state = deps.appStore.getState();
 
             // Best effort persistence - errors are silently ignored
             // since there's no user-facing action to take on storage failure

@@ -2,12 +2,12 @@ import { type CurrencyCode, createIdFromString, err, ok, type Result } from '@ev
 import { satsToBtc } from '@minimalist-apps/bitcoin';
 import { generateIndexBetween } from '@minimalist-apps/fractional-indexing';
 import { bitcoinToFiat } from '../converter/bitcoinToFiat';
-import type { StoreDep } from './createStore';
+import type { AppStoreDep } from './createAppStore';
 import type { GetSelectedCurrenciesDep } from './evolu/createGetSelectedCurrencies';
 import type { EnsureEvoluStorageDep } from './evolu/schema';
 import type { SelectedCurrency } from './SelectedCurrency/SelectedCurrency';
 
-type AddCurrencyAllDeps = StoreDep & EnsureEvoluStorageDep & GetSelectedCurrenciesDep;
+type AddCurrencyAllDeps = AppStoreDep & EnsureEvoluStorageDep & GetSelectedCurrenciesDep;
 
 export interface AddCurrencyParams {
     readonly code: CurrencyCode;
@@ -34,7 +34,7 @@ export interface AddCurrencyDep {
 export const createAddCurrency =
     (deps: AddCurrencyAllDeps): AddCurrency =>
     async ({ code }) => {
-        const { fiatAmounts, satsAmount, rates } = deps.store.getState();
+        const { fiatAmounts, satsAmount, rates } = deps.appStore.getState();
 
         if (rates[code] === undefined) {
             return ok();
@@ -67,7 +67,7 @@ export const createAddCurrency =
             return err(AddCurrencyUpdateError({ caused: result.error }));
         }
 
-        deps.store.setState({
+        deps.appStore.setState({
             fiatAmounts: {
                 ...fiatAmounts,
                 [code]: bitcoinToFiat(btcAmount, rates[code].rate),

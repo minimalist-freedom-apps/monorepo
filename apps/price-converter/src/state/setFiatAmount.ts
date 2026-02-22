@@ -1,6 +1,6 @@
 import type { CurrencyCode } from '@evolu/common';
 import type { FiatAmount } from '@minimalist-apps/fiat';
-import type { StoreDep } from './createStore';
+import type { AppStoreDep } from './createAppStore';
 
 export interface SetFiatAmountParams {
     readonly code: CurrencyCode;
@@ -14,11 +14,11 @@ export interface SetFiatAmountDep {
 }
 
 export const createSetFiatAmount =
-    (deps: StoreDep): SetFiatAmount =>
+    (deps: AppStoreDep): SetFiatAmount =>
     ({ code, amount }) => {
-        const { fiatAmounts } = deps.store.getState();
+        const { fiatAmounts } = deps.appStore.getState();
 
-        deps.store.setState({
+        deps.appStore.setState({
             fiatAmounts: { ...fiatAmounts, [code]: amount },
         });
     };

@@ -1,6 +1,12 @@
 import type { EvoluSchema, Owner } from '@evolu/common';
+import type { ValidateSchema } from '@evolu/common/local-first';
 import type { Connect } from '@minimalist-apps/connect';
-import type { EnsureEvoluStorageDep } from '@minimalist-apps/evolu';
+import {
+    createEnsureEvoluMnemonic,
+    createEnsureEvoluStorage,
+    type EnsureEvoluStorageDep,
+} from '@minimalist-apps/evolu';
+import { toGetter } from '@minimalist-apps/mini-store';
 import { type BackupMnemonicDep, BackupMnemonic as BackupMnemonicPure } from './BackupMnemonic';
 import { createRestoreMnemonic } from './createRestoreMnemonic';
 import { createSetEvoluMnemonic } from './createSetEvoluMnemonic';
@@ -11,23 +17,40 @@ import { selectEvoluMnemonic } from './selectEvoluMnemonic';
 type EvoluFragmentCompositionRootDeps<
     State extends EvoluState,
     Schema extends EvoluSchema,
-> = EvoluStoreDep<State> &
-    EnsureEvoluStorageDep<Schema> & {
-        readonly connect: Connect<{ readonly store: State }>;
-        readonly onOwnerUsed: (owner: Owner) => void;
-    };
+> = EvoluStoreDep<State> & {
+    readonly connect: Connect<{ readonly store: State }>;
+    readonly onOwnerUsed: (owner: Owner) => void;
+    readonly schema: ValidateSchema<Schema> extends never ? Schema : ValidateSchema<Schema>;
+    readonly appName: string;
+};
 
 export const createEvoluFragmentCompositionRoot = <
     Schema extends EvoluSchema,
     State extends EvoluState,
 >(
     deps: EvoluFragmentCompositionRootDeps<State, Schema>,
-): BackupMnemonicDep & RestoreMnemonicDep => {
+): BackupMnemonicDep & RestoreMnemonicDep & EnsureEvoluStorageDep<Schema> => {
     const setEvoluMnemonic = createSetEvoluMnemonic({ store: deps.store });
+
+    const getPersistedMnemonic = toGetter(deps.store.getState, selectEvoluMnemonic);
+
+    const ensureEvoluOwner = createEnsureEvoluMnemonic({
+        getPersistedMnemonic,
+        persistMnemonic: setEvoluMnemonic,
+    });
+
+    const ensureEvoluStorage = createEnsureEvoluStorage({
+        deps: {
+            ensureEvoluOwner,
+            onOwnerUsed: deps.onOwnerUsed,
+        },
+        schema: deps.schema,
+        appName: deps.appName,
+    });
 
     const restoreMnemonic = createRestoreMnemonic({
         setEvoluMnemonic,
-        ensureEvoluStorage: deps.ensureEvoluStorage,
+        ensureEvoluStorage,
         onOwnerUsed: deps.onOwnerUsed,
     });
 
@@ -39,5 +62,5 @@ export const createEvoluFragmentCompositionRoot = <
         restoreMnemonic,
     });
 
-    return { BackupMnemonic, RestoreMnemonic };
+    return { BackupMnemonic, RestoreMnemonic, ensureEvoluStorage };
 };

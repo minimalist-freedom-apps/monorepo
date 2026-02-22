@@ -2,18 +2,12 @@ import { Notification } from '@minimalist-apps/components';
 import { createConnect } from '@minimalist-apps/connect';
 import { CurrencyInputPure } from '@minimalist-apps/currency-input';
 import { createCurrentDateTime } from '@minimalist-apps/datetime';
-import { createEnsureEvoluMnemonic, createEnsureEvoluStorage } from '@minimalist-apps/evolu';
-import {
-    createEvoluFragmentCompositionRoot,
-    createSetEvoluMnemonic,
-    selectEvoluMnemonic,
-} from '@minimalist-apps/fragment-evolu';
+import { createEvoluFragmentCompositionRoot } from '@minimalist-apps/fragment-evolu';
 import {
     createThemeFragmentCompositionRoot,
     selectThemeMode,
 } from '@minimalist-apps/fragment-theme';
 import { createLocalStorage } from '@minimalist-apps/local-storage';
-import { toGetter } from '@minimalist-apps/mini-store';
 import { createWindow } from '@minimalist-apps/window';
 import { AddCurrencyButtonPure } from './app/AddCurrencyScreen/AddCurrencyButton';
 import { AddCurrencyScreenPure } from './app/AddCurrencyScreen/AddCurrencyScreen';
@@ -38,7 +32,7 @@ import { createReorderCurrency } from './converter/reorderCurrency';
 import { createMain, type Main } from './createMain';
 import { createFetchRatesCompositionRoot } from './rates/fetchRatesCompositionRoot';
 import { createAddCurrency } from './state/addCurrency';
-import { createStore } from './state/createStore';
+import { createAppStore } from './state/createAppStore';
 import { createGetSelectedCurrencies } from './state/evolu/createGetSelectedCurrencies';
 import { createSelectedCurrenciesStore } from './state/evolu/createSelectedCurrenciesStore';
 import { Schema } from './state/evolu/schema';
@@ -60,23 +54,22 @@ export const createCompositionRoot = (): Main => {
     const localStorage = createLocalStorage();
 
     // Store
-    const store = createStore();
-    const setDebugMode = createSetDebugMode({ store });
-    const navigate = createNavigate({ store });
-    const setSatsAmount = createSetSatsAmount({ store });
-    const setFiatAmount = createSetFiatAmount({ store });
-    const setFocusedCurrency = createSetFocusedCurrency({ store });
-    const setMnemonic = createSetEvoluMnemonic({ store });
-    const setBtcMode = createSetBtcMode({ store });
-    const removeFiatAmount = createRemoveFiatAmount({ store });
+    const appStore = createAppStore();
+    const setDebugMode = createSetDebugMode({ appStore });
+    const navigate = createNavigate({ appStore });
+    const setSatsAmount = createSetSatsAmount({ appStore });
+    const setFiatAmount = createSetFiatAmount({ appStore });
+    const setFocusedCurrency = createSetFocusedCurrency({ appStore });
+    const setBtcMode = createSetBtcMode({ appStore });
+    const removeFiatAmount = createRemoveFiatAmount({ appStore });
 
     // State Persistence
     const loadInitialState = createLoadInitialState({
-        store,
+        appStore,
         localStorage,
     });
 
-    const persistStore = createPersistStore({ store, localStorage });
+    const persistStore = createPersistStore({ appStore, localStorage });
 
     const statePersistence = createStatePersistence({
         loadInitialState,
@@ -84,24 +77,16 @@ export const createCompositionRoot = (): Main => {
         window: window,
     });
 
-    // Evolu
-    const getPersistedMnemonic = toGetter(store.getState, selectEvoluMnemonic);
-
-    const ensureEvoluOwner = createEnsureEvoluMnemonic({
-        getPersistedMnemonic,
-        persistMnemonic: setMnemonic,
-    });
-    const ensureEvoluStorage = createEnsureEvoluStorage({
-        deps: {
-            ensureEvoluOwner,
-            onOwnerUsed: owner => {
-                store.setState({ activeOwnerId: owner.id });
-            },
-        },
-        schema: Schema,
-        appName: 'price-converter-v2',
-        // shardPath: ['minimalist-apps', 'price-converter'],
-    });
+    // Modules
+    const connectAppStore = createConnect({ store: appStore });
+    const { BackupMnemonic, RestoreMnemonic, ensureEvoluStorage } =
+        createEvoluFragmentCompositionRoot({
+            connect: connectAppStore,
+            store: appStore,
+            onOwnerUsed: owner => appStore.setState({ activeOwnerId: owner.id }),
+            schema: Schema,
+            appName: 'price-converter-v2',
+        });
 
     const selectedCurrenciesStore = createSelectedCurrenciesStore({
         ensureEvoluStorage,
@@ -109,25 +94,15 @@ export const createCompositionRoot = (): Main => {
 
     const getSelectedCurrencies = createGetSelectedCurrencies({ ensureEvoluStorage });
 
-    const connect = createConnect({ store, selectedCurrencies: selectedCurrenciesStore });
-
-    const { ThemeModeSettings } = createThemeFragmentCompositionRoot({ connect, store });
-
-    // Modules
-    const { BackupMnemonic, RestoreMnemonic } = createEvoluFragmentCompositionRoot({
-        connect,
-        ensureEvoluStorage,
-        store,
-        onOwnerUsed: owner => {
-            store.setState({ activeOwnerId: owner.id });
-        },
-    });
+    // App
+    const connect = createConnect({ store: appStore, selectedCurrencies: selectedCurrenciesStore });
+    const { ThemeModeSettings } = createThemeFragmentCompositionRoot({ connect, store: appStore });
 
     // Fetch Rates
     const fetchRates = createFetchRatesCompositionRoot();
 
     const addCurrency = createAddCurrency({
-        store,
+        appStore,
         ensureEvoluStorage,
         getSelectedCurrencies,
     });
@@ -142,11 +117,11 @@ export const createCompositionRoot = (): Main => {
     const getSelectedCurrencyCodes = () => selectedCurrenciesStore.getState().map(c => c.code);
 
     const recalculateFromBtc = createRecalculateFromBtc({
-        store,
+        appStore,
         getSelectedCurrencyCodes,
     });
     const recalculateFromCurrency = createRecalculateFromCurrency({
-        store,
+        appStore,
         recalculateFromBtc,
     });
     const changeFiatAmount = createChangeFiatAmount({
@@ -159,7 +134,7 @@ export const createCompositionRoot = (): Main => {
     });
 
     const fetchAndStoreRates = createFetchAndStoreRates({
-        store,
+        appStore,
         fetchRates,
         recalculateFromBtc,
         currentDateTime,

@@ -1,7 +1,7 @@
 import type { CurrencyCode } from '@evolu/common';
 import { btcToSats } from '@minimalist-apps/bitcoin';
 import type { FiatAmount } from '@minimalist-apps/fiat';
-import type { StoreDep } from '../state/createStore';
+import type { AppStoreDep } from '../state/createAppStore';
 import { fiatToBitcoin } from './fiatToBitcoin';
 import type { RecalculateFromBtcDep } from './recalculateFromBtc';
 
@@ -16,19 +16,19 @@ export interface RecalculateFromCurrencyDep {
     readonly recalculateFromCurrency: RecalculateFromCurrency;
 }
 
-type RecalculateFromCurrencyDeps = StoreDep & RecalculateFromBtcDep;
+type RecalculateFromCurrencyDeps = AppStoreDep & RecalculateFromBtcDep;
 
 export const createRecalculateFromCurrency =
     (deps: RecalculateFromCurrencyDeps): RecalculateFromCurrency =>
     ({ code, value }) => {
-        const { rates } = deps.store.getState();
+        const { rates } = deps.appStore.getState();
 
         if (rates[code] === undefined) {
             return;
         }
 
         const newBtcValue = fiatToBitcoin(value, rates[code].rate);
-        deps.store.setState({ satsAmount: btcToSats(newBtcValue) });
+        deps.appStore.setState({ satsAmount: btcToSats(newBtcValue) });
 
         deps.recalculateFromBtc();
     };

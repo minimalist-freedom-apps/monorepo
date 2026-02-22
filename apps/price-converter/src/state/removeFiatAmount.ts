@@ -1,5 +1,5 @@
 import type { CurrencyCode } from '@evolu/common';
-import type { StoreDep } from './createStore';
+import type { AppStoreDep } from './createAppStore';
 
 export type RemoveFiatAmount = (code: CurrencyCode) => void;
 
@@ -8,10 +8,10 @@ export interface RemoveFiatAmountDep {
 }
 
 export const createRemoveFiatAmount =
-    (deps: StoreDep): RemoveFiatAmount =>
+    (deps: AppStoreDep): RemoveFiatAmount =>
     code => {
-        const { fiatAmounts } = deps.store.getState();
+        const { fiatAmounts } = deps.appStore.getState();
         const { [code]: _, ...newFiatAmounts } = fiatAmounts;
 
-        deps.store.setState({ fiatAmounts: newFiatAmounts });
+        deps.appStore.setState({ fiatAmounts: newFiatAmounts });
     };

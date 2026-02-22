@@ -1,5 +1,5 @@
 import type { AmountSats } from '@minimalist-apps/bitcoin';
-import type { StoreDep } from './createStore';
+import type { AppStoreDep } from './createAppStore';
 
 export type SetSatsAmount = (satsAmount: AmountSats) => void;
 
@@ -8,6 +8,6 @@ export interface SetSatsAmountDep {
 }
 
 export const createSetSatsAmount =
-    (deps: StoreDep): SetSatsAmount =>
+    (deps: AppStoreDep): SetSatsAmount =>
     satsAmount =>
-        deps.store.setState({ satsAmount });
+        deps.appStore.setState({ satsAmount });

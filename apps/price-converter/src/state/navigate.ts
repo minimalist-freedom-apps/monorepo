@@ -1,4 +1,4 @@
-import type { StoreDep } from './createStore';
+import type { AppStoreDep } from './createAppStore';
 import type { Screen } from './State';
 
 export type Navigate = (screen: Screen) => void;
@@ -8,6 +8,6 @@ export interface NavigateDep {
 }
 
 export const createNavigate =
-    (deps: StoreDep): Navigate =>
+    (deps: AppStoreDep): Navigate =>
     screen =>
-        deps.store.setState({ currentScreen: screen });
+        deps.appStore.setState({ currentScreen: screen });

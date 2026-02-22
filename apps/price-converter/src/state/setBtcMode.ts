@@ -1,4 +1,4 @@
-import type { StoreDep } from './createStore';
+import type { AppStoreDep } from './createAppStore';
 import type { BtcMode } from './State';
 
 export type SetBtcMode = (btcMode: BtcMode) => void;
@@ -8,6 +8,6 @@ export interface SetBtcModeDep {
 }
 
 export const createSetBtcMode =
-    (deps: StoreDep): SetBtcMode =>
+    (deps: AppStoreDep): SetBtcMode =>
     btcMode =>
-        deps.store.setState({ btcMode });
+        deps.appStore.setState({ btcMode });

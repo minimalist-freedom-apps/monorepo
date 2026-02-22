@@ -32,7 +32,7 @@ describe(createAddCurrency.name, () => {
         };
 
         const addCurrency = createAddCurrency({
-            store: store as never,
+            appStore: store as never,
             ensureEvoluStorage: async () => mockEvoluStorage(upsert),
             getSelectedCurrencies: async () => [],
         });
