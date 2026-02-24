@@ -1,14 +1,14 @@
 import { Button, Column } from '@minimalist-apps/components';
+import type { GoBackDep } from '@minimalist-apps/navigator';
 import type { ReactNode } from 'react';
 
-type SettingsScreenProps = {
-    readonly onBack: () => void;
+type SettingsScreenProps = GoBackDep & {
     readonly children: ReactNode;
 };
 
-export const SettingsScreen = ({ children, onBack }: SettingsScreenProps) => (
+export const SettingsScreen = ({ children, goBack }: SettingsScreenProps) => (
     <Column gap={12}>
-        <Button onClick={onBack} variant="text" style={{ alignSelf: 'start' }}>
+        <Button onClick={goBack} variant="text" style={{ alignSelf: 'start' }}>
             ← Back
         </Button>
         {children}

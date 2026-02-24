@@ -15,6 +15,7 @@
         "typecheck": "tsc --noEmit"
     },
     "dependencies": {
+        "@minimalist-apps/navigator": "workspace:*",
         "@minimalist-apps/mini-store": "workspace:*"
     },
     "devDependencies": {

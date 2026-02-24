@@ -1,5 +1,6 @@
-import { createGoBack, type GoBackDep } from './createGoBack';
-import { createNavigate, type NavigateDep } from './createNavigate';
+import type { GoBackDep, NavigateDep } from '@minimalist-apps/navigator';
+import { createGoBack } from './createGoBack';
+import { createNavigate } from './createNavigate';
 import type { NavigatorStoreDep } from './navigatorState';
 
 export type NavigatorFragmentCompositionRootDeps<Screen> = NavigatorStoreDep<Screen> & {

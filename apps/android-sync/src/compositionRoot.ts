@@ -6,6 +6,10 @@ import {
 } from '@minimalist-apps/fragment-debug';
 import { createEvoluFragmentCompositionRoot } from '@minimalist-apps/fragment-evolu';
 import {
+    createNavigatorFragmentCompositionRoot,
+    selectCurrentScreen,
+} from '@minimalist-apps/fragment-navigator';
+import {
     createThemeFragmentCompositionRoot,
     selectThemeMode,
 } from '@minimalist-apps/fragment-theme';
@@ -16,10 +20,9 @@ import { AppHeader as AppHeaderPure } from './app/AppHeader';
 import { DebugRow } from './app/DebugRow';
 import { HomeScreenPure } from './app/HomeScreen/HomeScreen';
 import { SettingsScreenPure } from './app/SettingsScreen/SettingsScreen';
-import { selectCurrentScreen } from './appStore/AppState';
+import type { Screen } from './appStore/AppState';
 import { createAppStore } from './appStore/createAppStore';
 import { Schema } from './appStore/evolu/schema';
-import { createNavigate } from './appStore/navigate';
 import { createMain, type Main } from './createMain';
 import { createLoadInitialState } from './localStorage/loadInitialState';
 import { createPersistStore } from './localStorage/persistStore';
@@ -29,7 +32,10 @@ export const createCompositionRoot = (): Main => {
     const localStorage = createLocalStorage();
     const store = createAppStore();
 
-    const navigate = createNavigate({ store });
+    const { goBack, navigate } = createNavigatorFragmentCompositionRoot<Screen>({
+        store,
+        rootScreen: 'Home',
+    });
 
     const loadInitialState = createLoadInitialState({
         store,
@@ -77,7 +83,7 @@ export const createCompositionRoot = (): Main => {
             BackupMnemonic,
             RestoreMnemonic,
             DebugSettings,
-            onBack: () => navigate('Home'),
+            goBack,
         });
 
     const App = connect(

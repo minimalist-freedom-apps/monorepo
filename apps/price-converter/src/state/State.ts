@@ -3,6 +3,7 @@ import type { AmountSats } from '@minimalist-apps/bitcoin';
 import type { FiatAmount } from '@minimalist-apps/fiat';
 import type { DebugState } from '@minimalist-apps/fragment-debug';
 import type { EvoluState } from '@minimalist-apps/fragment-evolu';
+import type { NavigatorState } from '@minimalist-apps/fragment-navigator';
 import type { ThemeState } from '@minimalist-apps/fragment-theme';
 import type { CurrencyMap } from '../rates/FetchRates';
 
@@ -12,9 +13,9 @@ export type CurrencyValues = {
     [K in CurrencyCode]?: FiatAmount<K>;
 };
 
-export type Screen = 'Converter' | 'AddCurrency' | 'Settings';
+export type NavigatorScreen = 'Converter' | 'AddCurrency' | 'Settings';
 
-export interface State extends ThemeState, EvoluState, DebugState {
+export interface State extends ThemeState, EvoluState, DebugState, NavigatorState<NavigatorScreen> {
     readonly rates: CurrencyMap;
     readonly satsAmount: AmountSats;
     readonly fiatAmounts: Readonly<CurrencyValues>;
@@ -22,7 +23,6 @@ export interface State extends ThemeState, EvoluState, DebugState {
     readonly error: string;
     readonly lastUpdated: number | null;
     readonly btcMode: BtcMode;
-    readonly currentScreen: Screen;
     readonly focusedCurrency: CurrencyCode | 'BTC' | null;
     readonly activeOwnerId: OwnerId | null;
 }

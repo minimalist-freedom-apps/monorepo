@@ -1,9 +1,6 @@
+import type { NavigatorState } from '@minimalist-apps/fragment-navigator';
 import type { ThemeState } from '@minimalist-apps/fragment-theme';
 
-export type Screen = 'Game' | 'Settings';
+export type NavigatorScreen = 'Game' | 'Settings';
 
-export interface AppState extends ThemeState {
-    readonly currentScreen: Screen;
-}
-
-export const selectCurrentScreen = (state: AppState): Screen => state.currentScreen;
+export interface AppState extends ThemeState, NavigatorState<NavigatorScreen> {}

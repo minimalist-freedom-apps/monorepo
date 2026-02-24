@@ -1,8 +1,9 @@
 import { FloatButton, PlusOutlined } from '@minimalist-apps/components';
+import type { NavigateDep } from '@minimalist-apps/navigator';
 import type { FC } from 'react';
-import type { NavigateDep } from '../../state/navigate';
+import type { NavigatorScreen } from '../../state/State';
 
-type AddCurrencyButtonDeps = NavigateDep;
+type AddCurrencyButtonDeps = NavigateDep<NavigatorScreen>;
 
 export type AddCurrencyButtonDep = { AddCurrencyButton: FC };
 

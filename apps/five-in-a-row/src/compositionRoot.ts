@@ -1,5 +1,9 @@
 import { createConnect } from '@minimalist-apps/connect';
 import {
+    createNavigatorFragmentCompositionRoot,
+    selectCurrentScreen,
+} from '@minimalist-apps/fragment-navigator';
+import {
     createThemeFragmentCompositionRoot,
     selectThemeMode,
 } from '@minimalist-apps/fragment-theme';
@@ -34,9 +38,8 @@ import {
     type GameModeSettingsStateProps,
 } from './app/SettingsScreen/GameModeSettings';
 import { SettingsScreenPure } from './app/SettingsScreen/SettingsScreen';
-import { selectCurrentScreen } from './appStore/AppState';
+import type { NavigatorScreen } from './appStore/AppState';
 import { createAppStore } from './appStore/createAppStore';
-import { createNavigate } from './appStore/navigate';
 import { createMain, type Main } from './createMain';
 import { createLoadInitialState } from './localStorage/loadInitialState';
 import { createPersistStore } from './localStorage/persistStore';
@@ -47,7 +50,10 @@ export const createCompositionRoot = (): Main => {
     const store = createAppStore();
     const gameStore = createGameStore({ initialBoardSize: 10 });
 
-    const navigate = createNavigate({ store });
+    const { goBack, navigate } = createNavigatorFragmentCompositionRoot<NavigatorScreen>({
+        store,
+        rootScreen: 'Game',
+    });
 
     const setBoardSize = createSetBoardSize({ gameStore });
     const setGameMode = createSetGameMode({ gameStore });
@@ -117,7 +123,7 @@ export const createCompositionRoot = (): Main => {
             ThemeModeSettings,
             GameModeSettings,
             BoardSizeSettings,
-            onBack: () => navigate('Game'),
+            goBack,
         });
 
     const App = connect(

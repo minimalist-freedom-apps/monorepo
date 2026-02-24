@@ -1,5 +1,6 @@
-export { createGoBack, type GoBack, type GoBackDep } from './createGoBack';
-export { createNavigate, type Navigate, type NavigateDep } from './createNavigate';
+export type { GoBack, GoBackDep, Navigate, NavigateDep } from '@minimalist-apps/navigator';
+export { createGoBack } from './createGoBack';
+export { createNavigate } from './createNavigate';
 export {
     createNavigatorFragmentCompositionRoot,
     type NavigatorFragmentCompositionRootDeps,

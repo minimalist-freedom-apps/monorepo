@@ -86,6 +86,9 @@ importers:
       '@minimalist-apps/fragment-evolu':
         specifier: workspace:*
         version: link:../../packages/fragment-evolu
+      '@minimalist-apps/fragment-navigator':
+        specifier: workspace:*
+        version: link:../../packages/fragment-navigator
       '@minimalist-apps/fragment-settings':
         specifier: workspace:*
         version: link:../../packages/fragment-settings
@@ -101,6 +104,9 @@ importers:
       '@minimalist-apps/mobile-native':
         specifier: workspace:*
         version: link:../../packages/mobile-native
+      '@minimalist-apps/navigator':
+        specifier: workspace:*
+        version: link:../../packages/navigator
       '@minimalist-apps/type-utils':
         specifier: workspace:*
         version: link:../../packages/type-utils
@@ -165,6 +171,9 @@ importers:
       '@minimalist-apps/fragment-evolu':
         specifier: workspace:*
         version: link:../../packages/fragment-evolu
+      '@minimalist-apps/fragment-navigator':
+        specifier: workspace:*
+        version: link:../../packages/fragment-navigator
       '@minimalist-apps/fragment-settings':
         specifier: workspace:*
         version: link:../../packages/fragment-settings
@@ -180,6 +189,9 @@ importers:
       '@minimalist-apps/mobile-native':
         specifier: workspace:*
         version: link:../../packages/mobile-native
+      '@minimalist-apps/navigator':
+        specifier: workspace:*
+        version: link:../../packages/navigator
       '@minimalist-apps/type-utils':
         specifier: workspace:*
         version: link:../../packages/type-utils
@@ -232,6 +244,9 @@ importers:
       '@minimalist-apps/connect':
         specifier: workspace:*
         version: link:../../packages/connect
+      '@minimalist-apps/fragment-navigator':
+        specifier: workspace:*
+        version: link:../../packages/fragment-navigator
       '@minimalist-apps/fragment-settings':
         specifier: workspace:*
         version: link:../../packages/fragment-settings
@@ -247,6 +262,9 @@ importers:
       '@minimalist-apps/mobile-native':
         specifier: workspace:*
         version: link:../../packages/mobile-native
+      '@minimalist-apps/navigator':
+        specifier: workspace:*
+        version: link:../../packages/navigator
       '@minimalist-apps/type-utils':
         specifier: workspace:*
         version: link:../../packages/type-utils
@@ -332,6 +350,9 @@ importers:
       '@minimalist-apps/fragment-evolu':
         specifier: workspace:*
         version: link:../../packages/fragment-evolu
+      '@minimalist-apps/fragment-navigator':
+        specifier: workspace:*
+        version: link:../../packages/fragment-navigator
       '@minimalist-apps/fragment-settings':
         specifier: workspace:*
         version: link:../../packages/fragment-settings
@@ -347,6 +368,9 @@ importers:
       '@minimalist-apps/mobile-native':
         specifier: workspace:*
         version: link:../../packages/mobile-native
+      '@minimalist-apps/navigator':
+        specifier: workspace:*
+        version: link:../../packages/navigator
       '@minimalist-apps/number':
         specifier: workspace:*
         version: link:../../packages/number
@@ -722,6 +746,9 @@ importers:
       '@minimalist-apps/mini-store':
         specifier: workspace:*
         version: link:../mini-store
+      '@minimalist-apps/navigator':
+        specifier: workspace:*
+        version: link:../navigator
     devDependencies:
       '@minimalist-apps/tsconfig':
         specifier: workspace:*
@@ -735,6 +762,9 @@ importers:
       '@minimalist-apps/components':
         specifier: workspace:*
         version: link:../components
+      '@minimalist-apps/navigator':
+        specifier: workspace:*
+        version: link:../navigator
       react:
         specifier: ^19.0.0
         version: 19.2.4
@@ -820,6 +850,15 @@ importers:
       '@minimalist-apps/tsconfig':
         specifier: workspace:*
         version: link:../tsconfig
+
+  packages/navigator:
+    devDependencies:
+      '@minimalist-apps/tsconfig':
+        specifier: workspace:*
+        version: link:../tsconfig
+      typescript:
+        specifier: ^5.3.0
+        version: 5.9.3
 
   packages/number:
     devDependencies:
