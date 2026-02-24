@@ -717,6 +717,19 @@ importers:
         specifier: ^5.3.0
         version: 5.9.3
 
+  packages/fragment-navigator:
+    dependencies:
+      '@minimalist-apps/mini-store':
+        specifier: workspace:*
+        version: link:../mini-store
+    devDependencies:
+      '@minimalist-apps/tsconfig':
+        specifier: workspace:*
+        version: link:../tsconfig
+      typescript:
+        specifier: ^5.3.0
+        version: 5.9.3
+
   packages/fragment-settings:
     dependencies:
       '@minimalist-apps/components':
