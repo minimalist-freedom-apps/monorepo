@@ -1,0 +1,7 @@
+<?xml version='1.0' encoding='utf-8'?>
+<resources>
+    <string name="app_name">Android Sync</string>
+    <string name="title_activity_main">Android Sync</string>
+    <string name="package_name">com.minimalist.androidsync</string>
+    <string name="custom_url_scheme">com.minimalist.androidsync</string>
+</resources>

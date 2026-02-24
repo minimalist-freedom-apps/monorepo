@@ -60,6 +60,85 @@ importers:
         specifier: ^2.0.0
         version: 2.1.9(@types/node@25.2.2)(jsdom@28.0.0(@noble/hashes@2.0.1))(terser@5.46.0)
 
+  apps/android-sync:
+    dependencies:
+      '@capacitor/core':
+        specifier: ^7.2.0
+        version: 7.4.5
+      '@capacitor/status-bar':
+        specifier: ^7.0.0
+        version: 7.0.4(@capacitor/core@7.4.5)
+      '@evolu/common':
+        specifier: ^7.4.1
+        version: 7.4.1
+      '@minimalist-apps/components':
+        specifier: workspace:*
+        version: link:../../packages/components
+      '@minimalist-apps/connect':
+        specifier: workspace:*
+        version: link:../../packages/connect
+      '@minimalist-apps/evolu':
+        specifier: workspace:*
+        version: link:../../packages/evolu
+      '@minimalist-apps/fragment-debug':
+        specifier: workspace:*
+        version: link:../../packages/fragment-debug
+      '@minimalist-apps/fragment-evolu':
+        specifier: workspace:*
+        version: link:../../packages/fragment-evolu
+      '@minimalist-apps/fragment-settings':
+        specifier: workspace:*
+        version: link:../../packages/fragment-settings
+      '@minimalist-apps/fragment-theme':
+        specifier: workspace:*
+        version: link:../../packages/fragment-theme
+      '@minimalist-apps/local-storage':
+        specifier: workspace:*
+        version: link:../../packages/local-storage
+      '@minimalist-apps/mini-store':
+        specifier: workspace:*
+        version: link:../../packages/mini-store
+      '@minimalist-apps/mobile-native':
+        specifier: workspace:*
+        version: link:../../packages/mobile-native
+      '@minimalist-apps/type-utils':
+        specifier: workspace:*
+        version: link:../../packages/type-utils
+      react:
+        specifier: ^19.0.0
+        version: 19.2.4
+      react-dom:
+        specifier: ^19.0.0
+        version: 19.2.4(react@19.2.4)
+    devDependencies:
+      '@capacitor/android':
+        specifier: ^7.2.0
+        version: 7.4.5(@capacitor/core@7.4.5)
+      '@capacitor/cli':
+        specifier: ^7.2.0
+        version: 7.4.5
+      '@minimalist-apps/requirements':
+        specifier: workspace:*
+        version: link:../../packages/requirements
+      '@minimalist-apps/tsconfig':
+        specifier: workspace:*
+        version: link:../../packages/tsconfig
+      '@types/react':
+        specifier: ^19.0.0
+        version: 19.2.13
+      '@types/react-dom':
+        specifier: ^19.0.0
+        version: 19.2.3(@types/react@19.2.13)
+      '@vitejs/plugin-react':
+        specifier: ^4.3.0
+        version: 4.7.0(vite@7.3.1(@types/node@25.2.2)(terser@5.46.0)(tsx@4.21.0))
+      typescript:
+        specifier: ^5.3.0
+        version: 5.9.3
+      vite:
+        specifier: ^7.3.1
+        version: 7.3.1(@types/node@25.2.2)(terser@5.46.0)(tsx@4.21.0)
+
   apps/chat:
     dependencies:
       '@capacitor/core':
