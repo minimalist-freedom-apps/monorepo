@@ -1,16 +1,16 @@
 import { SettingsScreen } from '@minimalist-apps/fragment-settings';
 import type { ThemeModeSettingsDep } from '@minimalist-apps/fragment-theme';
+import type { GoBackDep } from '@minimalist-apps/navigator';
 import type { BoardSizeSettingsDep } from './BoardSizeSettings';
 import type { GameModeSettingsDep } from './GameModeSettings';
 
 type SettingsScreenDeps = ThemeModeSettingsDep &
     GameModeSettingsDep &
-    BoardSizeSettingsDep & {
-        readonly onBack: () => void;
-    };
+    BoardSizeSettingsDep &
+    GoBackDep;
 
 export const SettingsScreenPure = (deps: SettingsScreenDeps) => (
-    <SettingsScreen onBack={deps.onBack}>
+    <SettingsScreen goBack={deps.goBack}>
         <deps.ThemeModeSettings />
         <deps.GameModeSettings />
         <deps.BoardSizeSettings />

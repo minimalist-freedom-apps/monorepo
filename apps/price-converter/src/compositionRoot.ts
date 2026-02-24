@@ -9,6 +9,10 @@ import {
 } from '@minimalist-apps/fragment-debug';
 import { createEvoluFragmentCompositionRoot } from '@minimalist-apps/fragment-evolu';
 import {
+    createNavigatorFragmentCompositionRoot,
+    selectCurrentScreen,
+} from '@minimalist-apps/fragment-navigator';
+import {
     createThemeFragmentCompositionRoot,
     selectThemeMode,
 } from '@minimalist-apps/fragment-theme';
@@ -44,8 +48,8 @@ import { Schema } from './state/evolu/schema';
 import { createLoadInitialState } from './state/localStorage/loadInitialState';
 import { createPersistStore } from './state/localStorage/persistStore';
 import { createStatePersistence } from './state/localStorage/statePersistence';
-import { createNavigate } from './state/navigate';
 import { createRemoveFiatAmount } from './state/removeFiatAmount';
+import type { NavigatorScreen } from './state/State';
 import { createSetBtcMode } from './state/setBtcMode';
 import { createSetFiatAmount } from './state/setFiatAmount';
 import { createSetFocusedCurrency } from './state/setFocusedCurrency';
@@ -59,7 +63,10 @@ export const createCompositionRoot = (): Main => {
 
     // Store
     const appStore = createAppStore();
-    const navigate = createNavigate({ appStore });
+    const { goBack, navigate } = createNavigatorFragmentCompositionRoot<NavigatorScreen>({
+        store: appStore,
+        rootScreen: 'Converter',
+    });
     const setSatsAmount = createSetSatsAmount({ appStore });
     const setFiatAmount = createSetFiatAmount({ appStore });
     const setFocusedCurrency = createSetFocusedCurrency({ appStore });
@@ -224,7 +231,7 @@ export const createCompositionRoot = (): Main => {
             DebugSettings,
             BackupMnemonic,
             RestoreMnemonic,
-            onBack: () => navigate('Converter'),
+            goBack,
         });
 
     const AddCurrencyScreen = connect(
@@ -260,7 +267,7 @@ export const createCompositionRoot = (): Main => {
         themeMode: selectThemeMode(store),
     }));
 
-    const App = connect(AppPure, ({ store }) => ({ currentScreen: store.currentScreen }), {
+    const App = connect(AppPure, ({ store }) => ({ currentScreen: selectCurrentScreen(store) }), {
         // Components
         ConverterScreen,
         AddCurrencyScreen,

@@ -1,10 +1,5 @@
+import type { GoBack } from '@minimalist-apps/navigator';
 import type { NavigatorStoreDep } from './navigatorState';
-
-export type GoBack = () => void;
-
-export interface GoBackDep {
-    readonly goBack: GoBack;
-}
 
 type CreateGoBackDeps<Screen> = NavigatorStoreDep<Screen> & {
     readonly rootScreen: Screen;

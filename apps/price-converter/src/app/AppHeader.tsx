@@ -12,12 +12,12 @@ import {
     Switch,
 } from '@minimalist-apps/components';
 import { SettingsButton } from '@minimalist-apps/fragment-settings';
+import type { NavigateDep } from '@minimalist-apps/navigator';
 import { exhaustive } from '@minimalist-apps/type-utils';
 import { type FC, useRef, useState } from 'react';
 import { config } from '../../config';
 import type { FetchAndStoreRatesDep } from '../converter/fetchAndStoreRates';
-import type { NavigateDep } from '../state/navigate';
-import type { BtcMode } from '../state/State';
+import type { BtcMode, NavigatorScreen } from '../state/State';
 import type { SetBtcModeDep } from '../state/setBtcMode';
 
 type BurgerMenuKey = 'mode' | 'refresh' | 'settings';
@@ -27,7 +27,7 @@ export type AppHeaderStateProps = {
     readonly mode: BtcMode;
 };
 
-type AppHeaderDeps = FetchAndStoreRatesDep & NavigateDep & SetBtcModeDep;
+type AppHeaderDeps = FetchAndStoreRatesDep & NavigateDep<NavigatorScreen> & SetBtcModeDep;
 
 export type AppHeaderDep = {
     readonly AppHeader: FC;

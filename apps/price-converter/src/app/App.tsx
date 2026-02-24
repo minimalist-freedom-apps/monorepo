@@ -1,6 +1,6 @@
 import { exhaustive } from '@minimalist-apps/type-utils';
 import type { FC } from 'react';
-import type { Screen } from '../state/State';
+import type { NavigatorScreen } from '../state/State';
 import type { AddCurrencyScreenDep } from './AddCurrencyScreen/AddCurrencyScreen';
 import type { AppLayoutDep } from './AppLayout';
 import type { ConverterScreenDep } from './ConverterScreen/ConverterScreen';
@@ -8,7 +8,7 @@ import type { SettingsScreenDep } from './SettingsScreen/SettingsScreen';
 import type { ThemeWrapperDep } from './ThemeWrapper';
 
 export type AppStateProps = {
-    readonly currentScreen: Screen;
+    readonly currentScreen: NavigatorScreen;
 };
 
 type AppDeps = ConverterScreenDep &

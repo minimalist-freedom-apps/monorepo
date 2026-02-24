@@ -1,5 +1,5 @@
 {
-    "name": "@minimalist-apps/fragment-settings",
+    "name": "@minimalist-apps/navigator",
     "version": "1.0.0",
     "private": true,
     "type": "module",
@@ -14,18 +14,8 @@
     "scripts": {
         "typecheck": "tsc --noEmit"
     },
-    "dependencies": {
-        "@minimalist-apps/components": "workspace:*",
-        "@minimalist-apps/navigator": "workspace:*"
-    },
-    "peerDependencies": {
-        "react": "^19.0.0",
-        "react-dom": "^19.0.0"
-    },
     "devDependencies": {
         "@minimalist-apps/tsconfig": "workspace:*",
-        "@types/react": "^19.0.0",
-        "@types/react-dom": "^19.0.0",
         "typescript": "^5.3.0"
     }
 }

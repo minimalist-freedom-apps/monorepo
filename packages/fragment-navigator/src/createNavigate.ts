@@ -1,10 +1,5 @@
+import type { Navigate } from '@minimalist-apps/navigator';
 import type { NavigatorStoreDep } from './navigatorState';
-
-export type Navigate<Screen> = (screen: Screen) => void;
-
-export interface NavigateDep<Screen> {
-    readonly navigate: Navigate<Screen>;
-}
 
 export const createNavigate =
     <Screen>(deps: NavigatorStoreDep<Screen>): Navigate<Screen> =>

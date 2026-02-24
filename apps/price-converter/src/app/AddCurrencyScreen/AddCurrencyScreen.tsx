@@ -2,12 +2,13 @@ import type { CurrencyCode } from '@evolu/common';
 import type { NotificationDep } from '@minimalist-apps/components';
 import { Button, Flex, List, Row, Screen, SearchInput, Text } from '@minimalist-apps/components';
 import { CURRENCY_TERRITORIES } from '@minimalist-apps/fiat';
+import type { NavigateDep } from '@minimalist-apps/navigator';
 import { typedObjectValues } from '@minimalist-apps/type-utils';
 import type { FC } from 'react';
 import { useEffect, useRef, useState } from 'react';
 import type { CurrencyEntity, CurrencyMap } from '../../rates/FetchRates';
 import type { AddCurrencyDep } from '../../state/addCurrency';
-import type { NavigateDep } from '../../state/navigate';
+import type { NavigatorScreen } from '../../state/State';
 import { filterCurrencies } from './filterCurrencies';
 
 export type AddCurrencyScreenStateProps = {
@@ -15,7 +16,7 @@ export type AddCurrencyScreenStateProps = {
     readonly selectedCurrencies: ReadonlyArray<CurrencyCode>;
 };
 
-type AddCurrencyScreenDeps = AddCurrencyDep & NavigateDep & NotificationDep;
+type AddCurrencyScreenDeps = AddCurrencyDep & NavigateDep<NavigatorScreen> & NotificationDep;
 
 export type AddCurrencyScreenDep = {
     readonly AddCurrencyScreen: FC;
