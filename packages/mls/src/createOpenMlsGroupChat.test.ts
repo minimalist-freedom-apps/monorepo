@@ -1,61 +1,44 @@
-import { Group, Identity, Provider } from 'openmls-wasm';
 import { describe, expect, test } from 'vitest';
+import { createOpenMlsGroup } from './createOpenMlsGroup';
 
-const encoder = new TextEncoder();
-const decoder = new TextDecoder();
-
-describe('openmls-wasm group flow', () => {
-    test('alice creates group, adds bob, both exchange messages, then bob cannot decrypt after alice-only rotation', () => {
+describe('ChatGroup service', () => {
+    test('alice and bob can chat in one group and bob cannot read after kick', () => {
         const groupId = 'alice-bob-group';
+        const aliceDevice = createOpenMlsGroup({
+            groupId,
+            memberName: 'alice',
+            mode: 'founder',
+        });
+        const bobDevice = createOpenMlsGroup({
+            groupId,
+            memberName: 'bob',
+            mode: 'pending',
+        });
 
-        const aliceProvider = new Provider();
-        const aliceIdentity = new Identity(aliceProvider, 'alice');
-        const aliceGroup = Group.create_new(aliceProvider, aliceIdentity, groupId);
+        const invite = aliceDevice.inviteMember(bobDevice.createKeyPackage());
+        aliceDevice.mergePendingCommit();
+        const ratchetTreeAfterCommit = aliceDevice.exportRatchetTree();
 
-        const bobProvider = new Provider();
-        const bobIdentity = new Identity(bobProvider, 'bob');
-        const bobKeyPackage = bobIdentity.key_package(bobProvider);
+        const bobJoined = bobDevice.joinFromWelcome({
+            welcome: invite.welcome,
+            ratchetTree: ratchetTreeAfterCommit,
+        });
 
-        const addMessages = aliceGroup.propose_and_commit_add(
-            aliceProvider,
-            aliceIdentity,
-            bobKeyPackage,
-        );
+        const aliceCiphertext = aliceDevice.createMessage('hello bob');
+        const bobReadAlice = bobJoined.readMessage(aliceCiphertext);
 
-        aliceGroup.merge_pending_commit(aliceProvider);
+        expect(bobReadAlice).toBe('hello bob');
 
-        const ratchetTree = aliceGroup.export_ratchet_tree();
-        const bobGroup = Group.join(bobProvider, addMessages.welcome, ratchetTree);
+        const bobCiphertext = bobJoined.createMessage('hello alice');
+        const aliceReadBob = aliceDevice.readMessage(bobCiphertext);
 
-        const alicePlaintext = 'hello bob';
-        const aliceCiphertext = aliceGroup.create_message(
-            aliceProvider,
-            aliceIdentity,
-            encoder.encode(alicePlaintext),
-        );
-        const bobDecrypted = bobGroup.process_message(bobProvider, aliceCiphertext);
+        expect(aliceReadBob).toBe('hello alice');
 
-        expect(decoder.decode(bobDecrypted)).toBe(alicePlaintext);
-
-        const bobPlaintext = 'hello alice';
-        const bobCiphertext = bobGroup.create_message(
-            bobProvider,
-            bobIdentity,
-            encoder.encode(bobPlaintext),
-        );
-        const aliceDecrypted = aliceGroup.process_message(aliceProvider, bobCiphertext);
-
-        expect(decoder.decode(aliceDecrypted)).toBe(bobPlaintext);
-
-        const aliceOnlyGroup = Group.create_new(aliceProvider, aliceIdentity, groupId);
-        const postKickCiphertext = aliceOnlyGroup.create_message(
-            aliceProvider,
-            aliceIdentity,
-            encoder.encode('secret after bob removed'),
-        );
+        const aliceAfterKick = aliceDevice.kickMember();
+        const postKickCiphertext = aliceAfterKick.createMessage('secret after bob removed');
 
         expect(() => {
-            bobGroup.process_message(bobProvider, postKickCiphertext);
+            bobJoined.readMessage(postKickCiphertext);
         }).toThrow();
     });
 });
