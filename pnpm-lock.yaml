@@ -86,6 +86,9 @@ importers:
       '@minimalist-apps/fragment-evolu':
         specifier: workspace:*
         version: link:../../packages/fragment-evolu
+      '@minimalist-apps/fragment-local-storage':
+        specifier: workspace:*
+        version: link:../../packages/fragment-local-storage
       '@minimalist-apps/fragment-navigator':
         specifier: workspace:*
         version: link:../../packages/fragment-navigator
@@ -110,6 +113,9 @@ importers:
       '@minimalist-apps/type-utils':
         specifier: workspace:*
         version: link:../../packages/type-utils
+      '@minimalist-apps/window':
+        specifier: workspace:*
+        version: link:../../packages/window
       react:
         specifier: ^19.0.0
         version: 19.2.4
@@ -171,6 +177,9 @@ importers:
       '@minimalist-apps/fragment-evolu':
         specifier: workspace:*
         version: link:../../packages/fragment-evolu
+      '@minimalist-apps/fragment-local-storage':
+        specifier: workspace:*
+        version: link:../../packages/fragment-local-storage
       '@minimalist-apps/fragment-navigator':
         specifier: workspace:*
         version: link:../../packages/fragment-navigator
@@ -195,6 +204,9 @@ importers:
       '@minimalist-apps/type-utils':
         specifier: workspace:*
         version: link:../../packages/type-utils
+      '@minimalist-apps/window':
+        specifier: workspace:*
+        version: link:../../packages/window
       react:
         specifier: ^19.0.0
         version: 19.2.4
@@ -244,6 +256,9 @@ importers:
       '@minimalist-apps/connect':
         specifier: workspace:*
         version: link:../../packages/connect
+      '@minimalist-apps/fragment-local-storage':
+        specifier: workspace:*
+        version: link:../../packages/fragment-local-storage
       '@minimalist-apps/fragment-navigator':
         specifier: workspace:*
         version: link:../../packages/fragment-navigator
@@ -271,6 +286,9 @@ importers:
       '@minimalist-apps/undo':
         specifier: workspace:*
         version: link:../../packages/undo
+      '@minimalist-apps/window':
+        specifier: workspace:*
+        version: link:../../packages/window
       react:
         specifier: ^19.0.0
         version: 19.2.4
@@ -350,6 +368,9 @@ importers:
       '@minimalist-apps/fragment-evolu':
         specifier: workspace:*
         version: link:../../packages/fragment-evolu
+      '@minimalist-apps/fragment-local-storage':
+        specifier: workspace:*
+        version: link:../../packages/fragment-local-storage
       '@minimalist-apps/fragment-navigator':
         specifier: workspace:*
         version: link:../../packages/fragment-navigator
@@ -737,6 +758,28 @@ importers:
       '@types/react-dom':
         specifier: ^19.0.0
         version: 19.2.3(@types/react@19.2.13)
+      typescript:
+        specifier: ^5.3.0
+        version: 5.9.3
+
+  packages/fragment-local-storage:
+    dependencies:
+      '@minimalist-apps/local-storage':
+        specifier: workspace:*
+        version: link:../local-storage
+      '@minimalist-apps/mini-store':
+        specifier: workspace:*
+        version: link:../mini-store
+      '@minimalist-apps/type-utils':
+        specifier: workspace:*
+        version: link:../type-utils
+      '@minimalist-apps/window':
+        specifier: workspace:*
+        version: link:../window
+    devDependencies:
+      '@minimalist-apps/tsconfig':
+        specifier: workspace:*
+        version: link:../tsconfig
       typescript:
         specifier: ^5.3.0
         version: 5.9.3

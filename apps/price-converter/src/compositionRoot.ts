@@ -8,6 +8,7 @@ import {
     selectDebugMode,
 } from '@minimalist-apps/fragment-debug';
 import { createEvoluFragmentCompositionRoot } from '@minimalist-apps/fragment-evolu';
+import { createLocalStorageFragmentCompositionRoot } from '@minimalist-apps/fragment-local-storage';
 import {
     createNavigatorFragmentCompositionRoot,
     selectCurrentScreen,
@@ -16,7 +17,6 @@ import {
     createThemeFragmentCompositionRoot,
     selectThemeMode,
 } from '@minimalist-apps/fragment-theme';
-import { createLocalStorage } from '@minimalist-apps/local-storage';
 import { createWindow } from '@minimalist-apps/window';
 import { createElement } from 'react';
 import { AddCurrencyButtonPure } from './app/AddCurrencyScreen/AddCurrencyButton';
@@ -45,9 +45,11 @@ import { createAppStore } from './state/createAppStore';
 import { createGetSelectedCurrencies } from './state/evolu/createGetSelectedCurrencies';
 import { createSelectedCurrenciesStore } from './state/evolu/createSelectedCurrenciesStore';
 import { Schema } from './state/evolu/schema';
-import { createLoadInitialState } from './state/localStorage/loadInitialState';
-import { createPersistStore } from './state/localStorage/persistStore';
-import { createStatePersistence } from './state/localStorage/statePersistence';
+import {
+    localStoragePrefix,
+    mapLocalStorageToState,
+    mapStateLocalStorage,
+} from './state/localStorage/storageMaps';
 import { createRemoveFiatAmount } from './state/removeFiatAmount';
 import type { NavigatorScreen } from './state/State';
 import { createSetBtcMode } from './state/setBtcMode';
@@ -59,7 +61,6 @@ export const createCompositionRoot = (): Main => {
     // Low Level
     const window = createWindow();
     const currentDateTime = createCurrentDateTime();
-    const localStorage = createLocalStorage();
 
     // Store
     const appStore = createAppStore();
@@ -74,17 +75,12 @@ export const createCompositionRoot = (): Main => {
     const removeFiatAmount = createRemoveFiatAmount({ appStore });
 
     // State Persistence
-    const loadInitialState = createLoadInitialState({
-        appStore,
-        localStorage,
-    });
-
-    const persistStore = createPersistStore({ appStore, localStorage });
-
-    const statePersistence = createStatePersistence({
-        loadInitialState,
-        persistStore,
-        window: window,
+    const { localStorageInit } = createLocalStorageFragmentCompositionRoot({
+        store: appStore,
+        prefix: localStoragePrefix,
+        mapStateLocalStorage,
+        mapLocalStorageToState,
+        window,
     });
 
     // Modules
@@ -276,5 +272,5 @@ export const createCompositionRoot = (): Main => {
         ThemeWrapper,
     });
 
-    return createMain({ App, statePersistence });
+    return createMain({ App, localStorageInit });
 };

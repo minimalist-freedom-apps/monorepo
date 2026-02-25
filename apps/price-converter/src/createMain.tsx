@@ -1,7 +1,7 @@
+import type { LocalStorageInitDep } from '@minimalist-apps/fragment-local-storage';
 import React from 'react';
 import ReactDOM from 'react-dom/client';
 import type { AppDep } from './app/App';
-import type { StatePersistenceDep } from './state/localStorage/statePersistence';
 
 export type Main = () => void;
 
@@ -9,12 +9,12 @@ export interface MainDep {
     readonly main: Main;
 }
 
-type MainDeps = AppDep & StatePersistenceDep;
+type MainDeps = AppDep & LocalStorageInitDep;
 
 export const createMain =
     (deps: MainDeps): Main =>
     () => {
-        deps.statePersistence.start();
+        deps.localStorageInit();
 
         ReactDOM.createRoot(document.getElementById('root')!).render(
             <React.StrictMode>
