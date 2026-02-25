@@ -5,6 +5,7 @@ import {
     selectDebugMode,
 } from '@minimalist-apps/fragment-debug';
 import { createEvoluFragmentCompositionRoot } from '@minimalist-apps/fragment-evolu';
+import { createLocalStorageFragmentCompositionRoot } from '@minimalist-apps/fragment-local-storage';
 import {
     createNavigatorFragmentCompositionRoot,
     selectCurrentScreen,
@@ -13,7 +14,7 @@ import {
     createThemeFragmentCompositionRoot,
     selectThemeMode,
 } from '@minimalist-apps/fragment-theme';
-import { createLocalStorage } from '@minimalist-apps/local-storage';
+import { createWindow } from '@minimalist-apps/window';
 import { createElement } from 'react';
 import { AppPure } from './app/App';
 import { AppHeader as AppHeaderPure } from './app/AppHeader';
@@ -24,12 +25,14 @@ import type { Screen } from './appStore/AppState';
 import { createAppStore } from './appStore/createAppStore';
 import { Schema } from './appStore/evolu/schema';
 import { createMain, type Main } from './createMain';
-import { createLoadInitialState } from './localStorage/loadInitialState';
-import { createPersistStore } from './localStorage/persistStore';
-import { createStatePersistence } from './localStorage/statePersistence';
+import {
+    localStoragePrefix,
+    mapLocalStorageToState,
+    mapStateLocalStorage,
+} from './localStorage/storageMaps';
 
 export const createCompositionRoot = (): Main => {
-    const localStorage = createLocalStorage();
+    const window = createWindow();
     const store = createAppStore();
 
     const { goBack, navigate } = createNavigatorFragmentCompositionRoot<Screen>({
@@ -37,12 +40,13 @@ export const createCompositionRoot = (): Main => {
         rootScreen: 'Home',
     });
 
-    const loadInitialState = createLoadInitialState({
+    const { localStorageInit } = createLocalStorageFragmentCompositionRoot({
         store,
-        localStorage,
+        prefix: localStoragePrefix,
+        mapStateLocalStorage,
+        mapLocalStorageToState,
+        window,
     });
-    const persistStore = createPersistStore({ store, localStorage });
-    const statePersistence = createStatePersistence({ loadInitialState, persistStore });
 
     const connect = createConnect({ store });
     const connectAppStore = createConnect({ store });
@@ -99,5 +103,5 @@ export const createCompositionRoot = (): Main => {
         },
     );
 
-    return createMain({ App, statePersistence });
+    return createMain({ App, localStorageInit });
 };

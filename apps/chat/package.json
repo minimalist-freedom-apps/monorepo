@@ -22,6 +22,7 @@
         "@minimalist-apps/evolu": "workspace:*",
         "@minimalist-apps/fragment-debug": "workspace:*",
         "@minimalist-apps/fragment-evolu": "workspace:*",
+        "@minimalist-apps/fragment-local-storage": "workspace:*",
         "@minimalist-apps/fragment-navigator": "workspace:*",
         "@minimalist-apps/fragment-settings": "workspace:*",
         "@minimalist-apps/fragment-theme": "workspace:*",
@@ -30,6 +31,7 @@
         "@minimalist-apps/mobile-native": "workspace:*",
         "@minimalist-apps/navigator": "workspace:*",
         "@minimalist-apps/type-utils": "workspace:*",
+        "@minimalist-apps/window": "workspace:*",
         "react": "^19.0.0",
         "react-dom": "^19.0.0"
     },
