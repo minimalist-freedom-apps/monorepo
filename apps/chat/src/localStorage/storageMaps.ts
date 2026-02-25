@@ -1,3 +1,4 @@
+import { Mnemonic } from '@evolu/common';
 import { isTheme, type Theme } from '@minimalist-apps/components';
 import type {
     MapLocalStorageToState,
@@ -22,5 +23,13 @@ export const mapLocalStorageToState: MapLocalStorageToState<AppState> = {
         return value as Theme;
     },
     debugMode: value => value === 'true',
-    evoluMnemonic: value => value as AppState['evoluMnemonic'],
+    evoluMnemonic: value => {
+        const mnemonic = Mnemonic.from(value);
+
+        if (mnemonic.ok === false) {
+            return null;
+        }
+
+        return mnemonic.value;
+    },
 };
