@@ -250,6 +250,9 @@ importers:
       '@capacitor/status-bar':
         specifier: ^7.0.0
         version: 7.0.4(@capacitor/core@7.4.5)
+      '@evolu/common':
+        specifier: ^7.4.1
+        version: 7.4.1
       '@minimalist-apps/components':
         specifier: workspace:*
         version: link:../../packages/components

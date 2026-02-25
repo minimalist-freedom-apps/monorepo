@@ -8,4 +8,4 @@ export {
     type MapLocalStorageToState,
     type MapStateLocalStorage,
 } from './createLocalStorageFragmentCompositionRoot';
-export type { LocalStorageInitDep } from './createLocalStorageInit';
+export type { LocalStorageInit, LocalStorageInitDep } from './createLocalStorageInit';

@@ -3,23 +3,25 @@ import type {
     MapLocalStorageToState,
     MapStateLocalStorage,
 } from '@minimalist-apps/fragment-local-storage';
-import { type GameMode, isGameMode, isValidBoardSize } from '../app/game/store/createGameStore';
-
-export interface LocalStorageState {
-    readonly themeMode: Theme;
-    readonly boardSize: number;
-    readonly gameMode: GameMode;
-}
+import {
+    type GameStoreState,
+    isGameMode,
+    isValidBoardSize,
+} from '../app/game/store/createGameStore';
+import type { AppState } from '../appStore/AppState';
 
 export const localStoragePrefix = 'five-in-a-row-v1';
 
-export const mapStateLocalStorage: MapStateLocalStorage<LocalStorageState> = {
+export const mapAppStateLocalStorage: MapStateLocalStorage<AppState> = {
     themeMode: state => state.themeMode,
-    boardSize: state => String(state.boardSize),
+};
+
+export const mapGameStateLocalStorage: MapStateLocalStorage<GameStoreState> = {
+    history: state => JSON.stringify(state.history),
     gameMode: state => state.gameMode,
 };
 
-export const mapLocalStorageToState: MapLocalStorageToState<LocalStorageState> = {
+export const mapAppLocalStorageToState: MapLocalStorageToState<AppState> = {
     themeMode: value => {
         if (!isTheme(value)) {
             return undefined;
@@ -27,10 +29,13 @@ export const mapLocalStorageToState: MapLocalStorageToState<LocalStorageState> =
 
         return value as Theme;
     },
-    boardSize: value => {
-        const parsed = Number(value);
+};
 
-        if (!isValidBoardSize(parsed)) {
+export const mapGameLocalStorageToState: MapLocalStorageToState<GameStoreState> = {
+    history: value => {
+        const parsed = JSON.parse(value) as GameStoreState['history'];
+
+        if (!isValidBoardSize(parsed.present.boardSize)) {
             return undefined;
         }
 
