@@ -1,7 +1,7 @@
 {
     "name": "@minimalist-apps/android-sync",
     "version": "1.0.0",
-    "description": "Minimalist Android sync app",
+    "description": "Android Sync for Contacts, Calendar, and Tasks",
     "private": true,
     "type": "module",
     "scripts": {
