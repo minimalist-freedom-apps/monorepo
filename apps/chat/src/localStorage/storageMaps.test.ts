@@ -1,4 +1,4 @@
-import { type Mnemonic, ok } from '@evolu/common';
+import { getOrThrow, Mnemonic, ok } from '@evolu/common';
 import {
     applyMapLocalStorageToState,
     applyMapStateLocalStorage,
@@ -11,7 +11,11 @@ import { mapLocalStorageToState, mapStateLocalStorage } from './storageMaps';
 const initState: AppState = {
     themeMode: 'dark',
     debugMode: true,
-    evoluMnemonic: 'example mnemonic' as Mnemonic,
+    evoluMnemonic: getOrThrow(
+        Mnemonic.from(
+            'abandon abandon abandon abandon abandon abandon abandon abandon abandon abandon abandon about',
+        ),
+    ),
     currentScreen: 'Chat',
     activeOwnerId: null,
 };
@@ -39,7 +43,8 @@ describe('storageMaps', () => {
         expect(data).toEqual({
             'test-prefix:themeMode': 'dark',
             'test-prefix:debugMode': 'true',
-            'test-prefix:evoluMnemonic': 'example mnemonic',
+            'test-prefix:evoluMnemonic':
+                'abandon abandon abandon abandon abandon abandon abandon abandon abandon abandon abandon about',
         });
 
         const state = applyMapLocalStorageToState({
@@ -51,7 +56,8 @@ describe('storageMaps', () => {
         expect(state).toEqual({
             themeMode: 'dark',
             debugMode: true,
-            evoluMnemonic: 'example mnemonic',
+            evoluMnemonic:
+                'abandon abandon abandon abandon abandon abandon abandon abandon abandon abandon abandon about',
         });
     });
 });
