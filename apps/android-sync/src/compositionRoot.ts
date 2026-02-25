@@ -49,18 +49,19 @@ export const createCompositionRoot = (): Main => {
     });
 
     const connect = createConnect({ store });
-    const connectAppStore = createConnect({ store });
 
     const { ThemeModeSettings } = createThemeFragmentCompositionRoot({ connect, store });
+
     const { BackupMnemonic, RestoreMnemonic } = createEvoluFragmentCompositionRoot({
-        connect: connectAppStore,
+        connect,
         store,
         onOwnerUsed: owner => store.setState({ activeOwnerId: owner.id }),
         schema: Schema,
         appName: 'android-sync-v1',
     });
+
     const { DebugSettings } = createDebugFragmentCompositionRoot({
-        connect: connectAppStore,
+        connect,
         store,
     });
 
@@ -77,9 +78,7 @@ export const createCompositionRoot = (): Main => {
         onOpenSettings: () => navigate('Settings'),
     });
 
-    const HomeScreen = connect(HomeScreenPure, () => ({}), {
-        DebugHeader,
-    });
+    const HomeScreen = connect(HomeScreenPure, () => ({}), { DebugHeader });
 
     const SettingsScreen = () =>
         SettingsScreenPure({

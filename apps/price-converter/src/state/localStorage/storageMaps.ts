@@ -1,3 +1,4 @@
+import { Mnemonic } from '@evolu/common';
 import type {
     MapLocalStorageToState,
     MapStateLocalStorage,
@@ -23,5 +24,13 @@ export const mapLocalStorageToState: MapLocalStorageToState<State> = {
     },
     btcMode: value => (value === 'sats' ? 'sats' : 'btc'),
     debugMode: value => value === 'true',
-    evoluMnemonic: value => value as State['evoluMnemonic'],
+    evoluMnemonic: value => {
+        const mnemonic = Mnemonic.from(value);
+
+        if (mnemonic.ok === false) {
+            return null;
+        }
+
+        return mnemonic.value;
+    },
 };
