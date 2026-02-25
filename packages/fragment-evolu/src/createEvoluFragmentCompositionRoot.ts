@@ -48,9 +48,15 @@ export const createEvoluFragmentCompositionRoot = <Schema extends EvoluSchema>(
         onOwnerUsed: deps.onOwnerUsed,
     });
 
-    const BackupMnemonic = deps.connect(BackupMnemonicPure, ({ store }) => ({
-        evoluMnemonic: selectEvoluMnemonic(store),
-    }));
+    const BackupMnemonic = deps.connect(
+        BackupMnemonicPure,
+        ({ store }) => ({
+            evoluMnemonic: selectEvoluMnemonic(store),
+        }),
+        {
+            ensureEvoluOwner,
+        },
+    );
 
     const RestoreMnemonic = deps.connect(RestoreMnemonicPure, () => ({}), {
         restoreMnemonic,
