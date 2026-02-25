@@ -1,55 +1,82 @@
+import { type CurrencyCode, ok } from '@evolu/common';
+import type { AmountSats } from '@minimalist-apps/bitcoin';
+import { FiatAmount } from '@minimalist-apps/fiat';
+import {
+    applyMapLocalStorageToState,
+    applyMapStateLocalStorage,
+} from '@minimalist-apps/fragment-local-storage';
+import type { LocalStorage } from '@minimalist-apps/local-storage';
 import { describe, expect, test } from 'vitest';
-import { createAppStore } from '../createAppStore';
+import { RateBtcPerFiat } from '../../converter/rate';
 import type { State } from '../State';
-import type { mapLocalStorageToState } from './storageMaps';
+import { mapLocalStorageToState, mapStateLocalStorage } from './storageMaps';
 
-const createStateForStorage = (): State => {
-    const appStore = createAppStore();
-    const initialState = appStore.getState();
+const USD = 'USD' as CurrencyCode;
 
-    return {
-        ...initialState,
-        rates: {
-            USD: {
-                code: 'USD',
-                name: 'US Dollar',
-                rate: 0.00001,
-            },
-        } as State['rates'],
-        lastUpdated: 123,
-        btcMode: 'sats',
-        debugMode: true,
-        evoluMnemonic: 'example mnemonic' as State['evoluMnemonic'],
-    };
+const initState: State = {
+    rates: {
+        [USD]: {
+            code: USD,
+            name: 'US Dollar',
+            rate: RateBtcPerFiat(USD).from(0.00001),
+        },
+    },
+    lastUpdated: 123,
+    btcMode: 'sats',
+    debugMode: true,
+    evoluMnemonic: 'example mnemonic' as State['evoluMnemonic'],
+    satsAmount: 1234 as AmountSats,
+    fiatAmounts: {
+        [USD]: FiatAmount(USD).from(567890),
+    },
+    loading: false,
+    error: '',
+    focusedCurrency: null,
+    activeOwnerId: null,
+    themeMode: 'dark',
+    currentScreen: 'Converter',
 };
 
 describe('storageMaps', () => {
-    test('encodes primitives as plain strings', () => {
-        const state = createStateForStorage();
-
-        const encoded = encodeStateToStorage({ state });
-
-        expect(encoded.lastUpdated).toBe('123');
-        expect(encoded.btcMode).toBe('sats');
-        expect(encoded.debugMode).toBe('true');
-        expect(encoded.evoluMnemonic).toBe('example mnemonic');
-        expect(encoded.rates).toBe(JSON.stringify(state.rates));
-    });
-
     test('round-trips persisted values back to equivalent state', () => {
-        const state = createStateForStorage();
+        const data: Record<string, unknown> = {};
 
-        const encoded = encodeStateToStorage({ state });
-        const decoded = decodeStorageToState({
-            values: encoded as Record<keyof typeof mapLocalStorageToState, string>,
+        const localStorage: LocalStorage = {
+            load: <T>(key: string) => ok((data[key] ?? null) as T | null),
+            save: (key: string, value: unknown) => {
+                data[key] = value;
+
+                return ok();
+            },
+        };
+
+        applyMapStateLocalStorage({
+            localStorage,
+            prefix: 'test-prefix',
+            mapStateLocalStorage,
+            state: initState,
         });
 
-        expect(decoded).toEqual({
-            rates: state.rates,
-            lastUpdated: state.lastUpdated,
-            btcMode: state.btcMode,
-            debugMode: state.debugMode,
-            evoluMnemonic: state.evoluMnemonic,
+        expect(data).toEqual({
+            'test-prefix:rates': '{"USD":{"code":"USD","name":"US Dollar","rate":0.00001}}',
+            'test-prefix:lastUpdated': '123',
+            'test-prefix:btcMode': 'sats',
+            'test-prefix:debugMode': 'true',
+            'test-prefix:evoluMnemonic': 'example mnemonic',
+        });
+
+        const state = applyMapLocalStorageToState({
+            localStorage,
+            prefix: 'test-prefix',
+            mapLocalStorageToState,
+        });
+
+        expect(state).toEqual({
+            rates: initState.rates,
+            lastUpdated: 123,
+            btcMode: 'sats',
+            debugMode: true,
+            evoluMnemonic: 'example mnemonic',
         });
     });
 });

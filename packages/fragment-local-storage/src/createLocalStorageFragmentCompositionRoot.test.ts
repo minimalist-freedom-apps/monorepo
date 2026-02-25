@@ -92,10 +92,10 @@ describe(createLocalStorageFragmentCompositionRoot.name, () => {
             tags: { team: 'core' },
         });
 
-        expect(globalThis.localStorage.getItem('test-app:name')).toBe('Bob');
-        expect(globalThis.localStorage.getItem('test-app:age')).toBe('42');
+        expect(globalThis.localStorage.getItem('test-app:name')).toBe(JSON.stringify('Bob'));
+        expect(globalThis.localStorage.getItem('test-app:age')).toBe(JSON.stringify('42'));
         expect(globalThis.localStorage.getItem('test-app:tags')).toBe(
-            JSON.stringify({ team: 'core' }),
+            JSON.stringify(JSON.stringify({ team: 'core' })),
         );
 
         stop();

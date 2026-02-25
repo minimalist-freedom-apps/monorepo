@@ -1,4 +1,7 @@
 export {
+    // useful for testing
+    applyMapLocalStorageToState,
+    applyMapStateLocalStorage,
     createLocalStorageFragmentCompositionRoot,
     type LoadInitialState,
     type LocalStorageFragmentCompositionRootDeps,
