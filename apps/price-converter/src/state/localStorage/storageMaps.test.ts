@@ -24,7 +24,8 @@ const initState: State = {
     lastUpdated: 123,
     btcMode: 'sats',
     debugMode: true,
-    evoluMnemonic: 'example mnemonic' as State['evoluMnemonic'],
+    evoluMnemonic:
+        'abandon abandon abandon abandon abandon abandon abandon abandon abandon abandon abandon about' as State['evoluMnemonic'],
     satsAmount: 1234 as AmountSats,
     fiatAmounts: {
         [USD]: FiatAmount(USD).from(567890),
@@ -62,7 +63,8 @@ describe('storageMaps', () => {
             'test-prefix:lastUpdated': '123',
             'test-prefix:btcMode': 'sats',
             'test-prefix:debugMode': 'true',
-            'test-prefix:evoluMnemonic': 'example mnemonic',
+            'test-prefix:evoluMnemonic':
+                'abandon abandon abandon abandon abandon abandon abandon abandon abandon abandon abandon about',
         });
 
         const state = applyMapLocalStorageToState({
@@ -76,7 +78,8 @@ describe('storageMaps', () => {
             lastUpdated: 123,
             btcMode: 'sats',
             debugMode: true,
-            evoluMnemonic: 'example mnemonic',
+            evoluMnemonic:
+                'abandon abandon abandon abandon abandon abandon abandon abandon abandon abandon abandon about',
         });
     });
 });
