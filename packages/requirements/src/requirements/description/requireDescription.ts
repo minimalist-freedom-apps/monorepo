@@ -1,38 +1,48 @@
-import { existsSync, readFileSync } from 'node:fs';
+import { readFileSync, writeFileSync } from 'node:fs';
 import { resolve } from 'node:path';
+import { loadAppConfig } from '../appConfig/loadAppConfig';
 import type { Requirement } from '../Requirement';
+
+const readPackageJson = (pkgPath: string): { description?: string } =>
+    JSON.parse(readFileSync(pkgPath, 'utf-8')) as {
+        description?: string;
+    };
 
 export const requireDescription: Requirement = {
     name: 'matching description',
     applies: ({ projectType }) => projectType === 'app',
-    fix: async () => [],
-    verify: ({ appDir }) => {
+    fix: async ({ appDir }) => {
         const configPath = resolve(appDir, 'config.ts');
         const pkgPath = resolve(appDir, 'package.json');
 
-        if (!existsSync(configPath)) {
-            return ['missing config.ts — cannot verify description'];
+        const configDescription = (await loadAppConfig(configPath)).appDescription;
+        const pkg = readPackageJson(pkgPath);
+
+        if (pkg.description === configDescription) {
+            return [];
         }
 
-        if (!existsSync(pkgPath)) {
-            return ['missing package.json — cannot verify description'];
-        }
+        const nextPkg = {
+            ...pkg,
+            description: configDescription,
+        };
 
-        const pkg = JSON.parse(readFileSync(pkgPath, 'utf-8'));
+        writeFileSync(pkgPath, `${JSON.stringify(nextPkg, null, 4)}\n`);
+
+        return [];
+    },
+    verify: async ({ appDir }) => {
+        const configPath = resolve(appDir, 'config.ts');
+        const pkgPath = resolve(appDir, 'package.json');
+
+        const pkg = readPackageJson(pkgPath);
         const pkgDescription: string | undefined = pkg.description;
 
         if (pkgDescription === undefined) {
             return ['missing "description" in package.json'];
         }
 
-        const configContent = readFileSync(configPath, 'utf-8');
-        const match = /appDescription:\s*['"](.+?)['"]/u.exec(configContent);
-
-        if (match === null) {
-            return ['could not find appDescription in config.ts'];
-        }
-
-        const configDescription = match[1];
+        const configDescription = (await loadAppConfig(configPath)).appDescription;
 
         if (pkgDescription !== configDescription) {
             return [

@@ -16,5 +16,7 @@ export interface Requirement {
 
     readonly fix: ({ appDir }: RequirementActionProps) => Promise<ReadonlyArray<string>>;
 
-    readonly verify: ({ appDir }: RequirementActionProps) => ReadonlyArray<string>;
+    readonly verify: ({
+        appDir,
+    }: RequirementActionProps) => ReadonlyArray<string> | Promise<ReadonlyArray<string>>;
 }
