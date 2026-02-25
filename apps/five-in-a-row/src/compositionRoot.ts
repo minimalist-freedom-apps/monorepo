@@ -8,7 +8,6 @@ import {
     createThemeFragmentCompositionRoot,
     selectThemeMode,
 } from '@minimalist-apps/fragment-theme';
-import type { Store } from '@minimalist-apps/mini-store';
 import { toGetter } from '@minimalist-apps/mini-store';
 import { createWindow } from '@minimalist-apps/window';
 import { AppPure } from './app/App';
@@ -17,9 +16,6 @@ import { GameScreenPure } from './app/GameScreen/GameScreen';
 import { createPlayerMove } from './app/game/createPlayerMove';
 import {
     createGameStore,
-    type GameMode,
-    isGameMode,
-    isValidBoardSize,
     selectBoardSize,
     selectCurrentSnapshot,
     selectGameMode,
@@ -47,10 +43,11 @@ import type { NavigatorScreen } from './appStore/AppState';
 import { createAppStore } from './appStore/createAppStore';
 import { createMain, type Main } from './createMain';
 import {
-    type LocalStorageState,
     localStoragePrefix,
-    mapLocalStorageToState,
-    mapStateLocalStorage,
+    mapAppLocalStorageToState,
+    mapAppStateLocalStorage,
+    mapGameLocalStorageToState,
+    mapGameStateLocalStorage,
 } from './localStorage/storageMaps';
 
 export const createCompositionRoot = (): Main => {
@@ -78,41 +75,19 @@ export const createCompositionRoot = (): Main => {
     const undoMove = createUndoMove({ gameStore });
     const redoMove = createRedoMove({ gameStore });
 
-    const localStorageStore: Store<LocalStorageState> = {
-        getState: () => ({
-            themeMode: store.getState().themeMode,
-            boardSize: selectBoardSize(gameStore.getState()),
-            gameMode: selectGameMode(gameStore.getState()),
-        }),
-        setState: partial => {
-            if (partial.themeMode !== undefined) {
-                store.setState({ themeMode: partial.themeMode });
-            }
-
-            if (partial.boardSize !== undefined && isValidBoardSize(partial.boardSize)) {
-                setBoardSize(partial.boardSize);
-            }
-
-            if (partial.gameMode !== undefined && isGameMode(partial.gameMode)) {
-                setGameMode(partial.gameMode as GameMode);
-            }
-        },
-        subscribe: listener => {
-            const unsubscribeAppStore = store.subscribe(listener);
-            const unsubscribeGameStore = gameStore.subscribe(listener);
-
-            return () => {
-                unsubscribeAppStore();
-                unsubscribeGameStore();
-            };
-        },
-    };
-
-    const { localStorageInit } = createLocalStorageFragmentCompositionRoot({
-        store: localStorageStore,
+    const { localStorageInit: appLocalStorageInit } = createLocalStorageFragmentCompositionRoot({
+        store,
         prefix: localStoragePrefix,
-        mapStateLocalStorage,
-        mapLocalStorageToState,
+        mapStateLocalStorage: mapAppStateLocalStorage,
+        mapLocalStorageToState: mapAppLocalStorageToState,
+        window,
+    });
+
+    const { localStorageInit: gameLocalStorageInit } = createLocalStorageFragmentCompositionRoot({
+        store: gameStore,
+        prefix: localStoragePrefix,
+        mapStateLocalStorage: mapGameStateLocalStorage,
+        mapLocalStorageToState: mapGameLocalStorageToState,
         window,
     });
 
@@ -176,5 +151,5 @@ export const createCompositionRoot = (): Main => {
         },
     );
 
-    return createMain({ App, localStorageInit });
+    return createMain({ App, localStorageInits: [appLocalStorageInit, gameLocalStorageInit] });
 };
