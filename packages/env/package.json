@@ -1,0 +1,15 @@
+{
+    "name": "@minimalist-apps/env",
+    "version": "0.0.1",
+    "type": "module",
+    "exports": {
+        ".": {
+            "types": "./src/index.ts",
+            "default": "./src/index.ts"
+        }
+    },
+    "devDependencies": {
+        "@minimalist-apps/tsconfig": "workspace:*",
+        "@types/node": "^22.0.0"
+    }
+}

@@ -1,0 +1,156 @@
+name: E2E
+
+on:
+  pull_request:
+    branches: [main]
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  android-sync-e2e:
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+
+    env:
+      APPIUM_HOME: ${{ github.workspace }}/.appium
+      ANDROID_SDK_ROOT: /usr/local/lib/android/sdk
+      ANDROID_API_LEVEL: '34'
+      ANDROID_EMULATOR_ARCH: x86_64
+      ANDROID_EMULATOR_PROFILE: pixel_6
+      ANDROID_EMULATOR_TARGET: google_apis
+      E2E_APPIUM_SERVER_URL: http://127.0.0.1:4723
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node + pnpm + install
+        uses: ./.github/actions/setup-node-pnpm
+
+      - name: Setup Java
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '21'
+
+      - name: Cache Gradle user home
+        id: gradle-cache
+        uses: actions/cache@v4
+        with:
+          path: |
+            ~/.gradle/caches
+            ~/.gradle/wrapper
+          key: gradle-${{ runner.os }}-${{ hashFiles('**/gradle-wrapper.properties', '**/*.gradle', '**/*.gradle.kts', '**/settings.gradle', '**/settings.gradle.kts') }}
+          restore-keys: |
+            gradle-${{ runner.os }}-
+
+      - name: Cache Appium extensions
+        uses: actions/cache@v4
+        with:
+          path: ${{ env.APPIUM_HOME }}
+          key: appium-${{ runner.os }}-${{ hashFiles('apps/android-sync/package.json') }}
+          restore-keys: |
+            appium-${{ runner.os }}-
+
+      - name: Prepare Android SDK cache directories
+        run: |
+          sudo mkdir -p \
+            "${ANDROID_SDK_ROOT}/build-tools/35.0.0" \
+            "${ANDROID_SDK_ROOT}/cmdline-tools" \
+            "${ANDROID_SDK_ROOT}/platform-tools" \
+            "${ANDROID_SDK_ROOT}/platforms/android-${ANDROID_API_LEVEL}" \
+            "${ANDROID_SDK_ROOT}/emulator" \
+            "${ANDROID_SDK_ROOT}/system-images/android-${ANDROID_API_LEVEL}/${ANDROID_EMULATOR_TARGET}/${ANDROID_EMULATOR_ARCH}" \
+            "${ANDROID_SDK_ROOT}/licenses"
+          sudo chown -R "$USER:$USER" \
+            "${ANDROID_SDK_ROOT}/build-tools/35.0.0" \
+            "${ANDROID_SDK_ROOT}/cmdline-tools" \
+            "${ANDROID_SDK_ROOT}/platform-tools" \
+            "${ANDROID_SDK_ROOT}/platforms/android-${ANDROID_API_LEVEL}" \
+            "${ANDROID_SDK_ROOT}/emulator" \
+            "${ANDROID_SDK_ROOT}/system-images/android-${ANDROID_API_LEVEL}/${ANDROID_EMULATOR_TARGET}/${ANDROID_EMULATOR_ARCH}" \
+            "${ANDROID_SDK_ROOT}/licenses"
+
+      - name: Cache Android SDK packages
+        id: android-sdk-cache
+        uses: actions/cache@v4
+        with:
+          path: |
+            ${{ env.ANDROID_SDK_ROOT }}/build-tools/35.0.0
+            ${{ env.ANDROID_SDK_ROOT }}/cmdline-tools
+            ${{ env.ANDROID_SDK_ROOT }}/platform-tools
+            ${{ env.ANDROID_SDK_ROOT }}/platforms/android-${{ env.ANDROID_API_LEVEL }}
+            ${{ env.ANDROID_SDK_ROOT }}/emulator
+            ${{ env.ANDROID_SDK_ROOT }}/licenses
+            ${{ env.ANDROID_SDK_ROOT }}/system-images/android-${{ env.ANDROID_API_LEVEL }}/${{ env.ANDROID_EMULATOR_TARGET }}/${{ env.ANDROID_EMULATOR_ARCH }}
+          key: android-sdk-${{ runner.os }}-api${{ env.ANDROID_API_LEVEL }}-${{ env.ANDROID_EMULATOR_TARGET }}-${{ env.ANDROID_EMULATOR_ARCH }}-v1
+          restore-keys: |
+            android-sdk-${{ runner.os }}-api${{ env.ANDROID_API_LEVEL }}-${{ env.ANDROID_EMULATOR_TARGET }}-${{ env.ANDROID_EMULATOR_ARCH }}-
+
+      - name: Log cache status
+        run: |
+          echo "gradle cache hit: ${{ steps.gradle-cache.outputs.cache-hit }}"
+          echo "android sdk cache hit: ${{ steps.android-sdk-cache.outputs.cache-hit }}"
+
+      - name: Install Appium UiAutomator2 driver
+        run: |
+          set -euo pipefail
+
+          INSTALLED_DRIVERS_RAW="$(pnpm --filter @minimalist-apps/android-sync exec appium driver list --installed 2>&1)"
+          INSTALLED_DRIVERS="$(printf '%s\n' "$INSTALLED_DRIVERS_RAW" | sed -E 's/\x1B\[[0-9;]*[mK]//g')"
+
+          echo "INSTALLED_DRIVERS:"
+          printf '%s\n' "$INSTALLED_DRIVERS"
+
+          if printf '%s\n' "$INSTALLED_DRIVERS" | grep -Eq 'uiautomator2@4\.2\.3([[:space:]]|$)'; then
+            echo "Appium uiautomator2@4.2.3 already cached. Skipping install."
+            exit 0
+          fi
+
+          if printf '%s\n' "$INSTALLED_DRIVERS" | grep -Eq 'uiautomator2@'; then
+            echo "Different uiautomator2 version detected. Reinstalling 4.2.3."
+            pnpm --filter @minimalist-apps/android-sync exec appium driver uninstall uiautomator2 || true
+          fi
+
+          pnpm --filter @minimalist-apps/android-sync exec appium driver install --source=npm appium-uiautomator2-driver@4.2.3
+
+      - name: Start Appium server
+        run: |
+          pnpm --filter @minimalist-apps/android-sync run e2e:appium > appium.log 2>&1 &
+          for i in {1..30}; do
+            if curl -sf http://127.0.0.1:4723/status > /dev/null; then
+              exit 0
+            fi
+            sleep 2
+          done
+          cat appium.log
+          exit 1
+
+      - name: Enable KVM group permissions
+        run: |
+          echo 'KERNEL=="kvm", GROUP="kvm", MODE="0666", OPTIONS+="static_node=kvm"' | sudo tee /etc/udev/rules.d/99-kvm4all.rules
+          sudo udevadm control --reload-rules
+          sudo udevadm trigger --name-match=kvm
+
+      - name: Run Android emulator and E2E tests
+        uses: reactivecircus/android-emulator-runner@v2
+        with:
+          force-avd-creation: true
+          api-level: ${{ env.ANDROID_API_LEVEL }}
+          arch: ${{ env.ANDROID_EMULATOR_ARCH }}
+          profile: ${{ env.ANDROID_EMULATOR_PROFILE }}
+          target: ${{ env.ANDROID_EMULATOR_TARGET }}
+          emulator-boot-timeout: 600
+          disable-linux-hw-accel: false
+          disable-animations: true
+          emulator-options: -no-window -gpu swiftshader_indirect -noaudio -no-boot-anim -no-snapshot -wipe-data
+          script: pnpm --filter @minimalist-apps/android-sync run e2e-ci
+
+      - name: Upload Appium log on failure
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: appium-log
+          path: appium.log

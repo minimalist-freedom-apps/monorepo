@@ -1,0 +1,29 @@
+{
+    "name": "@minimalist-apps/android-e2e",
+    "version": "0.0.1",
+    "type": "module",
+    "scripts": {
+        "e2e:emulator": "node ./src/startEmulatorCli.mjs"
+    },
+    "exports": {
+        ".": {
+            "types": "./src/index.ts",
+            "default": "./src/index.ts"
+        },
+        "./appium-client": {
+            "types": "./src/appiumClient.ts",
+            "default": "./src/appiumClient.ts"
+        },
+        "./global-setup": {
+            "types": "./src/emulator.ts",
+            "default": "./src/emulator.ts"
+        }
+    },
+    "dependencies": {
+        "@minimalist-apps/utils": "workspace:*"
+    },
+    "devDependencies": {
+        "@minimalist-apps/tsconfig": "workspace:*",
+        "@types/node": "^22.0.0"
+    }
+}

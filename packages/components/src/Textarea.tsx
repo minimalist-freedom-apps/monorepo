@@ -9,6 +9,7 @@ interface TextareaProps {
     readonly disabled?: boolean;
     readonly status?: 'warning' | 'error';
     readonly style?: React.CSSProperties;
+    readonly testId?: string;
 }
 
 export const Textarea = ({
@@ -19,6 +20,7 @@ export const Textarea = ({
     disabled = false,
     status,
     style,
+    testId,
 }: TextareaProps) => {
     const handleChange = (event: ChangeEvent<HTMLTextAreaElement>) => {
         onChange(event.target.value);
@@ -32,6 +34,8 @@ export const Textarea = ({
             rows={rows}
             disabled={disabled}
             {...(status !== undefined ? { status } : {})}
+            id={testId}
+            data-testid={testId}
             style={{
                 resize: 'vertical',
                 ...style,

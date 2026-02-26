@@ -5,5 +5,10 @@ export type SettingsButtonProps = {
 };
 
 export const SettingsButton = ({ onOpenSettings }: SettingsButtonProps) => (
-    <Button variant="text" icon={<SettingOutlined />} onClick={onOpenSettings} />
+    <Button
+        variant="text"
+        icon={<SettingOutlined />}
+        onClick={onOpenSettings}
+        ariaLabel="Settings"
+    />
 );

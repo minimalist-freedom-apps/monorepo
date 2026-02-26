@@ -13,6 +13,14 @@ const expectedScripts: ReadonlyArray<readonly [name: string, value: string]> = [
     ['typecheck', 'tsc --noEmit'],
 ];
 
+const optionalAllowedScriptNames = [
+    'e2e',
+    'e2e-ci',
+    'e2e:prepare',
+    'e2e:appium',
+    'e2e:emulator',
+] as const;
+
 export const requiredAppScripts: Requirement = {
     name: 'has required scripts',
     applies: ({ projectType }) => projectType === 'app',
@@ -55,14 +63,18 @@ export const requiredAppScripts: Requirement = {
         const scriptKeys = typedObjectKeys(scripts);
 
         const missing = expectedNames.filter(s => !scriptKeys.includes(s));
-        const extra = scriptKeys.filter(s => !expectedNames.includes(s));
+        const extra = scriptKeys.filter(
+            s => !expectedNames.includes(s) && !optionalAllowedScriptNames.includes(s),
+        );
 
         for (const name of missing) {
             errors.push(`missing script "${name}"`);
         }
 
         for (const name of extra) {
-            errors.push(`unexpected script "${name}" (only ${expectedNames.join(', ')} allowed)`);
+            errors.push(
+                `unexpected script "${name}" (only ${[...expectedNames, ...optionalAllowedScriptNames].join(', ')} allowed)`,
+            );
         }
 
         if (missing.length === 0 && extra.length === 0) {

@@ -1,0 +1,43 @@
+name: Checks
+
+on:
+  pull_request:
+    branches: [main]
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  ci:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Setup Node + pnpm + install
+        uses: ./.github/actions/setup-node-pnpm
+
+      - name: Check deduplicated dependencies
+        run: pnpm dedupe --check
+
+      - name: Check (format, organize imports)
+        run: pnpm check
+
+      - name: Lint (biome + eslint)
+        run: pnpm lint
+
+      - name: TypeScript check
+        run: pnpm nx affected -t typecheck --base=${{ github.event.pull_request.base.sha || github.event.before }} --head=${{ github.sha }} --parallel=3 --output-style=stream --verbose
+
+      - name: Verify requirements
+        run: pnpm requirements:verify
+
+      - name: Run affected unit tests
+        run: pnpm nx affected -t test --base=${{ github.event.pull_request.base.sha || github.event.before }} --head=${{ github.sha }} --parallel=3 --output-style=stream --verbose
+
+      - name: Build apps
+        run: pnpm -r --filter "./apps/*" build

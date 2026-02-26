@@ -1,7 +1,7 @@
 #!/usr/bin/env tsx
 
 import { join, resolve } from 'node:path';
-import { filterDirs, getSubDirs, green, parseArgs, red } from '@minimalist-apps/cli';
+import { coloredText, filterDirs, getSubDirs, parseArgs } from '@minimalist-apps/cli';
 import { requirements } from '../allRequirements';
 import { filterRequirementsByName } from '../filterRequirementsByName';
 import { fixProjects } from '../fixProjects';
@@ -33,14 +33,19 @@ const errors: Array<string> = [
 ];
 
 if (errors.length > 0) {
-    console.error(red('\nFix had errors:\n'));
+    console.error(coloredText('\nFix had errors:\n', 'red'));
 
     for (const error of errors) {
-        console.error(red(`  ✗ ${error}`));
+        console.error(coloredText(`  ✗ ${error}`, 'red'));
     }
 
-    console.error(red(`\n${errors.length} error(s) found.`));
+    console.error(coloredText(`\n${errors.length} error(s) found.`, 'red'));
     process.exit(1);
 }
 
-console.log(green(`\n✓ Fixed ${appDirs.length} app(s) and ${packageDirs.length} package(s).`));
+console.log(
+    coloredText(
+        `\n✓ Fixed ${appDirs.length} app(s) and ${packageDirs.length} package(s).`,
+        'green',
+    ),
+);
