@@ -15,6 +15,8 @@ interface ButtonProps {
     readonly variant?: 'text' | 'default';
     readonly size?: 'small' | 'medium' | 'large';
     readonly style?: React.CSSProperties;
+    readonly testId?: string;
+    readonly ariaLabel?: string;
 }
 
 const buildIntentStyle = (
@@ -74,6 +76,8 @@ export const Button = ({
     variant = 'default',
     size = 'medium',
     style,
+    testId,
+    ariaLabel,
 }: ButtonProps) => {
     const { token } = theme.useToken();
     const isTextVariant = variant === 'text';
@@ -91,6 +95,9 @@ export const Button = ({
             danger={isDanger}
             size={size === 'medium' ? 'middle' : size}
             style={buildStyles(intent, isTextVariant, token, style)}
+            id={testId}
+            data-testid={testId}
+            aria-label={ariaLabel}
         >
             {children}
         </AntButton>

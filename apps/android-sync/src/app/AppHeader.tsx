@@ -12,5 +12,6 @@ export const AppHeader = ({ onHome, onOpenSettings }: AppHeaderProps) => (
         title={config.appShortName}
         onTitleClick={onHome}
         actions={<SettingsButton onOpenSettings={onOpenSettings} />}
+        actionsTestId="app-header-actions"
     />
 );

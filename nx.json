@@ -1,0 +1,10 @@
+{
+    "$schema": "./node_modules/nx/schemas/nx-schema.json",
+    "defaultBase": "main",
+    "plugins": ["nx/plugins/package-json"],
+    "targetDefaults": {
+        "e2e": {
+            "cache": false
+        }
+    }
+}

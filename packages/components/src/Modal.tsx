@@ -17,6 +17,8 @@ interface ModalProps {
     readonly maskClosable?: boolean;
     readonly keyboard?: boolean;
     readonly focusTriggerAfterClose?: boolean;
+    readonly okButtonTestId?: string;
+    readonly cancelButtonTestId?: string;
 }
 
 export const Modal = ({
@@ -35,6 +37,8 @@ export const Modal = ({
     maskClosable = true,
     keyboard = true,
     focusTriggerAfterClose = true,
+    okButtonTestId,
+    cancelButtonTestId,
 }: ModalProps) => (
     <AntModal
         open={open}
@@ -43,10 +47,21 @@ export const Modal = ({
         {...(onCancel !== undefined ? { onCancel } : {})}
         {...(okText !== undefined ? { okText } : {})}
         {...(cancelText !== undefined ? { cancelText } : {})}
-        {...(!showCancel ? { cancelButtonProps: { style: { display: 'none' } } } : {})}
+        {...(!showCancel
+            ? { cancelButtonProps: { style: { display: 'none' } } }
+            : {
+                  cancelButtonProps: {
+                      ...(cancelButtonTestId !== undefined ? { id: cancelButtonTestId } : {}),
+                      ...(cancelButtonTestId !== undefined
+                          ? { 'data-testid': cancelButtonTestId }
+                          : {}),
+                  },
+              })}
         okButtonProps={{
             ...(okDanger ? { danger: true } : {}),
             ...(okDisabled ? { disabled: true } : {}),
+            ...(okButtonTestId !== undefined ? { id: okButtonTestId } : {}),
+            ...(okButtonTestId !== undefined ? { 'data-testid': okButtonTestId } : {}),
             style: { boxShadow: 'none' },
         }}
         centered={centered}

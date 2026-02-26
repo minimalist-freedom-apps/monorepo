@@ -45,6 +45,7 @@ export const RestoreMnemonic = (deps: RestoreMnemonicDeps) => {
                 okText="Restore"
                 cancelText="Cancel"
                 okDisabled={isRestoreSeedValid === false}
+                okButtonTestId="restore-modal-ok"
             >
                 <Column gap={16}>
                     <Banner showIcon={true} intent="warning">
@@ -57,6 +58,7 @@ export const RestoreMnemonic = (deps: RestoreMnemonicDeps) => {
                         onChange={setRestoreSeed}
                         placeholder="Enter your backup phrase here"
                         rows={6}
+                        testId="restore-seed-input"
                         {...(restoreSeed !== '' && !isRestoreSeedValid
                             ? { status: 'error' as const }
                             : {})}
@@ -64,7 +66,7 @@ export const RestoreMnemonic = (deps: RestoreMnemonicDeps) => {
                     />
                 </Column>
             </Modal>
-            <Button onClick={openRestoreModal} intent="primary">
+            <Button onClick={openRestoreModal} intent="primary" testId="restore-backup-button">
                 Restore Backup
             </Button>
         </SettingsRow>
