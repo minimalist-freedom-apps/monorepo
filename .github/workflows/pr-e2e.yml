@@ -29,13 +29,31 @@ jobs:
       - name: Setup Node + pnpm + install
         uses: ./.github/actions/setup-node-pnpm
 
+      - name: Detect affected E2E projects
+        id: affected-e2e
+        run: |
+          set -euo pipefail
+
+          AFFECTED_E2E_PROJECTS="$(pnpm nx show projects --affected --withTarget=e2e-ci --base=${{ github.event.pull_request.base.sha || github.event.before }} --head=${{ github.sha }} --json)"
+
+          echo "affected e2e projects: $AFFECTED_E2E_PROJECTS"
+          echo "projects=$AFFECTED_E2E_PROJECTS" >> "$GITHUB_OUTPUT"
+
+          if [ "$AFFECTED_E2E_PROJECTS" = "[]" ]; then
+            echo "has_e2e=false" >> "$GITHUB_OUTPUT"
+          else
+            echo "has_e2e=true" >> "$GITHUB_OUTPUT"
+          fi
+
       - name: Setup Java
+        if: steps.affected-e2e.outputs.has_e2e == 'true'
         uses: actions/setup-java@v4
         with:
           distribution: temurin
           java-version: '21'
 
       - name: Cache Gradle user home
+        if: steps.affected-e2e.outputs.has_e2e == 'true'
         id: gradle-cache
         uses: actions/cache@v4
         with:
@@ -47,14 +65,16 @@ jobs:
             gradle-${{ runner.os }}-
 
       - name: Cache Appium extensions
+        if: steps.affected-e2e.outputs.has_e2e == 'true'
         uses: actions/cache@v4
         with:
           path: ${{ env.APPIUM_HOME }}
-          key: appium-${{ runner.os }}-${{ hashFiles('apps/android-sync/package.json') }}
+          key: appium-${{ runner.os }}-${{ hashFiles('apps/*/package.json') }}
           restore-keys: |
             appium-${{ runner.os }}-
 
       - name: Prepare Android SDK cache directories
+        if: steps.affected-e2e.outputs.has_e2e == 'true'
         run: |
           sudo mkdir -p \
             "${ANDROID_SDK_ROOT}/build-tools/35.0.0" \
@@ -74,6 +94,7 @@ jobs:
             "${ANDROID_SDK_ROOT}/licenses"
 
       - name: Cache Android SDK packages
+        if: steps.affected-e2e.outputs.has_e2e == 'true'
         id: android-sdk-cache
         uses: actions/cache@v4
         with:
@@ -90,11 +111,13 @@ jobs:
             android-sdk-${{ runner.os }}-api${{ env.ANDROID_API_LEVEL }}-${{ env.ANDROID_EMULATOR_TARGET }}-${{ env.ANDROID_EMULATOR_ARCH }}-
 
       - name: Log cache status
+        if: steps.affected-e2e.outputs.has_e2e == 'true'
         run: |
           echo "gradle cache hit: ${{ steps.gradle-cache.outputs.cache-hit }}"
           echo "android sdk cache hit: ${{ steps.android-sdk-cache.outputs.cache-hit }}"
 
       - name: Install Appium UiAutomator2 driver
+        if: steps.affected-e2e.outputs.has_e2e == 'true'
         run: |
           set -euo pipefail
 
@@ -117,6 +140,7 @@ jobs:
           pnpm --filter @minimalist-apps/android-sync exec appium driver install --source=npm appium-uiautomator2-driver@4.2.3
 
       - name: Start Appium server
+        if: steps.affected-e2e.outputs.has_e2e == 'true'
         run: |
           pnpm --filter @minimalist-apps/android-sync run e2e:appium > appium.log 2>&1 &
           for i in {1..30}; do
@@ -129,12 +153,14 @@ jobs:
           exit 1
 
       - name: Enable KVM group permissions
+        if: steps.affected-e2e.outputs.has_e2e == 'true'
         run: |
           echo 'KERNEL=="kvm", GROUP="kvm", MODE="0666", OPTIONS+="static_node=kvm"' | sudo tee /etc/udev/rules.d/99-kvm4all.rules
           sudo udevadm control --reload-rules
           sudo udevadm trigger --name-match=kvm
 
       - name: Run Android emulator and E2E tests
+        if: steps.affected-e2e.outputs.has_e2e == 'true'
         uses: reactivecircus/android-emulator-runner@v2
         with:
           force-avd-creation: true
@@ -146,7 +172,11 @@ jobs:
           disable-linux-hw-accel: false
           disable-animations: true
           emulator-options: -no-window -gpu swiftshader_indirect -noaudio -no-boot-anim -no-snapshot -wipe-data
-          script: pnpm --filter @minimalist-apps/android-sync run e2e-ci
+          script: pnpm nx affected -t e2e-ci --base=${{ github.event.pull_request.base.sha || github.event.before }} --head=${{ github.sha }} --parallel=1 --output-style=stream --verbose
+
+      - name: No affected E2E projects
+        if: steps.affected-e2e.outputs.has_e2e != 'true'
+        run: echo "No affected projects with e2e-ci target; skipping E2E job body."
 
       - name: Upload Appium log on failure
         if: failure()
