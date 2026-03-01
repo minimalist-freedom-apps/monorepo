@@ -5,7 +5,7 @@ interface DeleteAppiumSessionProps {
     readonly sessionId: string;
 }
 
-export const deleteAppiumSession = async ({
+export const deleteSession = async ({
     serverUrl,
     sessionId,
 }: DeleteAppiumSessionProps): Promise<void> => {

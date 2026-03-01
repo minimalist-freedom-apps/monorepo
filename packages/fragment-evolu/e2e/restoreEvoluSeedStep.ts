@@ -23,19 +23,11 @@ const openSettings = async ({ serverUrl, sessionId }: RestoreEvoluSeedStepProps)
         sessionId,
     });
 
-    try {
-        await clickElementById({
-            id: 'open-settings-button',
-            serverUrl,
-            sessionId,
-        });
-    } catch {
-        await clickElementById({
-            id: 'open-settings-button',
-            serverUrl,
-            sessionId,
-        });
-    }
+    await clickElementById({
+        id: 'open-settings-button',
+        serverUrl,
+        sessionId,
+    });
 
     await waitForElementById({
         id: 'settings-back-button',
@@ -45,26 +37,11 @@ const openSettings = async ({ serverUrl, sessionId }: RestoreEvoluSeedStepProps)
 };
 
 const restoreSeed = async ({ serverUrl, sessionId }: RestoreEvoluSeedStepProps) => {
-    let isRestoreTextareaVisible = false;
-
-    try {
-        await waitForElementById({
-            id: 'restore-seed-input',
-            serverUrl,
-            sessionId,
-            timeoutMs: 1_000,
-        });
-
-        isRestoreTextareaVisible = true;
-    } catch {}
-
-    if (!isRestoreTextareaVisible) {
-        await clickElementById({
-            id: 'restore-backup-button',
-            serverUrl,
-            sessionId,
-        });
-    }
+    await clickElementById({
+        id: 'restore-backup-button',
+        serverUrl,
+        sessionId,
+    });
 
     await waitForElementById({
         id: 'restore-seed-input',
@@ -98,12 +75,6 @@ const enableDebug = async ({ serverUrl, sessionId }: RestoreEvoluSeedStepProps) 
         serverUrl,
         sessionId,
     });
-
-    await clickElementById({
-        id: 'settings-back-button',
-        serverUrl,
-        sessionId,
-    });
 };
 
 const assertDebugOwnerSuffix = async ({ serverUrl, sessionId }: RestoreEvoluSeedStepProps) => {
@@ -119,8 +90,6 @@ export const restoreEvoluSeedStep = async (props: RestoreEvoluSeedStepProps): Pr
     await openSettings(props);
 
     await enableDebug(props);
-
-    await openSettings(props);
 
     await restoreSeed(props);
 
