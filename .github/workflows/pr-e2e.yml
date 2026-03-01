@@ -25,6 +25,8 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
 
       - name: Setup Node + pnpm + install
         uses: ./.github/actions/setup-node-pnpm
@@ -34,7 +36,15 @@ jobs:
         run: |
           set -euo pipefail
 
-          AFFECTED_E2E_PROJECTS="$(pnpm nx show projects --affected --withTarget=e2e-ci --base=${{ github.event.pull_request.base.sha || github.event.before }} --head=${{ github.sha }} --json)"
+          BASE_SHA="${{ github.event.pull_request.base.sha || github.event.before }}"
+          HEAD_SHA="${{ github.sha }}"
+
+          if ! git cat-file -e "${BASE_SHA}^{commit}" 2>/dev/null; then
+            echo "Base commit ${BASE_SHA} is missing locally. Fetching base branch history..."
+            git fetch --no-tags --prune origin "${{ github.event.pull_request.base.ref }}"
+          fi
+
+          AFFECTED_E2E_PROJECTS="$(pnpm nx show projects --affected --withTarget=e2e-ci --base=${BASE_SHA} --head=${HEAD_SHA} --json)"
 
           echo "affected e2e projects: $AFFECTED_E2E_PROJECTS"
           echo "projects=$AFFECTED_E2E_PROJECTS" >> "$GITHUB_OUTPUT"
