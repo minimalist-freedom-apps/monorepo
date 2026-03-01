@@ -15,11 +15,9 @@
     },
     "dependencies": {
         "@capacitor/core": "^7.2.0",
-        "@capacitor/status-bar": "^7.0.0",
         "@evolu/common": "^7.4.1",
         "@minimalist-apps/connect": "workspace:*",
         "@minimalist-apps/components": "workspace:*",
-        "@minimalist-apps/evolu": "workspace:*",
         "@minimalist-apps/fragment-debug": "workspace:*",
         "@minimalist-apps/fragment-evolu": "workspace:*",
         "@minimalist-apps/fragment-local-storage": "workspace:*",

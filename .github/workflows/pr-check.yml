@@ -30,6 +30,9 @@ jobs:
       - name: Lint (biome + eslint)
         run: pnpm lint
 
+      - name: Run Knip
+        run: pnpm knip
+
       - name: TypeScript check
         run: pnpm nx affected -t typecheck --base=${{ github.event.pull_request.base.sha || github.event.before }} --head=${{ github.sha }} --parallel=3 --output-style=stream --verbose
 
