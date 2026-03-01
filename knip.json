@@ -6,6 +6,9 @@
         ".": {},
         "apps/android-sync": {
             "ignore": ["vitest.e2e.config.ts", "e2e/globalSetup.ts"]
+        },
+        "apps/price-converter": {
+            "ignore": ["vitest.e2e.config.ts", "e2e/globalSetup.ts"]
         }
     }
 }

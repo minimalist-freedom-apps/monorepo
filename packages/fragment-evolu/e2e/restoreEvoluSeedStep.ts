@@ -1,16 +1,15 @@
 import {
-    clickElementByXPath,
-    clickElementByXPathWithJavaScript,
-    setAppiumContext,
-    typeIntoElementByXPath,
-    waitForElementByXPath,
-    waitForWebViewContext,
+    clickElementById,
+    typeIntoElementById,
+    waitForElementById,
+    waitForElementTextByIdContains,
+    waitForReload,
 } from '@minimalist-apps/android-e2e';
 
-export const EVOLU_ABANDOn_TEST_SEED =
+const EVOLU_ABANDOn_TEST_SEED =
     'abandon abandon abandon abandon abandon abandon abandon abandon abandon abandon abandon about';
 
-export const EVOLU_ABANDON_SEED_OWNER_ID = 'F0xh0HpiAx5shgCgtGENww';
+const EVOLU_ABANDON_SEED_OWNER_ID = 'F0xh0HpiAx5shgCgtGENww';
 
 type RestoreEvoluSeedStepProps = {
     readonly serverUrl: string;
@@ -18,30 +17,30 @@ type RestoreEvoluSeedStepProps = {
 };
 
 const openSettings = async ({ serverUrl, sessionId }: RestoreEvoluSeedStepProps) => {
-    await waitForElementByXPath({
+    await waitForElementById({
+        id: 'open-settings-button',
         serverUrl,
         sessionId,
-        xPath: "//*[@id='open-settings-button']",
     });
 
     try {
-        await clickElementByXPathWithJavaScript({
+        await clickElementById({
+            id: 'open-settings-button',
             serverUrl,
             sessionId,
-            xPath: "//*[@id='open-settings-button']",
         });
     } catch {
-        await clickElementByXPathWithJavaScript({
+        await clickElementById({
+            id: 'open-settings-button',
             serverUrl,
             sessionId,
-            xPath: "//*[@id='open-settings-button']",
         });
     }
 
-    await waitForElementByXPath({
+    await waitForElementById({
+        id: 'settings-back-button',
         serverUrl,
         sessionId,
-        xPath: "//*[@id='settings-back-button']",
     });
 };
 
@@ -49,94 +48,83 @@ const restoreSeed = async ({ serverUrl, sessionId }: RestoreEvoluSeedStepProps) 
     let isRestoreTextareaVisible = false;
 
     try {
-        await waitForElementByXPath({
+        await waitForElementById({
+            id: 'restore-seed-input',
             serverUrl,
             sessionId,
             timeoutMs: 1_000,
-            xPath: "//*[@id='restore-seed-input']",
         });
 
         isRestoreTextareaVisible = true;
     } catch {}
 
     if (!isRestoreTextareaVisible) {
-        await clickElementByXPath({
+        await clickElementById({
+            id: 'restore-backup-button',
             serverUrl,
             sessionId,
-            xPath: "//*[@id='restore-backup-button']",
         });
     }
 
-    await waitForElementByXPath({
+    await waitForElementById({
+        id: 'restore-seed-input',
         serverUrl,
         sessionId,
-        xPath: "//*[@id='restore-seed-input']",
     });
 
-    await typeIntoElementByXPath({
+    await typeIntoElementById({
+        id: 'restore-seed-input',
         serverUrl,
         sessionId,
         text: EVOLU_ABANDOn_TEST_SEED,
-        xPath: "//*[@id='restore-seed-input']",
     });
 
-    await clickElementByXPathWithJavaScript({
-        xPath: "//*[@id='restore-modal-ok']",
+    await clickElementById({
+        id: 'restore-modal-ok',
         serverUrl,
         sessionId,
     });
 };
 
 const enableDebug = async ({ serverUrl, sessionId }: RestoreEvoluSeedStepProps) => {
-    await waitForElementByXPath({
+    await waitForElementById({
+        id: 'debug-mode-switch',
         serverUrl,
         sessionId,
-        xPath: "//*[@id='debug-mode-switch']",
     });
 
-    await clickElementByXPath({
+    await clickElementById({
+        id: 'debug-mode-switch',
         serverUrl,
         sessionId,
-        xPath: "//*[@id='debug-mode-switch']",
     });
 
-    await clickElementByXPath({
+    await clickElementById({
+        id: 'settings-back-button',
         serverUrl,
         sessionId,
-        xPath: "//*[@id='settings-back-button']",
     });
 };
 
 const assertDebugOwnerSuffix = async ({ serverUrl, sessionId }: RestoreEvoluSeedStepProps) => {
-    await waitForElementByXPath({
+    await waitForElementTextByIdContains({
+        id: 'debug-owner-id',
         serverUrl,
         sessionId,
-        xPath: `//*[@id='debug-owner-id' and contains(normalize-space(.), '${EVOLU_ABANDON_SEED_OWNER_ID.slice(-6)}')]`,
+        text: EVOLU_ABANDON_SEED_OWNER_ID.slice(-6),
     });
 };
 
 export const restoreEvoluSeedStep = async (props: RestoreEvoluSeedStepProps): Promise<void> => {
     await openSettings(props);
-    await restoreSeed(props);
 
-    const webViewContextName = await waitForWebViewContext({
-        serverUrl: props.serverUrl,
-        sessionId: props.sessionId,
-    });
-
-    await setAppiumContext({
-        contextName: webViewContextName,
-        serverUrl: props.serverUrl,
-        sessionId: props.sessionId,
-    });
-
-    await waitForElementByXPath({
-        serverUrl: props.serverUrl,
-        sessionId: props.sessionId,
-        xPath: "//*[@id='open-settings-button']",
-    });
+    await enableDebug(props);
 
     await openSettings(props);
-    await enableDebug(props);
+
+    await restoreSeed(props);
+
+    await waitForReload(props);
+
     await assertDebugOwnerSuffix(props);
 };
