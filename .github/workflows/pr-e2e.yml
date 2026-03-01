@@ -179,7 +179,21 @@ jobs:
           disable-linux-hw-accel: false
           disable-animations: true
           emulator-options: -no-window -gpu swiftshader_indirect -noaudio -no-boot-anim -no-snapshot -wipe-data
-          script: pnpm nx affected -t e2e-ci --base=${{ github.event.pull_request.base.sha || github.event.before }} --head=${{ github.sha }} --parallel=1 --output-style=stream --verbose
+          script: |
+            set -eu
+
+            adb -s emulator-5554 shell rm -f /sdcard/e2e-run.mp4 || true
+            adb -s emulator-5554 shell screenrecord --bit-rate 4000000 --time-limit 180 /sdcard/e2e-run.mp4 >/dev/null 2>&1 &
+            recorder_pid=$!
+
+            cleanup() {
+              kill "$recorder_pid" >/dev/null 2>&1 || true
+              adb -s emulator-5554 pull /sdcard/e2e-run.mp4 e2e-run.mp4 >/dev/null 2>&1 || true
+            }
+
+            trap cleanup EXIT
+
+            pnpm nx affected -t e2e-ci --base=${{ github.event.pull_request.base.sha || github.event.before }} --head=${{ github.sha }} --parallel=1 --output-style=stream --verbose
 
       - name: No affected E2E projects
         if: steps.affected-e2e.outputs.has_e2e != 'true'
@@ -191,3 +205,11 @@ jobs:
         with:
           name: appium-log
           path: appium.log
+
+      - name: Upload E2E video on failure
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: e2e-video
+          path: e2e-run.mp4
+          if-no-files-found: warn
