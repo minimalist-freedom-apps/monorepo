@@ -180,13 +180,21 @@ jobs:
           disable-animations: true
           emulator-options: -no-window -gpu swiftshader_indirect -noaudio -no-boot-anim -no-snapshot -wipe-data
           script: >
-            adb -s emulator-5554 shell rm -f /sdcard/e2e-run.mp4 || true;
-            adb -s emulator-5554 shell screenrecord --bit-rate 4000000 --time-limit 180 /sdcard/e2e-run.mp4 >/dev/null 2>&1 &
-            recorder_pid=$!;
+            rm -rf e2e-video && mkdir -p e2e-video;
+            stop_file=/tmp/e2e-video-stop;
+            rm -f "$stop_file";
+            adb -s emulator-5554 shell rm -f /sdcard/e2e-run-*.mp4 || true;
+            adb -s emulator-5554 shell input keyevent KEYCODE_WAKEUP || true;
+            adb -s emulator-5554 shell wm dismiss-keyguard || true;
+            (i=1; while [ ! -f "$stop_file" ]; do adb -s emulator-5554 shell screenrecord --bit-rate 4000000 --time-limit 180 /sdcard/e2e-run-$i.mp4 >/dev/null 2>&1 || true; i=$((i+1)); done) &
+            recorder_loop_pid=$!;
             pnpm nx affected -t e2e-ci --base=${{ github.event.pull_request.base.sha || github.event.before }} --head=${{ github.sha }} --parallel=1 --output-style=stream --verbose;
             test_exit=$?;
-            kill "$recorder_pid" >/dev/null 2>&1 || true;
-            adb -s emulator-5554 pull /sdcard/e2e-run.mp4 e2e-run.mp4 >/dev/null 2>&1 || true;
+            touch "$stop_file";
+            wait "$recorder_loop_pid" 2>/dev/null || true;
+            j=1;
+            while [ "$j" -le 20 ]; do adb -s emulator-5554 pull /sdcard/e2e-run-$j.mp4 e2e-video/e2e-run-$j.mp4 >/dev/null 2>&1 || break; j=$((j+1)); done;
+            if command -v ffmpeg >/dev/null 2>&1; then : > e2e-video/concat.txt; for f in e2e-video/e2e-run-*.mp4; do [ -f "$f" ] || continue; printf "file '%s/%s'\n" "$PWD" "$f" >> e2e-video/concat.txt; done; ffmpeg -hide_banner -loglevel error -f concat -safe 0 -i e2e-video/concat.txt -c copy e2e-run.mp4 || true; fi;
             exit "$test_exit";
 
       - name: No affected E2E projects
@@ -205,5 +213,7 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: e2e-video
-          path: e2e-run.mp4
+          path: |
+            e2e-run.mp4
+            e2e-video/*.mp4
           if-no-files-found: warn
