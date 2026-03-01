@@ -1,7 +1,9 @@
 {
     "extends": "@minimalist-apps/tsconfig/library.json",
     "compilerOptions": {
-        "jsx": "react-jsx"
+        "jsx": "react-jsx",
+        "rootDir": "./src",
+        "types": ["@testing-library/jest-dom"]
     },
     "include": ["src"]
 }
