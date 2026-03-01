@@ -8,7 +8,12 @@ type SettingsScreenProps = GoBackDep & {
 
 export const SettingsScreen = ({ children, goBack }: SettingsScreenProps) => (
     <Column gap={12}>
-        <Button onClick={goBack} variant="text" style={{ alignSelf: 'start' }}>
+        <Button
+            onClick={goBack}
+            variant="text"
+            style={{ alignSelf: 'start' }}
+            testId="settings-back-button"
+        >
             ← Back
         </Button>
         {children}

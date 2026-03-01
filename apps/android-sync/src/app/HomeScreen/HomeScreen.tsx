@@ -6,7 +6,9 @@ export const HomeScreenPure = (deps: DebugHeaderDep) => (
         <deps.DebugHeader />
         <Card>
             <Column gap={8}>
-                <Title level={4}>🔄 Android Sync</Title>
+                <div id="home-screen-title">
+                    <Title level={4}>🔄 Android Sync</Title>
+                </div>
                 <Text>Empty app scaffold is ready.</Text>
             </Column>
         </Card>
