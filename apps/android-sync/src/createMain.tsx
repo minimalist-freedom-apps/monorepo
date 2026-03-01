@@ -11,11 +11,15 @@ export interface MainDep {
 }
 
 type MainDeps = AppDep & LocalStorageInitDep;
+type MainInitDep = {
+    readonly onMainInit?: () => void;
+};
 
 export const createMain =
-    (deps: MainDeps): Main =>
+    (deps: MainDeps & MainInitDep): Main =>
     () => {
         deps.localStorageInit();
+        deps.onMainInit?.();
 
         ReactDOM.createRoot(document.getElementById('root')!).render(
             <React.StrictMode>

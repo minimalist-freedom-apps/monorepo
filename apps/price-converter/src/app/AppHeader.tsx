@@ -131,6 +131,7 @@ export const AppHeaderPure = (deps: AppHeaderDeps, { loading, mode }: AppHeaderS
         <AppHeader
             title={config.appShortName}
             onTitleClick={handleHome}
+            actionsTestId="app-header-actions"
             actions={
                 <>
                     {modeSwitcher}

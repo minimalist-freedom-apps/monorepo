@@ -8,7 +8,10 @@ import {
 } from '@minimalist-apps/evolu';
 import { toGetter } from '@minimalist-apps/mini-store';
 import { type BackupMnemonicDep, BackupMnemonic as BackupMnemonicPure } from './BackupMnemonic';
-import { createRestoreMnemonic } from './createRestoreMnemonic';
+import {
+    createRestoreMnemonic,
+    type RestoreMnemonicDep as RestoreMnemonicServiceDep,
+} from './createRestoreMnemonic';
 import { createSetEvoluMnemonic } from './createSetEvoluMnemonic';
 import type { EvoluState, EvoluStoreDep } from './evoluState';
 import { type RestoreMnemonicDep, RestoreMnemonic as RestoreMnemonicPure } from './RestoreMnemonic';
@@ -23,7 +26,10 @@ type EvoluFragmentCompositionRootDeps<Schema extends EvoluSchema> = EvoluStoreDe
 
 export const createEvoluFragmentCompositionRoot = <Schema extends EvoluSchema>(
     deps: EvoluFragmentCompositionRootDeps<Schema>,
-): BackupMnemonicDep & RestoreMnemonicDep & EnsureEvoluStorageDep<Schema> => {
+): BackupMnemonicDep &
+    RestoreMnemonicDep &
+    RestoreMnemonicServiceDep &
+    EnsureEvoluStorageDep<Schema> => {
     const setEvoluMnemonic = createSetEvoluMnemonic({ store: deps.store });
 
     const getPersistedMnemonic = toGetter(deps.store.getState, selectEvoluMnemonic);
@@ -62,5 +68,5 @@ export const createEvoluFragmentCompositionRoot = <Schema extends EvoluSchema>(
         restoreMnemonic,
     });
 
-    return { BackupMnemonic, RestoreMnemonic, ensureEvoluStorage };
+    return { BackupMnemonic, RestoreMnemonic, restoreMnemonic, ensureEvoluStorage };
 };
