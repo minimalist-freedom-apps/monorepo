@@ -15,7 +15,6 @@
     },
     "dependencies": {
         "@capacitor/core": "^7.2.0",
-        "@capacitor/status-bar": "^7.0.0",
         "@minimalist-apps/components": "workspace:*",
         "@minimalist-apps/mobile-native": "workspace:*",
         "react": "^19.0.0",
