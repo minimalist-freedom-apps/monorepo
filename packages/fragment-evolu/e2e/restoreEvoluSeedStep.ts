@@ -1,5 +1,6 @@
 import {
     clickElementById,
+    getElementAttributeById,
     typeIntoElementById,
     waitForElementById,
     waitForElementTextByIdContains,
@@ -69,6 +70,18 @@ const enableDebug = async ({ serverUrl, sessionId }: RestoreEvoluSeedStepProps) 
         serverUrl,
         sessionId,
     });
+
+    const isDebugEnabled =
+        (await getElementAttributeById({
+            attribute: 'aria-checked',
+            id: 'debug-mode-switch',
+            serverUrl,
+            sessionId,
+        })) === 'true';
+
+    if (isDebugEnabled) {
+        return;
+    }
 
     await clickElementById({
         id: 'debug-mode-switch',
