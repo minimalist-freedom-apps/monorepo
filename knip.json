@@ -1,8 +1,11 @@
 {
     "$schema": "https://unpkg.com/knip@5/schema.json",
     "ignoreFiles": ["**/android/**/build/**", "**/android/app/src/main/assets/public/**"],
-    "tags": ["-lintignore"],
+    "tags": ["-lintignore", "-publicdep"],
     "workspaces": {
-        ".": {}
+        ".": {},
+        "apps/android-sync": {
+            "ignore": ["vitest.e2e.config.ts", "e2e/globalSetup.ts"]
+        }
     }
 }

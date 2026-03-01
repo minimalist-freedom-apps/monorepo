@@ -2,7 +2,7 @@ import type { Row } from '@evolu/common';
 import { asFractionalIndex, compareFractionalIndex } from '@minimalist-apps/fractional-indexing';
 import type { SelectedCurrency } from './SelectedCurrency';
 
-export interface SelectedCurrencyRow extends Row {
+interface SelectedCurrencyRow extends Row {
     readonly id: string;
     readonly currency: SelectedCurrency['code'] | null;
     readonly order: SelectedCurrency['order'] | null;

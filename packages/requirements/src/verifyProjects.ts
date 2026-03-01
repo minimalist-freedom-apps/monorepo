@@ -1,7 +1,7 @@
 import type { ProjectType, Requirement } from './requirements/Requirement';
 import { runProjects } from './runProjects';
 
-export interface VerifyProjectsProps {
+interface VerifyProjectsProps {
     readonly projectDirs: ReadonlyArray<string>;
     readonly projectType: ProjectType;
     readonly filteredRequirements: ReadonlyArray<Requirement>;

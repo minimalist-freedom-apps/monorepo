@@ -13,7 +13,7 @@ import type { AddCurrencyButtonDep } from '../AddCurrencyScreen/AddCurrencyButto
 import type { RatesLoadingDep } from '../RatesLoading';
 import type { CurrencyRowDep } from './CurrencyFiatRow';
 
-export type ConverterScreenStateProps = {
+type ConverterScreenStateProps = {
     readonly satsAmount: AmountSats;
     readonly fiatAmounts: Readonly<CurrencyValues>;
     readonly selectedCurrencies: ReadonlyArray<SelectedCurrency>;

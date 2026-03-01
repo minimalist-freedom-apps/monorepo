@@ -2,7 +2,7 @@ import type { EvoluSchema, Mnemonic, Owner } from '@evolu/common';
 import type { EnsureEvoluStorageDep } from '@minimalist-apps/evolu';
 import type { SetEvoluMnemonicDep } from './createSetEvoluMnemonic';
 
-export type RestoreMnemonicDeps<S extends EvoluSchema> = SetEvoluMnemonicDep &
+type RestoreMnemonicDeps<S extends EvoluSchema> = SetEvoluMnemonicDep &
     EnsureEvoluStorageDep<S> & {
         readonly onOwnerUsed: (owner: Owner) => void;
     };

@@ -22,7 +22,7 @@ import type { SetBtcModeDep } from '../state/setBtcMode';
 
 type BurgerMenuKey = 'mode' | 'refresh' | 'settings';
 
-export type AppHeaderStateProps = {
+type AppHeaderStateProps = {
     readonly loading: boolean;
     readonly mode: BtcMode;
 };

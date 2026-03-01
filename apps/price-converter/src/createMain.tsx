@@ -5,6 +5,7 @@ import type { AppDep } from './app/App';
 
 export type Main = () => void;
 
+/** @publicdep */
 export interface MainDep {
     readonly main: Main;
 }

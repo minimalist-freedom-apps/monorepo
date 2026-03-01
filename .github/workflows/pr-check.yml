@@ -43,4 +43,4 @@ jobs:
         run: pnpm nx affected -t test --base=${{ github.event.pull_request.base.sha || github.event.before }} --head=${{ github.sha }} --parallel=3 --output-style=stream --verbose
 
       - name: Build apps
-        run: pnpm -r --filter "./apps/*" build
+        run: pnpm -r --filter "./apps/*" run build

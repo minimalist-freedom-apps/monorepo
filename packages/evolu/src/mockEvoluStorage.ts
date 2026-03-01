@@ -12,12 +12,12 @@ export const TodoTestSchema = {
 
 export type TodoTestSchema = typeof TodoTestSchema;
 
-export type TodoRow = {
+type TodoRow = {
     readonly id: string;
     readonly value: string;
 };
 
-export type MockEvoluStorage = EvoluStorage<TodoTestSchema> & {
+type MockEvoluStorage = EvoluStorage<TodoTestSchema> & {
     readonly emitUpdate: (nextRows: ReadonlyArray<TodoRow>) => void;
 };
 

@@ -2,7 +2,7 @@ import { type CurrencyCode, createIdFromString, sqliteTrue } from '@evolu/common
 import type { EnsureEvoluStorageDep } from '../state/evolu/schema';
 import type { RemoveFiatAmountDep } from '../state/removeFiatAmount';
 
-export interface RemoveCurrencyParams {
+interface RemoveCurrencyParams {
     readonly code: CurrencyCode;
 }
 

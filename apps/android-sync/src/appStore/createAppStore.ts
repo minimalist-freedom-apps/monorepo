@@ -2,6 +2,7 @@ import type { Store } from '@minimalist-apps/mini-store';
 import { createStore as createMiniStore } from '@minimalist-apps/mini-store';
 import type { AppState } from './AppState';
 
+/** @publicdep */
 export type AppStoreDep = { readonly store: Store<AppState> };
 
 export const createAppStore = (): Store<AppState> => {

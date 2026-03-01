@@ -3,7 +3,7 @@ import { Mnemonic as MnemonicComponent, SettingsRow } from '@minimalist-apps/com
 import type { EnsureEvoluOwnerDep } from '@minimalist-apps/evolu';
 import { type FC, useEffect } from 'react';
 
-export interface BackupMnemonicProps {
+interface BackupMnemonicProps {
     readonly evoluMnemonic: Mnemonic | null;
 }
 

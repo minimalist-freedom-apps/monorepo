@@ -6,7 +6,7 @@ import type { SelectedCurrency } from '../state/SelectedCurrency/SelectedCurrenc
 
 export type ReorderCurrencyDeps = EnsureEvoluStorageDep & GetSelectedCurrenciesDep;
 
-export interface ReorderCurrencyParams {
+interface ReorderCurrencyParams {
     readonly active: CurrencyCode;
     readonly over: CurrencyCode;
 }

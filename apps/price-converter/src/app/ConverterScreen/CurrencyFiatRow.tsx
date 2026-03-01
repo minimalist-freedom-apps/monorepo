@@ -14,7 +14,7 @@ export type CurrencyRowOwnProps = {
     readonly onRemove?: () => void;
 };
 
-export type CurrencyRowStateProps = {
+type CurrencyRowStateProps = {
     readonly btcMode: BtcMode;
 };
 

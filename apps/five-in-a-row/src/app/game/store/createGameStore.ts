@@ -26,7 +26,7 @@ export const isValidBoardSize = (value: unknown): value is number =>
 export const isGameMode = (value: unknown): value is GameMode =>
     value === 'human' || value === 'bot';
 
-export const MAX_BOT_BOARD_SIZE = 15;
+const MAX_BOT_BOARD_SIZE = 15;
 
 interface ClampBoardSizeProps {
     readonly size: number;
@@ -36,7 +36,7 @@ interface ClampBoardSizeProps {
 export const clampBoardSize = ({ size, gameMode }: ClampBoardSizeProps): number =>
     gameMode === 'bot' ? Math.min(size, MAX_BOT_BOARD_SIZE) : size;
 
-export interface GameViewState {
+interface GameViewState {
     readonly boardSize: number;
     readonly board: GameBoard;
     readonly currentPlayer: Player;

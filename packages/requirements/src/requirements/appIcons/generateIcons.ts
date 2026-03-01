@@ -5,7 +5,7 @@ import { createCanvas } from '@napi-rs/canvas';
 
 // --- Types ---
 
-export interface GenerateIconsConfig {
+interface GenerateIconsConfig {
     readonly emoji: string;
     readonly webOutputDir: string;
     readonly androidResDir?: string | undefined;

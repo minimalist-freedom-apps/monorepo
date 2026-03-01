@@ -16,7 +16,7 @@ interface CoingeckoResponse {
     };
 }
 
-export interface FetchCoingeckoRatesDeps {
+interface FetchCoingeckoRatesDeps {
     readonly fetch: typeof globalThis.fetch;
 }
 

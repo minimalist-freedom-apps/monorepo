@@ -3,7 +3,7 @@ import { typedObjectKeys } from '@minimalist-apps/type-utils';
 import { RateBtcPerFiat } from '../converter/rate.js';
 import { type CurrencyMap, type FetchRates, FetchRatesError } from './FetchRates.js';
 
-export interface FetchAverageRatesDeps {
+interface FetchAverageRatesDeps {
     readonly fetchRates: readonly FetchRates[];
 }
 

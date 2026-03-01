@@ -5,7 +5,7 @@ export type ThemeWrapperOwnProps = {
     readonly children: ReactNode;
 };
 
-export type ThemeWrapperStateProps = {
+type ThemeWrapperStateProps = {
     readonly themeMode: Theme;
 };
 

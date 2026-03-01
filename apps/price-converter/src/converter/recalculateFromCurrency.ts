@@ -5,7 +5,7 @@ import type { AppStoreDep } from '../state/createAppStore';
 import { fiatToBitcoin } from './fiatToBitcoin';
 import type { RecalculateFromBtcDep } from './recalculateFromBtc';
 
-export interface RecalculateFromCurrencyParams {
+interface RecalculateFromCurrencyParams {
     readonly code: CurrencyCode;
     readonly value: FiatAmount<CurrencyCode>;
 }

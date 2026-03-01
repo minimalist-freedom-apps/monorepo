@@ -3,7 +3,7 @@ import { exhaustive } from '@minimalist-apps/type-utils';
 import type { FC } from 'react';
 import type { NavigatorScreen } from '../appStore/AppState';
 
-export type AppStateProps = {
+type AppStateProps = {
     readonly themeMode: Theme;
     readonly currentScreen: NavigatorScreen;
 };
