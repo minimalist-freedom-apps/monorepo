@@ -533,6 +533,9 @@ importers:
 
   packages/android-e2e:
     dependencies:
+      '@minimalist-apps/cli':
+        specifier: workspace:*
+        version: link:../cli
       '@minimalist-apps/utils':
         specifier: workspace:*
         version: link:../utils

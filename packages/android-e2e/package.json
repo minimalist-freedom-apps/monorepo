@@ -3,7 +3,7 @@
     "version": "0.0.1",
     "type": "module",
     "scripts": {
-        "e2e:emulator": "node ./src/startEmulatorCli.mjs"
+        "e2e:emulator": "pnpm exec tsx ./src/startEmulatorCli.ts"
     },
     "exports": {
         ".": {
@@ -20,6 +20,7 @@
         }
     },
     "dependencies": {
+        "@minimalist-apps/cli": "workspace:*",
         "@minimalist-apps/utils": "workspace:*"
     },
     "devDependencies": {

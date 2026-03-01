@@ -57,7 +57,7 @@ test('smoke e2e can open app, navigate settings, and restore seed', async () => 
     await waitForElementByXPath({
         serverUrl,
         sessionId: session.sessionId,
-        xPath: "//*[contains(normalize-space(.), 'Android Sync')]",
+        xPath: "//*[@id='home-screen-title']",
     });
 
     await clickElementByXPath({
@@ -69,7 +69,7 @@ test('smoke e2e can open app, navigate settings, and restore seed', async () => 
     await waitForElementByXPath({
         serverUrl,
         sessionId: session.sessionId,
-        xPath: "//*[contains(normalize-space(.), 'Back')]",
+        xPath: "//*[@id='settings-back-button']",
     });
 
     let isRestoreTextareaVisible = false;
@@ -79,37 +79,35 @@ test('smoke e2e can open app, navigate settings, and restore seed', async () => 
             serverUrl,
             sessionId: session.sessionId,
             timeoutMs: 1_000,
-            xPath: "//textarea[@placeholder='Enter your backup phrase here']",
+            xPath: "//*[@id='restore-seed-input']",
         });
 
         isRestoreTextareaVisible = true;
-    } catch (e) {
-        console.error('error while waitForElementByXPath', e);
-    }
+    } catch {}
 
     if (!isRestoreTextareaVisible) {
         await clickElementByXPath({
             serverUrl,
             sessionId: session.sessionId,
-            xPath: "//*[self::button or self::*[@role='button']][contains(normalize-space(.), 'Restore Backup')]",
+            xPath: "//*[@id='restore-backup-button']",
         });
     }
 
     await waitForElementByXPath({
         serverUrl,
         sessionId: session.sessionId,
-        xPath: "//textarea[@placeholder='Enter your backup phrase here']",
+        xPath: "//*[@id='restore-seed-input']",
     });
 
     await typeIntoElementByXPath({
         serverUrl,
         sessionId: session.sessionId,
         text: testSeed,
-        xPath: "//textarea[@placeholder='Enter your backup phrase here']",
+        xPath: "//*[@id='restore-seed-input']",
     });
 
     await clickElementByXPathWithJavaScript({
-        xPath: "//div[contains(@class, 'ant-modal-footer')]//button[normalize-space(.)='Restore']",
+        xPath: "//*[@id='restore-modal-ok']",
         serverUrl,
         sessionId: session.sessionId,
     });
