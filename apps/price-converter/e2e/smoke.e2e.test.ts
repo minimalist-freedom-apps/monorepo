@@ -4,8 +4,7 @@ import { afterEach, test } from 'vitest';
 
 const serverUrl = process.env.E2E_APPIUM_SERVER_URL ?? 'http://127.0.0.1:4723';
 
-const appPath =
-    process.env.E2E_ANDROID_APP_PATH ?? './android/app/build/outputs/apk/debug/app-debug.apk';
+const appPath = './android/app/build/outputs/apk/debug/app-debug.apk';
 
 let currentSessionId: string | null = null;
 
