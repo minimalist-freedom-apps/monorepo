@@ -85,7 +85,7 @@ export const createCompositionRoot = (): Main => {
 
     // Modules
     const connectAppStore = createConnect({ store: appStore });
-    const { BackupMnemonic, restoreMnemonic, ensureEvoluStorage } =
+    const { BackupMnemonic, RestoreMnemonic, ensureEvoluStorage } =
         createEvoluFragmentCompositionRoot({
             connect: connectAppStore,
             store: appStore,
@@ -226,7 +226,7 @@ export const createCompositionRoot = (): Main => {
             ThemeModeSettings,
             DebugSettings,
             BackupMnemonic,
-            restoreMnemonic,
+            RestoreMnemonic,
             goBack,
         });
 
