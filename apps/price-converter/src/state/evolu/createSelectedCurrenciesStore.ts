@@ -5,8 +5,9 @@ import type { SelectedCurrency } from '../SelectedCurrency/SelectedCurrency';
 import { allSelectedCurrenciesQuery } from './allSelectedCurrenciesQuery';
 import type { EnsureEvoluStorageDep } from './schema';
 
-export type SelectedCurrenciesStore = Subscribable<ReadonlyArray<SelectedCurrency>>;
+type SelectedCurrenciesStore = Subscribable<ReadonlyArray<SelectedCurrency>>;
 
+/** @publicdep */
 export interface SelectedCurrenciesStoreDep {
     readonly selectedCurrenciesStore: SelectedCurrenciesStore;
 }

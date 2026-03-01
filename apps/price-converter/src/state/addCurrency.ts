@@ -9,11 +9,14 @@ import type { SelectedCurrency } from './SelectedCurrency/SelectedCurrency';
 
 type AddCurrencyAllDeps = AppStoreDep & EnsureEvoluStorageDep & GetSelectedCurrenciesDep;
 
-export interface AddCurrencyParams {
+interface AddCurrencyParams {
     readonly code: CurrencyCode;
 }
 
+/** @publicdep */
 export type AddCurrencyUpdateErrorType = { type: 'AddCurrencyUpdateError'; caused: unknown };
+
+/** @publicdep */
 export const AddCurrencyUpdateError = ({
     caused,
 }: {

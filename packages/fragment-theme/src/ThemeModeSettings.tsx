@@ -6,11 +6,11 @@ export type ThemeModeSettingsDep = {
     readonly ThemeModeSettings: FC;
 };
 
-export interface ThemeModeSettingsStateProps {
+interface ThemeModeSettingsStateProps {
     readonly themeMode: Theme;
 }
 
-export type ThemeModeSettingsDeps = SetThemeModeDep;
+type ThemeModeSettingsDeps = SetThemeModeDep;
 
 export const ThemeModeSettingsPure = (
     deps: ThemeModeSettingsDeps,

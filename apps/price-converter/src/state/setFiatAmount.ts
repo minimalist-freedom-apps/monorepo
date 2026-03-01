@@ -2,7 +2,7 @@ import type { CurrencyCode } from '@evolu/common';
 import type { FiatAmount } from '@minimalist-apps/fiat';
 import type { AppStoreDep } from './createAppStore';
 
-export interface SetFiatAmountParams {
+interface SetFiatAmountParams {
     readonly code: CurrencyCode;
     readonly amount: FiatAmount<CurrencyCode>;
 }

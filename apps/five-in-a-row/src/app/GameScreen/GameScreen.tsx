@@ -33,7 +33,7 @@ const buildStatusText = ({ winner, currentPlayer, boardIsFull }: BuildStatusText
     return emojiMap[currentPlayer];
 };
 
-export interface GameScreenStateProps {
+interface GameScreenStateProps {
     readonly winner: Winner | null;
     readonly currentPlayer: Player;
     readonly boardIsFull: boolean;
@@ -44,6 +44,7 @@ export interface GameScreenStateProps {
     readonly isBotThinking: boolean;
 }
 
+/** @publicdep */
 export type GameScreenDep = UndoMoveDeps & RedoMoveDeps & ResetGameDeps & PlayerMoveDep;
 
 export const GameScreenPure = (

@@ -11,7 +11,7 @@ import type { AddCurrencyDep } from '../../state/addCurrency';
 import type { NavigatorScreen } from '../../state/State';
 import { filterCurrencies } from './filterCurrencies';
 
-export type AddCurrencyScreenStateProps = {
+type AddCurrencyScreenStateProps = {
     readonly rates: CurrencyMap;
     readonly selectedCurrencies: ReadonlyArray<CurrencyCode>;
 };

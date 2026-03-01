@@ -1,8 +1,9 @@
 import type { CurrencyCode } from '@evolu/common';
 import type { AppStoreDep } from './createAppStore';
 
-export type SetFocusedCurrency = (code: CurrencyCode | 'BTC') => void;
+type SetFocusedCurrency = (code: CurrencyCode | 'BTC') => void;
 
+/** @publicdep */
 export interface SetFocusedCurrencyDep {
     readonly setFocusedCurrency: SetFocusedCurrency;
 }

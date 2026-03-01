@@ -7,7 +7,7 @@ import type { ConverterScreenDep } from './ConverterScreen/ConverterScreen';
 import type { SettingsScreenDep } from './SettingsScreen/SettingsScreen';
 import type { ThemeWrapperDep } from './ThemeWrapper';
 
-export type AppStateProps = {
+type AppStateProps = {
     readonly currentScreen: NavigatorScreen;
 };
 

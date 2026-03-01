@@ -2,7 +2,7 @@ import { SettingsRow, Switch } from '@minimalist-apps/components';
 import type { FC } from 'react';
 import type { SetDebugModeDep } from './createSetDebugMode';
 
-export type DebugSettingsStateProps = {
+type DebugSettingsStateProps = {
     readonly debugMode: boolean;
 };
 

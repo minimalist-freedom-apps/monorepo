@@ -14,7 +14,7 @@ interface BlockchainInfoResponse {
     readonly [code: string]: BlockchainInfoRateInfo;
 }
 
-export interface FetchBlockchainInfoRatesDeps {
+interface FetchBlockchainInfoRatesDeps {
     readonly fetch: typeof globalThis.fetch;
 }
 

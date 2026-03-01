@@ -1,6 +1,7 @@
 import type { CurrencyCode, Result, TypeError } from '@evolu/common';
 import type { RateBtcPerFiat } from '../converter/rate';
 
+/** @publicdep */
 export interface CurrencyCodeError extends TypeError<'CurrencyCode'> {}
 
 export interface CurrencyEntity<T extends CurrencyCode = CurrencyCode> {

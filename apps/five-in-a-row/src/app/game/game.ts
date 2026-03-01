@@ -2,8 +2,8 @@ export type Player = 'cross' | 'ring';
 
 export const startingPlayer: Player = 'cross';
 
-export const ringEmoji = '🔵';
-export const crossEmoji = '❌';
+const ringEmoji = '🔵';
+const crossEmoji = '❌';
 
 export const emojiMap: Record<Player, string> = {
     cross: crossEmoji,

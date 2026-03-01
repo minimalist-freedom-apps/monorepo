@@ -9,12 +9,12 @@ export type MoscowTimeOwnProps = {
     readonly code: CurrencyCode | 'BTC';
 };
 
-export type MoscowTimeStateProps = {
+type MoscowTimeStateProps = {
     readonly btcMode: BtcMode;
     readonly rateBtcPerFiat: RateBtcPerFiat<CurrencyCode> | undefined;
 };
 
-export type MoscowTimeProps = MoscowTimeOwnProps & MoscowTimeStateProps;
+type MoscowTimeProps = MoscowTimeOwnProps & MoscowTimeStateProps;
 
 export type MoscowTimeDep = {
     MoscowTime: FC<MoscowTimeOwnProps>;

@@ -1,13 +1,14 @@
 import { Modal, Text } from '@minimalist-apps/components';
 import type { FC } from 'react';
 
-export type RemoveCurrencyModalOwnProps = {
+type RemoveCurrencyModalOwnProps = {
     readonly code: string;
     readonly open: boolean;
     readonly onOk: () => void;
     readonly onCancel: () => void;
 };
 
+/** @publicdep */
 export type RemoveCurrencyModalDep = {
     RemoveCurrencyModal: FC<RemoveCurrencyModalOwnProps>;
 };

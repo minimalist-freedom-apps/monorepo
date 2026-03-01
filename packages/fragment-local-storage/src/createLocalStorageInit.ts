@@ -7,11 +7,13 @@ export interface LocalStorageInitDep {
     readonly localStorageInit: LocalStorageInit;
 }
 
-interface LoadInitialStateDep {
+/** @publicdep */
+export interface LoadInitialStateDep {
     readonly loadInitialState: LoadInitialState;
 }
 
-interface PersistStoreDep {
+/** @publicdep */
+export interface PersistStoreDep {
     readonly persistStore: PersistStore;
 }
 

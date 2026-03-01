@@ -10,6 +10,7 @@ export interface RecalculateFromBtcDep {
     readonly recalculateFromBtc: RecalculateFromBtc;
 }
 
+/** @publicdep */
 export type GetSelectedCurrencyCodesDep = {
     readonly getSelectedCurrencyCodes: () => ReadonlyArray<CurrencyCode>;
 };

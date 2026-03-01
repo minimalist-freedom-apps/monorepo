@@ -1,7 +1,7 @@
 import { Row } from '@minimalist-apps/components';
 import type { FC, ReactNode } from 'react';
 
-export type DebugHeaderStateProps = {
+type DebugHeaderStateProps = {
     readonly debugMode: boolean;
     readonly children?: ReactNode;
 };

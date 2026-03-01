@@ -28,7 +28,7 @@ const getTimeAgo = (timestamp: number): string => {
     return `${seconds}s ago`;
 };
 
-export type RatesLoadingStateProps = {
+type RatesLoadingStateProps = {
     readonly error: string;
     readonly lastUpdated: number | null;
 };

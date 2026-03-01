@@ -3,7 +3,7 @@ import type { FiatAmount } from '@minimalist-apps/fiat';
 import type { SetFiatAmountDep } from '../state/setFiatAmount';
 import type { RecalculateFromCurrencyDep } from './recalculateFromCurrency';
 
-export interface ChangeFiatAmountParams {
+interface ChangeFiatAmountParams {
     readonly code: CurrencyCode;
     readonly value: FiatAmount<CurrencyCode>;
 }

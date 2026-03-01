@@ -3,7 +3,7 @@ import type { GameState } from './game';
 import type { GameStoreDep } from './store/createGameStore';
 import type { PlayMoveDep } from './store/playMove';
 
-export type PlayerMoveParams = {
+type PlayerMoveParams = {
     readonly index: number;
 };
 
@@ -13,10 +13,12 @@ export type PlayerMoveDep = {
     readonly playerMove: PlayerMove;
 };
 
+/** @publicdep */
 export interface ShouldPlayBotDep {
     readonly getShouldPlayBot: () => boolean;
 }
 
+/** @publicdep */
 export interface CurrentSnapshotDep {
     readonly getCurrentSnapshot: () => GameState;
 }

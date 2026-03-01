@@ -13,7 +13,7 @@ interface BitpayResponse {
     readonly data: readonly BitpayRateItem[];
 }
 
-export interface FetchBitpayRatesDeps {
+interface FetchBitpayRatesDeps {
     readonly fetch: typeof globalThis.fetch;
 }
 
