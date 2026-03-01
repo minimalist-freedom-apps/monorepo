@@ -97,13 +97,15 @@ describe(requiredAppScripts.name, () => {
             });
         });
 
-        test('replaces existing scripts entirely', async () => {
+        test('preserves optional scripts and removes unexpected ones', async () => {
             writePackageJson({
                 dir: appDir,
                 content: {
                     name: 'test-app',
                     scripts: {
                         dev: 'webpack serve',
+                        e2e: 'custom-e2e-command',
+                        'e2e:appium': 'custom-appium-command',
                         'custom:script': 'echo hello',
                         lint: 'eslint .',
                     },
@@ -114,6 +116,10 @@ describe(requiredAppScripts.name, () => {
 
             const pkg = readPackageJson({ dir: appDir });
             const scriptKeys = typedObjectKeys(pkg.scripts as Record<string, string>);
+            expect((pkg.scripts as Record<string, string>).e2e).toBe('custom-e2e-command');
+            expect((pkg.scripts as Record<string, string>)['e2e:appium']).toBe(
+                'custom-appium-command',
+            );
             expect(scriptKeys).not.toContain('custom:script');
             expect(scriptKeys).not.toContain('lint');
         });

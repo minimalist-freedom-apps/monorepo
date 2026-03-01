@@ -33,10 +33,19 @@ export const requiredAppScripts: Requirement = {
         }
 
         const pkg = JSON.parse(readFileSync(pkgPath, 'utf-8'));
+        const existingScripts = (pkg.scripts ?? {}) as Record<string, string>;
         const newScripts: Record<string, string> = {};
 
         for (const [name, value] of expectedScripts) {
             newScripts[name] = value;
+        }
+
+        for (const name of optionalAllowedScriptNames) {
+            const existingValue = existingScripts[name];
+
+            if (typeof existingValue === 'string') {
+                newScripts[name] = existingValue;
+            }
         }
 
         pkg.scripts = newScripts;
