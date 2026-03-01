@@ -92,7 +92,6 @@ jobs:
             "${ANDROID_SDK_ROOT}/platform-tools" \
             "${ANDROID_SDK_ROOT}/platforms/android-${ANDROID_API_LEVEL}" \
             "${ANDROID_SDK_ROOT}/emulator" \
-            "${ANDROID_SDK_ROOT}/system-images/android-${ANDROID_API_LEVEL}/${ANDROID_EMULATOR_TARGET}/${ANDROID_EMULATOR_ARCH}" \
             "${ANDROID_SDK_ROOT}/licenses"
           sudo chown -R "$USER:$USER" \
             "${ANDROID_SDK_ROOT}/build-tools/35.0.0" \
@@ -100,7 +99,6 @@ jobs:
             "${ANDROID_SDK_ROOT}/platform-tools" \
             "${ANDROID_SDK_ROOT}/platforms/android-${ANDROID_API_LEVEL}" \
             "${ANDROID_SDK_ROOT}/emulator" \
-            "${ANDROID_SDK_ROOT}/system-images/android-${ANDROID_API_LEVEL}/${ANDROID_EMULATOR_TARGET}/${ANDROID_EMULATOR_ARCH}" \
             "${ANDROID_SDK_ROOT}/licenses"
 
       - name: Cache Android SDK packages
@@ -115,8 +113,7 @@ jobs:
             ${{ env.ANDROID_SDK_ROOT }}/platforms/android-${{ env.ANDROID_API_LEVEL }}
             ${{ env.ANDROID_SDK_ROOT }}/emulator
             ${{ env.ANDROID_SDK_ROOT }}/licenses
-            ${{ env.ANDROID_SDK_ROOT }}/system-images/android-${{ env.ANDROID_API_LEVEL }}/${{ env.ANDROID_EMULATOR_TARGET }}/${{ env.ANDROID_EMULATOR_ARCH }}
-          key: android-sdk-${{ runner.os }}-api${{ env.ANDROID_API_LEVEL }}-${{ env.ANDROID_EMULATOR_TARGET }}-${{ env.ANDROID_EMULATOR_ARCH }}-v1
+          key: android-sdk-${{ runner.os }}-api${{ env.ANDROID_API_LEVEL }}-${{ env.ANDROID_EMULATOR_TARGET }}-${{ env.ANDROID_EMULATOR_ARCH }}-v2
           restore-keys: |
             android-sdk-${{ runner.os }}-api${{ env.ANDROID_API_LEVEL }}-${{ env.ANDROID_EMULATOR_TARGET }}-${{ env.ANDROID_EMULATOR_ARCH }}-
 
