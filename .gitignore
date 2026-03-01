@@ -28,3 +28,6 @@ keystore.properties
 *.sw?
 
 .nx
+
+# E2E video artifacts
+apps/*/e2e-video/
