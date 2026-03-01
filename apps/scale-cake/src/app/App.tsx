@@ -5,16 +5,18 @@ import { Rectangle } from './modules/rectangle/Rectangle';
 
 export const App = () => (
     <ThemeProvider>
-        <Layout>
-            <Layout.Header>
-                <AppHeader title={`${config.appIconEmoji} ${config.appShortName}`} />
-            </Layout.Header>
-            <Layout.Content>
-                <Column gap={12}>
-                    <Circle />
-                    <Rectangle />
-                </Column>
-            </Layout.Content>
-        </Layout>
+        <div id="app">
+            <Layout>
+                <Layout.Header>
+                    <AppHeader title={`${config.appIconEmoji} ${config.appShortName}`} />
+                </Layout.Header>
+                <Layout.Content>
+                    <Column gap={12}>
+                        <Circle />
+                        <Rectangle />
+                    </Column>
+                </Layout.Content>
+            </Layout>
+        </div>
     </ThemeProvider>
 );

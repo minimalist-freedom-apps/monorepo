@@ -32,14 +32,16 @@ export const AppPure = (deps: AppDeps, { themeMode, currentScreen }: AppStatePro
 
     return (
         <ThemeProvider mode={themeMode}>
-            <Layout>
-                <Layout.Header>
-                    <deps.AppHeader />
-                </Layout.Header>
-                <Layout.Content maxWidth={760} style={{ minWidth: 360 }}>
-                    {renderScreen()}
-                </Layout.Content>
-            </Layout>
+            <div id="app">
+                <Layout>
+                    <Layout.Header>
+                        <deps.AppHeader />
+                    </Layout.Header>
+                    <Layout.Content maxWidth={760} style={{ minWidth: 360 }}>
+                        {renderScreen()}
+                    </Layout.Content>
+                </Layout>
+            </div>
         </ThemeProvider>
     );
 };

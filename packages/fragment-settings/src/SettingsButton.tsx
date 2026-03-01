@@ -9,6 +9,7 @@ export const SettingsButton = ({ onOpenSettings }: SettingsButtonProps) => (
         variant="text"
         icon={<SettingOutlined />}
         onClick={onOpenSettings}
+        testId="open-settings-button"
         ariaLabel="Settings"
     />
 );

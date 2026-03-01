@@ -52,13 +52,14 @@ export const createCompositionRoot = (): Main => {
 
     const { ThemeModeSettings } = createThemeFragmentCompositionRoot({ connect, store });
 
-    const { BackupMnemonic, RestoreMnemonic } = createEvoluFragmentCompositionRoot({
-        connect,
-        store,
-        onOwnerUsed: owner => store.setState({ activeOwnerId: owner.id }),
-        schema: Schema,
-        appName: 'android-sync-v1',
-    });
+    const { BackupMnemonic, RestoreMnemonic, ensureEvoluStorage } =
+        createEvoluFragmentCompositionRoot({
+            connect,
+            store,
+            onOwnerUsed: owner => store.setState({ activeOwnerId: owner.id }),
+            schema: Schema,
+            appName: 'android-sync-v1',
+        });
 
     const { DebugSettings } = createDebugFragmentCompositionRoot({
         connect,
@@ -102,5 +103,11 @@ export const createCompositionRoot = (): Main => {
         },
     );
 
-    return createMain({ App, localStorageInit });
+    return createMain({
+        App,
+        localStorageInit,
+        onMainInit: () => {
+            void ensureEvoluStorage();
+        },
+    });
 };

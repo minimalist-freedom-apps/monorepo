@@ -20,7 +20,7 @@ export const DebugSettingsPure = (
 
     return (
         <SettingsRow label="Debug">
-            <Switch checked={debugMode} onChange={onDebugToggle} />
+            <Switch checked={debugMode} onChange={onDebugToggle} testId="debug-mode-switch" />
         </SettingsRow>
     );
 };

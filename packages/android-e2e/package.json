@@ -21,7 +21,8 @@
     },
     "dependencies": {
         "@minimalist-apps/cli": "workspace:*",
-        "@minimalist-apps/utils": "workspace:*"
+        "@minimalist-apps/utils": "workspace:*",
+        "webdriverio": "^9.24.0"
     },
     "devDependencies": {
         "@minimalist-apps/tsconfig": "workspace:*",

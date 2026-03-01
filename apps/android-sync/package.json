@@ -15,14 +15,14 @@
         "e2e": "sh -c 'pnpm run e2e:prepare && vitest run --config vitest.e2e.config.ts'",
         "e2e-ci": "sh -c 'pnpm run e2e:prepare && vitest run --config vitest.e2e.config.ts'",
         "e2e:prepare": "pnpm build && npx cap sync android && cd android && ./gradlew assembleDebug",
-        "e2e:appium": "appium --base-path / --allow-insecure chromedriver_autodownload",
+        "e2e:appium": "APPIUM_HOME=${APPIUM_HOME:-$HOME/.appium} pnpm exec appium --base-path / --allow-insecure chromedriver_autodownload",
         "e2e:emulator": "pnpm --filter @minimalist-apps/android-e2e run e2e:emulator"
     },
     "dependencies": {
         "@capacitor/core": "^7.2.0",
         "@evolu/common": "^7.4.1",
-        "@minimalist-apps/connect": "workspace:*",
         "@minimalist-apps/components": "workspace:*",
+        "@minimalist-apps/connect": "workspace:*",
         "@minimalist-apps/fragment-debug": "workspace:*",
         "@minimalist-apps/fragment-evolu": "workspace:*",
         "@minimalist-apps/fragment-local-storage": "workspace:*",

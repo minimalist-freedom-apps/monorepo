@@ -52,13 +52,14 @@ export const createCompositionRoot = (): Main => {
     const connectAppStore = createConnect({ store });
 
     const { ThemeModeSettings } = createThemeFragmentCompositionRoot({ connect, store });
-    const { BackupMnemonic, RestoreMnemonic } = createEvoluFragmentCompositionRoot({
-        connect: connectAppStore,
-        store,
-        onOwnerUsed: owner => store.setState({ activeOwnerId: owner.id }),
-        schema: Schema,
-        appName: 'chat-v1',
-    });
+    const { BackupMnemonic, RestoreMnemonic, ensureEvoluStorage } =
+        createEvoluFragmentCompositionRoot({
+            connect: connectAppStore,
+            store,
+            onOwnerUsed: owner => store.setState({ activeOwnerId: owner.id }),
+            schema: Schema,
+            appName: 'chat-v1',
+        });
     const { DebugSettings } = createDebugFragmentCompositionRoot({
         connect: connectAppStore,
         store,
@@ -103,5 +104,11 @@ export const createCompositionRoot = (): Main => {
         },
     );
 
-    return createMain({ App, localStorageInit });
+    return createMain({
+        App,
+        localStorageInit,
+        onMainInit: () => {
+            void ensureEvoluStorage();
+        },
+    });
 };

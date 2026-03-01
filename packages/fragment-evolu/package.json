@@ -9,6 +9,10 @@
         ".": {
             "types": "./src/index.ts",
             "import": "./src/index.ts"
+        },
+        "./e2e": {
+            "types": "./e2e/index.ts",
+            "import": "./e2e/index.ts"
         }
     },
     "scripts": {
@@ -16,6 +20,7 @@
     },
     "dependencies": {
         "@evolu/common": "^7.4.1",
+        "@minimalist-apps/android-e2e": "workspace:*",
         "@minimalist-apps/connect": "workspace:*",
         "@minimalist-apps/evolu": "workspace:*",
         "@minimalist-apps/components": "workspace:*",

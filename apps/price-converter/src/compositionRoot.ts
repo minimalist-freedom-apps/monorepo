@@ -272,5 +272,11 @@ export const createCompositionRoot = (): Main => {
         ThemeWrapper,
     });
 
-    return createMain({ App, localStorageInit });
+    return createMain({
+        App,
+        localStorageInit,
+        onMainInit: () => {
+            void ensureEvoluStorage();
+        },
+    });
 };

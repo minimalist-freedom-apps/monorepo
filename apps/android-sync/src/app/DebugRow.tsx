@@ -5,4 +5,8 @@ type DebugRowProps = {
     readonly ownerId: OwnerId;
 };
 
-export const DebugRow = ({ ownerId }: DebugRowProps) => <Code inline>🐛${ownerId.slice(-6)}</Code>;
+export const DebugRow = ({ ownerId }: DebugRowProps) => (
+    <span id="debug-owner-id">
+        <Code inline>🐛{ownerId.slice(-6)}</Code>
+    </span>
+);

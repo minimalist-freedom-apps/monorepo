@@ -37,7 +37,9 @@ export const AppPure = (deps: AppDeps, { currentScreen }: AppStateProps) => {
 
     return (
         <deps.ThemeWrapper>
-            <deps.AppLayout>{renderScreen()}</deps.AppLayout>
+            <div id="app">
+                <deps.AppLayout>{renderScreen()}</deps.AppLayout>
+            </div>
         </deps.ThemeWrapper>
     );
 };
