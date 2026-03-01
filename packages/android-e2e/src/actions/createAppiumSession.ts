@@ -1,4 +1,5 @@
 import { readFile } from 'node:fs/promises';
+import { isAbsolute, resolve } from 'node:path';
 import { remote } from 'webdriverio';
 
 interface CreateAppiumSessionProps {
@@ -14,7 +15,9 @@ export const createAppiumSession = async ({
     serverUrl,
     appPath,
 }: CreateAppiumSessionProps): Promise<AppiumSession> => {
-    await readFile(appPath);
+    const resolvedAppPath = isAbsolute(appPath) ? appPath : resolve(process.cwd(), appPath);
+
+    await readFile(resolvedAppPath);
 
     const url = new URL(serverUrl);
     const protocol = url.protocol.replace(':', '');
@@ -23,7 +26,7 @@ export const createAppiumSession = async ({
 
     const browser = await remote({
         capabilities: {
-            'appium:app': appPath,
+            'appium:app': resolvedAppPath,
             // cspell:ignore uiautomator
             // cspell:ignore chromedriver
             'appium:automationName': 'UiAutomator2',

@@ -97,9 +97,8 @@ const createDefaultAppPath = ({ appDirectory }: { readonly appDirectory: string 
 
 export const createAndroidE2EGlobalSetup = ({
     appDirectory,
-    defaultAppPath,
 }: CreateAndroidE2EGlobalSetupProps): (() => Promise<void>) => {
-    const resolvedDefaultAppPath = defaultAppPath ?? createDefaultAppPath({ appDirectory });
+    const resolvedDefaultAppPath = createDefaultAppPath({ appDirectory });
 
     return async (): Promise<void> => {
         await assertBinaryAvailable({ binary: 'adb' });
@@ -107,7 +106,6 @@ export const createAndroidE2EGlobalSetup = ({
         await assertAndroidEnvironment();
         await waitForConnectedDevice();
 
-        const appPath = process.env.E2E_ANDROID_APP_PATH ?? resolvedDefaultAppPath;
-        await assertPathExists({ filePath: appPath });
+        await assertPathExists({ filePath: resolvedDefaultAppPath });
     };
 };
