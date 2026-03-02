@@ -16,12 +16,11 @@ export type RestoreMnemonicDep = {
 export const createRestoreMnemonic =
     <S extends EvoluSchema>(deps: RestoreMnemonicDeps<S>): RestoreMnemonic =>
     async mnemonic => {
+        // Destroy old appOwner
         const storage = await deps.ensureEvoluStorage();
+        await storage.dispose();
 
-        // Must happen before reload
+        // Ensure new, after set new mnemonic
         deps.setEvoluMnemonic(mnemonic);
-        deps.onOwnerUsed(await storage.evolu.appOwner);
-
-        // Evolu has issues with resource dispose, so we need to reload
-        await storage.evolu.restoreAppOwner(mnemonic, { reload: true });
+        await deps.ensureEvoluStorage();
     };

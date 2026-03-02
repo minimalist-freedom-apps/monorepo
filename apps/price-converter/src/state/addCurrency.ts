@@ -37,45 +37,45 @@ export interface AddCurrencyDep {
 export const createAddCurrency =
     (deps: AddCurrencyAllDeps): AddCurrency =>
     async ({ code }) => {
-        const { fiatAmounts, satsAmount, rates } = deps.appStore.getState();
+        try {
+            const { fiatAmounts, satsAmount, rates } = deps.appStore.getState();
 
-        if (rates[code] === undefined) {
+            if (rates[code] === undefined) {
+                return ok();
+            }
+
+            const btcAmount = satsToBtc(satsAmount);
+
+            // Compute order: place at end of list
+            const orderedCurrencies = await deps.getSelectedCurrencies();
+            const lastItem = orderedCurrencies[orderedCurrencies.length - 1] as
+                | SelectedCurrency
+                | undefined;
+            const lastIndex = lastItem !== undefined ? lastItem.order : null;
+            const newOrder = generateIndexBetween(lastIndex, null);
+
+            const { evolu, activeOwner } = await deps.ensureEvoluStorage();
+
+            evolu.upsert(
+                'currency',
+                {
+                    id: createIdFromString<'CurrencyId'>(code),
+                    currency: code,
+                    order: newOrder,
+                    isDeleted: 0,
+                },
+                { ownerId: activeOwner.id },
+            );
+
+            deps.appStore.setState({
+                fiatAmounts: {
+                    ...fiatAmounts,
+                    [code]: bitcoinToFiat(btcAmount, rates[code].rate),
+                },
+            });
+
             return ok();
+        } catch (caused) {
+            return err(AddCurrencyUpdateError({ caused }));
         }
-
-        const btcAmount = satsToBtc(satsAmount);
-
-        // Compute order: place at end of list
-        const orderedCurrencies = await deps.getSelectedCurrencies();
-        const lastItem = orderedCurrencies[orderedCurrencies.length - 1] as
-            | SelectedCurrency
-            | undefined;
-        const lastIndex = lastItem !== undefined ? lastItem.order : null;
-        const newOrder = generateIndexBetween(lastIndex, null);
-
-        const { evolu, activeOwner } = await deps.ensureEvoluStorage();
-
-        const result = evolu.upsert(
-            'currency',
-            {
-                id: createIdFromString<'CurrencyId'>(code),
-                currency: code,
-                order: newOrder,
-                isDeleted: 0,
-            },
-            { ownerId: activeOwner.id },
-        );
-
-        if (!result.ok) {
-            return err(AddCurrencyUpdateError({ caused: result.error }));
-        }
-
-        deps.appStore.setState({
-            fiatAmounts: {
-                ...fiatAmounts,
-                [code]: bitcoinToFiat(btcAmount, rates[code].rate),
-            },
-        });
-
-        return ok();
     };

@@ -1,17 +1,18 @@
 import {
+    AppName,
     createAppOwner,
     createEvolu,
     createOwnerWebSocketTransport,
+    createRun,
     type Evolu,
     type EvoluSchema,
+    getOrThrow,
     type Mnemonic,
     mnemonicToOwnerSecret,
-    SimpleName,
-    type SyncOwner,
     type UnuseOwner,
 } from '@evolu/common';
 import type { Owner, ValidateSchema } from '@evolu/common/local-first';
-import { evoluWebDeps } from '@evolu/web';
+import { createEvoluDeps } from '@evolu/web';
 import type { EnsureEvoluOwnerDep } from '@minimalist-apps/evolu';
 
 export type EvoluStorage<S extends EvoluSchema> = {
@@ -36,45 +37,58 @@ const createEvoluStorage = async <S extends EvoluSchema>({
 }: CreateEvoluStorageProps<S>): Promise<EvoluStorage<S>> => {
     const ownerSecret = mnemonicToOwnerSecret(mnemonic);
     const appOwner = createAppOwner(ownerSecret);
+    const evoluDeps = createEvoluDeps();
 
-    const evolu = createEvolu(evoluWebDeps)(schema, {
-        name: SimpleName.orThrow(appName),
-        transports: [],
-        externalAppOwner: appOwner,
-    });
+    await using run = createRun(evoluDeps);
 
-    let unuseOwner: UnuseOwner = () => {};
+    const evolu = getOrThrow(
+        await run(
+            createEvolu(schema, {
+                appName: AppName.orThrow(appName),
+                transports: [
+                    createOwnerWebSocketTransport({
+                        url: 'https://free.evoluhq.com',
+                        ownerId: appOwner.id,
+                    }),
+                ],
+                appOwner,
+            }),
+        ),
+    );
 
-    const updateRelayUrls = async (urls?: ReadonlyArray<string>) => {
-        const owner = await evolu.appOwner;
+    const unuseOwner: UnuseOwner = () => {};
 
-        const syncOwner: SyncOwner = {
-            id: owner.id,
-            encryptionKey: owner.encryptionKey,
-            writeKey: owner.writeKey,
-            ...(urls !== undefined
-                ? {
-                      transports: urls.map(url =>
-                          createOwnerWebSocketTransport({
-                              url,
-                              ownerId: owner.id,
-                          }),
-                      ),
-                  }
-                : {}),
-        };
+    // biome-ignore lint/correctness/noUnusedFunctionParameters: not implemented in new Evolu yet
+    const updateRelayUrls = (urls?: ReadonlyArray<string>): Promise<void> => {
+        // const owner = evolu.appOwner;
 
-        unuseOwner();
-        unuseOwner = evolu.useOwner(syncOwner);
+        // const syncOwner: SyncOwner = {
+        //     id: owner.id,
+        //     encryptionKey: owner.encryptionKey,
+        //     writeKey: owner.writeKey,
+        //     ...(urls !== undefined
+        //         ? {
+        //               transports: urls.map(url =>
+        //                   createOwnerWebSocketTransport({
+        //                       url,
+        //                       ownerId: owner.id,
+        //                   }),
+        //               ),
+        //           }
+        //         : {}),
+        // };
+
+        // unuseOwner();
+        // unuseOwner = evolu.useOwner(syncOwner);
+
+        return Promise.resolve();
     };
 
-    await updateRelayUrls(['https://free.evoluhq.com']); // init with default Evolu relay
+    // await updateRelayUrls(['https://free.evoluhq.com']); // init with default Evolu relay
 
     // const shardOwner = deriveShardOwner(appOwner, shardPath);
-
     // const unuseShardOwner = evolu.useOwner(shardOwner);
 
-    // Todo: new evolu API will be async
     return {
         evolu,
         // shardOwner,
@@ -83,8 +97,8 @@ const createEvoluStorage = async <S extends EvoluSchema>({
         dispose: async () => {
             // unuseShardOwner();
             unuseOwner();
-            // Must reload to properly dispose Evolu. Will be hopefully fixed in a future Evolu release.
-            await evolu.resetAppOwner({ reload: true });
+            await evolu[Symbol.asyncDispose]();
+            evoluDeps[Symbol.dispose]();
         },
     };
 };
