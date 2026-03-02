@@ -25,6 +25,7 @@
         "requirements:verify": "requirements-verify",
         "requirements:fix": "requirements-fix",
         "build:clean": "find apps -type d \\( -name android -o -name dist \\) -exec rm -rf {} +",
+        "postinstall": "node ./scripts/fix-evolu-git-deps.mjs",
         "prepare": "husky",
         "knip": "knip"
     },
