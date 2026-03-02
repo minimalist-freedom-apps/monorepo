@@ -12,8 +12,7 @@
 
 1. Connect your Android device via USB
 2. Run 
-    - `bun --filter @minimalist-apps/scale-cake dev`
-    - `bun --filter @minimalist-apps/scale-cake dev:android` in another terminal. App shall be installed and launched on your device.
+    - `bun --filter @minimalist-apps/scale-cake dev:android` App shall be installed and launched on your device.
 3. Open `chrome://inspect` in Chromium
 4. Your app should appear under **Remote Target**
 5. Click **Inspect** to open DevTools

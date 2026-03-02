@@ -1,3 +1,5 @@
+import './polyfills/disposablestackAuto';
+
 export {
     createEnsureEvoluMnemonic,
     type EnsureEvoluMnemonic,

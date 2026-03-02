@@ -204,7 +204,7 @@ class AsyncDisposableStackPolyfill {
     }
 }
 
-const globalObject = globalThis as {
+const globalObject = globalThis as unknown as {
     DisposableStack?: typeof DisposableStackPolyfill;
     AsyncDisposableStack?: typeof AsyncDisposableStackPolyfill;
 };

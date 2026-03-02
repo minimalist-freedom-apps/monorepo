@@ -39,7 +39,7 @@ const createEvoluStorage = async <S extends EvoluSchema>({
     const appOwner = createAppOwner(ownerSecret);
     const evoluDeps = createEvoluDeps();
 
-    await using run = createRun(evoluDeps);
+    const run = createRun(evoluDeps);
 
     const evolu = getOrThrow(
         await run(
