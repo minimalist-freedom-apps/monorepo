@@ -1,4 +1,4 @@
-import { describe, expect, test } from 'vitest';
+import { describe, expect, test } from 'bun:test';
 import { createEmptyBoard } from './createRootSnapshot';
 
 describe(createEmptyBoard.name, () => {

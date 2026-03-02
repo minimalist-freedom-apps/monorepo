@@ -1,4 +1,4 @@
-import { describe, expect, test } from 'vitest';
+import { describe, expect, test } from 'bun:test';
 import { createEmptyBoard } from './createRootSnapshot';
 import { findWinner, type GameBoard, getNextPlayer, isBoardFull } from './game';
 
