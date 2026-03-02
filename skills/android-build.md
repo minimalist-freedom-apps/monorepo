@@ -7,8 +7,8 @@ Check the files in the `@minimalist-apps/android-build` package and those must n
 ## How to make changes
 
 1. Edit the **template** or **generator** in `packages/android-build/src/` (templates live in `packages/android-build/src/templates/`).
-2. Run `pnpm requirements:fix` to regenerate the files for all apps.
-3. Verify with `pnpm requirements:verify`.
+2. Run `bun requirements:fix` to regenerate the files for all apps.
+3. Verify with `bun requirements:verify`.
 
 ## How it works
 

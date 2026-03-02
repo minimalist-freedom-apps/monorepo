@@ -1,6 +1,6 @@
 # Creating a New App
 
-Every app lives in `apps/` and must pass `pnpm requirements:verify`. Auto-fix what's possible with `pnpm requirements:fix`.
+Every app lives in `apps/` and must pass `bun requirements:verify`. Auto-fix what's possible with `bun requirements:fix`.
 
 ## Steps
 

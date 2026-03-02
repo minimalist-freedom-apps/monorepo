@@ -1,6 +1,10 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
+TARGET_APP_DIR="${APP_DIR:-$PWD}"
+
+cd "$TARGET_APP_DIR"
+
 get_first_connected_device() {
 	adb devices | tail -n +2 | awk '$2 == "device" { print $1 }' | head -n 1
 }

@@ -17,6 +17,10 @@
         "@types/node": "^22.0.0"
     },
     "scripts": {
+        "build": "bash ./scripts/build-android.sh",
+        "build:debug": "bash ./scripts/build-android-debug.sh",
+        "dev": "bash ./scripts/dev-android.sh",
+        "sign": "bash ./scripts/sign-apk.sh",
         "typecheck": "tsc --noEmit"
     }
 }

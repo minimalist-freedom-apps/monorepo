@@ -1,6 +1,10 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
+TARGET_APP_DIR="${APP_DIR:-$PWD}"
+
+cd "$TARGET_APP_DIR"
+
 APK_DIR="android/app/build/outputs/apk/release"
 
 APK=$(find "$APK_DIR" -name '*.apk' -print -quit 2>/dev/null || true)

@@ -5,21 +5,19 @@ import type { Requirement } from '../Requirement';
 
 const expectedScripts: ReadonlyArray<readonly [name: string, value: string]> = [
     ['dev', 'vite'],
-    ['dev:android', '../../scripts/dev-android.sh'],
+    ['dev:android', 'APP_DIR=$PWD bun run --filter @minimalist-apps/android-build dev'],
     ['build', 'vite build'],
-    ['build:android', '../../scripts/build-android.sh'],
-    ['build:android:sign', '../../scripts/sign-apk.sh'],
+    ['build:android', 'APP_DIR=$PWD bun run --filter @minimalist-apps/android-build build'],
+    [
+        'build:android:debug',
+        'APP_DIR=$PWD bun run --filter @minimalist-apps/android-build build:debug',
+    ],
+    ['build:android:sign', 'APP_DIR=$PWD bun run --filter @minimalist-apps/android-build sign'],
     ['preview', 'vite preview'],
     ['typecheck', 'tsc --noEmit'],
 ];
 
-const optionalAllowedScriptNames = [
-    'e2e',
-    'e2e-ci',
-    'e2e:prepare',
-    'e2e:appium',
-    'e2e:emulator',
-] as const;
+const optionalAllowedScriptNames = ['e2e', 'e2e-ci', 'e2e:appium', 'e2e:emulator'] as const;
 
 const requiredPackageScripts = ['typecheck', 'tsc --noEmit'] as const;
 

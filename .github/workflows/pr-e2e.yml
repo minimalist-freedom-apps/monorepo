@@ -46,7 +46,7 @@ jobs:
             git fetch --no-tags --prune origin "${{ github.event.pull_request.base.ref }}"
           fi
 
-          AFFECTED_E2E_PROJECTS="$(bunx nx show projects --affected --withTarget=e2e-ci --base=${BASE_SHA} --head=${HEAD_SHA} --json)"
+          AFFECTED_E2E_PROJECTS="$(bunx nx show projects --affected --withTarget=e2e --base=${BASE_SHA} --head=${HEAD_SHA} --json)"
 
           echo "affected e2e projects: $AFFECTED_E2E_PROJECTS"
           echo "projects=$AFFECTED_E2E_PROJECTS" >> "$GITHUB_OUTPUT"
@@ -183,7 +183,7 @@ jobs:
           emulator-options: -no-window -gpu swiftshader_indirect -noaudio -no-boot-anim -no-snapshot -wipe-data
           script: >
             rm -rf e2e-video && mkdir -p e2e-video;
-            bunx nx affected -t e2e-ci --base=${{ github.event.pull_request.base.sha || github.event.before }} --head=${{ github.sha }} --parallel=1 --output-style=stream --verbose;
+            bunx nx affected -t e2e --base=${{ github.event.pull_request.base.sha || github.event.before }} --head=${{ github.sha }} --parallel=1 --output-style=stream --verbose;
             exit $?;
 
       - name: No affected E2E projects
