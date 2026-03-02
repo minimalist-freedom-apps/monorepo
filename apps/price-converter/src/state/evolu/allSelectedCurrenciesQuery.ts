@@ -1,8 +1,10 @@
-import { sqliteTrue } from '@evolu/common';
-import type { EvoluStorage } from './schema';
+import { createQueryBuilder, sqliteTrue } from '@evolu/common';
+import { type EvoluStorage, Schema } from './schema';
+
+const createQuery = createQueryBuilder(Schema);
 
 export const allSelectedCurrenciesQuery = (storage: EvoluStorage) =>
-    storage.evolu.createQuery(db =>
+    createQuery(db =>
         db
             .selectFrom('currency')
             .select(['id', 'currency', 'order'])

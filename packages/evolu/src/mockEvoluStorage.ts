@@ -1,4 +1,4 @@
-import { String as EvoluString, id, type StoreListener } from '@evolu/common';
+import { String as EvoluString, id, type Listener } from '@evolu/common';
 import type { EvoluStorage } from './createEnsureEvoluStorage';
 
 const TodoId = id('TodoId');
@@ -27,7 +27,7 @@ export const mockEvoluStorage = (initialRows: ReadonlyArray<TodoRow>): MockEvolu
 
     return {
         evolu: {
-            subscribeQuery: () => (listener: StoreListener) => {
+            subscribeQuery: () => (listener: Listener) => {
                 onQueryChanged = listener;
 
                 return () => {
