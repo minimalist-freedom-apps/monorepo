@@ -3,7 +3,7 @@
     "version": "0.0.1",
     "type": "module",
     "scripts": {
-        "e2e:emulator": "pnpm exec tsx ./src/startEmulatorCli.ts"
+        "e2e:emulator": "bunx tsx ./src/startEmulatorCli.ts"
     },
     "exports": {
         ".": {

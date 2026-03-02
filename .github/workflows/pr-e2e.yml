@@ -30,8 +30,8 @@ jobs:
         with:
           fetch-depth: 0
 
-      - name: Setup Node + pnpm + install
-        uses: ./.github/actions/setup-node-pnpm
+      - name: Setup Node + Bun + install
+        uses: ./.github/actions/setup-node-bun
 
       - name: Detect affected E2E projects
         id: affected-e2e
@@ -46,7 +46,7 @@ jobs:
             git fetch --no-tags --prune origin "${{ github.event.pull_request.base.ref }}"
           fi
 
-          AFFECTED_E2E_PROJECTS="$(pnpm nx show projects --affected --withTarget=e2e-ci --base=${BASE_SHA} --head=${HEAD_SHA} --json)"
+          AFFECTED_E2E_PROJECTS="$(bunx nx show projects --affected --withTarget=e2e-ci --base=${BASE_SHA} --head=${HEAD_SHA} --json)"
 
           echo "affected e2e projects: $AFFECTED_E2E_PROJECTS"
           echo "projects=$AFFECTED_E2E_PROJECTS" >> "$GITHUB_OUTPUT"
@@ -130,7 +130,7 @@ jobs:
         run: |
           set -euo pipefail
 
-          INSTALLED_DRIVERS_RAW="$(pnpm --filter @minimalist-apps/android-sync exec appium driver list --installed 2>&1)"
+          INSTALLED_DRIVERS_RAW="$(bunx appium driver list --installed 2>&1 || true)"
           INSTALLED_DRIVERS="$(printf '%s\n' "$INSTALLED_DRIVERS_RAW" | sed -E 's/\x1B\[[0-9;]*[mK]//g')"
 
           echo "INSTALLED_DRIVERS:"
@@ -143,15 +143,15 @@ jobs:
 
           if printf '%s\n' "$INSTALLED_DRIVERS" | grep -Eq 'uiautomator2@'; then
             echo "Different uiautomator2 version detected. Reinstalling 4.2.3."
-            pnpm --filter @minimalist-apps/android-sync exec appium driver uninstall uiautomator2 || true
+            bunx appium driver uninstall uiautomator2 || true
           fi
 
-          pnpm --filter @minimalist-apps/android-sync exec appium driver install --source=npm appium-uiautomator2-driver@4.2.3
+          bunx appium driver install --source=npm appium-uiautomator2-driver@4.2.3
 
       - name: Start Appium server
         if: steps.affected-e2e.outputs.has_e2e == 'true'
         run: |
-          pnpm --filter @minimalist-apps/android-sync run e2e:appium > appium.log 2>&1 &
+          bunx appium --base-path / --allow-insecure chromedriver_autodownload > appium.log 2>&1 &
           for i in {1..30}; do
             if curl -sf http://127.0.0.1:4723/status > /dev/null; then
               exit 0
@@ -183,7 +183,7 @@ jobs:
           emulator-options: -no-window -gpu swiftshader_indirect -noaudio -no-boot-anim -no-snapshot -wipe-data
           script: >
             rm -rf e2e-video && mkdir -p e2e-video;
-            pnpm nx affected -t e2e-ci --base=${{ github.event.pull_request.base.sha || github.event.before }} --head=${{ github.sha }} --parallel=1 --output-style=stream --verbose;
+            bunx nx affected -t e2e-ci --base=${{ github.event.pull_request.base.sha || github.event.before }} --head=${{ github.sha }} --parallel=1 --output-style=stream --verbose;
             exit $?;
 
       - name: No affected E2E projects

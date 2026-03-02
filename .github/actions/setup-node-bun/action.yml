@@ -1,6 +1,6 @@
-name: Setup Node and Bun (compat)
+name: Setup Node and Bun
 
-description: Backward-compatible setup action path using Bun, Node.js, caches, and install.
+description: Setup Bun, setup Node.js, restore caches, and install dependencies.
 
 inputs:
   bun-version:
