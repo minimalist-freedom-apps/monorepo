@@ -1,3 +1,4 @@
+import { describe, expect, test } from 'bun:test';
 import { type CurrencyCode, ok } from '@evolu/common';
 import type { AmountSats } from '@minimalist-apps/bitcoin';
 import { FiatAmount } from '@minimalist-apps/fiat';
@@ -6,7 +7,6 @@ import {
     applyMapStateLocalStorage,
 } from '@minimalist-apps/fragment-local-storage';
 import type { LocalStorage } from '@minimalist-apps/local-storage';
-import { describe, expect, test } from 'vitest';
 import { RateBtcPerFiat } from '../../converter/rate';
 import type { State } from '../State';
 import { mapLocalStorageToState, mapStateLocalStorage } from './storageMaps';

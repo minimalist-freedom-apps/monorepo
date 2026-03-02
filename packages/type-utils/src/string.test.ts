@@ -1,4 +1,4 @@
-import { describe, expect, expectTypeOf, test } from 'vitest';
+import { describe, expect, expectTypeOf, test } from 'bun:test';
 import { isNonEmpty } from './string.js';
 
 describe(isNonEmpty.name, () => {

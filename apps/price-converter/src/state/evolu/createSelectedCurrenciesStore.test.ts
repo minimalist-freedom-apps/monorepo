@@ -1,4 +1,4 @@
-import { describe, expect, test, vi } from 'vitest';
+import { describe, expect, test, vi } from 'bun:test';
 import { createSelectedCurrenciesStore } from './createSelectedCurrenciesStore';
 
 // biome-ignore lint/suspicious/noExplicitAny: test mocks
@@ -25,7 +25,7 @@ describe(createSelectedCurrenciesStore.name, () => {
         };
         const storage = {
             evolu,
-            shardOwner: { id: 'owner-id' },
+            activeOwner: { id: 'owner-id' },
         };
         const ensureEvoluStorage = vi.fn(() => Promise.resolve(asAny(storage)));
         const selectedCurrenciesStore = createSelectedCurrenciesStore({
