@@ -31,7 +31,7 @@ java -version
 Requires the Vite dev server running and a connected Android device/emulator:
 
 ```bash
-pnpm --filter @minimalist-apps/scale-cake dev:android
+bun --filter @minimalist-apps/scale-cake dev:android
 ```
 
 ### 2. Production APK
@@ -39,7 +39,7 @@ pnpm --filter @minimalist-apps/scale-cake dev:android
 Build the web assets, sync to Android, and assemble the release APK:
 
 ```bash
-pnpm --filter @minimalist-apps/scale-cake build:android
+bun --filter @minimalist-apps/scale-cake build:android
 ```
 
 The APK will be in the Gradle build output directory, named by version from `package.json`:

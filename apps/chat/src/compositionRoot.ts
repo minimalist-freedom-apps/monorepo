@@ -67,10 +67,7 @@ export const createCompositionRoot = (): Main => {
 
     const DebugHeader = connect(DebugHeaderPure, ({ store }) => ({
         debugMode: selectDebugMode(store),
-        children:
-            store.activeOwnerId === null
-                ? null
-                : createElement(DebugRow, { ownerId: store.activeOwnerId }),
+        children: createElement(DebugRow, { ownerId: store.activeOwnerId }),
     }));
 
     const AppHeader = connect(AppHeaderPure, () => ({}), {

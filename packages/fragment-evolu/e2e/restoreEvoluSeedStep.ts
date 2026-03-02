@@ -4,10 +4,9 @@ import {
     typeIntoElementById,
     waitForElementById,
     waitForElementTextByIdContains,
-    waitForReload,
 } from '@minimalist-apps/android-e2e';
 
-const EVOLU_ABANDOn_TEST_SEED =
+const EVOLU_ABANDON_TEST_SEED =
     'abandon abandon abandon abandon abandon abandon abandon abandon abandon abandon abandon about';
 
 const EVOLU_ABANDON_SEED_OWNER_ID = 'F0xh0HpiAx5shgCgtGENww';
@@ -54,7 +53,7 @@ const restoreSeed = async ({ serverUrl, sessionId }: RestoreEvoluSeedStepProps) 
         id: 'restore-seed-input',
         serverUrl,
         sessionId,
-        text: EVOLU_ABANDOn_TEST_SEED,
+        text: EVOLU_ABANDON_TEST_SEED,
     });
 
     await clickElementById({
@@ -99,6 +98,26 @@ const assertDebugOwnerSuffix = async ({ serverUrl, sessionId }: RestoreEvoluSeed
     });
 };
 
+const goBackFromSettings = async ({ serverUrl, sessionId }: RestoreEvoluSeedStepProps) => {
+    await waitForElementById({
+        id: 'settings-back-button',
+        serverUrl,
+        sessionId,
+    });
+
+    await clickElementById({
+        id: 'settings-back-button',
+        serverUrl,
+        sessionId,
+    });
+
+    await waitForElementById({
+        id: 'open-settings-button',
+        serverUrl,
+        sessionId,
+    });
+};
+
 export const restoreEvoluSeedStep = async (props: RestoreEvoluSeedStepProps): Promise<void> => {
     await openSettings(props);
 
@@ -106,7 +125,7 @@ export const restoreEvoluSeedStep = async (props: RestoreEvoluSeedStepProps): Pr
 
     await restoreSeed(props);
 
-    await waitForReload(props);
+    await goBackFromSettings(props);
 
     await assertDebugOwnerSuffix(props);
 };

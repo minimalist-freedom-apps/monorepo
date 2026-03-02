@@ -58,8 +58,7 @@ const createEvoluStorage = async <S extends EvoluSchema>({
 
     const unuseOwner: UnuseOwner = () => {};
 
-    // biome-ignore lint/correctness/noUnusedFunctionParameters: not implemented in new Evolu yet
-    const updateRelayUrls = (urls?: ReadonlyArray<string>): Promise<void> => {
+    const updateRelayUrls = (/*urls?: ReadonlyArray<string>*/): Promise<void> => {
         // const owner = evolu.appOwner;
 
         // const syncOwner: SyncOwner = {
