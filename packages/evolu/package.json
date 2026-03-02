@@ -19,7 +19,15 @@
         "@evolu/web": "git+https://github.com/evoluhq/evolu.git#common-v8",
         "@minimalist-apps/connect": "workspace:*",
         "@okikio/sharedworker": "^1.1.0",
-        "promise.try": "^2.0.1"
+        "abort-signal-polyfill": "^1.0.0",
+        "promise.try": "^2.0.1",
+        "set.prototype.difference": "^1.1.7",
+        "set.prototype.intersection": "^1.1.8",
+        "set.prototype.isdisjointfrom": "^1.1.5",
+        "set.prototype.issubsetof": "^1.1.4",
+        "set.prototype.issupersetof": "^1.1.3",
+        "set.prototype.symmetricdifference": "^1.1.3",
+        "set.prototype.union": "^1.1.3"
     },
     "devDependencies": {
         "@minimalist-apps/tsconfig": "workspace:*",
