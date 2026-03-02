@@ -36,6 +36,24 @@ describe(DebugSettingsPure.name, () => {
         expect(screen.getByRole('switch')).not.toBeChecked();
     });
 
+    test('does not show runtime debug info when debug mode is off', () => {
+        const { DebugSettings } = createTestComponent(false);
+
+        render(<DebugSettings />);
+
+        expect(screen.queryByText(/Environment Debug Info/i)).not.toBeInTheDocument();
+    });
+
+    test('shows runtime debug info when debug mode is on', () => {
+        const { DebugSettings } = createTestComponent(true);
+
+        render(<DebugSettings />);
+
+        expect(screen.getByText(/Environment Debug Info/i)).toBeInTheDocument();
+        expect(screen.getByText(/runtime: browser/i)).toBeInTheDocument();
+        expect(screen.getByText(/userAgent:/i)).toBeInTheDocument();
+    });
+
     test('calls setDebugMode with true when toggling from off', async () => {
         const user = userEvent.setup();
         const { setDebugMode, DebugSettings } = createTestComponent(false);
