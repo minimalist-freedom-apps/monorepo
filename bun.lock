@@ -31,6 +31,7 @@
         "@evolu/common": "git+https://github.com/evoluhq/evolu.git#common-v8",
         "@minimalist-apps/components": "workspace:*",
         "@minimalist-apps/connect": "workspace:*",
+        "@minimalist-apps/evolu": "workspace:*",
         "@minimalist-apps/fragment-debug": "workspace:*",
         "@minimalist-apps/fragment-evolu": "workspace:*",
         "@minimalist-apps/fragment-local-storage": "workspace:*",
@@ -68,6 +69,7 @@
         "@evolu/common": "git+https://github.com/evoluhq/evolu.git#common-v8",
         "@minimalist-apps/components": "workspace:*",
         "@minimalist-apps/connect": "workspace:*",
+        "@minimalist-apps/evolu": "workspace:*",
         "@minimalist-apps/fragment-debug": "workspace:*",
         "@minimalist-apps/fragment-evolu": "workspace:*",
         "@minimalist-apps/fragment-local-storage": "workspace:*",
@@ -772,7 +774,7 @@
 
     "@eslint/plugin-kit": ["@eslint/plugin-kit@0.4.1", "", { "dependencies": { "@eslint/core": "0.17.0", "levn": "0.4.1" } }, "sha512-43/qtrDUokr7LJqoF2c3+RInu/t4zfrpYdoSDfYyhg52rwLV6TnOvdG4fXm7IkSB3wErkcmJS9iEhjVtOSEjjA=="],
 
-    "@evolu/common": ["@evolu/monorepo@github:evoluhq/evolu#461979c", {}, "evoluhq-evolu-461979c", "sha512-sPqYzePXluywZt0nJIj6FuunPyePcKAvTMrvo7W+mX+iZB+R0epB5SzMPC/Ef1sBmY2umRuOKlbJ9Hv+roJ56A=="],
+    "@evolu/common": ["@evolu/monorepo@github:evoluhq/evolu#00fb70a", {}, "evoluhq-evolu-00fb70a", "sha512-ioOUQX/d1Np4cKaXXYyJt3f8L54qFtkjw3mOXaazG8VkUh/C5qARN6YZNnex9BFtWhS2oWwRQrXS/ldLMQo+7g=="],
 
     "@evolu/web": ["@evolu/monorepo@github:evoluhq/evolu#00fb70a", {}, "evoluhq-evolu-00fb70a", "sha512-ioOUQX/d1Np4cKaXXYyJt3f8L54qFtkjw3mOXaazG8VkUh/C5qARN6YZNnex9BFtWhS2oWwRQrXS/ldLMQo+7g=="],
 
@@ -2592,7 +2594,17 @@
 
     "@isaacs/cliui/wrap-ansi": ["wrap-ansi@8.1.0", "", { "dependencies": { "ansi-styles": "6.2.3", "string-width": "5.1.2", "strip-ansi": "7.2.0" } }, "sha512-si7QWI6zUMq56bESFvagtmzMdGOtoxfR+Sez11Mobfc7tm+VkUckk9bW2UeffTGVUbOksxmSw0AA2gs8g71NCQ=="],
 
-    "@minimalist-apps/evolu/@evolu/common": ["@evolu/monorepo@github:evoluhq/evolu#00fb70a", {}, "evoluhq-evolu-00fb70a", "sha512-ioOUQX/d1Np4cKaXXYyJt3f8L54qFtkjw3mOXaazG8VkUh/C5qARN6YZNnex9BFtWhS2oWwRQrXS/ldLMQo+7g=="],
+    "@minimalist-apps/bitcoin/@evolu/common": ["@evolu/monorepo@github:evoluhq/evolu#461979c", {}, "evoluhq-evolu-461979c", "sha512-sPqYzePXluywZt0nJIj6FuunPyePcKAvTMrvo7W+mX+iZB+R0epB5SzMPC/Ef1sBmY2umRuOKlbJ9Hv+roJ56A=="],
+
+    "@minimalist-apps/currency-input/@evolu/common": ["@evolu/monorepo@github:evoluhq/evolu#461979c", {}, "evoluhq-evolu-461979c", "sha512-sPqYzePXluywZt0nJIj6FuunPyePcKAvTMrvo7W+mX+iZB+R0epB5SzMPC/Ef1sBmY2umRuOKlbJ9Hv+roJ56A=="],
+
+    "@minimalist-apps/fiat/@evolu/common": ["@evolu/monorepo@github:evoluhq/evolu#461979c", {}, "evoluhq-evolu-461979c", "sha512-sPqYzePXluywZt0nJIj6FuunPyePcKAvTMrvo7W+mX+iZB+R0epB5SzMPC/Ef1sBmY2umRuOKlbJ9Hv+roJ56A=="],
+
+    "@minimalist-apps/five-in-a-row/@evolu/common": ["@evolu/monorepo@github:evoluhq/evolu#461979c", {}, "evoluhq-evolu-461979c", "sha512-sPqYzePXluywZt0nJIj6FuunPyePcKAvTMrvo7W+mX+iZB+R0epB5SzMPC/Ef1sBmY2umRuOKlbJ9Hv+roJ56A=="],
+
+    "@minimalist-apps/fractional-indexing/@evolu/common": ["@evolu/monorepo@github:evoluhq/evolu#461979c", {}, "evoluhq-evolu-461979c", "sha512-sPqYzePXluywZt0nJIj6FuunPyePcKAvTMrvo7W+mX+iZB+R0epB5SzMPC/Ef1sBmY2umRuOKlbJ9Hv+roJ56A=="],
+
+    "@minimalist-apps/price-converter/@evolu/common": ["@evolu/monorepo@github:evoluhq/evolu#461979c", {}, "evoluhq-evolu-461979c", "sha512-sPqYzePXluywZt0nJIj6FuunPyePcKAvTMrvo7W+mX+iZB+R0epB5SzMPC/Ef1sBmY2umRuOKlbJ9Hv+roJ56A=="],
 
     "@oxc-resolver/binding-wasm32-wasi/@napi-rs/wasm-runtime": ["@napi-rs/wasm-runtime@1.1.1", "", { "dependencies": { "@emnapi/core": "1.8.1", "@emnapi/runtime": "1.8.1", "@tybys/wasm-util": "0.10.1" } }, "sha512-p64ah1M1ld8xjWv3qbvFwHiFVWrq1yFvV4f7w+mzaqiR4IlSgkqhcRdHwsGgomwzBH51sRY4NEowLxnaBjcW/A=="],
 
