@@ -15,7 +15,7 @@
         "typecheck": "tsc --noEmit"
     },
     "dependencies": {
-        "@evolu/common": "^7.4.1",
+        "@evolu/common": "git+https://github.com/evoluhq/evolu.git#common-v8",
         "fractional-indexing": "^3.2.0"
     },
     "devDependencies": {

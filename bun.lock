@@ -29,7 +29,7 @@
       "version": "1.0.0",
       "dependencies": {
         "@capacitor/core": "^7.2.0",
-        "@evolu/common": "^7.4.1",
+        "@evolu/common": "git+https://github.com/evoluhq/evolu.git#common-v8",
         "@minimalist-apps/components": "workspace:*",
         "@minimalist-apps/connect": "workspace:*",
         "@minimalist-apps/fragment-debug": "workspace:*",
@@ -66,7 +66,7 @@
       "version": "1.0.0",
       "dependencies": {
         "@capacitor/core": "^7.2.0",
-        "@evolu/common": "^7.4.1",
+        "@evolu/common": "git+https://github.com/evoluhq/evolu.git#common-v8",
         "@minimalist-apps/components": "workspace:*",
         "@minimalist-apps/connect": "workspace:*",
         "@minimalist-apps/fragment-debug": "workspace:*",
@@ -101,7 +101,7 @@
       "version": "1.2.0",
       "dependencies": {
         "@capacitor/core": "^7.2.0",
-        "@evolu/common": "^7.4.1",
+        "@evolu/common": "git+https://github.com/evoluhq/evolu.git#common-v8",
         "@minimalist-apps/components": "workspace:*",
         "@minimalist-apps/connect": "workspace:*",
         "@minimalist-apps/fragment-local-storage": "workspace:*",
@@ -135,7 +135,7 @@
       "version": "1.0.0",
       "dependencies": {
         "@capacitor/core": "^7.2.0",
-        "@evolu/common": "^7.4.1",
+        "@evolu/common": "git+https://github.com/evoluhq/evolu.git#common-v8",
         "@minimalist-apps/bitcoin": "workspace:*",
         "@minimalist-apps/components": "workspace:*",
         "@minimalist-apps/connect": "workspace:*",
@@ -226,7 +226,7 @@
       "name": "@minimalist-apps/bitcoin",
       "version": "1.0.0",
       "dependencies": {
-        "@evolu/common": "^7.4.1",
+        "@evolu/common": "git+https://github.com/evoluhq/evolu.git#common-v8",
         "@minimalist-apps/number": "workspace:*",
       },
       "devDependencies": {
@@ -282,7 +282,7 @@
       "name": "@minimalist-apps/currency-input",
       "version": "1.0.0",
       "dependencies": {
-        "@evolu/common": "^7.4.1",
+        "@evolu/common": "git+https://github.com/evoluhq/evolu.git#common-v8",
         "@minimalist-apps/bitcoin": "workspace:*",
         "@minimalist-apps/components": "workspace:*",
         "@minimalist-apps/fiat": "workspace:*",
@@ -318,8 +318,8 @@
       "name": "@minimalist-apps/evolu",
       "version": "1.0.0",
       "dependencies": {
-        "@evolu/common": "^7.4.1",
-        "@evolu/web": "^2.4.0",
+        "@evolu/common": "git+https://github.com/evoluhq/evolu.git#common-v8",
+        "@evolu/web": "git+https://github.com/evoluhq/evolu.git#common-v8",
         "@minimalist-apps/connect": "workspace:*",
       },
       "devDependencies": {
@@ -331,7 +331,7 @@
       "name": "@minimalist-apps/fiat",
       "version": "1.0.0",
       "dependencies": {
-        "@evolu/common": "^7.4.1",
+        "@evolu/common": "git+https://github.com/evoluhq/evolu.git#common-v8",
         "@minimalist-apps/number": "workspace:*",
       },
       "devDependencies": {
@@ -343,7 +343,7 @@
       "name": "@minimalist-apps/fractional-indexing",
       "version": "1.0.0",
       "dependencies": {
-        "@evolu/common": "^7.4.1",
+        "@evolu/common": "git+https://github.com/evoluhq/evolu.git#common-v8",
         "fractional-indexing": "^3.2.0",
       },
       "devDependencies": {
@@ -377,7 +377,7 @@
       "name": "@minimalist-apps/fragment-evolu",
       "version": "1.0.0",
       "dependencies": {
-        "@evolu/common": "^7.4.1",
+        "@evolu/common": "git+https://github.com/evoluhq/evolu.git#common-v8",
         "@minimalist-apps/android-e2e": "workspace:*",
         "@minimalist-apps/components": "workspace:*",
         "@minimalist-apps/connect": "workspace:*",
@@ -462,7 +462,7 @@
       "name": "@minimalist-apps/local-storage",
       "version": "0.0.1",
       "dependencies": {
-        "@evolu/common": "^7.4.1",
+        "@evolu/common": "git+https://github.com/evoluhq/evolu.git#common-v8",
       },
       "devDependencies": {
         "@minimalist-apps/tsconfig": "workspace:*",
@@ -771,11 +771,9 @@
 
     "@eslint/plugin-kit": ["@eslint/plugin-kit@0.4.1", "", { "dependencies": { "@eslint/core": "0.17.0", "levn": "0.4.1" } }, "sha512-43/qtrDUokr7LJqoF2c3+RInu/t4zfrpYdoSDfYyhg52rwLV6TnOvdG4fXm7IkSB3wErkcmJS9iEhjVtOSEjjA=="],
 
-    "@evolu/common": ["@evolu/common@7.4.1", "", { "dependencies": { "@noble/ciphers": "2.1.1", "@noble/hashes": "2.0.1", "@scure/bip39": "2.0.1", "kysely": "0.28.11", "msgpackr": "1.11.8", "random": "5.4.1" } }, "sha512-aTSJN9GXvoN5FXo8DRiYdbMVFvBUG6N7Ygu7n5viyauPKBwylyAazZuDcBlQg5MxVv6YrF5c6w2LRG/OR2UIHA=="],
+    "@evolu/common": ["@evolu/monorepo@github:evoluhq/evolu#461979c", {}, "evoluhq-evolu-461979c", "sha512-sPqYzePXluywZt0nJIj6FuunPyePcKAvTMrvo7W+mX+iZB+R0epB5SzMPC/Ef1sBmY2umRuOKlbJ9Hv+roJ56A=="],
 
-    "@evolu/sqlite-wasm": ["@evolu/sqlite-wasm@2.2.4", "", { "bin": { "sqlite-wasm": "bin/index.js" } }, "sha512-/JOYGFN93QspD2C8HVxVgBUlFWqJ1IpaVuIhEB53u4+ZvE+D3LjpNHDYiwZgf0n7VaH2U85OY5eV3wUrWc3scg=="],
-
-    "@evolu/web": ["@evolu/web@2.4.0", "", { "dependencies": { "@evolu/sqlite-wasm": "2.2.4", "idb-keyval": "6.2.2" }, "peerDependencies": { "@evolu/common": "7.4.1" } }, "sha512-yba/zpcsf5qu4NEup/rx8j+M/7DmF53/EZXKe8NRJefPJxrCxjzteOgUqUMkHQwYDRdH3u81KMoPlhvdBgSFuQ=="],
+    "@evolu/web": ["@evolu/monorepo@github:evoluhq/evolu#461979c", {}, "evoluhq-evolu-461979c", "sha512-sPqYzePXluywZt0nJIj6FuunPyePcKAvTMrvo7W+mX+iZB+R0epB5SzMPC/Ef1sBmY2umRuOKlbJ9Hv+roJ56A=="],
 
     "@exodus/bytes": ["@exodus/bytes@1.11.0", "", { "optionalDependencies": { "@noble/hashes": "2.0.1" } }, "sha512-wO3vd8nsEHdumsXrjGO/v4p6irbg7hy9kvIeR6i2AwylZSk4HJdWgL0FNaVquW1+AweJcdvU1IEpuIWk/WaPnA=="],
 
@@ -933,18 +931,6 @@
 
     "@minimalist-apps/window": ["@minimalist-apps/window@workspace:packages/window"],
 
-    "@msgpackr-extract/msgpackr-extract-darwin-arm64": ["@msgpackr-extract/msgpackr-extract-darwin-arm64@3.0.3", "", { "os": "darwin", "cpu": "arm64" }, "sha512-QZHtlVgbAdy2zAqNA9Gu1UpIuI8Xvsd1v8ic6B2pZmeFnFcMWiPLfWXh7TVw4eGEZ/C9TH281KwhVoeQUKbyjw=="],
-
-    "@msgpackr-extract/msgpackr-extract-darwin-x64": ["@msgpackr-extract/msgpackr-extract-darwin-x64@3.0.3", "", { "os": "darwin", "cpu": "x64" }, "sha512-mdzd3AVzYKuUmiWOQ8GNhl64/IoFGol569zNRdkLReh6LRLHOXxU4U8eq0JwaD8iFHdVGqSy4IjFL4reoWCDFw=="],
-
-    "@msgpackr-extract/msgpackr-extract-linux-arm": ["@msgpackr-extract/msgpackr-extract-linux-arm@3.0.3", "", { "os": "linux", "cpu": "arm" }, "sha512-fg0uy/dG/nZEXfYilKoRe7yALaNmHoYeIoJuJ7KJ+YyU2bvY8vPv27f7UKhGRpY6euFYqEVhxCFZgAUNQBM3nw=="],
-
-    "@msgpackr-extract/msgpackr-extract-linux-arm64": ["@msgpackr-extract/msgpackr-extract-linux-arm64@3.0.3", "", { "os": "linux", "cpu": "arm64" }, "sha512-YxQL+ax0XqBJDZiKimS2XQaf+2wDGVa1enVRGzEvLLVFeqa5kx2bWbtcSXgsxjQB7nRqqIGFIcLteF/sHeVtQg=="],
-
-    "@msgpackr-extract/msgpackr-extract-linux-x64": ["@msgpackr-extract/msgpackr-extract-linux-x64@3.0.3", "", { "os": "linux", "cpu": "x64" }, "sha512-cvwNfbP07pKUfq1uH+S6KJ7dT9K8WOE4ZiAcsrSes+UY55E/0jLYc+vq+DO7jlmqRb5zAggExKm0H7O/CBaesg=="],
-
-    "@msgpackr-extract/msgpackr-extract-win32-x64": ["@msgpackr-extract/msgpackr-extract-win32-x64@3.0.3", "", { "os": "win32", "cpu": "x64" }, "sha512-x0fWaQtYp4E6sktbsdAqnehxDgEc/VwM7uLsRCYWaiGu0ykYdZPiS8zCWdnjHwyiumousxfBm4SO31eXqwEZhQ=="],
-
     "@napi-rs/canvas": ["@napi-rs/canvas@0.1.90", "", { "optionalDependencies": { "@napi-rs/canvas-android-arm64": "0.1.90", "@napi-rs/canvas-darwin-arm64": "0.1.90", "@napi-rs/canvas-darwin-x64": "0.1.90", "@napi-rs/canvas-linux-arm-gnueabihf": "0.1.90", "@napi-rs/canvas-linux-arm64-gnu": "0.1.90", "@napi-rs/canvas-linux-arm64-musl": "0.1.90", "@napi-rs/canvas-linux-riscv64-gnu": "0.1.90", "@napi-rs/canvas-linux-x64-gnu": "0.1.90", "@napi-rs/canvas-linux-x64-musl": "0.1.90", "@napi-rs/canvas-win32-arm64-msvc": "0.1.90", "@napi-rs/canvas-win32-x64-msvc": "0.1.90" } }, "sha512-vO9j7TfwF9qYCoTOPO39yPLreTRslBVOaeIwhDZkizDvBb0MounnTl0yeWUMBxP4Pnkg9Sv+3eQwpxNUmTwt0w=="],
 
     "@napi-rs/canvas-android-arm64": ["@napi-rs/canvas-android-arm64@0.1.90", "", { "os": "android", "cpu": "arm64" }, "sha512-3JBULVF+BIgr7yy7Rf8UjfbkfFx4CtXrkJFD1MDgKJ83b56o0U9ciT8ZGTCNmwWkzu8RbNKlyqPP3KYRG88y7Q=="],
@@ -970,8 +956,6 @@
     "@napi-rs/canvas-win32-x64-msvc": ["@napi-rs/canvas-win32-x64-msvc@0.1.90", "", { "os": "win32", "cpu": "x64" }, "sha512-48CxEbzua5BP4+OumSZdi3+9fNiRO8cGNBlO2bKwx1PoyD1R2AXzPtqd/no1f1uSl0W2+ihOO1v3pqT3USbmgQ=="],
 
     "@napi-rs/wasm-runtime": ["@napi-rs/wasm-runtime@0.2.4", "", { "dependencies": { "@emnapi/core": "1.8.1", "@emnapi/runtime": "1.8.1", "@tybys/wasm-util": "0.9.0" } }, "sha512-9zESzOO5aDByvhIAsOy9TbpZ0Ur2AJbUI7UT73kcUTS2mxAMHOBaa1st/jAymNoCtvrit99kkzT1FZuXVcgfIQ=="],
-
-    "@noble/ciphers": ["@noble/ciphers@2.1.1", "", {}, "sha512-bysYuiVfhxNJuldNXlFEitTVdNnYUc+XNJZd7Qm2a5j1vZHgY+fazadNFWFaMK/2vye0JVlxV3gHmC0WDfAOQw=="],
 
     "@noble/hashes": ["@noble/hashes@2.0.1", "", {}, "sha512-XlOlEbQcE9fmuXxrVTXCTlG2nlRXa9Rj3rr5Ue/+tX+nmkgbX720YHh0VR3hBF9xDvwnb8D2shVGOwNx+ulArw=="],
 
@@ -1184,10 +1168,6 @@
     "@rollup/rollup-win32-x64-gnu": ["@rollup/rollup-win32-x64-gnu@4.57.1", "", { "os": "win32", "cpu": "x64" }, "sha512-VMBH2eOOaKGtIJYleXsi2B8CPVADrh+TyNxJ4mWPnKfLB/DBUmzW+5m1xUrcwWoMfSLagIRpjUFeW5CO5hyciQ=="],
 
     "@rollup/rollup-win32-x64-msvc": ["@rollup/rollup-win32-x64-msvc@4.57.1", "", { "os": "win32", "cpu": "x64" }, "sha512-mxRFDdHIWRxg3UfIIAwCm6NzvxG0jDX/wBN6KsQFTvKFqqg9vTrWUE68qEjHt19A5wwx5X5aUi2zuZT7YR0jrA=="],
-
-    "@scure/base": ["@scure/base@2.0.0", "", {}, "sha512-3E1kpuZginKkek01ovG8krQ0Z44E3DHPjc5S2rjJw9lZn3KSQOs8S7wqikF/AH7iRanHypj85uGyxk0XAyC37w=="],
-
-    "@scure/bip39": ["@scure/bip39@2.0.1", "", { "dependencies": { "@noble/hashes": "2.0.1", "@scure/base": "2.0.0" } }, "sha512-PsxdFj/d2AcJcZDX1FXN3dDgitDDTmwf78rKZq1a6c1P1Nan1X/Sxc7667zU3U+AN60g7SxxP0YCVw2H/hBycg=="],
 
     "@sidvind/better-ajv-errors": ["@sidvind/better-ajv-errors@3.0.1", "", { "dependencies": { "kleur": "4.1.5" }, "peerDependencies": { "ajv": "8.17.1" } }, "sha512-++1mEYIeozfnwWI9P1ECvOPoacy+CgDASrmGvXPMCcqgx0YUzB01vZ78uHdQ443V6sTY+e9MzHqmN9DOls02aw=="],
 
@@ -1787,8 +1767,6 @@
 
     "iconv-lite": ["iconv-lite@0.6.3", "", { "dependencies": { "safer-buffer": "2.1.2" } }, "sha512-4fCk79wshMdzMp2rH06qWrJE4iolqLhCUH+OiuIgU++RB0+94NlDL81atO7GX55uUKueo0txHNtvEyI6D7WdMw=="],
 
-    "idb-keyval": ["idb-keyval@6.2.2", "", {}, "sha512-yjD9nARJ/jb1g+CvD0tlhUHOrJ9Sy0P8T9MF3YaLlHnSRpwPfpTX0XIvpmw3gAJUmEu3FiICLBDPXVwyEvrleg=="],
-
     "ieee754": ["ieee754@1.2.1", "", {}, "sha512-dcyqhDvX1C46lXZcVqCpK+FtMRQVdIMN6/Df5js2zouUsqG7I6sFxitIC+7KYK29KdXOLHdu9zL4sFnoVQnqaA=="],
 
     "ignore": ["ignore@7.0.5", "", {}, "sha512-Hs59xBNfUIunMFgWAbGX5cq6893IbWg4KnrjbYwX3tx0ztorVgTDA6B2sxf8ejHJ4wz8BqGUMYlnzNBer5NvGg=="],
@@ -1893,8 +1871,6 @@
 
     "kuler": ["kuler@2.0.0", "", {}, "sha512-Xq9nH7KlWZmXAtodXDDRE7vs6DU1gTU8zYDHDiWLSip45Egwq3plLHzPn27NgvzL2r1LMPC1vdqh98sQxtqj4A=="],
 
-    "kysely": ["kysely@0.28.11", "", {}, "sha512-zpGIFg0HuoC893rIjYX1BETkVWdDnzTzF5e0kWXJFg5lE0k1/LfNWBejrcnOFu8Q2Rfq/hTDTU7XLUM8QOrpzg=="],
-
     "lazystream": ["lazystream@1.0.1", "", { "dependencies": { "readable-stream": "2.3.8" } }, "sha512-b94GiNHQNy6JNTrt5w6zNyffMrNkXZb3KTkCZJb2V1xaEGCk093vkZ2jk3tpaeP33/OiXC+WvK9AxUebnf5nbw=="],
 
     "levn": ["levn@0.4.1", "", { "dependencies": { "prelude-ls": "1.2.1", "type-check": "0.4.0" } }, "sha512-+bT2uH4E5LGE7h/n3evcS/sQlJXCpIp6ym8OWJ5eV6+67Dsql/LaaT7qJBAt2rzfoa/5QBGBhxDix1dMt2kQKQ=="],
@@ -1987,10 +1963,6 @@
 
     "ms": ["ms@2.1.3", "", {}, "sha512-6FlzubTLZG3J2a/NVCAleEhjzq5oxgHyaCU9yYXvcLsvoVaHJq/s5xXI6/XXP6tz7R9xAOtHnSO/tXtF3WRTlA=="],
 
-    "msgpackr": ["msgpackr@1.11.8", "", { "optionalDependencies": { "msgpackr-extract": "3.0.3" } }, "sha512-bC4UGzHhVvgDNS7kn9tV8fAucIYUBuGojcaLiz7v+P63Lmtm0Xeji8B/8tYKddALXxJLpwIeBmUN3u64C4YkRA=="],
-
-    "msgpackr-extract": ["msgpackr-extract@3.0.3", "", { "dependencies": { "node-gyp-build-optional-packages": "5.2.2" }, "optionalDependencies": { "@msgpackr-extract/msgpackr-extract-darwin-arm64": "3.0.3", "@msgpackr-extract/msgpackr-extract-darwin-x64": "3.0.3", "@msgpackr-extract/msgpackr-extract-linux-arm": "3.0.3", "@msgpackr-extract/msgpackr-extract-linux-arm64": "3.0.3", "@msgpackr-extract/msgpackr-extract-linux-x64": "3.0.3", "@msgpackr-extract/msgpackr-extract-win32-x64": "3.0.3" }, "bin": { "download-msgpackr-prebuilds": "bin/download-prebuilds.js" } }, "sha512-P0efT1C9jIdVRefqjzOQ9Xml57zpOXnIuS+csaB4MdZbTdmGDLo8XhzBG1N7aO11gKDDkJvBLULeFTo46wwreA=="],
-
     "mv": ["mv@2.1.1", "", { "dependencies": { "mkdirp": "0.5.6", "ncp": "2.0.0", "rimraf": "2.4.5" } }, "sha512-at/ZndSy3xEGJ8i0ygALh8ru9qy7gWW1cmkaqBN29JmMlIvM//MEO9y1sk/avxuwnPcfhkejkLsuPxH81BrkSg=="],
 
     "nanoid": ["nanoid@3.3.11", "", { "bin": { "nanoid": "bin/nanoid.cjs" } }, "sha512-N8SpfPUnUp1bK+PMYW8qSWdl9U+wwNWI4QKxOYDy9JAro3WMX7p2OeVRF9v+347pnakNevPmiHhNmZ2HbFA76w=="],
@@ -2004,8 +1976,6 @@
     "negotiator": ["negotiator@0.6.3", "", {}, "sha512-+EUsqGPLsM+j/zdChZjsnX51g4XrHFOIXwfnCVPGlQk/k5giakcKsuxCObBRu6DSm9opw/O6slWbJdghQM4bBg=="],
 
     "netmask": ["netmask@2.0.2", "", {}, "sha512-dBpDMdxv9Irdq66304OLfEmQ9tbNRFnFTuZiLo+bD+r332bBmMJ8GBLXklIXXgxd3+v9+KUnZaUR5PJMa75Gsg=="],
-
-    "node-gyp-build-optional-packages": ["node-gyp-build-optional-packages@5.2.2", "", { "dependencies": { "detect-libc": "2.1.2" }, "bin": { "node-gyp-build-optional-packages": "bin.js", "node-gyp-build-optional-packages-optional": "optional.js", "node-gyp-build-optional-packages-test": "build-test.js" } }, "sha512-s+w+rBWnpTMwSFbaE0UXsRlg7hU4FjekKU4eyAih5T8nJuNZT1nNsskXpxmeqSK9UzkBl6UgRlnKc8hz8IEqOw=="],
 
     "node-machine-id": ["node-machine-id@1.1.12", "", {}, "sha512-QNABxbrPa3qEIfrE6GOJ7BYIuignnJw7iQ2YPbc3Nla1HzRJjXzZOiikfF8m7eAMfichLt3M4VgLOetqgDmgGQ=="],
 
@@ -2128,8 +2098,6 @@
     "query-selector-shadow-dom": ["query-selector-shadow-dom@1.0.1", "", {}, "sha512-lT5yCqEBgfoMYpf3F2xQRK7zEr1rhIIZuceDK6+xRkJQ4NMbHTwXqk4NkwDwQMNqXgG9r9fyHnzwNVs6zV5KRw=="],
 
     "queue-microtask": ["queue-microtask@1.2.3", "", {}, "sha512-NuaNSa6flKT5JaSYQzJok04JzTL1CA6aGhv5rfLW3PgqA+M2ChpZQnAC8h8i4ZFkBS8X5RqkDBHA7r4hej3K9A=="],
-
-    "random": ["random@5.4.1", "", {}, "sha512-HtccRkYkAXCbj9bqsyGKGlicyeZ5AsQgs49fEuUO/BvrJ7WOQqXPjdg1CZrFjBkoT75ozrWlQXJ7TcXXLv2ISQ=="],
 
     "range-parser": ["range-parser@1.2.1", "", {}, "sha512-Hrgsx+orqoygnmhFbKaHE6c296J+HTAQXoxEF6gNupROmmGJRoyzfG3ccAveqCBrwr/2yxQ5BVd/GTl5agOwSg=="],
 

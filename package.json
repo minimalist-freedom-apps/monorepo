@@ -18,7 +18,7 @@
         "lint:biome:fix": "biome lint --error-on-warnings --write .",
         "lint:eslint": "eslint .",
         "lint:eslint:fix": "eslint --fix .",
-        "typecheck": "bun run --workspaces typecheck",
+        "typecheck": "bun run --workspaces --if-present typecheck",
         "test": "vitest run",
         "test:affected": "nx affected -t test",
         "e2e:affected": "nx affected -t e2e-ci",

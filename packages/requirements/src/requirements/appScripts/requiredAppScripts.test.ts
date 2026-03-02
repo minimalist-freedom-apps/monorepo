@@ -1,4 +1,4 @@
-import { mkdtempSync, readFileSync, rmSync, writeFileSync } from 'node:fs';
+import { mkdirSync, mkdtempSync, readFileSync, rmSync, writeFileSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
 import { typedObjectKeys } from '@minimalist-apps/type-utils';
@@ -25,9 +25,12 @@ const readPackageJson = ({ dir }: ReadPackageJsonProps): Record<string, unknown>
 
 describe(requiredAppScripts.name, () => {
     let appDir: string;
+    let packageDir: string;
 
     beforeEach(() => {
         appDir = createTempDir();
+        packageDir = join(appDir, 'packages', 'demo-package');
+        mkdirSync(packageDir, { recursive: true });
     });
 
     afterEach(() => {
@@ -197,6 +200,77 @@ describe(requiredAppScripts.name, () => {
             });
 
             const errors = requiredAppScripts.verify({ appDir });
+            expect(errors).toEqual([]);
+        });
+
+        test('package fix enforces required typecheck script and keeps other scripts', async () => {
+            writePackageJson({
+                dir: packageDir,
+                content: {
+                    name: '@minimalist-apps/demo-package',
+                    scripts: {
+                        lint: 'eslint .',
+                    },
+                },
+            });
+
+            const errors = await requiredAppScripts.fix({ appDir: packageDir });
+            expect(errors).toEqual([]);
+
+            const pkg = readPackageJson({ dir: packageDir });
+            expect(pkg.scripts).toEqual({
+                lint: 'eslint .',
+                typecheck: 'tsc --noEmit',
+            });
+        });
+    });
+
+    describe('verify', () => {
+        test('package verify requires typecheck script', () => {
+            writePackageJson({
+                dir: packageDir,
+                content: {
+                    name: '@minimalist-apps/demo-package',
+                    scripts: {
+                        lint: 'eslint .',
+                    },
+                },
+            });
+
+            const errors = requiredAppScripts.verify({ appDir: packageDir });
+            expect(errors).toEqual(['missing script "typecheck"']);
+        });
+
+        test('package verify checks typecheck script value', () => {
+            writePackageJson({
+                dir: packageDir,
+                content: {
+                    name: '@minimalist-apps/demo-package',
+                    scripts: {
+                        typecheck: 'tsc --pretty --noEmit',
+                    },
+                },
+            });
+
+            const errors = requiredAppScripts.verify({ appDir: packageDir });
+            expect(errors).toEqual([
+                'script "typecheck" value mismatch — expected "tsc --noEmit", found "tsc --pretty --noEmit"',
+            ]);
+        });
+
+        test('package verify allows extra scripts when typecheck is correct', () => {
+            writePackageJson({
+                dir: packageDir,
+                content: {
+                    name: '@minimalist-apps/demo-package',
+                    scripts: {
+                        typecheck: 'tsc --noEmit',
+                        lint: 'eslint .',
+                    },
+                },
+            });
+
+            const errors = requiredAppScripts.verify({ appDir: packageDir });
             expect(errors).toEqual([]);
         });
     });

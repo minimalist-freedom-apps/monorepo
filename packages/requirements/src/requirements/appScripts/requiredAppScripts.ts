@@ -1,5 +1,5 @@
 import { existsSync, readFileSync, writeFileSync } from 'node:fs';
-import { join } from 'node:path';
+import { join, sep } from 'node:path';
 import { typedObjectKeys } from '@minimalist-apps/type-utils';
 import type { Requirement } from '../Requirement';
 
@@ -21,9 +21,17 @@ const optionalAllowedScriptNames = [
     'e2e:emulator',
 ] as const;
 
+const requiredPackageScripts = ['typecheck', 'tsc --noEmit'] as const;
+
+const isPackageDir = (dirPath: string): boolean => {
+    const pathSegments = dirPath.split(sep);
+
+    return pathSegments.includes('packages');
+};
+
 export const requiredAppScripts: Requirement = {
     name: 'has required scripts',
-    applies: ({ projectType }) => projectType === 'app',
+    applies: () => true,
     // biome-ignore lint/suspicious/useAwait: interface requires Promise return
     fix: async ({ appDir }) => {
         const pkgPath = join(appDir, 'package.json');
@@ -34,6 +42,17 @@ export const requiredAppScripts: Requirement = {
 
         const pkg = JSON.parse(readFileSync(pkgPath, 'utf-8'));
         const existingScripts = (pkg.scripts ?? {}) as Record<string, string>;
+
+        if (isPackageDir(appDir)) {
+            pkg.scripts = {
+                ...existingScripts,
+                [requiredPackageScripts[0]]: requiredPackageScripts[1],
+            };
+            writeFileSync(pkgPath, `${JSON.stringify(pkg, null, 4)}\n`);
+
+            return [];
+        }
+
         const newScripts: Record<string, string> = {};
 
         for (const [name, value] of expectedScripts) {
@@ -68,12 +87,28 @@ export const requiredAppScripts: Requirement = {
             return ['no "scripts" in package.json'];
         }
 
+        if (isPackageDir(appDir)) {
+            const [scriptName, scriptValue] = requiredPackageScripts;
+
+            if (!(scriptName in scripts)) {
+                return [`missing script "${scriptName}"`];
+            }
+
+            if (scripts[scriptName] !== scriptValue) {
+                return [
+                    `script "${scriptName}" value mismatch — expected "${scriptValue}", found "${scripts[scriptName]}"`,
+                ];
+            }
+
+            return [];
+        }
+
         const expectedNames = expectedScripts.map(([name]) => name);
         const scriptKeys = typedObjectKeys(scripts);
 
         const missing = expectedNames.filter(s => !scriptKeys.includes(s));
         const extra = scriptKeys.filter(
-            s => !expectedNames.includes(s) && !optionalAllowedScriptNames.includes(s),
+            s => !expectedNames.includes(s) && !(optionalAllowedScriptNames as ReadonlyArray<string>).includes(s),
         );
 
         for (const name of missing) {
