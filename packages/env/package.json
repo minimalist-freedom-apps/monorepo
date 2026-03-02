@@ -11,5 +11,8 @@
     "devDependencies": {
         "@minimalist-apps/tsconfig": "workspace:*",
         "@types/node": "^22.0.0"
+    },
+    "scripts": {
+        "typecheck": "tsc --noEmit"
     }
 }

@@ -108,7 +108,9 @@ export const requiredAppScripts: Requirement = {
 
         const missing = expectedNames.filter(s => !scriptKeys.includes(s));
         const extra = scriptKeys.filter(
-            s => !expectedNames.includes(s) && !(optionalAllowedScriptNames as ReadonlyArray<string>).includes(s),
+            s =>
+                !expectedNames.includes(s) &&
+                !(optionalAllowedScriptNames as ReadonlyArray<string>).includes(s),
         );
 
         for (const name of missing) {
