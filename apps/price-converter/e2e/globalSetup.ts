@@ -5,6 +5,4 @@ const appDirectory = fileURLToPath(new URL('..', import.meta.url));
 
 export const runAndroidE2EGlobalSetup = createAndroidE2EGlobalSetup({ appDirectory });
 
-if (import.meta.main) {
-    await runAndroidE2EGlobalSetup();
-}
+await runAndroidE2EGlobalSetup();
