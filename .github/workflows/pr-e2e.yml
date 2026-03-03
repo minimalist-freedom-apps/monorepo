@@ -151,7 +151,7 @@ jobs:
       - name: Start Appium server
         if: steps.affected-e2e.outputs.has_e2e == 'true'
         run: |
-          bunx appium --base-path / --allow-insecure chromedriver_autodownload > appium.log 2>&1 &
+          bunx appium --base-path / --allow-insecure '*:chromedriver_autodownload' > appium.log 2>&1 &
           for i in {1..30}; do
             if curl -sf http://127.0.0.1:4723/status > /dev/null; then
               exit 0
