@@ -19,7 +19,10 @@ const expectedScripts: ReadonlyArray<readonly [name: string, value: string]> = [
 
 const optionalAllowedScriptNames = ['e2e', 'e2e-ci', 'e2e:appium', 'e2e:emulator'] as const;
 
-const requiredPackageScripts = ['typecheck', 'tsc --noEmit'] as const;
+const requiredPackageScripts: ReadonlyArray<readonly [string, string]> = [
+    ['test', 'vitest run'],
+    ['typecheck', 'tsc --noEmit'],
+];
 
 const isPackageDir = (dirPath: string): boolean => {
     const pathSegments = dirPath.split(sep);
@@ -29,7 +32,7 @@ const isPackageDir = (dirPath: string): boolean => {
 
 export const requiredAppScripts: Requirement = {
     name: 'has required scripts',
-    applies: () => true,
+    applies: ({ projectType, dirName }) => !(projectType === 'package' && dirName === 'tsconfig'),
     // biome-ignore lint/suspicious/useAwait: interface requires Promise return
     fix: async ({ appDir }) => {
         const pkgPath = join(appDir, 'package.json');
@@ -42,9 +45,15 @@ export const requiredAppScripts: Requirement = {
         const existingScripts = (pkg.scripts ?? {}) as Record<string, string>;
 
         if (isPackageDir(appDir)) {
+            const requiredScripts: Record<string, string> = {};
+
+            for (const [name, value] of requiredPackageScripts) {
+                requiredScripts[name] = value;
+            }
+
             pkg.scripts = {
                 ...existingScripts,
-                [requiredPackageScripts[0]]: requiredPackageScripts[1],
+                ...requiredScripts,
             };
             writeFileSync(pkgPath, `${JSON.stringify(pkg, null, 4)}\n`);
 
@@ -86,16 +95,16 @@ export const requiredAppScripts: Requirement = {
         }
 
         if (isPackageDir(appDir)) {
-            const [scriptName, scriptValue] = requiredPackageScripts;
+            for (const [scriptName, scriptValue] of requiredPackageScripts) {
+                if (!(scriptName in scripts)) {
+                    return [`missing script "${scriptName}"`];
+                }
 
-            if (!(scriptName in scripts)) {
-                return [`missing script "${scriptName}"`];
-            }
-
-            if (scripts[scriptName] !== scriptValue) {
-                return [
-                    `script "${scriptName}" value mismatch — expected "${scriptValue}", found "${scripts[scriptName]}"`,
-                ];
+                if (scripts[scriptName] !== scriptValue) {
+                    return [
+                        `script "${scriptName}" value mismatch — expected "${scriptValue}", found "${scripts[scriptName]}"`,
+                    ];
+                }
             }
 
             return [];

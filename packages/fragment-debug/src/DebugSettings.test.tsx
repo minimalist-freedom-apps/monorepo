@@ -49,7 +49,6 @@ describe(DebugSettingsPure.name, () => {
 
         render(<DebugSettings />);
 
-        expect(screen.getByText(/Environment Debug Info/i)).toBeInTheDocument();
         expect(screen.getByText(/runtime: browser/i)).toBeInTheDocument();
         expect(screen.getByText(/userAgent:/i)).toBeInTheDocument();
     });

@@ -64,7 +64,7 @@ describe(CurrencyRowPure.name, () => {
         await user.click(screen.getByRole('button', { name: 'OK' }));
 
         await waitFor(() => {
-            expect(screen.getByText(/Fiat currencies inevitably die/i)).not.toBeVisible();
+            expect(screen.getByRole('dialog')).toHaveClass('ant-zoom-leave');
         });
     });
 });

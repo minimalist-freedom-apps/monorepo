@@ -38,6 +38,12 @@ describe(requiredAppScripts.name, () => {
     });
 
     describe('fix', () => {
+        test('does not apply to tsconfig package', () => {
+            expect(
+                requiredAppScripts.applies({ projectType: 'package', dirName: 'tsconfig' }),
+            ).toBe(false);
+        });
+
         test('returns error when package.json is missing', async () => {
             const errors = await requiredAppScripts.fix({ appDir });
 
@@ -207,7 +213,7 @@ describe(requiredAppScripts.name, () => {
             expect(errors).toEqual([]);
         });
 
-        test('package fix enforces required typecheck script and keeps other scripts', async () => {
+        test('package fix enforces required test and typecheck scripts and keeps other scripts', async () => {
             writePackageJson({
                 dir: packageDir,
                 content: {
@@ -224,18 +230,36 @@ describe(requiredAppScripts.name, () => {
             const pkg = readPackageJson({ dir: packageDir });
             expect(pkg.scripts).toEqual({
                 lint: 'eslint .',
+                test: 'vitest run',
                 typecheck: 'tsc --noEmit',
             });
         });
     });
 
     describe('verify', () => {
+        test('package verify requires test script', () => {
+            writePackageJson({
+                dir: packageDir,
+                content: {
+                    name: '@minimalist-apps/demo-package',
+                    scripts: {
+                        typecheck: 'tsc --noEmit',
+                        lint: 'eslint .',
+                    },
+                },
+            });
+
+            const errors = requiredAppScripts.verify({ appDir: packageDir });
+            expect(errors).toEqual(['missing script "test"']);
+        });
+
         test('package verify requires typecheck script', () => {
             writePackageJson({
                 dir: packageDir,
                 content: {
                     name: '@minimalist-apps/demo-package',
                     scripts: {
+                        test: 'vitest run',
                         lint: 'eslint .',
                     },
                 },
@@ -251,6 +275,7 @@ describe(requiredAppScripts.name, () => {
                 content: {
                     name: '@minimalist-apps/demo-package',
                     scripts: {
+                        test: 'vitest run',
                         typecheck: 'tsc --pretty --noEmit',
                     },
                 },
@@ -262,12 +287,31 @@ describe(requiredAppScripts.name, () => {
             ]);
         });
 
-        test('package verify allows extra scripts when typecheck is correct', () => {
+        test('package verify checks test script value', () => {
             writePackageJson({
                 dir: packageDir,
                 content: {
                     name: '@minimalist-apps/demo-package',
                     scripts: {
+                        test: 'bun test',
+                        typecheck: 'tsc --noEmit',
+                    },
+                },
+            });
+
+            const errors = requiredAppScripts.verify({ appDir: packageDir });
+            expect(errors).toEqual([
+                'script "test" value mismatch — expected "vitest run", found "bun test"',
+            ]);
+        });
+
+        test('package verify allows extra scripts when test/typecheck are correct', () => {
+            writePackageJson({
+                dir: packageDir,
+                content: {
+                    name: '@minimalist-apps/demo-package',
+                    scripts: {
+                        test: 'vitest run',
                         typecheck: 'tsc --noEmit',
                         lint: 'eslint .',
                     },

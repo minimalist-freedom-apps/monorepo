@@ -25,7 +25,7 @@ describe(createSelectedCurrenciesStore.name, () => {
         };
         const storage = {
             evolu,
-            shardOwner: { id: 'owner-id' },
+            activeOwner: { id: 'owner-id' },
         };
         const ensureEvoluStorage = vi.fn(() => Promise.resolve(asAny(storage)));
         const selectedCurrenciesStore = createSelectedCurrenciesStore({

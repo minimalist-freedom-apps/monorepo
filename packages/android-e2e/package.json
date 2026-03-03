@@ -4,6 +4,7 @@
     "type": "module",
     "scripts": {
         "e2e:emulator": "bunx tsx ./src/startEmulatorCli.ts",
+        "test": "vitest run",
         "typecheck": "tsc --noEmit"
     },
     "exports": {
