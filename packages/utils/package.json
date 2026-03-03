@@ -12,6 +12,7 @@
         "@minimalist-apps/tsconfig": "workspace:*"
     },
     "scripts": {
+        "test": "vitest run",
         "typecheck": "tsc --noEmit"
     }
 }

@@ -21,6 +21,7 @@
         "build:debug": "bash ./scripts/build-android-debug.sh",
         "dev": "bash ./scripts/dev-android.sh",
         "sign": "bash ./scripts/sign-apk.sh",
+        "test": "vitest run",
         "typecheck": "tsc --noEmit"
     }
 }

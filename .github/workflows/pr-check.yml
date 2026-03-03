@@ -39,7 +39,7 @@ jobs:
       - name: Verify requirements
         run: bun run requirements:verify
 
-      - name: Run affected unit tests
+      - name: Run affected unit tests (Vitest targets)
         run: bunx nx affected -t test --base=${{ github.event.pull_request.base.sha || github.event.before }} --head=${{ github.sha }} --parallel=3 --output-style=stream --verbose
 
       - name: Build apps
