@@ -1,106 +1,10 @@
-import {
-    AppName,
-    createAppOwner,
-    createEvolu,
-    createOwnerWebSocketTransport,
-    createRun,
-    type Evolu,
-    type EvoluSchema,
-    getOrThrow,
-    type Mnemonic,
-    mnemonicToOwnerSecret,
-    type UnuseOwner,
-} from '@evolu/common';
+import { createRun, type EvoluSchema } from '@evolu/common';
 import type { Owner, ValidateSchema } from '@evolu/common/local-first';
 import { createEvoluDeps } from '@evolu/web';
 import type { EnsureEvoluOwnerDep } from '@minimalist-apps/evolu';
+import { createEvoluStorage, type EvoluStorage } from './createEvoluStorage';
 
-export type EvoluStorage<S extends EvoluSchema> = {
-    readonly evolu: Evolu<S>;
-    readonly activeOwner: Owner;
-    readonly updateRelayUrls: (urls: ReadonlyArray<string>) => Promise<void>;
-    readonly dispose: () => Promise<void>;
-};
-
-interface CreateEvoluStorageProps<S extends EvoluSchema> {
-    readonly mnemonic: Mnemonic;
-    readonly schema: ValidateSchema<S> extends never ? S : ValidateSchema<S>;
-    readonly appName: string;
-    // readonly shardPath: NonEmptyReadonlyArray<string | number>;
-}
-
-const createEvoluStorage = async <S extends EvoluSchema>({
-    mnemonic,
-    schema,
-    appName,
-    // shardPath,
-}: CreateEvoluStorageProps<S>): Promise<EvoluStorage<S>> => {
-    const ownerSecret = mnemonicToOwnerSecret(mnemonic);
-    const appOwner = createAppOwner(ownerSecret);
-    const evoluDeps = createEvoluDeps();
-
-    const run = createRun(evoluDeps);
-
-    const evolu = getOrThrow(
-        await run(
-            createEvolu(schema, {
-                appName: AppName.orThrow(appName),
-                transports: [
-                    createOwnerWebSocketTransport({
-                        url: 'https://free.evoluhq.com',
-                        ownerId: appOwner.id,
-                    }),
-                ],
-                appOwner,
-            }),
-        ),
-    );
-
-    const unuseOwner: UnuseOwner = () => {};
-
-    const updateRelayUrls = (/*urls?: ReadonlyArray<string>*/): Promise<void> => {
-        // const owner = evolu.appOwner;
-
-        // const syncOwner: SyncOwner = {
-        //     id: owner.id,
-        //     encryptionKey: owner.encryptionKey,
-        //     writeKey: owner.writeKey,
-        //     ...(urls !== undefined
-        //         ? {
-        //               transports: urls.map(url =>
-        //                   createOwnerWebSocketTransport({
-        //                       url,
-        //                       ownerId: owner.id,
-        //                   }),
-        //               ),
-        //           }
-        //         : {}),
-        // };
-
-        // unuseOwner();
-        // unuseOwner = evolu.useOwner(syncOwner);
-
-        return Promise.resolve();
-    };
-
-    // await updateRelayUrls(['https://free.evoluhq.com']); // init with default Evolu relay
-
-    // const shardOwner = deriveShardOwner(appOwner, shardPath);
-    // const unuseShardOwner = evolu.useOwner(shardOwner);
-
-    return {
-        evolu,
-        // shardOwner,
-        activeOwner: appOwner,
-        updateRelayUrls,
-        dispose: async () => {
-            // unuseShardOwner();
-            unuseOwner();
-            await evolu[Symbol.asyncDispose]();
-            evoluDeps[Symbol.dispose]();
-        },
-    };
-};
+export type { EvoluStorage } from './createEvoluStorage';
 
 export type EnsureEvoluStorage<S extends EvoluSchema> = () => Promise<EvoluStorage<S>>;
 
@@ -129,14 +33,41 @@ export const createEnsureEvoluStorage = <S extends EvoluSchema>({
 
     return async () => {
         if (storage === null) {
-            storage = await createEvoluStorage({
-                mnemonic: deps.ensureEvoluOwner(),
-                schema,
-                appName,
-                // shardPath,
-            });
+            const evoluDeps = createEvoluDeps();
+            const run = createRun(evoluDeps);
 
-            deps.onOwnerUsed(storage.activeOwner);
+            const createdStorage = await createEvoluStorage(
+                {
+                    run,
+                },
+                {
+                    mnemonic: deps.ensureEvoluOwner(),
+                    schema,
+                    appName,
+                    onOwnerUsed: deps.onOwnerUsed,
+                    // shardPath,
+                },
+            );
+
+            storage = {
+                get evolu() {
+                    return createdStorage.evolu;
+                },
+                get activeOwner() {
+                    return createdStorage.activeOwner;
+                },
+                updateRelayUrls: urls => createdStorage.updateRelayUrls(urls),
+                restoreOwner: mnemonic => createdStorage.restoreOwner(mnemonic),
+                dispose: async () => {
+                    if (storage === null) {
+                        return;
+                    }
+
+                    await createdStorage.dispose();
+                    evoluDeps[Symbol.dispose]();
+                    storage = null;
+                },
+            };
         }
 
         return storage;
