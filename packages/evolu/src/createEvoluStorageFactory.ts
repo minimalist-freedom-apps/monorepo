@@ -1,14 +1,7 @@
 import type { Mnemonic } from '@evolu/common';
 import type { Evolu, EvoluSchema, Owner, ValidateSchema } from '@evolu/common/local-first';
 import type { CreateEvolu } from './createEvoluFactory';
-
-export type EvoluStorage<S extends EvoluSchema> = {
-    readonly evolu: Evolu<S>;
-    readonly activeOwner: Owner;
-    readonly updateRelayUrls: (urls: ReadonlyArray<string>) => Promise<void>;
-    readonly restoreOwner: (mnemonic: Mnemonic) => Promise<void>;
-    readonly dispose: () => Promise<void>;
-};
+import type { EvoluStorage } from './EvoluStorage';
 
 type CreateEvoluStorageFactoryDeps<S extends EvoluSchema> = {
     readonly createEvolu: CreateEvolu<S>;
@@ -19,6 +12,7 @@ type CreateEvoluStorageProps<S extends EvoluSchema> = {
     readonly schema: ValidateSchema<S> extends never ? S : ValidateSchema<S>;
     readonly appName: string;
     readonly onOwnerUsed?: (owner: Owner) => void;
+    readonly urls: ReadonlyArray<string>;
 };
 
 type CreateEvoluStorage<S extends EvoluSchema> = (
@@ -33,6 +27,10 @@ const disposeEvolu = async <S extends EvoluSchema>(evolu: Evolu<S>) => {
     await evolu[Symbol.asyncDispose]();
 };
 
+/**
+ * Responsibility: Creation of the Storage object that wraps Evolu and provides
+ *                 additional lifecycle management (dispose, restoreOwner, etc).
+ */
 export const createEvoluStorageFactory =
     <S extends EvoluSchema>(deps: CreateEvoluStorageFactoryDeps<S>): CreateEvoluStorage<S> =>
     async props => {
@@ -40,6 +38,7 @@ export const createEvoluStorageFactory =
             mnemonic: props.mnemonic,
             schema: props.schema,
             appName: props.appName,
+            urls: props.urls,
         });
 
         let evolu = createdEvolu.evolu;
@@ -59,6 +58,7 @@ export const createEvoluStorageFactory =
                 mnemonic,
                 schema: props.schema,
                 appName: props.appName,
+                urls: props.urls,
             });
             evolu = created.evolu;
             activeOwner = created.owner;

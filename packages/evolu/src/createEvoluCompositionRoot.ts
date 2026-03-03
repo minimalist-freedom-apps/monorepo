@@ -8,7 +8,7 @@ import {
     type OnOwnerUsedDep,
 } from './createEnsureEvoluStorage';
 import { createEvoluFactory } from './createEvoluFactory';
-import { createEvoluStorageFactory } from './createEvoluStorage';
+import { createEvoluStorageFactory } from './createEvoluStorageFactory';
 
 type CreateEvoluCompositionRootDeps<S extends EvoluSchema> = EnsureEvoluOwnerDep &
     OnOwnerUsedDep & {
