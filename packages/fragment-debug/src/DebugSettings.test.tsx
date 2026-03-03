@@ -1,7 +1,7 @@
-import { describe, expect, test, vi } from 'bun:test';
 import { DebugSettingsPure } from '@minimalist-apps/fragment-debug';
 import { render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
+import { describe, expect, test, vi } from 'vitest';
 
 const createTestComponent = (debugMode: boolean) => {
     const setDebugMode = vi.fn();
@@ -41,7 +41,7 @@ describe(DebugSettingsPure.name, () => {
 
         render(<DebugSettings />);
 
-        expect(screen.queryByText(/runtime: browser/i)).not.toBeInTheDocument();
+        expect(screen.queryByText(/Environment Debug Info/i)).not.toBeInTheDocument();
     });
 
     test('shows runtime debug info when debug mode is on', () => {
@@ -49,6 +49,7 @@ describe(DebugSettingsPure.name, () => {
 
         render(<DebugSettings />);
 
+        expect(screen.getByText(/Environment Debug Info/i)).toBeInTheDocument();
         expect(screen.getByText(/runtime: browser/i)).toBeInTheDocument();
         expect(screen.getByText(/userAgent:/i)).toBeInTheDocument();
     });

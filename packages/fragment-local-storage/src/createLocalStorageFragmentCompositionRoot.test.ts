@@ -1,6 +1,6 @@
-import { describe, expect, test } from 'bun:test';
 import { createStore } from '@minimalist-apps/mini-store';
 import { typedObjectEntries } from '@minimalist-apps/type-utils';
+import { describe, expect, test } from 'vitest';
 import {
     createLocalStorageFragmentCompositionRoot,
     type MapLocalStorageToState,

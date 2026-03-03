@@ -1,4 +1,4 @@
-import { describe, expect, test } from 'bun:test';
+import { describe, expect, test } from 'vitest';
 import { addThousandSeparators } from './addThousandSeparators';
 
 describe(addThousandSeparators.name, () => {

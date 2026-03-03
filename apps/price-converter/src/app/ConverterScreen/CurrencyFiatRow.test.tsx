@@ -1,9 +1,9 @@
-import { describe, expect, test, vi } from 'bun:test';
 import { CurrencyCode, getOrThrow } from '@evolu/common';
 import type { CurrencyInputDep } from '@minimalist-apps/currency-input';
 import { render, screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import type { FC } from 'react';
+import { describe, expect, test, vi } from 'vitest';
 import { CurrencyRowPure } from './CurrencyFiatRow.js';
 import type { MoscowTimeDep } from './MoscowTime.js';
 

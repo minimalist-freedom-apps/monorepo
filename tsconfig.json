@@ -1,4 +1,4 @@
 {
     "extends": "@minimalist-apps/tsconfig/base.json",
-    "include": ["bun.test.setup.ts"]
+    "include": ["vitest.config.ts", "vitest.setup.ts"]
 }

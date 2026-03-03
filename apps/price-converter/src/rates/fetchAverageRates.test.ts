@@ -1,5 +1,5 @@
-import { describe, expect, test } from 'bun:test';
 import { CurrencyCode, err, getOrThrow, ok } from '@evolu/common';
+import { describe, expect, test } from 'vitest';
 import { type CurrencyMap, type FetchRates, FetchRatesError } from './FetchRates.js';
 import { createFetchAverageRates } from './fetchAverageRates.js';
 

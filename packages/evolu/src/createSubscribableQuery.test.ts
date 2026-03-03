@@ -1,5 +1,5 @@
-import { describe, expect, test, vi } from 'bun:test';
 import type { Query, Row } from '@evolu/common';
+import { describe, expect, test, vi } from 'vitest';
 import type { EvoluStorage } from './createEnsureEvoluStorage';
 import { createSubscribableQuery } from './createSubscribableQuery';
 import { mockEvoluStorage, type TodoTestSchema } from './mockEvoluStorage';

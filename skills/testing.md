@@ -48,17 +48,17 @@ export const testCreateTime = (options?: {
 }): TestTime => { ... };
 ```
 
-### Bun test filtering
+### Vitest filtering (https://vitest.dev/guide/filtering)
 
 ```bash
-# Run tests matching a package path pattern
-bun test packages/evolu
+# Run all tests in a package
+bun test --filter @evolu/common
 
 # Run a single file
-bun test ./packages/evolu/src/Task.test.ts
+bun test --filter @evolu/common -- Task
 
-# Run a single test by name
-bun test packages/evolu --test-name-pattern "yields and returns ok"
+# Run a single test by name (-t flag)
+bun test --filter @evolu/common -- -t "yields and returns ok"
 ```
 
 ### Data-provider pattern for simple tests

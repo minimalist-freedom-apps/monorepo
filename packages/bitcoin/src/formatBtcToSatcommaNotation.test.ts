@@ -1,4 +1,4 @@
-import { describe, expect, test } from 'bun:test';
+import { describe, expect, test } from 'vitest';
 import { formatBtcToSatcommaNotation } from './formatBtcToSatcommaNotation.js';
 import type { AmountBtc } from './types.js';
 

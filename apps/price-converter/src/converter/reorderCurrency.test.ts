@@ -1,6 +1,6 @@
-import { describe, expect, test, vi } from 'bun:test';
 import { CurrencyCode, getOrThrow, type Owner } from '@evolu/common';
 import { asFractionalIndex } from '@minimalist-apps/fractional-indexing';
+import { describe, expect, test, vi } from 'vitest';
 import type { EvoluStorage } from '../state/evolu/schema.js';
 import type { SelectedCurrency } from '../state/SelectedCurrency/SelectedCurrency.js';
 import { createReorderCurrency, type ReorderCurrencyDeps } from './reorderCurrency.js';

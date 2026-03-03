@@ -19,8 +19,7 @@
         "lint:eslint": "eslint .",
         "lint:eslint:fix": "eslint --fix .",
         "typecheck": "bun run --workspaces --if-present typecheck",
-        "test": "bun test packages apps/android-sync/src apps/chat/src apps/five-in-a-row/src apps/price-converter/src apps/scale-cake/src",
-        "test:e2e": "bun run --filter @minimalist-apps/android-sync e2e && bun run --filter @minimalist-apps/price-converter e2e",
+        "test": "vitest run",
         "test:affected": "nx affected -t test",
         "e2e:affected": "nx affected -t e2e-ci",
         "requirements:verify": "requirements-verify",
@@ -46,6 +45,7 @@
         "knip": "^5.85.0",
         "nx": "^20.4.6",
         "tsx": "^4.0.0",
-        "typescript": "^5.3.0"
+        "typescript": "^5.3.0",
+        "vitest": "^2.0.0"
     }
 }

@@ -1,5 +1,5 @@
-import { describe, expect, test, vi } from 'bun:test';
 import { CurrencyCode, getOrThrow, type Owner } from '@evolu/common';
+import { describe, expect, test, vi } from 'vitest';
 import { asRateBtcPerFiat } from '../converter/rate.js';
 import { createAddCurrency } from './addCurrency.js';
 import type { EvoluStorage } from './evolu/schema.js';

@@ -1,6 +1,6 @@
-import { describe, expect, test, vi } from 'bun:test';
 import type { CurrencyCode } from '@evolu/common';
 import { fireEvent, render, screen } from '@testing-library/react';
+import { describe, expect, test, vi } from 'vitest';
 import {
     type CurrencyInputProps,
     CurrencyInputPure,

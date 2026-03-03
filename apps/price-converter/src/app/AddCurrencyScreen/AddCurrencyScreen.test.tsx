@@ -1,8 +1,8 @@
-import { describe, expect, test, vi } from 'bun:test';
 import type { CurrencyCode } from '@evolu/common';
 import type { NotificationApi } from '@minimalist-apps/components';
 import { render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
+import { describe, expect, test, vi } from 'vitest';
 import { asRateBtcPerFiat } from '../../converter/rate.js';
 import type { CurrencyMap } from '../../rates/FetchRates.js';
 import { AddCurrencyScreenPure } from './AddCurrencyScreen.js';

@@ -5,10 +5,10 @@
     "workspaces": {
         ".": {},
         "apps/android-sync": {
-            "ignore": ["e2e/globalSetup.ts"]
+            "ignore": ["vitest.e2e.config.ts", "e2e/globalSetup.ts"]
         },
         "apps/price-converter": {
-            "ignore": ["e2e/globalSetup.ts"]
+            "ignore": ["vitest.e2e.config.ts", "e2e/globalSetup.ts"]
         }
     }
 }

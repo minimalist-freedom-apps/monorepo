@@ -1,4 +1,4 @@
-import { describe, expect, test } from 'bun:test';
+import { describe, expect, test } from 'vitest';
 import { createGameStore, selectGameViewState } from './createGameStore';
 import { createPlayMove } from './playMove';
 import { createRedoMove } from './redoMove';

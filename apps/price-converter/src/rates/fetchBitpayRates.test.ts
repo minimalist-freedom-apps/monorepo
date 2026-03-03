@@ -1,6 +1,6 @@
-import { describe, expect, test } from 'bun:test';
 import { CurrencyCode, getOrThrow } from '@evolu/common';
 import { typedObjectKeys } from '@minimalist-apps/type-utils';
+import { describe, expect, test } from 'vitest';
 import { createFetchBitpayRates } from './fetchBitpayRates.js';
 import bitpayFixture from './fixtures/bitpay.json';
 

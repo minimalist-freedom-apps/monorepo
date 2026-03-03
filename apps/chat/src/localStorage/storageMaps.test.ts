@@ -1,10 +1,10 @@
-import { describe, expect, test } from 'bun:test';
 import { getOrThrow, Mnemonic, ok } from '@evolu/common';
 import {
     applyMapLocalStorageToState,
     applyMapStateLocalStorage,
 } from '@minimalist-apps/fragment-local-storage';
 import type { LocalStorage } from '@minimalist-apps/local-storage';
+import { describe, expect, test } from 'vitest';
 import type { AppState } from '../appStore/AppState';
 import { mapLocalStorageToState, mapStateLocalStorage } from './storageMaps';
 

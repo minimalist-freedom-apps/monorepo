@@ -1,5 +1,5 @@
-import { describe, expect, test } from 'bun:test';
 import type { CurrencyCode } from '@evolu/common';
+import { describe, expect, test } from 'vitest';
 import { filterCurrencies } from './filterCurrencies.js';
 
 const currencies = [

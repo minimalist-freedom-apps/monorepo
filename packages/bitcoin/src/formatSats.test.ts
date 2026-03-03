@@ -1,4 +1,4 @@
-import { describe, expect, test } from 'bun:test';
+import { describe, expect, test } from 'vitest';
 import { formatSats } from './formatSats.js';
 import type { AmountSats } from './types.js';
 

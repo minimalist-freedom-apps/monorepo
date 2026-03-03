@@ -1,7 +1,7 @@
-import { afterEach, test } from 'bun:test';
 import { fileURLToPath } from 'node:url';
 import { createSession, deleteSession } from '@minimalist-apps/android-e2e';
 import { restoreEvoluSeedStep } from '@minimalist-apps/fragment-evolu/e2e';
+import { afterEach, test } from 'vitest';
 
 const serverUrl = process.env.E2E_APPIUM_SERVER_URL ?? 'http://127.0.0.1:4723';
 

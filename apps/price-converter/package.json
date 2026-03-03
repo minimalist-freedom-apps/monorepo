@@ -13,8 +13,8 @@
         "build:android:sign": "APP_DIR=$PWD bun run --filter @minimalist-apps/android-build sign",
         "preview": "vite preview",
         "typecheck": "tsc --noEmit",
-        "e2e": "sh -c 'bun run build:android:debug && bun run e2e/globalSetup.ts && bun test --timeout 900000 ./e2e/smoke.e2e.ts'",
-        "e2e-ci": "sh -c 'bun run build:android:debug && bun run e2e/globalSetup.ts && bun test --timeout 900000 ./e2e/smoke.e2e.ts'",
+        "e2e": "sh -c 'bun run build:android:debug && vitest run --config vitest.e2e.config.ts'",
+        "e2e-ci": "sh -c 'bun run build:android:debug && vitest run --config vitest.e2e.config.ts'",
         "e2e:appium": "APPIUM_HOME=${APPIUM_HOME:-$HOME/.appium} bunx appium --base-path / --allow-insecure chromedriver_autodownload",
         "e2e:emulator": "bun run --filter @minimalist-apps/android-e2e e2e:emulator"
     },

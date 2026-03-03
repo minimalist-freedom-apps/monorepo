@@ -1,10 +1,10 @@
-import { describe, expect, test } from 'bun:test';
 import { ok } from '@evolu/common';
 import {
     applyMapLocalStorageToState,
     applyMapStateLocalStorage,
 } from '@minimalist-apps/fragment-local-storage';
 import type { LocalStorage } from '@minimalist-apps/local-storage';
+import { describe, expect, test } from 'vitest';
 import { createGameStore } from '../app/game/store/createGameStore';
 import type { AppState } from '../appStore/AppState';
 import {

@@ -1,5 +1,5 @@
-import { describe, expect, test } from 'bun:test';
 import { Mnemonic } from '@evolu/common';
+import { describe, expect, test } from 'vitest';
 import { createEvoluFactory } from './createEvoluFactory';
 import { createEvoluStorageFactory } from './createEvoluStorage';
 import { TodoTestSchema } from './mockEvoluStorage';
