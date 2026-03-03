@@ -1,21 +1,6 @@
-import {
-    AppName,
-    createAppOwner,
-    createEvolu,
-    createOwnerWebSocketTransport,
-    getOrThrow,
-    type Mnemonic,
-    mnemonicToOwnerSecret,
-    type Run,
-    type UnuseOwner,
-} from '@evolu/common';
-import type {
-    Evolu,
-    EvoluPlatformDeps,
-    EvoluSchema,
-    Owner,
-    ValidateSchema,
-} from '@evolu/common/local-first';
+import type { Mnemonic } from '@evolu/common';
+import type { Evolu, EvoluSchema, Owner, ValidateSchema } from '@evolu/common/local-first';
+import type { CreateEvolu } from './createEvoluFactory';
 
 export type EvoluStorage<S extends EvoluSchema> = {
     readonly evolu: Evolu<S>;
@@ -25,106 +10,79 @@ export type EvoluStorage<S extends EvoluSchema> = {
     readonly dispose: () => Promise<void>;
 };
 
-export interface CreateEvoluStorageDeps {
-    readonly run: Run<EvoluPlatformDeps>;
-}
+type CreateEvoluStorageFactoryDeps<S extends EvoluSchema> = {
+    readonly createEvolu: CreateEvolu<S>;
+};
 
-interface CreateEvoluStorageProps<S extends EvoluSchema> {
+type CreateEvoluStorageProps<S extends EvoluSchema> = {
     readonly mnemonic: Mnemonic;
     readonly schema: ValidateSchema<S> extends never ? S : ValidateSchema<S>;
     readonly appName: string;
     readonly onOwnerUsed?: (owner: Owner) => void;
-}
-
-type EvoluRuntime<S extends EvoluSchema> = {
-    readonly evolu: Evolu<S>;
-    readonly activeOwner: Owner;
-    readonly unuseOwner: UnuseOwner;
 };
 
-const createEvoluRuntime = async <S extends EvoluSchema>(
-    deps: CreateEvoluStorageDeps,
-    props: {
-        readonly mnemonic: Mnemonic;
-        readonly schema: ValidateSchema<S> extends never ? S : ValidateSchema<S>;
-        readonly appName: string;
-    },
-): Promise<EvoluRuntime<S>> => {
-    const ownerSecret = mnemonicToOwnerSecret(props.mnemonic);
-    const appOwner = createAppOwner(ownerSecret);
-
-    const evolu = getOrThrow(
-        await deps.run(
-            createEvolu(props.schema, {
-                appName: AppName.orThrow(props.appName),
-                transports: [
-                    createOwnerWebSocketTransport({
-                        url: 'https://free.evoluhq.com',
-                        ownerId: appOwner.id,
-                    }),
-                ],
-                appOwner,
-            }),
-        ),
-    );
-
-    return {
-        evolu,
-        activeOwner: appOwner,
-        unuseOwner: () => {},
-    };
-};
-
-const disposeEvoluRuntime = async <S extends EvoluSchema>(runtime: EvoluRuntime<S>) => {
-    runtime.unuseOwner();
-    await runtime.evolu[Symbol.asyncDispose]();
-};
-
-export const createEvoluStorage = async <S extends EvoluSchema>(
-    deps: CreateEvoluStorageDeps,
+type CreateEvoluStorage<S extends EvoluSchema> = (
     props: CreateEvoluStorageProps<S>,
-): Promise<EvoluStorage<S>> => {
-    let runtime = await createEvoluRuntime(deps, {
-        mnemonic: props.mnemonic,
-        schema: props.schema,
-        appName: props.appName,
-    });
+) => Promise<EvoluStorage<S>>;
 
-    props.onOwnerUsed?.(runtime.activeOwner);
+export type CreateEvoluStorageDep<S extends EvoluSchema> = {
+    readonly createEvoluStorage: CreateEvoluStorage<S>;
+};
 
-    let isDisposed = false;
+const disposeEvolu = async <S extends EvoluSchema>(evolu: Evolu<S>) => {
+    await evolu[Symbol.asyncDispose]();
+};
 
-    const updateRelayUrls = (/*urls?: ReadonlyArray<string>*/): Promise<void> => Promise.resolve();
-
-    const restoreOwner = async (mnemonic: Mnemonic): Promise<void> => {
-        const previousRuntime = runtime;
-
-        runtime = await createEvoluRuntime(deps, {
-            mnemonic,
+export const createEvoluStorageFactory =
+    <S extends EvoluSchema>(deps: CreateEvoluStorageFactoryDeps<S>): CreateEvoluStorage<S> =>
+    async props => {
+        const createdEvolu = await deps.createEvolu({
+            mnemonic: props.mnemonic,
             schema: props.schema,
             appName: props.appName,
         });
 
-        props.onOwnerUsed?.(runtime.activeOwner);
-        await disposeEvoluRuntime(previousRuntime);
-    };
+        let evolu = createdEvolu.evolu;
+        let activeOwner = createdEvolu.owner;
 
-    return {
-        get evolu() {
-            return runtime.evolu;
-        },
-        get activeOwner() {
-            return runtime.activeOwner;
-        },
-        updateRelayUrls,
-        restoreOwner,
-        dispose: async () => {
-            if (isDisposed) {
-                return;
-            }
+        props.onOwnerUsed?.(activeOwner);
 
-            isDisposed = true;
-            await disposeEvoluRuntime(runtime);
-        },
+        let isDisposed = false;
+
+        const updateRelayUrls = (/*urls?: ReadonlyArray<string>*/): Promise<void> =>
+            Promise.resolve();
+
+        const restoreOwner = async (mnemonic: Mnemonic): Promise<void> => {
+            const previousEvolu = evolu;
+
+            const created = await deps.createEvolu({
+                mnemonic,
+                schema: props.schema,
+                appName: props.appName,
+            });
+            evolu = created.evolu;
+            activeOwner = created.owner;
+
+            props.onOwnerUsed?.(activeOwner);
+            await disposeEvolu(previousEvolu);
+        };
+
+        return {
+            get evolu() {
+                return evolu;
+            },
+            get activeOwner() {
+                return activeOwner;
+            },
+            updateRelayUrls,
+            restoreOwner,
+            dispose: async () => {
+                if (isDisposed) {
+                    return;
+                }
+
+                isDisposed = true;
+                await disposeEvolu(evolu);
+            },
+        };
     };
-};

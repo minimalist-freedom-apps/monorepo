@@ -9,5 +9,6 @@ export {
     type EvoluStorage,
     type OnOwnerUsedDep,
 } from './createEnsureEvoluStorage';
+export { createEvoluCompositionRoot } from './createEvoluCompositionRoot';
 export { createSubscribableQuery } from './createSubscribableQuery';
 export { installPolyfills } from './installPolyfills';

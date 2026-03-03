@@ -1,8 +1,7 @@
-import { createRun, type EvoluSchema } from '@evolu/common';
+import type { EvoluSchema } from '@evolu/common';
 import type { Owner, ValidateSchema } from '@evolu/common/local-first';
-import { createEvoluDeps } from '@evolu/web';
 import type { EnsureEvoluOwnerDep } from '@minimalist-apps/evolu';
-import { createEvoluStorage, type EvoluStorage } from './createEvoluStorage';
+import type { CreateEvoluStorageDep, EvoluStorage } from './createEvoluStorage';
 
 export type { EvoluStorage } from './createEvoluStorage';
 
@@ -17,7 +16,7 @@ export interface OnOwnerUsedDep {
 }
 
 interface CreateEnsureEvoluProps<S extends EvoluSchema> {
-    readonly deps: EnsureEvoluOwnerDep & OnOwnerUsedDep;
+    readonly deps: EnsureEvoluOwnerDep & OnOwnerUsedDep & CreateEvoluStorageDep<S>;
     readonly schema: ValidateSchema<S> extends never ? S : ValidateSchema<S>;
     readonly appName: string;
     // readonly shardPath: NonEmptyReadonlyArray<string | number>;
@@ -33,21 +32,13 @@ export const createEnsureEvoluStorage = <S extends EvoluSchema>({
 
     return async () => {
         if (storage === null) {
-            const evoluDeps = createEvoluDeps();
-            const run = createRun(evoluDeps);
-
-            const createdStorage = await createEvoluStorage(
-                {
-                    run,
-                },
-                {
-                    mnemonic: deps.ensureEvoluOwner(),
-                    schema,
-                    appName,
-                    onOwnerUsed: deps.onOwnerUsed,
-                    // shardPath,
-                },
-            );
+            const createdStorage = await deps.createEvoluStorage({
+                mnemonic: deps.ensureEvoluOwner(),
+                schema,
+                appName,
+                onOwnerUsed: deps.onOwnerUsed,
+                // shardPath,
+            });
 
             storage = {
                 get evolu() {
@@ -64,7 +55,6 @@ export const createEnsureEvoluStorage = <S extends EvoluSchema>({
                     }
 
                     await createdStorage.dispose();
-                    evoluDeps[Symbol.dispose]();
                     storage = null;
                 },
             };

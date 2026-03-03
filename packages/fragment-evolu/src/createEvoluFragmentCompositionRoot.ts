@@ -3,7 +3,7 @@ import type { ValidateSchema } from '@evolu/common/local-first';
 import type { Connect } from '@minimalist-apps/connect';
 import {
     createEnsureEvoluMnemonic,
-    createEnsureEvoluStorage,
+    createEvoluCompositionRoot,
     type EnsureEvoluStorageDep,
 } from '@minimalist-apps/evolu';
 import { toGetter } from '@minimalist-apps/mini-store';
@@ -39,11 +39,9 @@ export const createEvoluFragmentCompositionRoot = <Schema extends EvoluSchema>(
         persistMnemonic: setEvoluMnemonic,
     });
 
-    const ensureEvoluStorage = createEnsureEvoluStorage({
-        deps: {
-            ensureEvoluOwner,
-            onOwnerUsed: deps.onOwnerUsed,
-        },
+    const { ensureEvoluStorage } = createEvoluCompositionRoot<Schema>({
+        ensureEvoluOwner,
+        onOwnerUsed: deps.onOwnerUsed,
         schema: deps.schema,
         appName: deps.appName,
     });
