@@ -14,7 +14,7 @@ const mockEvoluStorage = (upsert: unknown): EvoluStorage => ({
     dispose: vi.fn(),
 });
 
-describe(createAddCurrency.name, () => {
+describe('createAddCurrency', () => {
     test('clears soft-delete flag when re-adding previously removed currency', async () => {
         const upsert = vi.fn(() => ({ ok: true }));
         const store = {

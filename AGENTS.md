@@ -17,6 +17,7 @@ See the following files:
 - [interface.md](skills/interface.md)
 - [store.md](skills/store.md)
 - [styles.md](skills/styles.md)
+- [test-selectors.md](skills/test-selectors.md)
 - [testing.md](skills/testing.md)
 - [tsconfig.md](skills/tsconfig.md)
 - [typescript.md](skills/typescript.md)

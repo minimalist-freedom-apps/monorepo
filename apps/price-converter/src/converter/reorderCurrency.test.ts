@@ -31,7 +31,7 @@ const mockEvoluStorage = (upsert: EvoluStorage['evolu']['upsert']): EvoluStorage
     dispose: vi.fn(),
 });
 
-describe(createReorderCurrency.name, () => {
+describe('createReorderCurrency', () => {
     test('moves item down in list', async () => {
         const currencies = [
             createTestCurrency(USD, 'a0'),

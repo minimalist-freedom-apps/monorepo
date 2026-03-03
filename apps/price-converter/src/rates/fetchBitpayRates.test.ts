@@ -16,7 +16,7 @@ const createMockFetch = (response: unknown, ok = true): typeof globalThis.fetch 
             json: () => Promise.resolve(response),
         })) as unknown as typeof globalThis.fetch;
 
-describe(createFetchBitpayRates, () => {
+describe('createFetchBitpayRates', () => {
     test('parses bitpay fixture into currency map', async () => {
         const fetchBitpayRates = createFetchBitpayRates({
             fetch: createMockFetch(bitpayFixture),

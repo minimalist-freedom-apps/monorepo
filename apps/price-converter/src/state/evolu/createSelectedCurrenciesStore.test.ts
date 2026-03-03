@@ -4,7 +4,7 @@ import { createSelectedCurrenciesStore } from './createSelectedCurrenciesStore';
 // biome-ignore lint/suspicious/noExplicitAny: test mocks
 const asAny = <T>(value: T): any => value;
 
-describe(createSelectedCurrenciesStore.name, () => {
+describe('createSelectedCurrenciesStore', () => {
     test('defers ensureEvoluStorage call to subscribe/getState time', () => {
         const ensureEvoluStorage = vi.fn();
 

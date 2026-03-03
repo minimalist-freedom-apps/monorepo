@@ -14,7 +14,7 @@ const createMockFetchRates =
 
 const createFailingFetchRates = (): FetchRates => async () => err(FetchRatesError());
 
-describe(createFetchAverageRates, () => {
+describe('createFetchAverageRates', () => {
     test('calculates average rate from multiple sources', async () => {
         const source1 = {
             [USD]: { code: USD, name: 'US Dollar', rate: 100 },

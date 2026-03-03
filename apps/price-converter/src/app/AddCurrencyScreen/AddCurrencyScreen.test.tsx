@@ -51,7 +51,7 @@ const createTestComponent = (selectedCurrencies: ReadonlyArray<CurrencyCode> = [
     return { navigate, addCurrency, notification, AddCurrencyScreen };
 };
 
-describe(AddCurrencyScreenPure.name, () => {
+describe('AddCurrencyScreenPure', () => {
     test('focuses search input on open', () => {
         const { AddCurrencyScreen } = createTestComponent();
 

@@ -20,6 +20,7 @@
         "lint:eslint:fix": "eslint --fix .",
         "typecheck": "bun run --workspaces --if-present typecheck",
         "test": "vitest run",
+        "test:no-cache": "vitest run --no-cache",
         "test:affected": "nx affected -t test",
         "e2e:affected": "nx affected -t e2e-ci",
         "requirements:verify": "requirements-verify",

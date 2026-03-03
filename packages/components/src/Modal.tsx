@@ -17,6 +17,7 @@ interface ModalProps {
     readonly maskClosable?: boolean;
     readonly keyboard?: boolean;
     readonly focusTriggerAfterClose?: boolean;
+    readonly destroyOnHidden?: boolean;
     readonly okButtonTestId?: string;
     readonly cancelButtonTestId?: string;
 }
@@ -37,6 +38,7 @@ export const Modal = ({
     maskClosable = true,
     keyboard = true,
     focusTriggerAfterClose = true,
+    destroyOnHidden = false,
     okButtonTestId,
     cancelButtonTestId,
 }: ModalProps) => (
@@ -69,6 +71,7 @@ export const Modal = ({
         maskClosable={maskClosable}
         keyboard={keyboard}
         focusTriggerAfterClose={focusTriggerAfterClose}
+        destroyOnHidden={destroyOnHidden}
     >
         {children}
     </AntModal>
