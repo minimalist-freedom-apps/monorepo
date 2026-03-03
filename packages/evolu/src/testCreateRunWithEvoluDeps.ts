@@ -81,7 +81,7 @@ const createBetterSqliteDriver: CreateSqliteDriver = (name, options) => () => {
     return ok(driver);
 };
 
-export const testCreateSqliteDeps: CreateSqliteDriverDep = {
+const testCreateSqliteDeps: CreateSqliteDriverDep = {
     createSqliteDriver: name => createBetterSqliteDriver(name, { mode: 'memory' }),
 };
 

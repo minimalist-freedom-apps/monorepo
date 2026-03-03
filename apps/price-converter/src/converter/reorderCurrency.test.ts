@@ -27,6 +27,7 @@ const mockEvoluStorage = (upsert: EvoluStorage['evolu']['upsert']): EvoluStorage
     evolu: { upsert } as EvoluStorage['evolu'],
     activeOwner: { id: 'test-owner' } as Owner,
     updateRelayUrls: vi.fn(),
+    restoreOwner: vi.fn(),
     dispose: vi.fn(),
 });
 

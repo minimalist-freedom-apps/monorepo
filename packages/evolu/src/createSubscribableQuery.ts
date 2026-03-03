@@ -1,6 +1,7 @@
 import type { EvoluSchema, Query, Row } from '@evolu/common';
 import type { Subscribable } from '@minimalist-apps/connect';
-import type { EnsureEvoluStorageDep, EvoluStorage } from './createEnsureEvoluStorage';
+import type { EnsureEvoluStorageDep } from './createEnsureEvoluStorage';
+import type { EvoluStorage } from './EvoluStorage';
 
 /**
  * Create a `Subscribable` query that defers Evolu initialization until

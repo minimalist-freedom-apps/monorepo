@@ -11,14 +11,6 @@
         ".": {
             "types": "./src/index.ts",
             "default": "./src/index.ts"
-        },
-        "./appium-client": {
-            "types": "./src/appiumClient.ts",
-            "default": "./src/appiumClient.ts"
-        },
-        "./global-setup": {
-            "types": "./src/emulator.ts",
-            "default": "./src/emulator.ts"
         }
     },
     "dependencies": {

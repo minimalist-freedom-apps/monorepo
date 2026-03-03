@@ -32,17 +32,19 @@ const ensurePromiseTry = (): void => {
         return;
     }
 
-    PromiseWithTry.try = <T>(
-        callback: (...args: ReadonlyArray<unknown>) => T | PromiseLike<T>,
-        ...args: ReadonlyArray<unknown>
+    const promiseTryImpl = (<T, U extends unknown[]>(
+        callbackFn: (...args: U) => T | PromiseLike<T>,
+        ...args: U
     ) =>
         new Promise<Awaited<T>>((resolve, reject) => {
             try {
-                resolve(callback(...args) as Awaited<T>);
+                resolve(callbackFn(...args) as Awaited<T>);
             } catch (error) {
                 reject(error);
             }
-        });
+        })) as NonNullable<PromiseWithTry['try']>;
+
+    PromiseWithTry.try = promiseTryImpl;
 };
 
 export const installPolyfills = (): void => {
