@@ -1,9 +1,8 @@
 import type { EvoluSchema } from '@evolu/common';
 import type { Owner, ValidateSchema } from '@evolu/common/local-first';
-import type { EnsureEvoluOwnerDep } from '@minimalist-apps/evolu';
-import type { CreateEvoluStorageDep, EvoluStorage } from './createEvoluStorage';
-
-export type { EvoluStorage } from './createEvoluStorage';
+import type { EnsureEvoluOwnerDep } from './createEnsureEvoluMnemonic';
+import type { CreateEvoluStorageDep } from './createEvoluStorageFactory';
+import type { EvoluStorage } from './EvoluStorage';
 
 export type EnsureEvoluStorage<S extends EvoluSchema> = () => Promise<EvoluStorage<S>>;
 
@@ -22,6 +21,10 @@ interface CreateEnsureEvoluProps<S extends EvoluSchema> {
     // readonly shardPath: NonEmptyReadonlyArray<string | number>;
 }
 
+/**
+ * Responsibility: Stateful service that ensures a single (for now)
+ *                 instance of EvoluStorage is created and reused.
+ */
 export const createEnsureEvoluStorage = <S extends EvoluSchema>({
     deps,
     schema,
@@ -32,32 +35,14 @@ export const createEnsureEvoluStorage = <S extends EvoluSchema>({
 
     return async () => {
         if (storage === null) {
-            const createdStorage = await deps.createEvoluStorage({
+            storage = await deps.createEvoluStorage({
                 mnemonic: deps.ensureEvoluOwner(),
                 schema,
                 appName,
                 onOwnerUsed: deps.onOwnerUsed,
+                urls: ['https://free.evoluhq.com'],
                 // shardPath,
             });
-
-            storage = {
-                get evolu() {
-                    return createdStorage.evolu;
-                },
-                get activeOwner() {
-                    return createdStorage.activeOwner;
-                },
-                updateRelayUrls: urls => createdStorage.updateRelayUrls(urls),
-                restoreOwner: mnemonic => createdStorage.restoreOwner(mnemonic),
-                dispose: async () => {
-                    if (storage === null) {
-                        return;
-                    }
-
-                    await createdStorage.dispose();
-                    storage = null;
-                },
-            };
         }
 
         return storage;

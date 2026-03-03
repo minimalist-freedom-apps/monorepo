@@ -20,6 +20,7 @@ export type CreateEvoluProps<S extends EvoluSchema> = {
     readonly mnemonic: Mnemonic;
     readonly schema: ValidateSchema<S> extends never ? S : ValidateSchema<S>;
     readonly appName: string;
+    readonly urls: ReadonlyArray<string>;
 };
 
 export type CreateEvoluResult<S extends EvoluSchema> = {
@@ -45,19 +46,16 @@ export const createEvoluFactory =
             await deps.run(
                 createEvolu(props.schema, {
                     appName: AppName.orThrow(props.appName),
-                    transports: [
+                    transports: props.urls.map(url =>
                         createOwnerWebSocketTransport({
-                            url: 'https://free.evoluhq.com',
+                            url,
                             ownerId: owner.id,
                         }),
-                    ],
+                    ),
                     appOwner: owner,
                 }),
             ),
         );
 
-        return {
-            evolu,
-            owner,
-        };
+        return { evolu, owner };
     };
