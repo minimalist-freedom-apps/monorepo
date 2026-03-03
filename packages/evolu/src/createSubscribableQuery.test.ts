@@ -1,7 +1,7 @@
 import type { Query, Row } from '@evolu/common';
 import { describe, expect, test, vi } from 'vitest';
-import type { EvoluStorage } from './createEnsureEvoluStorage';
 import { createSubscribableQuery } from './createSubscribableQuery';
+import type { EvoluStorage } from './EvoluStorage';
 import { mockEvoluStorage, type TodoTestSchema } from './mockEvoluStorage';
 
 // Query is not important here since we're mocking the storage and directly emitting updates

@@ -1,5 +1,5 @@
 import { String as EvoluString, id, type Listener } from '@evolu/common';
-import type { EvoluStorage } from './createEnsureEvoluStorage';
+import type { EvoluStorage } from './EvoluStorage';
 
 const TodoId = id('TodoId');
 

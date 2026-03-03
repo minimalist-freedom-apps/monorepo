@@ -1,14 +1,18 @@
 {
     "$schema": "https://unpkg.com/knip@5/schema.json",
-    "ignoreFiles": ["**/android/**/build/**", "**/android/app/src/main/assets/public/**"],
+    "ignoreFiles": [
+        "**/*.e2e.ts",
+        "**/android/**/build/**",
+        "**/android/app/src/main/assets/public/**"
+    ],
     "tags": ["-lintignore", "-publicdep"],
     "workspaces": {
         ".": {},
         "apps/android-sync": {
-            "ignore": ["vitest.e2e.config.ts", "e2e/globalSetup.ts"]
+            "entry": ["vitest.e2e.config.ts", "e2e/globalSetup.ts"]
         },
         "apps/price-converter": {
-            "ignore": ["vitest.e2e.config.ts", "e2e/globalSetup.ts"]
+            "entry": ["vitest.e2e.config.ts", "e2e/globalSetup.ts"]
         }
     }
 }
