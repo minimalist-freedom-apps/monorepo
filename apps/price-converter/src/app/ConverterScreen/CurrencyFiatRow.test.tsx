@@ -4,7 +4,16 @@ import { render, screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import type { FC } from 'react';
 import { describe, expect, test, vi } from 'vitest';
-import { CurrencyRowPure } from './CurrencyFiatRow.js';
+import {
+    BTC_EASTER_EGG_MODAL_CONTENT_TEST_ID,
+    BTC_EASTER_EGG_MODAL_OK_BUTTON_TEST_ID,
+    BTC_EASTER_EGG_MODAL_STATE_TEST_ID,
+} from './BtcEasterEggModal.js';
+import {
+    BTC_NOTE_BUTTON_TEST_ID,
+    CurrencyRowPure,
+    REMOVE_CURRENCY_BUTTON_TEST_ID,
+} from './CurrencyFiatRow.js';
 import type { MoscowTimeDep } from './MoscowTime.js';
 
 type TestDeps = CurrencyInputDep & MoscowTimeDep;
@@ -21,7 +30,7 @@ const createTestDeps = (): TestDeps => ({
     MoscowTime: () => null,
 });
 
-describe(CurrencyRowPure.name, () => {
+describe('CurrencyRowPure', () => {
     test('renders remove icon button for fiat rows', () => {
         const deps = createTestDeps();
         const onRemove = vi.fn();
@@ -36,8 +45,8 @@ describe(CurrencyRowPure.name, () => {
 
         render(<TestComponent />);
 
-        expect(screen.getByRole('button', { name: '🗑️' })).toBeInTheDocument();
-        expect(screen.queryByRole('button', { name: 'Bitcoin note' })).not.toBeInTheDocument();
+        expect(screen.getByTestId(REMOVE_CURRENCY_BUTTON_TEST_ID)).toBeInTheDocument();
+        expect(screen.queryByTestId(BTC_NOTE_BUTTON_TEST_ID)).not.toBeInTheDocument();
     });
 
     test('opens BTC easter-egg modal on click and closes with OK', async () => {
@@ -52,19 +61,29 @@ describe(CurrencyRowPure.name, () => {
             });
 
         render(<TestComponent />);
-        const [btcNoteButton] = screen.getAllByRole('button');
-        expect(screen.queryByText(/Fiat currencies inevitably die/i)).not.toBeInTheDocument();
+        const btcNoteButton = screen.getByTestId(BTC_NOTE_BUTTON_TEST_ID);
+        expect(screen.queryByTestId(BTC_EASTER_EGG_MODAL_CONTENT_TEST_ID)).not.toBeInTheDocument();
+        expect(screen.getByTestId(BTC_EASTER_EGG_MODAL_STATE_TEST_ID)).toHaveAttribute(
+            'data-open',
+            'false',
+        );
 
         await user.click(btcNoteButton);
 
-        expect(screen.getByText(/Fiat currencies inevitably die/i)).toBeInTheDocument();
-        expect(screen.getByRole('button', { name: 'OK' })).toBeInTheDocument();
-        expect(screen.queryByRole('button', { name: 'Cancel' })).not.toBeInTheDocument();
+        expect(screen.getByTestId(BTC_EASTER_EGG_MODAL_CONTENT_TEST_ID)).toBeInTheDocument();
+        expect(screen.getByTestId(BTC_EASTER_EGG_MODAL_STATE_TEST_ID)).toHaveAttribute(
+            'data-open',
+            'true',
+        );
+        expect(screen.getByTestId(BTC_EASTER_EGG_MODAL_OK_BUTTON_TEST_ID)).toBeInTheDocument();
 
-        await user.click(screen.getByRole('button', { name: 'OK' }));
+        await user.click(screen.getByTestId(BTC_EASTER_EGG_MODAL_OK_BUTTON_TEST_ID));
 
         await waitFor(() => {
-            expect(screen.getByText(/Fiat currencies inevitably die/i)).not.toBeVisible();
+            expect(screen.getByTestId(BTC_EASTER_EGG_MODAL_STATE_TEST_ID)).toHaveAttribute(
+                'data-open',
+                'false',
+            );
         });
     });
 });

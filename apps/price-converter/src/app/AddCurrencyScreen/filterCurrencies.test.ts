@@ -9,7 +9,7 @@ const currencies = [
     { code: 'CHF' as CurrencyCode, name: 'Swiss franc' },
 ] as const;
 
-describe(filterCurrencies.name, () => {
+describe('filterCurrencies', () => {
     test('returns all currencies when search term is empty', () => {
         expect(filterCurrencies(currencies, '')).toEqual(currencies);
     });

@@ -11,7 +11,7 @@ const createTestComponent = () => {
     return { navigate, AddCurrencyButton };
 };
 
-describe(AddCurrencyButtonPure.name, () => {
+describe('AddCurrencyButtonPure', () => {
     test('renders a button with Add Currency tooltip', () => {
         const { AddCurrencyButton } = createTestComponent();
 

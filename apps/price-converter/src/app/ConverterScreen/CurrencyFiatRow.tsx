@@ -24,6 +24,9 @@ export type CurrencyRowDep = {
     CurrencyRow: FC<CurrencyRowOwnProps>;
 };
 
+export const REMOVE_CURRENCY_BUTTON_TEST_ID = 'REMOVE_CURRENCY_BUTTON';
+export const BTC_NOTE_BUTTON_TEST_ID = 'BTC_NOTE_BUTTON';
+
 export const CurrencyRowPure = (
     deps: CurrencyRowDeps,
     { btcMode, code, value, onChange, onRemove }: CurrencyRowStateProps & CurrencyRowOwnProps,
@@ -66,6 +69,7 @@ export const CurrencyRowPure = (
                             onClick={() => {
                                 setIsRemoveModalOpen(true);
                             }}
+                            testId={REMOVE_CURRENCY_BUTTON_TEST_ID}
                             variant="text"
                             intent="danger"
                             size="small"
@@ -85,6 +89,7 @@ export const CurrencyRowPure = (
                     <>
                         <Button
                             onClick={openBtcEasterEgg}
+                            testId={BTC_NOTE_BUTTON_TEST_ID}
                             style={{
                                 width: 24,
                                 minWidth: 24,
