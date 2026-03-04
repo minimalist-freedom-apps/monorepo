@@ -45,13 +45,13 @@ export const Circle = () => {
                     }
                     denominator={
                         result !== null ? (
-                            <span id={CIRCLE_RESULT_TEST_ID} data-testid={CIRCLE_RESULT_TEST_ID}>
+                            <span data-testid={CIRCLE_RESULT_TEST_ID}>
                                 <Text strong size="large">
                                     {result.toFixed(0)}
                                 </Text>
                             </span>
                         ) : (
-                            <span id={CIRCLE_RESULT_TEST_ID} data-testid={CIRCLE_RESULT_TEST_ID}>
+                            <span data-testid={CIRCLE_RESULT_TEST_ID}>
                                 <Text size="large" intent="secondary">
                                     ?
                                 </Text>

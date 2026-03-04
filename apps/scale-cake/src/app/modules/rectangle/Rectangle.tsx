@@ -55,19 +55,13 @@ export const Rectangle = () => {
                     }
                     denominator={
                         result !== null ? (
-                            <span
-                                id={RECTANGLE_RESULT_TEST_ID}
-                                data-testid={RECTANGLE_RESULT_TEST_ID}
-                            >
+                            <span data-testid={RECTANGLE_RESULT_TEST_ID}>
                                 <Text strong size="large">
                                     {result.toFixed()}
                                 </Text>
                             </span>
                         ) : (
-                            <span
-                                id={RECTANGLE_RESULT_TEST_ID}
-                                data-testid={RECTANGLE_RESULT_TEST_ID}
-                            >
+                            <span data-testid={RECTANGLE_RESULT_TEST_ID}>
                                 <Text size="large" intent="secondary">
                                     ?
                                 </Text>

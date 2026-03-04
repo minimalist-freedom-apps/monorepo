@@ -60,7 +60,6 @@ export const Input = ({
 
     const input = (
         <AntInput
-            id={testId}
             data-testid={testId}
             ref={inputRef}
             value={value}
