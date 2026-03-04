@@ -2,7 +2,7 @@ import {
     createSession,
     deleteSession,
     typeIntoElementByTestId,
-    waitForElementById,
+    waitForElementByTestId,
     waitForElementTextByTestIdContains,
 } from '@minimalist-apps/android-e2e';
 import { afterEach, test } from 'vitest';
@@ -48,10 +48,10 @@ test('smoke e2e calculates circle and rectangle amounts', async () => {
 
     currentSessionId = session.sessionId;
 
-    await waitForElementById({
+    await waitForElementByTestId({
         serverUrl,
         sessionId: session.sessionId,
-        id: 'app',
+        testId: CIRCLE_AMOUNT_INPUT_TEST_ID,
     });
 
     await typeIntoElementByTestId({
