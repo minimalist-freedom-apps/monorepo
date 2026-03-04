@@ -41,85 +41,85 @@ afterEach(async () => {
 });
 
 test('smoke e2e calculates circle and rectangle amounts', async () => {
-    const session = await createSession({
+    const sessionId = await createSession({
         appPath,
         serverUrl,
     });
 
-    currentSessionId = session.sessionId;
+    currentSessionId = sessionId;
 
     await waitForElementByTestId({
         serverUrl,
-        sessionId: session.sessionId,
+        sessionId,
         testId: CIRCLE_AMOUNT_INPUT_TEST_ID,
     });
 
     await typeIntoElementByTestId({
         serverUrl,
-        sessionId: session.sessionId,
+        sessionId,
         testId: CIRCLE_AMOUNT_INPUT_TEST_ID,
         text: '100',
     });
 
     await typeIntoElementByTestId({
         serverUrl,
-        sessionId: session.sessionId,
+        sessionId,
         testId: CIRCLE_ORIGINAL_DIAMETER_INPUT_TEST_ID,
         text: '20',
     });
 
     await typeIntoElementByTestId({
         serverUrl,
-        sessionId: session.sessionId,
+        sessionId,
         testId: CIRCLE_NEW_DIAMETER_INPUT_TEST_ID,
         text: '30',
     });
 
     await waitForElementTextByTestIdContains({
         serverUrl,
-        sessionId: session.sessionId,
+        sessionId,
         testId: CIRCLE_RESULT_TEST_ID,
         text: '225',
     });
 
     await typeIntoElementByTestId({
         serverUrl,
-        sessionId: session.sessionId,
+        sessionId,
         testId: RECTANGLE_AMOUNT_INPUT_TEST_ID,
         text: '100',
     });
 
     await typeIntoElementByTestId({
         serverUrl,
-        sessionId: session.sessionId,
+        sessionId,
         testId: RECTANGLE_ORIGINAL_A_INPUT_TEST_ID,
         text: '20',
     });
 
     await typeIntoElementByTestId({
         serverUrl,
-        sessionId: session.sessionId,
+        sessionId,
         testId: RECTANGLE_ORIGINAL_B_INPUT_TEST_ID,
         text: '30',
     });
 
     await typeIntoElementByTestId({
         serverUrl,
-        sessionId: session.sessionId,
+        sessionId,
         testId: RECTANGLE_NEW_A_INPUT_TEST_ID,
         text: '40',
     });
 
     await typeIntoElementByTestId({
         serverUrl,
-        sessionId: session.sessionId,
+        sessionId,
         testId: RECTANGLE_NEW_B_INPUT_TEST_ID,
         text: '60',
     });
 
     await waitForElementTextByTestIdContains({
         serverUrl,
-        sessionId: session.sessionId,
+        sessionId,
         testId: RECTANGLE_RESULT_TEST_ID,
         text: '400',
     });

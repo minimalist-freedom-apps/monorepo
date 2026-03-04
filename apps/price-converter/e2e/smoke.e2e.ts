@@ -25,15 +25,15 @@ afterEach(async () => {
 });
 
 test('smoke e2e can restore seed and verify debug owner suffix', async () => {
-    const session = await createSession({
+    const sessionId = await createSession({
         appPath,
         serverUrl,
     });
 
-    currentSessionId = session.sessionId;
+    currentSessionId = sessionId;
 
     await restoreEvoluSeedStep({
         serverUrl,
-        sessionId: session.sessionId,
+        sessionId,
     });
 });

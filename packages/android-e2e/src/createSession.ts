@@ -8,16 +8,12 @@ interface CreateAppiumSessionInWebViewProps {
     readonly serverUrl: string;
 }
 
-interface CreateAppiumSessionInWebViewOutput {
-    readonly sessionId: string;
-}
-
 const isVideoRecordingEnabled = (): boolean => process.env.E2E_RECORD_VIDEO === 'true';
 
 export const createSession = async ({
     appPath,
     serverUrl,
-}: CreateAppiumSessionInWebViewProps): Promise<CreateAppiumSessionInWebViewOutput> => {
+}: CreateAppiumSessionInWebViewProps): Promise<string> => {
     const session = await createAppiumSession({
         appPath,
         serverUrl,
@@ -46,7 +42,5 @@ export const createSession = async ({
         });
     }
 
-    return {
-        sessionId: session.sessionId,
-    };
+    return session.sessionId;
 };
