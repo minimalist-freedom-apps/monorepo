@@ -6,7 +6,7 @@ type DebugRowProps = {
 };
 
 export const DebugRow = ({ ownerId }: DebugRowProps) => (
-    <span id="debug-owner-id">
+    <span data-testid="debug-owner-id">
         <Code inline>🐛{ownerId !== null ? ownerId.slice(-6) : 'N/A'}</Code>
     </span>
 );
