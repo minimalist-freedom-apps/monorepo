@@ -24,12 +24,14 @@ type EvoluFragmentCompositionRootDeps<Schema extends EvoluSchema> = EvoluStoreDe
     readonly appName: string;
 };
 
-export const createEvoluFragmentCompositionRoot = <Schema extends EvoluSchema>(
-    deps: EvoluFragmentCompositionRootDeps<Schema>,
-): BackupMnemonicDep &
+export type EvoluFragment<Schema extends EvoluSchema> = BackupMnemonicDep &
     RestoreMnemonicDep &
     RestoreMnemonicServiceDep &
-    EnsureEvoluStorageDep<Schema> => {
+    EnsureEvoluStorageDep<Schema>;
+
+export const createEvoluFragmentCompositionRoot = <Schema extends EvoluSchema>(
+    deps: EvoluFragmentCompositionRootDeps<Schema>,
+): EvoluFragment<Schema> => {
     const setEvoluMnemonic = createSetEvoluMnemonic({ store: deps.store });
 
     const getPersistedMnemonic = toGetter(deps.store.getState, selectEvoluMnemonic);
