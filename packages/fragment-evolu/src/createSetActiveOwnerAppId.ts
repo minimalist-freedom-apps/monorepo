@@ -1,8 +1,10 @@
 import type { OwnerId } from '@evolu/common';
 import type { EvoluStoreDep } from './evoluState';
 
+/** @publicdep */
 export type SetActiveOwnerAppId = (ownerAppId: OwnerId) => void;
 
+/** @publicdep */
 export type SetActiveOwnerAppIdDep = {
     readonly setActiveOwnerAppId: SetActiveOwnerAppId;
 };

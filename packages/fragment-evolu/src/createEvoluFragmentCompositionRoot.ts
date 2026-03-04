@@ -24,7 +24,7 @@ type EvoluFragmentCompositionRootDeps<Schema extends EvoluSchema> = EvoluStoreDe
     readonly appName: string;
 };
 
-export type EvoluFragment<Schema extends EvoluSchema> = BackupMnemonicDep &
+type EvoluFragment<Schema extends EvoluSchema> = BackupMnemonicDep &
     RestoreMnemonicDep &
     RestoreMnemonicServiceDep &
     EnsureEvoluStorageDep<Schema>;
