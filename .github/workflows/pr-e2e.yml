@@ -182,9 +182,35 @@ jobs:
           disable-animations: true
           emulator-options: -no-window -gpu swiftshader_indirect -noaudio -no-boot-anim -no-snapshot -wipe-data
           script: >
+            set -u;
             rm -rf e2e-video && mkdir -p e2e-video;
-            bunx nx affected -t e2e --base=${{ github.event.pull_request.base.sha || github.event.before }} --head=${{ github.sha }} --parallel=1 --output-style=stream --verbose;
-            exit $?;
+            E2E_LOG_PATH="$GITHUB_WORKSPACE/e2e-run.log";
+            rm -f "$E2E_LOG_PATH";
+            bunx nx affected -t e2e --base=${{ github.event.pull_request.base.sha || github.event.before }} --head=${{ github.sha }} --parallel=1 --output-style=static > "$E2E_LOG_PATH" 2>&1;
+            E2E_EXIT_CODE=$?;
+            cat "$E2E_LOG_PATH";
+            if [ "$E2E_EXIT_CODE" -eq 0 ]; then
+            echo "### E2E Result ✅" >> "$GITHUB_STEP_SUMMARY";
+            echo "All affected E2E targets passed." >> "$GITHUB_STEP_SUMMARY";
+            exit 0;
+            fi;
+            echo "### E2E Result ❌" >> "$GITHUB_STEP_SUMMARY";
+            echo "Failed targets:" >> "$GITHUB_STEP_SUMMARY";
+            echo "" >> "$GITHUB_STEP_SUMMARY";
+            echo '```' >> "$GITHUB_STEP_SUMMARY";
+            FAILED_TASKS_BLOCK="$(sed -n '/Failed tasks:/,/^$/p' "$E2E_LOG_PATH" | sed '/^$/d')";
+            if [ -n "$FAILED_TASKS_BLOCK" ]; then
+            printf '%s\n' "$FAILED_TASKS_BLOCK" | tee /dev/stderr >> "$GITHUB_STEP_SUMMARY";
+            else
+            echo "Could not parse failed task list from Nx output." | tee /dev/stderr >> "$GITHUB_STEP_SUMMARY";
+            fi;
+            echo '```' >> "$GITHUB_STEP_SUMMARY";
+            echo "" >> "$GITHUB_STEP_SUMMARY";
+            echo "Last 120 log lines:" >> "$GITHUB_STEP_SUMMARY";
+            echo '```' >> "$GITHUB_STEP_SUMMARY";
+            tail -n 120 "$E2E_LOG_PATH" >> "$GITHUB_STEP_SUMMARY";
+            echo '```' >> "$GITHUB_STEP_SUMMARY";
+            exit "$E2E_EXIT_CODE";
 
       - name: No affected E2E projects
         if: steps.affected-e2e.outputs.has_e2e != 'true'
@@ -204,3 +230,25 @@ jobs:
           name: e2e-video
           path: e2e-video/*.mp4
           if-no-files-found: warn
+
+      - name: Print compact E2E failure summary
+        if: always() && steps.affected-e2e.outputs.has_e2e == 'true'
+        run: |
+          E2E_LOG_PATH="$GITHUB_WORKSPACE/e2e-run.log"
+
+          if [ ! -f "$E2E_LOG_PATH" ]; then
+            echo "No e2e-run.log found."
+            exit 0
+          fi
+
+          if grep -q "Failed tasks:" "$E2E_LOG_PATH"; then
+            echo "========================================"
+            echo "E2E FAILED TASKS SUMMARY"
+            echo "========================================"
+            sed -n '/Failed tasks:/,/^$/p' "$E2E_LOG_PATH" | sed '/^$/d'
+          else
+            echo "========================================"
+            echo "E2E SUMMARY"
+            echo "========================================"
+            echo "No failed Nx tasks detected."
+          fi
