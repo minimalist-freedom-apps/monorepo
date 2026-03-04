@@ -33,7 +33,7 @@ const initState: State = {
     loading: false,
     error: '',
     focusedCurrency: null,
-    activeOwnerId: null,
+    activeOwnerAppId: null,
     themeMode: 'dark',
     currentScreen: 'Converter',
 };

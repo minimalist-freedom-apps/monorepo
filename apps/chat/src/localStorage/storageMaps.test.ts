@@ -17,7 +17,7 @@ const initState: AppState = {
         ),
     ),
     currentScreen: 'Chat',
-    activeOwnerId: null,
+    activeOwnerAppId: null,
 };
 
 describe('storageMaps', () => {

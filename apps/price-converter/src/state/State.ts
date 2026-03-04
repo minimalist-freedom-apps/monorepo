@@ -1,4 +1,4 @@
-import type { CurrencyCode, OwnerId } from '@evolu/common';
+import type { CurrencyCode } from '@evolu/common';
 import type { AmountSats } from '@minimalist-apps/bitcoin';
 import type { FiatAmount } from '@minimalist-apps/fiat';
 import type { DebugState } from '@minimalist-apps/fragment-debug';
@@ -24,5 +24,4 @@ export interface State extends ThemeState, EvoluState, DebugState, NavigatorStat
     readonly lastUpdated: number | null;
     readonly btcMode: BtcMode;
     readonly focusedCurrency: CurrencyCode | 'BTC' | null;
-    readonly activeOwnerId: OwnerId | null;
 }

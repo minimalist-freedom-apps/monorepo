@@ -1,4 +1,4 @@
-import type { EvoluSchema, Owner } from '@evolu/common';
+import type { EvoluSchema } from '@evolu/common';
 import type { ValidateSchema } from '@evolu/common/local-first';
 import type { Connect } from '@minimalist-apps/connect';
 import {
@@ -12,6 +12,7 @@ import {
     createRestoreMnemonic,
     type RestoreMnemonicDep as RestoreMnemonicServiceDep,
 } from './createRestoreMnemonic';
+import { createSetActiveOwnerAppId } from './createSetActiveOwnerAppId';
 import { createSetEvoluMnemonic } from './createSetEvoluMnemonic';
 import type { EvoluState, EvoluStoreDep } from './evoluState';
 import { type RestoreMnemonicDep, RestoreMnemonic as RestoreMnemonicPure } from './RestoreMnemonic';
@@ -19,7 +20,6 @@ import { selectEvoluMnemonic } from './selectEvoluMnemonic';
 
 type EvoluFragmentCompositionRootDeps<Schema extends EvoluSchema> = EvoluStoreDep & {
     readonly connect: Connect<{ readonly store: EvoluState }>;
-    readonly onOwnerUsed: (owner: Owner) => void;
     readonly schema: ValidateSchema<Schema> extends never ? Schema : ValidateSchema<Schema>;
     readonly appName: string;
 };
@@ -33,6 +33,7 @@ export const createEvoluFragmentCompositionRoot = <Schema extends EvoluSchema>(
     deps: EvoluFragmentCompositionRootDeps<Schema>,
 ): EvoluFragment<Schema> => {
     const setEvoluMnemonic = createSetEvoluMnemonic({ store: deps.store });
+    const setActiveOwnerAppId = createSetActiveOwnerAppId({ store: deps.store });
 
     const getPersistedMnemonic = toGetter(deps.store.getState, selectEvoluMnemonic);
 
@@ -43,7 +44,7 @@ export const createEvoluFragmentCompositionRoot = <Schema extends EvoluSchema>(
 
     const { ensureEvoluStorage } = createEvoluCompositionRoot<Schema>({
         ensureEvoluOwner,
-        onOwnerUsed: deps.onOwnerUsed,
+        onOwnerUsed: owner => setActiveOwnerAppId(owner.id),
         schema: deps.schema,
         appName: deps.appName,
     });

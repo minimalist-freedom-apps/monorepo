@@ -56,7 +56,6 @@ export const createCompositionRoot = (): Main => {
         createEvoluFragmentCompositionRoot({
             connect: connectAppStore,
             store,
-            onOwnerUsed: owner => store.setState({ activeOwnerId: owner.id }),
             schema: Schema,
             appName: 'chat-v1',
         });
@@ -67,7 +66,7 @@ export const createCompositionRoot = (): Main => {
 
     const DebugHeader = connect(DebugHeaderPure, ({ store }) => ({
         debugMode: selectDebugMode(store),
-        children: createElement(DebugRow, { ownerId: store.activeOwnerId }),
+        children: createElement(DebugRow, { ownerId: store.activeOwnerAppId }),
     }));
 
     const AppHeader = connect(AppHeaderPure, () => ({}), {

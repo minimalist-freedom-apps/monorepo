@@ -89,7 +89,6 @@ export const createCompositionRoot = (): Main => {
         createEvoluFragmentCompositionRoot({
             connect: connectAppStore,
             store: appStore,
-            onOwnerUsed: owner => appStore.setState({ activeOwnerId: owner.id }),
             schema: Schema,
             appName: 'price-converter-v2',
         });
@@ -110,7 +109,7 @@ export const createCompositionRoot = (): Main => {
 
     const DebugHeader = connect(DebugHeaderPure, ({ store }) => ({
         debugMode: selectDebugMode(store),
-        children: createElement(DebugRow, { ownerId: store.activeOwnerId }),
+        children: createElement(DebugRow, { ownerId: store.activeOwnerAppId }),
     }));
 
     // Fetch Rates

@@ -11,7 +11,7 @@ export const createAppStore = (): Store<AppState> => {
         currentScreen: 'Chat',
         debugMode: false,
         evoluMnemonic: null,
-        activeOwnerId: null,
+        activeOwnerAppId: null,
     };
 
     return createMiniStore(initialState);

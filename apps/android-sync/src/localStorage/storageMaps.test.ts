@@ -14,7 +14,7 @@ const initState: AppState = {
     evoluMnemonic:
         'abandon abandon abandon abandon abandon abandon abandon abandon abandon abandon abandon about' as Mnemonic,
     currentScreen: 'Home',
-    activeOwnerId: null,
+    activeOwnerAppId: null,
 };
 
 describe('storageMaps', () => {

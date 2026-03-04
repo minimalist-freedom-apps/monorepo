@@ -19,7 +19,7 @@ export const createAppStore = (): Store<State> => {
         themeMode: 'dark',
         debugMode: false,
         evoluMnemonic: null,
-        activeOwnerId: null,
+        activeOwnerAppId: null,
     };
 
     return createMiniStore(initialState);
