@@ -1,6 +1,8 @@
 export { clickElementById } from './actions/clickElementById.ts';
+export { clickElementByTestId } from './actions/clickElementByTestId.ts';
 export { deleteSession } from './actions/deleteAppiumSession.ts';
 export { getElementAttributeById } from './actions/getElementAttributeById.ts';
+export { getElementAttributeByTestId } from './actions/getElementAttributeByTestId.ts';
 export { typeIntoElementById } from './actions/typeIntoElementById.ts';
 export { typeIntoElementByTestId } from './actions/typeIntoElementByTestId.ts';
 export { waitForElementById } from './actions/waitForElementById.ts';
