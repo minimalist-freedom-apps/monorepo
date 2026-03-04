@@ -1,6 +1,6 @@
 {
     "name": "@minimalist-apps/android-e2e",
-    "version": "0.0.1",
+    "version": "1.0.0",
     "type": "module",
     "scripts": {
         "e2e:emulator": "bunx tsx ./src/startEmulatorCli.ts",

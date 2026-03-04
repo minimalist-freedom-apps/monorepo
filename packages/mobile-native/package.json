@@ -1,6 +1,6 @@
 {
     "name": "@minimalist-apps/mobile-native",
-    "version": "0.0.1",
+    "version": "1.0.0",
     "type": "module",
     "main": "./src/index.ts",
     "types": "./src/index.ts",
