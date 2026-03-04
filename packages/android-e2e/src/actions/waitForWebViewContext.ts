@@ -1,21 +1,19 @@
 import { sleep } from '@minimalist-apps/utils';
+import type { E2ESession } from '../session.ts';
 import { attachWebdriverIoBrowser } from './attachWebdriverIoBrowser.ts';
 import { defaultTimeoutMs, pollIntervalMs } from './shared.ts';
 
 interface WaitForWebViewContextProps {
-    readonly serverUrl: string;
-    readonly sessionId: string;
+    readonly session: E2ESession;
     readonly timeoutMs?: number;
 }
 
 export const waitForWebViewContext = async ({
-    serverUrl,
-    sessionId,
+    session,
     timeoutMs = defaultTimeoutMs,
 }: WaitForWebViewContextProps): Promise<string> => {
     const browser = await attachWebdriverIoBrowser({
-        serverUrl,
-        sessionId,
+        session,
     });
 
     const mobileBrowser = browser as unknown as {

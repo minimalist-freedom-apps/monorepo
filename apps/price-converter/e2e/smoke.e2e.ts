@@ -1,5 +1,5 @@
 import { fileURLToPath } from 'node:url';
-import { createSession, deleteSession } from '@minimalist-apps/android-e2e';
+import { createSession } from '@minimalist-apps/android-e2e';
 import { restoreEvoluSeedStep } from '@minimalist-apps/fragment-evolu/e2e';
 import { test } from 'vitest';
 
@@ -10,20 +10,12 @@ const appPath = fileURLToPath(
 );
 
 test('smoke e2e can restore seed and verify debug owner suffix', async () => {
-    const sessionId = await createSession({
+    await using session = await createSession({
         appPath,
         serverUrl,
     });
 
-    try {
-        await restoreEvoluSeedStep({
-            serverUrl,
-            sessionId,
-        });
-    } finally {
-        await deleteSession({
-            serverUrl,
-            sessionId,
-        });
-    }
+    await restoreEvoluSeedStep({
+        session,
+    });
 });

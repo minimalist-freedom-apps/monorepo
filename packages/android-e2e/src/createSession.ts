@@ -1,7 +1,9 @@
 import { attachWebdriverIoBrowser } from './actions/attachWebdriverIoBrowser.ts';
 import { createAppiumSession } from './actions/createAppiumSession.ts';
+import { deleteSession } from './actions/deleteAppiumSession.ts';
 import { setAppiumContext } from './actions/setAppiumContext.ts';
 import { waitForWebViewContext } from './actions/waitForWebViewContext.ts';
+import type { E2ESession } from './session.ts';
 
 interface CreateAppiumSessionInWebViewProps {
     readonly appPath: string;
@@ -13,27 +15,34 @@ const isVideoRecordingEnabled = (): boolean => process.env.E2E_RECORD_VIDEO === 
 export const createSession = async ({
     appPath,
     serverUrl,
-}: CreateAppiumSessionInWebViewProps): Promise<string> => {
-    const session = await createAppiumSession({
+}: CreateAppiumSessionInWebViewProps): Promise<E2ESession> => {
+    const appiumSession = await createAppiumSession({
         appPath,
         serverUrl,
     });
 
-    const webViewContextName = await waitForWebViewContext({
+    const session = {
         serverUrl,
-        sessionId: session.sessionId,
+        sessionId: appiumSession.sessionId,
+        async [Symbol.asyncDispose](): Promise<void> {
+            await deleteSession({
+                session,
+            });
+        },
+    };
+
+    const webViewContextName = await waitForWebViewContext({
+        session,
     });
 
     await setAppiumContext({
         contextName: webViewContextName,
-        serverUrl,
-        sessionId: session.sessionId,
+        session,
     });
 
     if (isVideoRecordingEnabled()) {
         const browser = await attachWebdriverIoBrowser({
-            serverUrl,
-            sessionId: session.sessionId,
+            session,
         });
 
         await browser.startRecordingScreen({
@@ -42,5 +51,5 @@ export const createSession = async ({
         });
     }
 
-    return session.sessionId;
+    return session;
 };

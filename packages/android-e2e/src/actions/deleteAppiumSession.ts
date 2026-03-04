@@ -1,10 +1,10 @@
 import { mkdir, writeFile } from 'node:fs/promises';
 import { basename, join } from 'node:path';
+import type { E2ESession } from '../session.ts';
 import { attachWebdriverIoBrowser } from './attachWebdriverIoBrowser.ts';
 
 interface DeleteAppiumSessionProps {
-    readonly serverUrl: string;
-    readonly sessionId: string;
+    readonly session: E2ESession;
 }
 
 const isVideoRecordingEnabled = (): boolean => process.env.E2E_RECORD_VIDEO === 'true';
@@ -30,13 +30,9 @@ const getVideoAppName = (): string => {
 const sanitizeVideoAppName = (value: string): string =>
     value.replaceAll(/[^a-zA-Z0-9_-]/g, '-').toLowerCase();
 
-export const deleteSession = async ({
-    serverUrl,
-    sessionId,
-}: DeleteAppiumSessionProps): Promise<void> => {
+export const deleteSession = async ({ session }: DeleteAppiumSessionProps): Promise<void> => {
     const browser = await attachWebdriverIoBrowser({
-        serverUrl,
-        sessionId,
+        session,
     });
 
     try {
@@ -51,7 +47,7 @@ export const deleteSession = async ({
                 const appName = sanitizeVideoAppName(getVideoAppName());
                 const videoPath = join(
                     getVideoOutputDirectory(),
-                    `${appName}-${Date.now()}-${sessionId}.mp4`,
+                    `${appName}-${Date.now()}-${session.sessionId}.mp4`,
                 );
 
                 await writeFile(videoPath, Buffer.from(videoBase64, 'base64'));

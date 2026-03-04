@@ -1,19 +1,17 @@
+import type { E2ESession } from '../session.ts';
 import { attachWebdriverIoBrowser } from './attachWebdriverIoBrowser.ts';
 
 interface SetAppiumContextProps {
-    readonly serverUrl: string;
-    readonly sessionId: string;
+    readonly session: E2ESession;
     readonly contextName: string;
 }
 
 export const setAppiumContext = async ({
-    serverUrl,
-    sessionId,
+    session,
     contextName,
 }: SetAppiumContextProps): Promise<void> => {
     const browser = await attachWebdriverIoBrowser({
-        serverUrl,
-        sessionId,
+        session,
     });
 
     const mobileBrowser = browser as unknown as {

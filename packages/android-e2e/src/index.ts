@@ -6,3 +6,4 @@ export { waitForElementByTestId } from './actions/waitForElementByTestId.ts';
 export { waitForElementTextByTestIdContains } from './actions/waitForElementTextByTestIdContains.ts';
 export { createAndroidE2EGlobalSetup } from './createAndroidE2EGlobalSetup.ts';
 export { createSession } from './createSession.ts';
+export type { E2ESession } from './session.ts';

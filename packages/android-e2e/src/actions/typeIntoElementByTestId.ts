@@ -1,23 +1,19 @@
+import type { E2ESession } from '../session.ts';
 import { attachWebdriverIoBrowser } from './attachWebdriverIoBrowser.ts';
 import { defaultTimeoutMs } from './shared.ts';
 
 interface TypeIntoElementByTestIdProps {
-    readonly serverUrl: string;
-    readonly sessionId: string;
+    readonly session: E2ESession;
     readonly testId: string;
     readonly text: string;
 }
 
 export const typeIntoElementByTestId = async ({
-    serverUrl,
-    sessionId,
+    session,
     testId,
     text,
 }: TypeIntoElementByTestIdProps): Promise<void> => {
-    const browser = await attachWebdriverIoBrowser({
-        serverUrl,
-        sessionId,
-    });
+    const browser = await attachWebdriverIoBrowser({ session });
 
     const element = await browser.$(`[data-testid="${testId}"]`);
     await element.waitForExist({ timeout: defaultTimeoutMs });
