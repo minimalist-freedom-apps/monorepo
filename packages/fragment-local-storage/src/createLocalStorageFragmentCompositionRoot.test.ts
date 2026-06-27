@@ -54,6 +54,10 @@ const createTestStateFragment = ({
         mapLocalStorageToState: localStorageStateMap,
         window: {
             addEventListener: () => () => {},
+            setTimeout: () => 0,
+            clearTimeout: () => {},
+            setInterval: () => 0,
+            clearInterval: () => {},
         },
     });
 
