@@ -10,5 +10,19 @@
 ## Development
 See: [Development](docs/development.md)
 
+## Nix
+
+Enter the pinned development shell before running workspace commands:
+
+```bash
+nix --extra-experimental-features nix-command --extra-experimental-features flakes develop
+```
+
+Example dev server:
+
+```bash
+bun --filter @minimalist-apps/scale-cake dev
+```
+
 ## iOS Support
 See: [iOS Support](docs/ios-support.md)
