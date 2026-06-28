@@ -2,6 +2,13 @@ import { createLocalStorage, type LocalStorage } from '@minimalist-apps/local-st
 import type { Store } from '@minimalist-apps/mini-store';
 import { typedObjectEntries } from '@minimalist-apps/type-utils';
 import type { WindowServiceDep } from '@minimalist-apps/window';
+import {
+    type CombinedLocalStorageState,
+    combineLocalStorageToState,
+    combineStateLocalStorage,
+    createCombinedLocalStorageStore,
+    type LocalStorageModule,
+} from './combineLocalStorage';
 import { createLocalStorageInit, type LocalStorageInitDep } from './createLocalStorageInit';
 
 type Unsubscribe = () => void;
@@ -22,12 +29,22 @@ export type MapLocalStorageToState<State> = Readonly<
     }>
 >;
 
-export interface LocalStorageFragmentCompositionRootDeps<State> extends WindowServiceDep {
+export interface SingleLocalStorageFragmentCompositionRootDeps<State extends object>
+    extends WindowServiceDep {
     readonly store: Store<State>;
     readonly prefix: string;
     readonly mapStateLocalStorage: MapStateLocalStorage<State>;
     readonly mapLocalStorageToState: MapLocalStorageToState<State>;
 }
+
+export interface CombinedLocalStorageFragmentCompositionRootDeps extends WindowServiceDep {
+    readonly prefix: string;
+    readonly modules: ReadonlyArray<LocalStorageModule>;
+}
+
+export type LocalStorageFragmentCompositionRootDeps<State extends object> =
+    | SingleLocalStorageFragmentCompositionRootDeps<State>
+    | CombinedLocalStorageFragmentCompositionRootDeps;
 
 interface CreateStorageKeyProps {
     readonly prefix: string;
@@ -103,8 +120,15 @@ export const applyMapStateLocalStorage = <State>({
     }
 };
 
-export const createLocalStorageFragmentCompositionRoot = <State>(
-    deps: LocalStorageFragmentCompositionRootDeps<State>,
+interface CreateLocalStorageInitDepProps<State extends object> extends WindowServiceDep {
+    readonly store: Store<State>;
+    readonly prefix: string;
+    readonly mapStateLocalStorage: MapStateLocalStorage<State>;
+    readonly mapLocalStorageToState: MapLocalStorageToState<State>;
+}
+
+const createLocalStorageInitDep = <State extends object>(
+    deps: CreateLocalStorageInitDepProps<State>,
 ): LocalStorageInitDep => {
     const localStorage = createLocalStorage();
 
@@ -140,4 +164,24 @@ export const createLocalStorageFragmentCompositionRoot = <State>(
             window: deps.window,
         }),
     };
+};
+
+const isCombinedLocalStorageFragmentCompositionRootDeps = <State extends object>(
+    deps: LocalStorageFragmentCompositionRootDeps<State>,
+): deps is CombinedLocalStorageFragmentCompositionRootDeps => 'modules' in deps;
+
+export const createLocalStorageFragmentCompositionRoot = <State extends object>(
+    deps: LocalStorageFragmentCompositionRootDeps<State>,
+): LocalStorageInitDep => {
+    if (isCombinedLocalStorageFragmentCompositionRootDeps(deps)) {
+        return createLocalStorageInitDep<CombinedLocalStorageState>({
+            store: createCombinedLocalStorageStore({ modules: deps.modules }),
+            prefix: deps.prefix,
+            mapStateLocalStorage: combineStateLocalStorage({ modules: deps.modules }),
+            mapLocalStorageToState: combineLocalStorageToState({ modules: deps.modules }),
+            window: deps.window,
+        });
+    }
+
+    return createLocalStorageInitDep(deps);
 };
