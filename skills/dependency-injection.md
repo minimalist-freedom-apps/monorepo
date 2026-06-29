@@ -2,6 +2,20 @@
 
 Some parts of the codebase use the Dependency Injection (DI) pattern. Instead of importing dependencies directly, pass them to the service as parameters. This allows better testability and separation of concerns.
 
+Never spread or destructure `deps`. Always reference dependencies explicitly via `deps.xxxx`.
+
+```ts
+// Good
+export const createService =
+    (deps: ServiceDeps): Service =>
+    params => deps.otherService(params);
+
+// Avoid
+export const createService =
+    ({ otherService }: ServiceDeps): Service =>
+    params => otherService(params);
+```
+
 ## Skill boundaries
 
 Use this skill mainly for packages that directly mention this skill.

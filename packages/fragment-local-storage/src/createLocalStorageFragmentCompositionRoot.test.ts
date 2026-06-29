@@ -3,7 +3,6 @@ import { typedObjectEntries } from '@minimalist-apps/type-utils';
 import { describe, expect, test } from 'vitest';
 import {
     createLocalStorageFragmentCompositionRoot,
-    createLocalStorageModule,
     type MapLocalStorageToState,
     type MapStateLocalStorage,
 } from '.';
@@ -65,10 +64,14 @@ const createTestStateFragment = ({
     }
 
     const { localStorageInit } = createLocalStorageFragmentCompositionRoot({
-        store,
-        prefix: 'test-app',
-        mapStateLocalStorage: stateLocalStorageMap,
-        mapLocalStorageToState: localStorageStateMap,
+        modules: [
+            {
+                prefix: 'test-app',
+                store,
+                mapStateLocalStorage: stateLocalStorageMap,
+                mapLocalStorageToState: localStorageStateMap,
+            },
+        ],
         window: {
             addEventListener: () => () => {},
             setTimeout: () => 0,
@@ -101,20 +104,19 @@ const createTestCombinedStateFragment = ({
     }
 
     const { localStorageInit } = createLocalStorageFragmentCompositionRoot({
-        prefix: 'test-app',
         modules: [
-            createLocalStorageModule({
-                key: 'profile',
+            {
+                prefix: 'test-profile',
                 store,
                 mapStateLocalStorage: stateLocalStorageMap,
                 mapLocalStorageToState: localStorageStateMap,
-            }),
-            createLocalStorageModule({
-                key: 'settings',
+            },
+            {
+                prefix: 'test-settings',
                 store: settingsStore,
                 mapStateLocalStorage: settingsStateLocalStorageMap,
                 mapLocalStorageToState: settingsLocalStorageStateMap,
-            }),
+            },
         ],
         window: {
             addEventListener: () => () => {},
@@ -172,10 +174,10 @@ describe(createLocalStorageFragmentCompositionRoot.name, () => {
     test('loads combined module state from a single local-storage fragment', () => {
         const { localStorageInit, settingsStore, store } = createTestCombinedStateFragment({
             initialLocalStorageValues: {
-                'test-app:profile.name': 'Alice',
-                'test-app:profile.age': '31',
-                'test-app:profile.tags': JSON.stringify({ role: 'admin' }),
-                'test-app:settings.theme': 'dark',
+                'test-profile:name': 'Alice',
+                'test-profile:age': '31',
+                'test-profile:tags': JSON.stringify({ role: 'admin' }),
+                'test-settings:theme': 'dark',
             },
         });
 
@@ -207,16 +209,12 @@ describe(createLocalStorageFragmentCompositionRoot.name, () => {
             theme: 'dark',
         });
 
-        expect(globalThis.localStorage.getItem('test-app:profile.name')).toBe(
-            JSON.stringify('Bob'),
-        );
-        expect(globalThis.localStorage.getItem('test-app:profile.age')).toBe(JSON.stringify('42'));
-        expect(globalThis.localStorage.getItem('test-app:profile.tags')).toBe(
+        expect(globalThis.localStorage.getItem('test-profile:name')).toBe(JSON.stringify('Bob'));
+        expect(globalThis.localStorage.getItem('test-profile:age')).toBe(JSON.stringify('42'));
+        expect(globalThis.localStorage.getItem('test-profile:tags')).toBe(
             JSON.stringify(JSON.stringify({ team: 'core' })),
         );
-        expect(globalThis.localStorage.getItem('test-app:settings.theme')).toBe(
-            JSON.stringify('dark'),
-        );
+        expect(globalThis.localStorage.getItem('test-settings:theme')).toBe(JSON.stringify('dark'));
 
         stop();
     });

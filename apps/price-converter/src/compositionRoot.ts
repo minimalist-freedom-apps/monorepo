@@ -76,10 +76,14 @@ export const createCompositionRoot = (): Main => {
 
     // State Persistence
     const { localStorageInit } = createLocalStorageFragmentCompositionRoot({
-        store: appStore,
-        prefix: localStoragePrefix,
-        mapStateLocalStorage,
-        mapLocalStorageToState,
+        modules: [
+            {
+                prefix: localStoragePrefix,
+                store: appStore,
+                mapStateLocalStorage,
+                mapLocalStorageToState,
+            },
+        ],
         window,
     });
 

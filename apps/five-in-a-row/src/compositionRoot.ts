@@ -76,18 +76,26 @@ export const createCompositionRoot = (): Main => {
     const redoMove = createRedoMove({ gameStore });
 
     const { localStorageInit: appLocalStorageInit } = createLocalStorageFragmentCompositionRoot({
-        store,
-        prefix: localStoragePrefix,
-        mapStateLocalStorage: mapAppStateLocalStorage,
-        mapLocalStorageToState: mapAppLocalStorageToState,
+        modules: [
+            {
+                prefix: localStoragePrefix,
+                store,
+                mapStateLocalStorage: mapAppStateLocalStorage,
+                mapLocalStorageToState: mapAppLocalStorageToState,
+            },
+        ],
         window,
     });
 
     const { localStorageInit: gameLocalStorageInit } = createLocalStorageFragmentCompositionRoot({
-        store: gameStore,
-        prefix: localStoragePrefix,
-        mapStateLocalStorage: mapGameStateLocalStorage,
-        mapLocalStorageToState: mapGameLocalStorageToState,
+        modules: [
+            {
+                prefix: localStoragePrefix,
+                store: gameStore,
+                mapStateLocalStorage: mapGameStateLocalStorage,
+                mapLocalStorageToState: mapGameLocalStorageToState,
+            },
+        ],
         window,
     });
 

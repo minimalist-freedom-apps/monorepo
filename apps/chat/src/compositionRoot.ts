@@ -41,10 +41,14 @@ export const createCompositionRoot = (): Main => {
     });
 
     const { localStorageInit } = createLocalStorageFragmentCompositionRoot({
-        store,
-        prefix: localStoragePrefix,
-        mapStateLocalStorage,
-        mapLocalStorageToState,
+        modules: [
+            {
+                prefix: localStoragePrefix,
+                store,
+                mapStateLocalStorage,
+                mapLocalStorageToState,
+            },
+        ],
         window,
     });
 
