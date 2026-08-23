@@ -14,6 +14,7 @@ const expectedScripts: ReadonlyArray<readonly [name: string, value: string]> = [
     ],
     ['build:android:sign', 'APP_DIR=$PWD pnpm --filter @minimalist-apps/android-build sign'],
     ['preview', 'vite preview'],
+    ['test', 'vitest run --config ../../vitest.config.ts --root .'],
     ['typecheck', 'tsc --noEmit'],
 ];
 
