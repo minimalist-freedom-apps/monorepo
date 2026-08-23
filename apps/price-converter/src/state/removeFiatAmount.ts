@@ -1,4 +1,4 @@
-import type { CurrencyCode } from '@evolu/common';
+import type { CurrencyCode } from '@minimalist-apps/fiat';
 import type { AppStoreDep } from './createAppStore';
 
 export type RemoveFiatAmount = (code: CurrencyCode) => void;

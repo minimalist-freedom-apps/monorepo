@@ -8,4 +8,10 @@ export {
     isFiatCurrency,
     type Territory,
 } from './territories';
-export { asFiatAmount, FiatAmount, type FiatCurrency } from './types';
+export {
+    asFiatAmount,
+    CurrencyCode,
+    type CurrencyCodeError,
+    FiatAmount,
+    type FiatCurrency,
+} from './types';

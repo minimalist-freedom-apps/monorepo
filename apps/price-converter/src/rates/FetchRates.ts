@@ -1,8 +1,6 @@
-import type { CurrencyCode, Result, TypeError } from '@evolu/common';
+import type { Result } from '@evolu/common';
+import type { CurrencyCode } from '@minimalist-apps/fiat';
 import type { RateBtcPerFiat } from '../converter/rate';
-
-/** @publicdep */
-export interface CurrencyCodeError extends TypeError<'CurrencyCode'> {}
 
 export interface CurrencyEntity<T extends CurrencyCode = CurrencyCode> {
     readonly code: T;

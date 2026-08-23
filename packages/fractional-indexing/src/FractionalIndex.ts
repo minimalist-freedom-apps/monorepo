@@ -24,4 +24,4 @@ export const asFractionalIndex = (value: string): FractionalIndex => value as Fr
  * always produced by `generateKeyBetween`/`generateNKeysBetween`, so they
  * are valid by construction.
  */
-export const FractionalIndexEvoluType = brand('FractionalIndex', EvoluString, value => ok(value));
+export const FractionalIndexEvoluType = brand('FractionalIndex', EvoluString, _ => ok());

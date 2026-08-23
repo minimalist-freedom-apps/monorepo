@@ -1,4 +1,5 @@
-import { type CurrencyCode, createIdFromString } from '@evolu/common';
+import { createIdFromString } from '@evolu/common';
+import type { CurrencyCode } from '@minimalist-apps/fiat';
 import { type FractionalIndex, generateIndexBetween } from '@minimalist-apps/fractional-indexing';
 import type { GetSelectedCurrenciesDep } from '../state/evolu/createGetSelectedCurrencies';
 import type { EnsureEvoluStorageDep } from '../state/evolu/schema';

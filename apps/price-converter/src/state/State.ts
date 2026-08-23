@@ -1,6 +1,5 @@
-import type { CurrencyCode } from '@evolu/common';
 import type { AmountSats } from '@minimalist-apps/bitcoin';
-import type { FiatAmount } from '@minimalist-apps/fiat';
+import type { CurrencyCode, FiatAmount } from '@minimalist-apps/fiat';
 import type { DebugState } from '@minimalist-apps/fragment-debug';
 import type { EvoluState } from '@minimalist-apps/fragment-evolu';
 import type { NavigatorState } from '@minimalist-apps/fragment-navigator';

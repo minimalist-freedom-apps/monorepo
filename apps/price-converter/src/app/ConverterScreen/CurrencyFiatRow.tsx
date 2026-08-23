@@ -1,6 +1,6 @@
-import type { CurrencyCode } from '@evolu/common';
 import { Button, Column, Row } from '@minimalist-apps/components';
 import type { CurrencyInputDep } from '@minimalist-apps/currency-input';
+import type { CurrencyCode } from '@minimalist-apps/fiat';
 import { type FC, useState } from 'react';
 import type { BtcMode } from '../../state/State';
 import { BtcEasterEggModal } from './BtcEasterEggModal';

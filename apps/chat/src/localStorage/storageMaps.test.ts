@@ -12,7 +12,7 @@ const initState: AppState = {
     themeMode: 'dark',
     debugMode: true,
     evoluMnemonic: getOrThrow(
-        Mnemonic.from(
+        Mnemonic.fromUnknown(
             'abandon abandon abandon abandon abandon abandon abandon abandon abandon abandon abandon about',
         ),
     ),

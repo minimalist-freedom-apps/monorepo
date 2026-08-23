@@ -5,7 +5,7 @@ import type { EvoluStorage } from './EvoluStorage';
 import { mockEvoluStorage, type TodoTestSchema } from './mockEvoluStorage';
 
 // Query is not important here since we're mocking the storage and directly emitting updates
-const query = '' as Query<Row>;
+const query = '' as Query<TodoTestSchema, Row>;
 
 describe(createSubscribableQuery.name, () => {
     test('loads and exposes mapped rows after ensureEvoluStorage resolves', async () => {

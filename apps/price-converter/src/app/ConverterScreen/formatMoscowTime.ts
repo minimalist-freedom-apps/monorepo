@@ -1,10 +1,10 @@
-import type { CurrencyCode } from '@evolu/common';
 import {
     type AmountBtc,
     btcToSats,
     formatBtcWithCommas,
     formatSats,
 } from '@minimalist-apps/bitcoin';
+import type { CurrencyCode } from '@minimalist-apps/fiat';
 import type { RateBtcPerFiat } from '../../converter/rate';
 import type { BtcMode } from '../../state/State';
 

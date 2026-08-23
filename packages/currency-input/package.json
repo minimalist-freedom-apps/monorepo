@@ -16,7 +16,6 @@
         "typecheck": "tsc --noEmit"
     },
     "dependencies": {
-        "@evolu/common": "git+https://github.com/evoluhq/evolu.git#common-v8",
         "@minimalist-apps/bitcoin": "workspace:*",
         "@minimalist-apps/components": "workspace:*",
         "@minimalist-apps/fiat": "workspace:*",

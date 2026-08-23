@@ -1,13 +1,14 @@
-import { CurrencyCode, id, nullOr } from '@evolu/common';
+import { id, nullOr } from '@evolu/common';
 import type {
     EnsureEvoluStorageDep as EnsureEvoluStorageDepPackage,
     EvoluStorage as EvoluStoragePackage,
 } from '@minimalist-apps/evolu';
+import { CurrencyCode } from '@minimalist-apps/fiat';
 import { FractionalIndexEvoluType } from '@minimalist-apps/fractional-indexing';
 
 const CurrencyId = id('CurrencyId');
 // biome-ignore lint/correctness/noUnusedVariables: Type alias for Evolu schema
-type CurrencyId = typeof CurrencyId.Type;
+type CurrencyId = typeof CurrencyId.Output;
 
 const currency = {
     id: CurrencyId,

@@ -1,5 +1,5 @@
-import type { CurrencyCode } from '@evolu/common';
 import type { NotificationApi } from '@minimalist-apps/components';
+import type { CurrencyCode } from '@minimalist-apps/fiat';
 import { render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { describe, expect, test, vi } from 'vitest';

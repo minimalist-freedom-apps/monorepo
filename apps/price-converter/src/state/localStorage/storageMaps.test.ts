@@ -1,6 +1,6 @@
-import { type CurrencyCode, ok } from '@evolu/common';
+import { ok } from '@evolu/common';
 import type { AmountSats } from '@minimalist-apps/bitcoin';
-import { FiatAmount } from '@minimalist-apps/fiat';
+import { type CurrencyCode, FiatAmount } from '@minimalist-apps/fiat';
 import {
     applyMapLocalStorageToState,
     applyMapStateLocalStorage,

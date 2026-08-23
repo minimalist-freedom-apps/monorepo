@@ -1,4 +1,4 @@
-import type { CurrencyCode } from '@evolu/common';
+import type { CurrencyCode } from '@minimalist-apps/fiat';
 import { fireEvent, render, screen } from '@testing-library/react';
 import { describe, expect, test, vi } from 'vitest';
 import {

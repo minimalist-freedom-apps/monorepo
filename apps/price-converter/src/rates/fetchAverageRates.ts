@@ -1,4 +1,5 @@
-import { CurrencyCode, err, ok } from '@evolu/common';
+import { err, ok } from '@evolu/common';
+import { CurrencyCode } from '@minimalist-apps/fiat';
 import { typedObjectKeys } from '@minimalist-apps/type-utils';
 import { RateBtcPerFiat } from '../converter/rate.js';
 import { type CurrencyMap, type FetchRates, FetchRatesError } from './FetchRates.js';
@@ -22,7 +23,7 @@ export const createFetchAverageRates =
         const uniqueCodes = [...new Set(allCodes)];
 
         const allRates = uniqueCodes.reduce<CurrencyMap>((acc, code) => {
-            const codeResult = CurrencyCode.from(code);
+            const codeResult = CurrencyCode.fromUnknown(code);
 
             if (!codeResult.ok) {
                 return acc;

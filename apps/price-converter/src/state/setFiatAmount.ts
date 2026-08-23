@@ -1,5 +1,4 @@
-import type { CurrencyCode } from '@evolu/common';
-import type { FiatAmount } from '@minimalist-apps/fiat';
+import type { CurrencyCode, FiatAmount } from '@minimalist-apps/fiat';
 import type { AppStoreDep } from './createAppStore';
 
 interface SetFiatAmountParams {

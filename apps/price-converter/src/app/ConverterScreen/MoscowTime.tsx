@@ -1,5 +1,5 @@
-import type { CurrencyCode } from '@evolu/common';
 import { Text } from '@minimalist-apps/components';
+import type { CurrencyCode } from '@minimalist-apps/fiat';
 import type { FC } from 'react';
 import type { RateBtcPerFiat } from '../../converter/rate';
 import type { BtcMode } from '../../state/State';

@@ -1,5 +1,6 @@
-import { CurrencyCode, getOrThrow } from '@evolu/common';
+import { getOrThrow } from '@evolu/common';
 import type { CurrencyInputDep } from '@minimalist-apps/currency-input';
+import { CurrencyCode } from '@minimalist-apps/fiat';
 import { render, screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import type { FC } from 'react';
@@ -17,7 +18,7 @@ import {
 import type { MoscowTimeDep } from './MoscowTime.js';
 
 type TestDeps = CurrencyInputDep & MoscowTimeDep;
-const USD = getOrThrow(CurrencyCode.from('USD'));
+const USD = getOrThrow(CurrencyCode.fromUnknown('USD'));
 
 const createTestDeps = (): TestDeps => ({
     CurrencyInput: ({ code, value, onChange }) => (

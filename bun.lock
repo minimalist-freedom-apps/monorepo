@@ -29,7 +29,7 @@
       "version": "1.0.0",
       "dependencies": {
         "@capacitor/core": "^7.2.0",
-        "@evolu/common": "git+https://github.com/evoluhq/evolu.git#common-v8",
+        "@evolu/common": "^8.5.0",
         "@minimalist-apps/components": "workspace:*",
         "@minimalist-apps/connect": "workspace:*",
         "@minimalist-apps/evolu": "workspace:*",
@@ -67,7 +67,7 @@
       "version": "1.0.0",
       "dependencies": {
         "@capacitor/core": "^7.2.0",
-        "@evolu/common": "git+https://github.com/evoluhq/evolu.git#common-v8",
+        "@evolu/common": "^8.5.0",
         "@minimalist-apps/components": "workspace:*",
         "@minimalist-apps/connect": "workspace:*",
         "@minimalist-apps/evolu": "workspace:*",
@@ -103,7 +103,7 @@
       "version": "1.2.0",
       "dependencies": {
         "@capacitor/core": "^7.2.0",
-        "@evolu/common": "git+https://github.com/evoluhq/evolu.git#common-v8",
+        "@evolu/common": "^8.5.0",
         "@minimalist-apps/components": "workspace:*",
         "@minimalist-apps/connect": "workspace:*",
         "@minimalist-apps/fragment-local-storage": "workspace:*",
@@ -137,7 +137,7 @@
       "version": "1.0.0",
       "dependencies": {
         "@capacitor/core": "^7.2.0",
-        "@evolu/common": "git+https://github.com/evoluhq/evolu.git#common-v8",
+        "@evolu/common": "^8.5.0",
         "@minimalist-apps/bitcoin": "workspace:*",
         "@minimalist-apps/components": "workspace:*",
         "@minimalist-apps/connect": "workspace:*",
@@ -203,7 +203,7 @@
     },
     "packages/android-build": {
       "name": "@minimalist-apps/android-build",
-      "version": "0.0.1",
+      "version": "1.0.0",
       "dependencies": {
         "@minimalist-apps/components": "workspace:*",
         "@minimalist-apps/type-utils": "workspace:*",
@@ -215,7 +215,7 @@
     },
     "packages/android-e2e": {
       "name": "@minimalist-apps/android-e2e",
-      "version": "0.0.1",
+      "version": "1.0.0",
       "dependencies": {
         "@minimalist-apps/cli": "workspace:*",
         "@minimalist-apps/utils": "workspace:*",
@@ -230,7 +230,7 @@
       "name": "@minimalist-apps/bitcoin",
       "version": "1.0.0",
       "dependencies": {
-        "@evolu/common": "git+https://github.com/evoluhq/evolu.git#common-v8",
+        "@evolu/common": "^8.5.0",
         "@minimalist-apps/number": "workspace:*",
       },
       "devDependencies": {
@@ -286,7 +286,6 @@
       "name": "@minimalist-apps/currency-input",
       "version": "1.0.0",
       "dependencies": {
-        "@evolu/common": "git+https://github.com/evoluhq/evolu.git#common-v8",
         "@minimalist-apps/bitcoin": "workspace:*",
         "@minimalist-apps/components": "workspace:*",
         "@minimalist-apps/fiat": "workspace:*",
@@ -305,14 +304,14 @@
     },
     "packages/datetime": {
       "name": "@minimalist-apps/datetime",
-      "version": "0.0.1",
+      "version": "1.0.0",
       "devDependencies": {
         "@minimalist-apps/tsconfig": "workspace:*",
       },
     },
     "packages/env": {
       "name": "@minimalist-apps/env",
-      "version": "0.0.1",
+      "version": "1.0.0",
       "devDependencies": {
         "@minimalist-apps/tsconfig": "workspace:*",
         "@types/node": "^22.0.0",
@@ -322,8 +321,8 @@
       "name": "@minimalist-apps/evolu",
       "version": "1.0.0",
       "dependencies": {
-        "@evolu/common": "git+https://github.com/evoluhq/evolu.git#common-v8",
-        "@evolu/web": "git+https://github.com/evoluhq/evolu.git#common-v8",
+        "@evolu/common": "^8.5.0",
+        "@evolu/web": "^3.1.0",
         "@minimalist-apps/connect": "workspace:*",
         "@okikio/sharedworker": "^1.1.0",
         "disposablestack": "^1.1.7",
@@ -340,7 +339,7 @@
       "name": "@minimalist-apps/fiat",
       "version": "1.0.0",
       "dependencies": {
-        "@evolu/common": "git+https://github.com/evoluhq/evolu.git#common-v8",
+        "@evolu/common": "^8.5.0",
         "@minimalist-apps/number": "workspace:*",
       },
       "devDependencies": {
@@ -352,7 +351,7 @@
       "name": "@minimalist-apps/fractional-indexing",
       "version": "1.0.0",
       "dependencies": {
-        "@evolu/common": "git+https://github.com/evoluhq/evolu.git#common-v8",
+        "@evolu/common": "^8.5.0",
         "fractional-indexing": "^3.2.0",
       },
       "devDependencies": {
@@ -386,7 +385,7 @@
       "name": "@minimalist-apps/fragment-evolu",
       "version": "1.0.0",
       "dependencies": {
-        "@evolu/common": "git+https://github.com/evoluhq/evolu.git#common-v8",
+        "@evolu/common": "^8.5.0",
         "@minimalist-apps/android-e2e": "workspace:*",
         "@minimalist-apps/components": "workspace:*",
         "@minimalist-apps/connect": "workspace:*",
@@ -469,9 +468,9 @@
     },
     "packages/local-storage": {
       "name": "@minimalist-apps/local-storage",
-      "version": "0.0.1",
+      "version": "1.0.0",
       "dependencies": {
-        "@evolu/common": "git+https://github.com/evoluhq/evolu.git#common-v8",
+        "@evolu/common": "^8.5.0",
       },
       "devDependencies": {
         "@minimalist-apps/tsconfig": "workspace:*",
@@ -487,7 +486,7 @@
     },
     "packages/mobile-native": {
       "name": "@minimalist-apps/mobile-native",
-      "version": "0.0.1",
+      "version": "1.0.0",
       "dependencies": {
         "@capacitor/core": "^7.2.0",
         "@capacitor/status-bar": "^7.0.0",
@@ -515,7 +514,7 @@
     },
     "packages/requirements": {
       "name": "@minimalist-apps/requirements",
-      "version": "0.0.1",
+      "version": "1.0.0",
       "bin": {
         "requirements-verify": "./src/scripts/verify.ts",
         "requirements-fix": "./src/scripts/fix.ts",
@@ -554,14 +553,14 @@
     },
     "packages/utils": {
       "name": "@minimalist-apps/utils",
-      "version": "0.0.1",
+      "version": "1.0.0",
       "devDependencies": {
         "@minimalist-apps/tsconfig": "workspace:*",
       },
     },
     "packages/window": {
       "name": "@minimalist-apps/window",
-      "version": "0.0.1",
+      "version": "1.0.0",
       "devDependencies": {
         "@minimalist-apps/tsconfig": "workspace:*",
       },
@@ -782,9 +781,11 @@
 
     "@eslint/plugin-kit": ["@eslint/plugin-kit@0.4.1", "", { "dependencies": { "@eslint/core": "^0.17.0", "levn": "^0.4.1" } }, "sha512-43/qtrDUokr7LJqoF2c3+RInu/t4zfrpYdoSDfYyhg52rwLV6TnOvdG4fXm7IkSB3wErkcmJS9iEhjVtOSEjjA=="],
 
-    "@evolu/common": ["@evolu/monorepo@github:evoluhq/evolu#00fb70a", {}, "evoluhq-evolu-00fb70a", "sha512-ioOUQX/d1Np4cKaXXYyJt3f8L54qFtkjw3mOXaazG8VkUh/C5qARN6YZNnex9BFtWhS2oWwRQrXS/ldLMQo+7g=="],
+    "@evolu/common": ["@evolu/common@8.5.0", "", { "dependencies": { "@noble/ciphers": "^2.3.0", "@noble/hashes": "^2.3.0", "@scure/bip39": "^2.3.0", "@standard-schema/spec": "^1.1.0", "kysely": "^0.29.5", "msgpackr": "^2.0.5", "random": "5.5.1" } }, "sha512-Okc+OhSI//NZrSCLP+4i1l8cveYyYGFWqZ/PiSSibkoabszhG0c78j5hUNIoKGDa2mIfOFPFdwDCS1hHg95Wkg=="],
 
-    "@evolu/web": ["@evolu/monorepo@github:evoluhq/evolu#327037d", {}, "evoluhq-evolu-327037d", "sha512-M/TWXx/hDBfG61ixqz42x1L17oIWgRUMDhu+zB23zIEv0rLz0y759ga8PnWDdFbpWZv/U85Dn9WtUmfJyvqL5Q=="],
+    "@evolu/sqlite-wasm": ["@evolu/sqlite-wasm@2.2.4", "", { "bin": { "sqlite-wasm": "bin/index.js" } }, "sha512-/JOYGFN93QspD2C8HVxVgBUlFWqJ1IpaVuIhEB53u4+ZvE+D3LjpNHDYiwZgf0n7VaH2U85OY5eV3wUrWc3scg=="],
+
+    "@evolu/web": ["@evolu/web@3.1.0", "", { "dependencies": { "@evolu/sqlite-wasm": "2.2.4", "idb-keyval": "^6.2.2" }, "peerDependencies": { "@evolu/common": "^8.0.0" } }, "sha512-QldJ28/5TpZoOcgCOHckqWdn8ykJEp8a0dLWQ0NFPCQjfMZXDoCLOLAD3h+AFxgFF7mR/NSP86yCiMm/KLB+pA=="],
 
     "@exodus/bytes": ["@exodus/bytes@1.14.1", "", { "peerDependencies": { "@noble/hashes": "^1.8.0 || ^2.0.0" }, "optionalPeers": ["@noble/hashes"] }, "sha512-OhkBFWI6GcRMUroChZiopRiSp2iAMvEBK47NhJooDqz1RERO4QuZIZnjP63TXX8GAiLABkYmX+fuQsdJ1dd2QQ=="],
 
@@ -938,6 +939,18 @@
 
     "@minimalist-apps/window": ["@minimalist-apps/window@workspace:packages/window"],
 
+    "@msgpackr-extract/msgpackr-extract-darwin-arm64": ["@msgpackr-extract/msgpackr-extract-darwin-arm64@3.0.4", "", { "os": "darwin", "cpu": "arm64" }, "sha512-LCkGo6JDfaBhgST7UpPWgNgLINpcpabaHfyz5OBx75nUYxBsaEPxjnyNjWpeb/xBup/682QnBfRBy2/LvPutZQ=="],
+
+    "@msgpackr-extract/msgpackr-extract-darwin-x64": ["@msgpackr-extract/msgpackr-extract-darwin-x64@3.0.4", "", { "os": "darwin", "cpu": "x64" }, "sha512-zExlW9zUJKZH/tOtVMttwjKa4Xm/3KcNjnE3dPN92uCktwavMxpgCA3MoJK/DOnTWsQgo224OaST27/mPNAf+w=="],
+
+    "@msgpackr-extract/msgpackr-extract-linux-arm": ["@msgpackr-extract/msgpackr-extract-linux-arm@3.0.4", "", { "os": "linux", "cpu": "arm" }, "sha512-Tg3yX65f5GbtXLkrYEHE5oibZG9epyYWas7FogTTEJeDEF9JlXJzKgXaNhT3UXlTOeA+AfZpYZYZ0uPj7Cfquw=="],
+
+    "@msgpackr-extract/msgpackr-extract-linux-arm64": ["@msgpackr-extract/msgpackr-extract-linux-arm64@3.0.4", "", { "os": "linux", "cpu": "arm64" }, "sha512-dgX0P/9wGPJeHFBG+ZmhgE6bmtMt7NP5CRBGyyktpopdk/mW4POnrpQsSLtKI1dwpc+pPLuXHDh6vvskyQE/sw=="],
+
+    "@msgpackr-extract/msgpackr-extract-linux-x64": ["@msgpackr-extract/msgpackr-extract-linux-x64@3.0.4", "", { "os": "linux", "cpu": "x64" }, "sha512-8TNXMEjJc3QEy7R/x1INhgiU+XakDAFUzBhaz7+Rbrs8NH5UQeHQxxmzsSBJGyV6I1jW79undiQm8tOI+D+8FQ=="],
+
+    "@msgpackr-extract/msgpackr-extract-win32-x64": ["@msgpackr-extract/msgpackr-extract-win32-x64@3.0.4", "", { "os": "win32", "cpu": "x64" }, "sha512-CmCXPQrkbwExx3j946/PtHWHbYJiCRBRDl4BlkRQcJB/YOwQxJRTpoo7aTsortjgoJ1x7opzTSxn7C+ASSLVjQ=="],
+
     "@napi-rs/canvas": ["@napi-rs/canvas@0.1.95", "", { "optionalDependencies": { "@napi-rs/canvas-android-arm64": "0.1.95", "@napi-rs/canvas-darwin-arm64": "0.1.95", "@napi-rs/canvas-darwin-x64": "0.1.95", "@napi-rs/canvas-linux-arm-gnueabihf": "0.1.95", "@napi-rs/canvas-linux-arm64-gnu": "0.1.95", "@napi-rs/canvas-linux-arm64-musl": "0.1.95", "@napi-rs/canvas-linux-riscv64-gnu": "0.1.95", "@napi-rs/canvas-linux-x64-gnu": "0.1.95", "@napi-rs/canvas-linux-x64-musl": "0.1.95", "@napi-rs/canvas-win32-arm64-msvc": "0.1.95", "@napi-rs/canvas-win32-x64-msvc": "0.1.95" } }, "sha512-lkg23ge+rgyhgUwXmlbkPEhuhHq/hUi/gXKH+4I7vO+lJrbNfEYcQdJLIGjKyXLQzgFiiyDAwh5vAe/tITAE+w=="],
 
     "@napi-rs/canvas-android-arm64": ["@napi-rs/canvas-android-arm64@0.1.95", "", { "os": "android", "cpu": "arm64" }, "sha512-SqTh0wsYbetckMXEvHqmR7HKRJujVf1sYv1xdlhkifg6TlCSysz1opa49LlS3+xWuazcQcfRfmhA07HxxxGsAA=="],
@@ -963,6 +976,10 @@
     "@napi-rs/canvas-win32-x64-msvc": ["@napi-rs/canvas-win32-x64-msvc@0.1.95", "", { "os": "win32", "cpu": "x64" }, "sha512-GA8leTTCfdjuHi8reICTIxU0081PhXvl3lzIniLUjeLACx9GubUiyzkwFb+oyeKLS5IAGZFLKnzAf4wm2epRlA=="],
 
     "@napi-rs/wasm-runtime": ["@napi-rs/wasm-runtime@0.2.4", "", { "dependencies": { "@emnapi/core": "^1.1.0", "@emnapi/runtime": "^1.1.0", "@tybys/wasm-util": "^0.9.0" } }, "sha512-9zESzOO5aDByvhIAsOy9TbpZ0Ur2AJbUI7UT73kcUTS2mxAMHOBaa1st/jAymNoCtvrit99kkzT1FZuXVcgfIQ=="],
+
+    "@noble/ciphers": ["@noble/ciphers@2.3.0", "", {}, "sha512-Clu/xdfgVTf9o7ngLOURaxePwR0j8sjclKEtVij10/jGulwFsPWCvvRgG/XjUVf8Nei+jLG6uwyXzUTGY1DQrw=="],
+
+    "@noble/hashes": ["@noble/hashes@2.3.0", "", {}, "sha512-oN+QwyX7VSHotibwubG3kpzbwKrfnyR6OOO+3Nk/53ADL7FmgHHz4TgrbaYKvvOw09u6QTx0oiH1cNCIOuN0CQ=="],
 
     "@nodelib/fs.scandir": ["@nodelib/fs.scandir@2.1.5", "", { "dependencies": { "@nodelib/fs.stat": "2.0.5", "run-parallel": "^1.1.9" } }, "sha512-vq24Bq3ym5HEQm2NKCr3yXDwjc7vTsEThRDnkp2DK9p1uqLR+DHurm/NOTo0KG7HYHU7eppKZj3MyqYuMBf62g=="],
 
@@ -1176,6 +1193,8 @@
 
     "@rollup/rollup-win32-x64-msvc": ["@rollup/rollup-win32-x64-msvc@4.59.0", "", { "os": "win32", "cpu": "x64" }, "sha512-2HRCml6OztYXyJXAvdDXPKcawukWY2GpR5/nxKp4iBgiO3wcoEGkAaqctIbZcNB6KlUQBIqt8VYkNSj2397EfA=="],
 
+    "@scure/bip39": ["@scure/bip39@2.3.0", "", { "dependencies": { "@noble/hashes": "2.3.0" } }, "sha512-qdyWuxoYwi3+YmqIsfkpz1I029m980WkVPilj+kG7VxSm+gKQ2BmQru3nv3LbMtpSUXuyZwdFT65JkpKu5OHOQ=="],
+
     "@sidvind/better-ajv-errors": ["@sidvind/better-ajv-errors@3.0.1", "", { "dependencies": { "kleur": "^4.1.0" }, "peerDependencies": { "ajv": "^6.12.3 || ^7.0.0 || ^8.0.0" } }, "sha512-++1mEYIeozfnwWI9P1ECvOPoacy+CgDASrmGvXPMCcqgx0YUzB01vZ78uHdQ443V6sTY+e9MzHqmN9DOls02aw=="],
 
     "@sinclair/typebox": ["@sinclair/typebox@0.27.10", "", {}, "sha512-MTBk/3jGLNB2tVxv6uLlFh1iu64iYOQ2PbdOSK3NW8JZsmlaOh2q6sdtKowBhfw8QFLmYNzTW4/oK4uATIi6ZA=="],
@@ -1183,6 +1202,8 @@
     "@sliphua/lilconfig-ts-loader": ["@sliphua/lilconfig-ts-loader@3.2.2", "", { "dependencies": { "lodash.get": "^4", "make-error": "^1", "ts-node": "^9", "tslib": "^2" }, "peerDependencies": { "lilconfig": ">=2" } }, "sha512-nX2aBwAykiG50fSUzK9eyA5UvWcrEKzA0ZzCq9mLwHMwpKxM+U05YH8PHba1LJrbeZ7R1HSjJagWKMqFyq8cxw=="],
 
     "@so-ric/colorspace": ["@so-ric/colorspace@1.1.6", "", { "dependencies": { "color": "^5.0.2", "text-hex": "1.0.x" } }, "sha512-/KiKkpHNOBgkFJwu9sh48LkHSMYGyuTcSFK/qMBdnOAlrRJzRSXAOFB5qwzaVQuDl8wAvHVMkaASQDReTahxuw=="],
+
+    "@standard-schema/spec": ["@standard-schema/spec@1.1.0", "", {}, "sha512-l2aFy5jALhniG5HgqrD6jXLi/rUWrKvqN/qJx6yoJsgKhblVd+iqqU4RCXavm/jPityDo5TCvKMnpjKnOriy0w=="],
 
     "@stylistic/eslint-plugin": ["@stylistic/eslint-plugin@5.9.0", "", { "dependencies": { "@eslint-community/eslint-utils": "^4.9.1", "@typescript-eslint/types": "^8.56.0", "eslint-visitor-keys": "^4.2.1", "espree": "^10.4.0", "estraverse": "^5.3.0", "picomatch": "^4.0.3" }, "peerDependencies": { "eslint": "^9.0.0 || ^10.0.0" } }, "sha512-FqqSkvDMYJReydrMhlugc71M76yLLQWNfmGq+SIlLa7N3kHp8Qq8i2PyWrVNAfjOyOIY+xv9XaaYwvVW7vroMA=="],
 
@@ -1832,6 +1853,8 @@
 
     "iconv-lite": ["iconv-lite@0.6.3", "", { "dependencies": { "safer-buffer": ">= 2.1.2 < 3.0.0" } }, "sha512-4fCk79wshMdzMp2rH06qWrJE4iolqLhCUH+OiuIgU++RB0+94NlDL81atO7GX55uUKueo0txHNtvEyI6D7WdMw=="],
 
+    "idb-keyval": ["idb-keyval@6.3.0", "", {}, "sha512-um+2dgAWmYsu615EXpWVwSmapJhON0G43t3Ka/EVaohzPQXSMqKEqeDK/oIW3Ow+BXaF2PvSc+oBTFp793A5Ow=="],
+
     "ieee754": ["ieee754@1.2.1", "", {}, "sha512-dcyqhDvX1C46lXZcVqCpK+FtMRQVdIMN6/Df5js2zouUsqG7I6sFxitIC+7KYK29KdXOLHdu9zL4sFnoVQnqaA=="],
 
     "ignore": ["ignore@7.0.5", "", {}, "sha512-Hs59xBNfUIunMFgWAbGX5cq6893IbWg4KnrjbYwX3tx0ztorVgTDA6B2sxf8ejHJ4wz8BqGUMYlnzNBer5NvGg=="],
@@ -1980,6 +2003,8 @@
 
     "kuler": ["kuler@2.0.0", "", {}, "sha512-Xq9nH7KlWZmXAtodXDDRE7vs6DU1gTU8zYDHDiWLSip45Egwq3plLHzPn27NgvzL2r1LMPC1vdqh98sQxtqj4A=="],
 
+    "kysely": ["kysely@0.29.5", "", {}, "sha512-ooa+eSbBNPTo3MycPEuW5jdrxQdQwdtB3LC3h43FiXQbIry5tR0C5lDG7eealK0E4D7XjrnOP5DIUg/LyjRMYQ=="],
+
     "lazystream": ["lazystream@1.0.1", "", { "dependencies": { "readable-stream": "^2.0.5" } }, "sha512-b94GiNHQNy6JNTrt5w6zNyffMrNkXZb3KTkCZJb2V1xaEGCk093vkZ2jk3tpaeP33/OiXC+WvK9AxUebnf5nbw=="],
 
     "levn": ["levn@0.4.1", "", { "dependencies": { "prelude-ls": "^1.2.1", "type-check": "~0.4.0" } }, "sha512-+bT2uH4E5LGE7h/n3evcS/sQlJXCpIp6ym8OWJ5eV6+67Dsql/LaaT7qJBAt2rzfoa/5QBGBhxDix1dMt2kQKQ=="],
@@ -2076,6 +2101,10 @@
 
     "ms": ["ms@2.1.3", "", {}, "sha512-6FlzubTLZG3J2a/NVCAleEhjzq5oxgHyaCU9yYXvcLsvoVaHJq/s5xXI6/XXP6tz7R9xAOtHnSO/tXtF3WRTlA=="],
 
+    "msgpackr": ["msgpackr@2.0.5", "", { "optionalDependencies": { "msgpackr-extract": "^3.0.4" } }, "sha512-cef05H/dSYpLpqp3sj/qyZh5vhUYCalnaLO7j1yOmpsR0y/XwLVtK7r5gn+U/F7CTEfMowcGhlUQJDLcLf7jcA=="],
+
+    "msgpackr-extract": ["msgpackr-extract@3.0.4", "", { "dependencies": { "node-gyp-build-optional-packages": "5.2.2" }, "optionalDependencies": { "@msgpackr-extract/msgpackr-extract-darwin-arm64": "3.0.4", "@msgpackr-extract/msgpackr-extract-darwin-x64": "3.0.4", "@msgpackr-extract/msgpackr-extract-linux-arm": "3.0.4", "@msgpackr-extract/msgpackr-extract-linux-arm64": "3.0.4", "@msgpackr-extract/msgpackr-extract-linux-x64": "3.0.4", "@msgpackr-extract/msgpackr-extract-win32-x64": "3.0.4" }, "bin": { "download-msgpackr-prebuilds": "bin/download-prebuilds.js" } }, "sha512-4kmO/MdyUIkLIvTPr8VHLil4AtoKIoniWPIEk5+CDy0xnWC84azhSFmuJ7PxZdsYtiP5kEeQsORAVIeMgxT+Hw=="],
+
     "mv": ["mv@2.1.1", "", { "dependencies": { "mkdirp": "~0.5.1", "ncp": "~2.0.0", "rimraf": "~2.4.0" } }, "sha512-at/ZndSy3xEGJ8i0ygALh8ru9qy7gWW1cmkaqBN29JmMlIvM//MEO9y1sk/avxuwnPcfhkejkLsuPxH81BrkSg=="],
 
     "nanoid": ["nanoid@3.3.11", "", { "bin": { "nanoid": "bin/nanoid.cjs" } }, "sha512-N8SpfPUnUp1bK+PMYW8qSWdl9U+wwNWI4QKxOYDy9JAro3WMX7p2OeVRF9v+347pnakNevPmiHhNmZ2HbFA76w=="],
@@ -2093,6 +2122,8 @@
     "netmask": ["netmask@2.0.2", "", {}, "sha512-dBpDMdxv9Irdq66304OLfEmQ9tbNRFnFTuZiLo+bD+r332bBmMJ8GBLXklIXXgxd3+v9+KUnZaUR5PJMa75Gsg=="],
 
     "node-abi": ["node-abi@3.87.0", "", { "dependencies": { "semver": "^7.3.5" } }, "sha512-+CGM1L1CgmtheLcBuleyYOn7NWPVu0s0EJH2C4puxgEZb9h8QpR9G2dBfZJOAUhi7VQxuBPMd0hiISWcTyiYyQ=="],
+
+    "node-gyp-build-optional-packages": ["node-gyp-build-optional-packages@5.2.2", "", { "dependencies": { "detect-libc": "^2.0.1" }, "bin": { "node-gyp-build-optional-packages": "bin.js", "node-gyp-build-optional-packages-optional": "optional.js", "node-gyp-build-optional-packages-test": "build-test.js" } }, "sha512-s+w+rBWnpTMwSFbaE0UXsRlg7hU4FjekKU4eyAih5T8nJuNZT1nNsskXpxmeqSK9UzkBl6UgRlnKc8hz8IEqOw=="],
 
     "node-machine-id": ["node-machine-id@1.1.12", "", {}, "sha512-QNABxbrPa3qEIfrE6GOJ7BYIuignnJw7iQ2YPbc3Nla1HzRJjXzZOiikfF8m7eAMfichLt3M4VgLOetqgDmgGQ=="],
 
@@ -2227,6 +2258,8 @@
     "query-selector-shadow-dom": ["query-selector-shadow-dom@1.0.1", "", {}, "sha512-lT5yCqEBgfoMYpf3F2xQRK7zEr1rhIIZuceDK6+xRkJQ4NMbHTwXqk4NkwDwQMNqXgG9r9fyHnzwNVs6zV5KRw=="],
 
     "queue-microtask": ["queue-microtask@1.2.3", "", {}, "sha512-NuaNSa6flKT5JaSYQzJok04JzTL1CA6aGhv5rfLW3PgqA+M2ChpZQnAC8h8i4ZFkBS8X5RqkDBHA7r4hej3K9A=="],
+
+    "random": ["random@5.5.1", "", {}, "sha512-2TIJKf/BGjy0FGeZaan2+a/vq37afbSyscquADMFC13KBjFmg+10T/TkACpP9GMHfbEruKYbHqq0rjCA9x8gNA=="],
 
     "range-parser": ["range-parser@1.2.1", "", {}, "sha512-Hrgsx+orqoygnmhFbKaHE6c296J+HTAQXoxEF6gNupROmmGJRoyzfG3ccAveqCBrwr/2yxQ5BVd/GTl5agOwSg=="],
 
@@ -2689,8 +2722,6 @@
     "@isaacs/cliui/strip-ansi": ["strip-ansi@7.2.0", "", { "dependencies": { "ansi-regex": "^6.2.2" } }, "sha512-yDPMNjp4WyfYBkHnjIRLfca1i6KMyGCtsVgoKe/z1+6vukgaENdgGBZt+ZmKPc4gavvEZ5OgHfHdrazhgNyG7w=="],
 
     "@isaacs/cliui/wrap-ansi": ["wrap-ansi@8.1.0", "", { "dependencies": { "ansi-styles": "^6.1.0", "string-width": "^5.0.1", "strip-ansi": "^7.0.1" } }, "sha512-si7QWI6zUMq56bESFvagtmzMdGOtoxfR+Sez11Mobfc7tm+VkUckk9bW2UeffTGVUbOksxmSw0AA2gs8g71NCQ=="],
-
-    "@minimalist-apps/evolu/@evolu/common": ["@evolu/monorepo@github:evoluhq/evolu#327037d", {}, "evoluhq-evolu-327037d", "sha512-M/TWXx/hDBfG61ixqz42x1L17oIWgRUMDhu+zB23zIEv0rLz0y759ga8PnWDdFbpWZv/U85Dn9WtUmfJyvqL5Q=="],
 
     "@oxc-resolver/binding-wasm32-wasi/@napi-rs/wasm-runtime": ["@napi-rs/wasm-runtime@1.1.1", "", { "dependencies": { "@emnapi/core": "^1.7.1", "@emnapi/runtime": "^1.7.1", "@tybys/wasm-util": "^0.10.1" } }, "sha512-p64ah1M1ld8xjWv3qbvFwHiFVWrq1yFvV4f7w+mzaqiR4IlSgkqhcRdHwsGgomwzBH51sRY4NEowLxnaBjcW/A=="],
 

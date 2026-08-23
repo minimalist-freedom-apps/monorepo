@@ -16,8 +16,8 @@
         "typecheck": "tsc --noEmit"
     },
     "dependencies": {
-        "@evolu/common": "git+https://github.com/evoluhq/evolu.git#common-v8",
-        "@evolu/web": "git+https://github.com/evoluhq/evolu.git#common-v8",
+        "@evolu/common": "^8.5.0",
+        "@evolu/web": "^3.1.0",
         "@minimalist-apps/connect": "workspace:*",
         "@okikio/sharedworker": "^1.1.0",
         "disposablestack": "^1.1.7",
