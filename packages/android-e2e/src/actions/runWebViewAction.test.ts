@@ -64,7 +64,11 @@ describe(runWebViewAction.name, () => {
     it('reconnects but does not replay a mutation automatically', async () => {
         const action = vi
             .fn<() => Promise<void>>()
-            .mockRejectedValue(new Error('no such window: target window already closed'));
+            .mockRejectedValue(
+                new Error(
+                    'disconnected: Unable to receive message from renderer (disconnected: not connected to DevTools)',
+                ),
+            );
         actionMocks.attachWebdriverIoBrowser.mockResolvedValue({
             switchContext: actionMocks.switchContext,
         });
