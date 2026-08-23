@@ -22,16 +22,28 @@ export const waitForElementTextByTestIdContains = async ({
     const element = await browser.$(`[data-testid="${testId}"]`);
     await element.waitForExist({ timeout: timeoutMs });
 
-    await browser.waitUntil(
-        async () => {
-            const value = await element.getText();
+    try {
+        await browser.waitUntil(
+            async () => {
+                const value = await element.getText();
 
-            return value.includes(text);
-        },
-        {
-            interval: pollIntervalMs,
-            timeout: timeoutMs,
-            timeoutMsg: `Element [data-testid="${testId}"] does not contain text: ${text}`,
-        },
-    );
+                return value.includes(text);
+            },
+            {
+                interval: pollIntervalMs,
+                timeout: timeoutMs,
+                timeoutMsg: `Element [data-testid="${testId}"] does not contain text: ${text}`,
+            },
+        );
+    } catch (error: unknown) {
+        const [actualText, browserLogs] = await Promise.all([
+            element.getText(),
+            browser.getLogs('browser'),
+        ]);
+
+        throw new Error(
+            `Element [data-testid="${testId}"] does not contain text: ${text}. Actual text: ${actualText}. Browser logs: ${JSON.stringify(browserLogs)}`,
+            { cause: error },
+        );
+    }
 };
