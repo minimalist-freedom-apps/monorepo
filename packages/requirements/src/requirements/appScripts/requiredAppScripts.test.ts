@@ -67,6 +67,7 @@ describe(requiredAppScripts.name, () => {
                 'build:android:sign':
                     'APP_DIR=$PWD pnpm --filter @minimalist-apps/android-build sign',
                 preview: 'vite preview',
+                test: 'vitest run --config ../../vitest.config.ts --root .',
                 typecheck: 'tsc --noEmit',
             });
         });
@@ -236,6 +237,33 @@ describe(requiredAppScripts.name, () => {
     });
 
     describe('verify', () => {
+        test('app verify requires test script', () => {
+            writePackageJson({
+                dir: appDir,
+                content: {
+                    name: '@minimalist-apps/demo-app',
+                    scripts: {
+                        dev: 'vite',
+                        'dev:android':
+                            'APP_DIR=$PWD pnpm --filter @minimalist-apps/android-build dev',
+                        build: 'vite build',
+                        'build:android':
+                            'APP_DIR=$PWD pnpm --filter @minimalist-apps/android-build build',
+                        'build:android:debug':
+                            'APP_DIR=$PWD pnpm --filter @minimalist-apps/android-build build:debug',
+                        'build:android:sign':
+                            'APP_DIR=$PWD pnpm --filter @minimalist-apps/android-build sign',
+                        preview: 'vite preview',
+                        typecheck: 'tsc --noEmit',
+                    },
+                },
+            });
+
+            const errors = requiredAppScripts.verify({ appDir });
+
+            expect(errors).toEqual(['missing script "test"']);
+        });
+
         test('package verify requires test script', () => {
             writePackageJson({
                 dir: packageDir,
