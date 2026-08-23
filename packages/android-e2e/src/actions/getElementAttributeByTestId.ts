@@ -1,5 +1,6 @@
 import type { E2ESession } from '../session.ts';
 import { attachWebdriverIoBrowser } from './attachWebdriverIoBrowser.ts';
+import { runWebViewAction } from './runWebViewAction.ts';
 import { defaultTimeoutMs } from './shared.ts';
 
 interface GetElementAttributeByTestIdProps {
@@ -9,18 +10,20 @@ interface GetElementAttributeByTestIdProps {
     readonly timeoutMs?: number;
 }
 
-export const getElementAttributeByTestId = async ({
+export const getElementAttributeByTestId = ({
     session,
     testId,
     attribute,
     timeoutMs = defaultTimeoutMs,
-}: GetElementAttributeByTestIdProps): Promise<string | null> => {
-    const browser = await attachWebdriverIoBrowser({
+}: GetElementAttributeByTestIdProps): Promise<string | null> =>
+    runWebViewAction({
+        action: async () => {
+            const browser = await attachWebdriverIoBrowser({ session });
+            const element = await browser.$(`[data-testid="${testId}"]`);
+
+            await element.waitForExist({ timeout: timeoutMs });
+
+            return element.getAttribute(attribute);
+        },
         session,
     });
-
-    const element = await browser.$(`[data-testid="${testId}"]`);
-    await element.waitForExist({ timeout: timeoutMs });
-
-    return element.getAttribute(attribute);
-};
