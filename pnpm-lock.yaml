@@ -682,12 +682,6 @@ importers:
       '@minimalist-apps/connect':
         specifier: workspace:*
         version: link:../connect
-      '@okikio/sharedworker':
-        specifier: ^1.1.0
-        version: 1.1.0
-      disposablestack:
-        specifier: ^1.1.8
-        version: 1.1.8
       promise.try:
         specifier: ^2.0.1
         version: 2.0.1
@@ -1918,9 +1912,6 @@ packages:
     resolution: {integrity: sha512-UD21AHWJ2PEA+PuANPCt+lj3kYpAzYNq+bm4VCbrt3KZd7zDPas0ns85UIhfrhsNiSmYzjWz2/JDk2S3cA6lGw==}
     cpu: [x64]
     os: [win32]
-
-  '@okikio/sharedworker@1.1.0':
-    resolution: {integrity: sha512-Xj9TUWll9mhARsKu5DtlQCjRekfJfQ2E291ow6gmXIz+WuF6uJMH8ZmGhdRTx/ndOippHnm1j/vxXNjmR6JuXw==}
 
   '@oxc-parser/binding-android-arm-eabi@0.143.0':
     resolution: {integrity: sha512-n9uozULWflPqBtdmI8lAabLqGKNgLVNN0ZH8HfgCwpKGNtzRzauB76jTiW/3YLkcA7N1zskpi9GdVnZuu1SAvg==}
@@ -3531,10 +3522,6 @@ packages:
   diff@9.0.0:
     resolution: {integrity: sha512-svtcdpS8CgJyqAjEQIXdb3OjhFVVYjzGAPO8WGCmRbrml64SPw/jJD4GoE98aR7r25A0XcgrK3F02yw9R/vhQw==}
     engines: {node: '>=0.3.1'}
-
-  disposablestack@1.1.8:
-    resolution: {integrity: sha512-RE/u845Vl08TSUsGnS4+he35LSuKl7kfurFgrTbcRCJogS1icLr3T8TderQ17rCcXu/+iMTivv2UCpyI4c9ibw==}
-    engines: {node: '>= 0.4'}
 
   dom-accessibility-api@0.5.16:
     resolution: {integrity: sha512-X7BJ2yElsnOJ30pZF4uIIDfBEVgF4XEBxL9Bxhy6dnrm5hkzqmsWHGTiHqRiITNhMyFLyAiWndIJP7Z1NTteDg==}
@@ -5346,10 +5333,6 @@ packages:
     resolution: {integrity: sha512-MpUEN2OodtUzxvKQl72cUF7RQ5EiHsGvSsVG0ia9c5RbWGL2CI4C7EpPS8UTBIplnlzZiNuV56w+FuNxy3ty2Q==}
     engines: {node: '>=10'}
 
-  suppressed-error@1.0.3:
-    resolution: {integrity: sha512-6+ZiCVUmDLFRyYRswTrDTYWaM/IT01W/cqQBLnnyg8T0njVrWj3tP+EXFevXk6qK61yDXnmZsOFVzFfYoUy/KA==}
-    engines: {node: '>= 0.4'}
-
   symbol-tree@3.2.4:
     resolution: {integrity: sha512-9QNk5KwDF+Bvz+PyObkmSYjI5ksVUYtjW7AU22r2NKcfLJcXp96hkDWU3+XndOsUb+AQ9QhfzfCT2O+CNWT5Tw==}
 
@@ -6730,8 +6713,6 @@ snapshots:
 
   '@nx/nx-win32-x64-msvc@23.1.1':
     optional: true
-
-  '@okikio/sharedworker@1.1.0': {}
 
   '@oxc-parser/binding-android-arm-eabi@0.143.0':
     optional: true
@@ -8359,21 +8340,6 @@ snapshots:
     optional: true
 
   diff@9.0.0: {}
-
-  disposablestack@1.1.8:
-    dependencies:
-      call-bind: 1.0.9
-      call-bound: 1.0.4
-      define-properties: 1.2.1
-      es-abstract: 1.24.2
-      es-errors: 1.3.0
-      es-set-tostringtag: 2.1.0
-      get-intrinsic: 1.3.0
-      globalthis: 1.0.4
-      has-symbols: 1.1.0
-      hasown: 2.0.4
-      internal-slot: 1.1.0
-      suppressed-error: 1.0.3
 
   dom-accessibility-api@0.5.16: {}
 
@@ -10612,17 +10578,6 @@ snapshots:
     dependencies:
       has-flag: 4.0.0
     optional: true
-
-  suppressed-error@1.0.3:
-    dependencies:
-      define-data-property: 1.1.4
-      define-properties: 1.2.1
-      es-abstract: 1.24.2
-      es-errors: 1.3.0
-      function-bind: 1.1.2
-      globalthis: 1.0.4
-      has-property-descriptors: 1.0.2
-      set-function-name: 2.0.2
 
   symbol-tree@3.2.4: {}
 
