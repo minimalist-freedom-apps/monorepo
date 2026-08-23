@@ -31,24 +31,30 @@ export const createSession = async ({
         },
     };
 
-    const webViewContextName = await waitForWebViewContext({
-        session,
-    });
-
-    await setAppiumContext({
-        contextName: webViewContextName,
-        session,
-    });
-
-    if (isVideoRecordingEnabled()) {
-        const browser = await attachWebdriverIoBrowser({
+    try {
+        const webViewContextName = await waitForWebViewContext({
             session,
         });
 
-        await browser.startRecordingScreen({
-            forceRestart: true,
-            timeLimit: '1800',
+        await setAppiumContext({
+            contextName: webViewContextName,
+            session,
         });
+
+        if (isVideoRecordingEnabled()) {
+            const browser = await attachWebdriverIoBrowser({
+                session,
+            });
+
+            await browser.startRecordingScreen({
+                forceRestart: true,
+                timeLimit: '1800',
+            });
+        }
+    } catch (error) {
+        await session[Symbol.asyncDispose]();
+
+        throw error;
     }
 
     return session;

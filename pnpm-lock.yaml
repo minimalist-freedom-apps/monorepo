@@ -682,6 +682,9 @@ importers:
       '@minimalist-apps/connect':
         specifier: workspace:*
         version: link:../connect
+      '@okikio/sharedworker':
+        specifier: ^1.1.0
+        version: 1.1.0
       promise.try:
         specifier: ^2.0.1
         version: 2.0.1
@@ -1912,6 +1915,9 @@ packages:
     resolution: {integrity: sha512-UD21AHWJ2PEA+PuANPCt+lj3kYpAzYNq+bm4VCbrt3KZd7zDPas0ns85UIhfrhsNiSmYzjWz2/JDk2S3cA6lGw==}
     cpu: [x64]
     os: [win32]
+
+  '@okikio/sharedworker@1.1.0':
+    resolution: {integrity: sha512-Xj9TUWll9mhARsKu5DtlQCjRekfJfQ2E291ow6gmXIz+WuF6uJMH8ZmGhdRTx/ndOippHnm1j/vxXNjmR6JuXw==}
 
   '@oxc-parser/binding-android-arm-eabi@0.143.0':
     resolution: {integrity: sha512-n9uozULWflPqBtdmI8lAabLqGKNgLVNN0ZH8HfgCwpKGNtzRzauB76jTiW/3YLkcA7N1zskpi9GdVnZuu1SAvg==}
@@ -6713,6 +6719,8 @@ snapshots:
 
   '@nx/nx-win32-x64-msvc@23.1.1':
     optional: true
+
+  '@okikio/sharedworker@1.1.0': {}
 
   '@oxc-parser/binding-android-arm-eabi@0.143.0':
     optional: true
