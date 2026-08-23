@@ -18,7 +18,9 @@ const maxFlowAttempts = 3;
 
 const webViewDetachedErrorMessages = [
     'chrome not reachable',
+    'disconnected: unable to receive message from renderer',
     'no such window',
+    'not connected to devtools',
     'stale element reference',
     'target window already closed',
     'web view not found',
