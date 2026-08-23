@@ -18,29 +18,29 @@ jobs:
         with:
           fetch-depth: 0
 
-      - name: Setup Node + Bun + install
-        uses: ./.github/actions/setup-node-bun
+      - name: Setup Node + pnpm + install
+        uses: ./.github/actions/setup-node-pnpm
 
       - name: Check lockfile install
-        run: bun install --frozen-lockfile
+        run: pnpm install --frozen-lockfile
 
       - name: Check (format, organize imports)
-        run: bun run check
+        run: pnpm check
 
       - name: Lint (biome + eslint)
-        run: bun run lint
+        run: pnpm lint
 
       - name: Run Knip
-        run: bun run knip
+        run: pnpm knip
 
       - name: TypeScript check
-        run: bunx nx affected -t typecheck --base=${{ github.event.pull_request.base.sha || github.event.before }} --head=${{ github.sha }} --parallel=3 --output-style=stream --verbose
+        run: pnpm exec nx affected -t typecheck --base=${{ github.event.pull_request.base.sha || github.event.before }} --head=${{ github.sha }} --parallel=3 --output-style=stream --verbose
 
       - name: Verify requirements
-        run: bun run requirements:verify
+        run: pnpm requirements:verify
 
       - name: Run affected unit tests (Vitest targets)
-        run: bunx nx affected -t test --base=${{ github.event.pull_request.base.sha || github.event.before }} --head=${{ github.sha }} --parallel=3 --output-style=stream --verbose
+        run: pnpm exec nx affected -t test --base=${{ github.event.pull_request.base.sha || github.event.before }} --head=${{ github.sha }} --parallel=3 --output-style=stream --verbose
 
       - name: Build apps
         run: |
@@ -48,6 +48,6 @@ jobs:
           for app in apps/*; do
             if [ -d "$app" ]; then
               echo "Building $app"
-              bun --cwd "$app" run build
+              pnpm --dir "$app" run build
             fi
           done

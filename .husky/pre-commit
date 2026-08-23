@@ -1,5 +1,5 @@
-bun run format
-bun run check:fix
-bun run lint:biome:fix
-bun run lint:eslint:fix
+pnpm format
+pnpm check:fix
+pnpm lint:biome:fix
+pnpm lint:eslint:fix
 git add -u

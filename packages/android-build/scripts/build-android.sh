@@ -11,7 +11,7 @@ echo "Building web assets…"
 vite build
 
 echo "Syncing Capacitor…"
-bunx cap sync android
+pnpm exec cap sync android
 
 echo "Generating icons…"
 (cd "$WORKSPACE_ROOT" && requirements-fix --filter "$APP_DIR_NAME" --only 'has generated icons')

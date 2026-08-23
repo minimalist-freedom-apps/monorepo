@@ -21,7 +21,7 @@ nix --extra-experimental-features nix-command --extra-experimental-features flak
 Example dev server:
 
 ```bash
-bun --filter @minimalist-apps/scale-cake dev
+pnpm --filter @minimalist-apps/scale-cake dev
 ```
 
 ## iOS Support
