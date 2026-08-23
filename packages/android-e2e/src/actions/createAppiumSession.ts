@@ -34,6 +34,7 @@ export const createAppiumSession = async ({
             'appium:enforceAppInstall': true,
             'appium:newCommandTimeout': 120,
             'appium:noReset': false,
+            'appium:recreateChromeDriverSessions': true,
             'goog:loggingPrefs': {
                 browser: 'ALL',
             },
