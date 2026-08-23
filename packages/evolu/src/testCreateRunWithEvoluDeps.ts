@@ -87,7 +87,9 @@ const testCreateSqliteDeps: CreateSqliteDriverDep = {
     createSqliteDriver: name => createBetterSqliteDriver(name, { mode: 'memory' }),
 };
 
-export const testCreateRunWithEvoluDeps = () => {
+export const testCreateRunWithEvoluDeps = async () => {
+    await using disposer = new AsyncDisposableStack();
+
     const consoleStoreOutput = createConsoleStoreOutput();
     const sharedWorker = testCreateSharedWorker<SharedWorkerInput, SharedWorkerOutput>();
 
@@ -108,9 +110,16 @@ export const testCreateRunWithEvoluDeps = () => {
         reloadApp: constVoid,
         sharedWorker,
     });
+    const disposeRun = run[Symbol.asyncDispose];
+    disposer.defer(disposeRun);
+    disposer.use(sharedWorker);
 
-    void run(initSharedWorker(sharedWorker.self));
+    disposer.use(await run.ok(initSharedWorker(sharedWorker.self)));
     sharedWorker.connect();
 
-    return run;
+    const disposables = disposer.move();
+
+    return Object.assign(run, {
+        [Symbol.asyncDispose]: () => disposables.disposeAsync(),
+    });
 };
