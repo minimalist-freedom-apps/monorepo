@@ -1,3 +1,4 @@
+import { promiseWithResolversPolyfillBanner } from '@minimalist-apps/evolu/vite';
 import react from '@vitejs/plugin-react';
 import { defineConfig } from 'vite';
 import { config } from './config.ts';
@@ -14,6 +15,11 @@ export default defineConfig({
     },
     worker: {
         format: 'es',
+        rollupOptions: {
+            output: {
+                banner: promiseWithResolversPolyfillBanner,
+            },
+        },
     },
     plugins: [react()],
 });

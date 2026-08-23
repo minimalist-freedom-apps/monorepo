@@ -15,6 +15,29 @@ type PromiseWithTry = PromiseConstructor & {
     };
 };
 
+const ensurePromiseWithResolvers = (): void => {
+    const PromiseWithResolvers = Promise as PromiseWithTry;
+
+    if (typeof PromiseWithResolvers.withResolvers === 'function') {
+        return;
+    }
+
+    PromiseWithResolvers.withResolvers = <T>() => {
+        let resolvePromise!: (value: T | PromiseLike<T>) => void;
+        let rejectPromise!: (reason?: unknown) => void;
+        const promise = new Promise<T>((resolve, reject) => {
+            resolvePromise = resolve;
+            rejectPromise = reject;
+        });
+
+        return {
+            promise,
+            resolve: resolvePromise,
+            reject: rejectPromise,
+        };
+    };
+};
+
 const ensurePromiseTry = (): void => {
     const PromiseWithTry = Promise as PromiseWithTry;
 
@@ -47,5 +70,6 @@ const ensurePromiseTry = (): void => {
 
 export const installPolyfills = (): void => {
     installEvoluCommonPolyfills();
+    ensurePromiseWithResolvers();
     ensurePromiseTry();
 };
