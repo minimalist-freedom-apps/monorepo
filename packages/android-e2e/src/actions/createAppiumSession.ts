@@ -34,6 +34,9 @@ export const createAppiumSession = async ({
             'appium:enforceAppInstall': true,
             'appium:newCommandTimeout': 120,
             'appium:noReset': false,
+            'goog:loggingPrefs': {
+                browser: 'ALL',
+            },
             platformName: 'Android',
         } as never,
         hostname: url.hostname,
