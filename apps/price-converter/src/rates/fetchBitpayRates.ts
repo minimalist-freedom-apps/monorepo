@@ -1,5 +1,5 @@
-import { CurrencyCode, tryAsync } from '@evolu/common';
-import { isFiatCurrency } from '@minimalist-apps/fiat';
+import { tryAsync } from '@evolu/common';
+import { CurrencyCode, isFiatCurrency } from '@minimalist-apps/fiat';
 import { RateBtcPerFiat } from '../converter/rate.js';
 import { type CurrencyMap, type FetchRates, FetchRatesError } from './FetchRates.js';
 
@@ -32,7 +32,7 @@ export const createFetchBitpayRates =
                 const data: BitpayResponse = await response.json();
 
                 const rates = data.data.reduce<CurrencyMap>((acc, item) => {
-                    const code = CurrencyCode.from(item.code);
+                    const code = CurrencyCode.fromUnknown(item.code);
 
                     if (code.ok && isFiatCurrency(code.value)) {
                         acc[code.value] = {

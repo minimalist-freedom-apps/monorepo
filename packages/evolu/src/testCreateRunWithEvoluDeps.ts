@@ -1,27 +1,27 @@
 import {
     type CreateSqliteDriver,
     type CreateSqliteDriverDep,
+    constVoid,
     createConsoleStoreOutput,
-    createInMemoryLeaderLock,
-    createMessageChannel,
-    createMessagePort,
     createPreparedStatementsCache,
-    createSharedWorker,
-    createSqlite,
-    createWorker,
-    lazyVoid,
     ok,
     type SqliteDriver,
     type SqliteRow,
+    testCreateBroadcastChannel,
+    testCreateLockManager,
+    testCreateMessageChannel,
+    testCreateMessagePort,
     testCreateRun,
+    testCreateSharedWorker,
     testCreateWebSocket,
-    testName,
+    testCreateWorker,
 } from '@evolu/common';
 import {
     type DbWorkerInit,
-    initDbWorker,
     initSharedWorker,
     type SharedWorkerInput,
+    type SharedWorkerOutput,
+    startDbWorker,
 } from '@evolu/common/local-first';
 import BetterSQLite, { type Statement } from 'better-sqlite3';
 
@@ -36,8 +36,18 @@ const createBetterSqliteDriver: CreateSqliteDriver = (name, options) => () => {
         sql => db.prepare(sql),
         // Not needed.
         // https://github.com/WiseLibs/better-sqlite3/blob/master/docs/api.md#class-statement
-        lazyVoid,
+        constVoid,
     );
+
+    const dispose = () => {
+        if (isDisposed) {
+            return;
+        }
+
+        isDisposed = true;
+        cache[Symbol.dispose]();
+        db.close();
+    };
 
     const driver: SqliteDriver = {
         exec: query => {
@@ -66,16 +76,8 @@ const createBetterSqliteDriver: CreateSqliteDriver = (name, options) => () => {
             // Ensure export uses transferable ArrayBuffer backing.
             return new Uint8Array(file);
         },
-
-        [Symbol.dispose]: () => {
-            if (isDisposed) {
-                return;
-            }
-
-            isDisposed = true;
-            cache[Symbol.dispose]();
-            db.close();
-        },
+        deleteDatabase: dispose,
+        [Symbol.dispose]: dispose,
     };
 
     return ok(driver);
@@ -85,41 +87,30 @@ const testCreateSqliteDeps: CreateSqliteDriverDep = {
     createSqliteDriver: name => createBetterSqliteDriver(name, { mode: 'memory' }),
 };
 
-export const testCreateRunWithEvoluDeps = async () => {
+export const testCreateRunWithEvoluDeps = () => {
     const consoleStoreOutput = createConsoleStoreOutput();
+    const sharedWorker = testCreateSharedWorker<SharedWorkerInput, SharedWorkerOutput>();
 
     const run = testCreateRun({
-        // console: createConsole({ level: "debug" }),
         consoleStoreOutputEntry: consoleStoreOutput.entry,
-        createMessageChannel,
-        createMessagePort,
+        createBroadcastChannel: testCreateBroadcastChannel,
+        createMessageChannel: testCreateMessageChannel,
+        createMessagePort: testCreateMessagePort,
         createWebSocket: testCreateWebSocket({ throwOnCreate: true }),
-    });
+        createDbWorker: () => {
+            const worker = testCreateWorker<DbWorkerInit>();
+            void run(startDbWorker(worker.self));
 
-    const driver = await run.orThrow(testCreateSqliteDeps.createSqliteDriver(testName));
-
-    const workerRun = testCreateRun({
-        consoleStoreOutputEntry: consoleStoreOutput.entry,
-        createMessagePort,
-        leaderLock: createInMemoryLeaderLock(),
-        createSqliteDriver: () => () => ok(driver),
-    });
-
-    const createDbWorker = () =>
-        createWorker<DbWorkerInit>(self => {
-            workerRun(initDbWorker(self));
-        });
-
-    const sharedWorker = createSharedWorker<SharedWorkerInput>(self => {
-        run(initSharedWorker(self));
-    });
-
-    const sqlite = await workerRun.orThrow(createSqlite(testName));
-
-    return run.addDeps({
-        createDbWorker,
-        reloadApp: lazyVoid,
+            return worker;
+        },
+        createSqliteDriver: testCreateSqliteDeps.createSqliteDriver,
+        lockManager: testCreateLockManager(),
+        reloadApp: constVoid,
         sharedWorker,
-        sqlite,
     });
+
+    void run(initSharedWorker(sharedWorker.self));
+    sharedWorker.connect();
+
+    return run;
 };

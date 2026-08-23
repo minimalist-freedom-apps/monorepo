@@ -1,5 +1,5 @@
-import type { CurrencyCode } from '@evolu/common';
 import { satsToBtc } from '@minimalist-apps/bitcoin';
+import type { CurrencyCode } from '@minimalist-apps/fiat';
 import type { AppStoreDep } from '../state/createAppStore';
 import type { CurrencyValues } from '../state/State';
 import { bitcoinToFiat } from './bitcoinToFiat';

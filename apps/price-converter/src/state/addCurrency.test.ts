@@ -1,10 +1,11 @@
-import { CurrencyCode, getOrThrow, type Owner } from '@evolu/common';
+import { getOrThrow, type Owner } from '@evolu/common';
+import { CurrencyCode } from '@minimalist-apps/fiat';
 import { describe, expect, test, vi } from 'vitest';
 import { asRateBtcPerFiat } from '../converter/rate.js';
 import { createAddCurrency } from './addCurrency.js';
 import type { EvoluStorage } from './evolu/schema.js';
 
-const USD = getOrThrow(CurrencyCode.from('USD'));
+const USD = getOrThrow(CurrencyCode.fromUnknown('USD'));
 
 const mockEvoluStorage = (upsert: unknown): EvoluStorage => ({
     evolu: { upsert: upsert as EvoluStorage['evolu']['upsert'] } as EvoluStorage['evolu'],

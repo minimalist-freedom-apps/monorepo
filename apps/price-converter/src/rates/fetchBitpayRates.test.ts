@@ -1,13 +1,14 @@
-import { CurrencyCode, getOrThrow } from '@evolu/common';
+import { getOrThrow } from '@evolu/common';
+import { CurrencyCode, type CurrencyCode as CurrencyCodeType } from '@minimalist-apps/fiat';
 import { typedObjectKeys } from '@minimalist-apps/type-utils';
 import { describe, expect, test } from 'vitest';
 import { createFetchBitpayRates } from './fetchBitpayRates.js';
 import bitpayFixture from './fixtures/bitpay.json';
 
-const USD = getOrThrow(CurrencyCode.from('USD'));
-const EUR = getOrThrow(CurrencyCode.from('EUR'));
-const GBP = getOrThrow(CurrencyCode.from('GBP'));
-const JPY = getOrThrow(CurrencyCode.from('JPY'));
+const USD = getOrThrow(CurrencyCode.fromUnknown('USD'));
+const EUR = getOrThrow(CurrencyCode.fromUnknown('EUR'));
+const GBP = getOrThrow(CurrencyCode.fromUnknown('GBP'));
+const JPY = getOrThrow(CurrencyCode.fromUnknown('JPY'));
 
 const createMockFetch = (response: unknown, ok = true): typeof globalThis.fetch =>
     (() =>
@@ -76,12 +77,12 @@ describe('createFetchBitpayRates', () => {
             return;
         }
 
-        expect(result.value['ETH' as CurrencyCode]).toBeUndefined();
-        expect(result.value['BCH' as CurrencyCode]).toBeUndefined();
-        expect(result.value['LTC' as CurrencyCode]).toBeUndefined();
-        expect(result.value['XRP' as CurrencyCode]).toBeUndefined();
-        expect(result.value['SOL' as CurrencyCode]).toBeUndefined();
-        expect(result.value['APE' as CurrencyCode]).toBeUndefined();
+        expect(result.value['ETH' as CurrencyCodeType]).toBeUndefined();
+        expect(result.value['BCH' as CurrencyCodeType]).toBeUndefined();
+        expect(result.value['LTC' as CurrencyCodeType]).toBeUndefined();
+        expect(result.value['XRP' as CurrencyCodeType]).toBeUndefined();
+        expect(result.value['SOL' as CurrencyCodeType]).toBeUndefined();
+        expect(result.value['APE' as CurrencyCodeType]).toBeUndefined();
     });
 
     test('excludes invalid currency codes', async () => {

@@ -1,7 +1,6 @@
-import type { CurrencyCode } from '@evolu/common';
 import type { NotificationDep } from '@minimalist-apps/components';
 import { Button, Flex, List, Row, Screen, SearchInput, Text } from '@minimalist-apps/components';
-import { CURRENCY_TERRITORIES } from '@minimalist-apps/fiat';
+import { CURRENCY_TERRITORIES, type CurrencyCode } from '@minimalist-apps/fiat';
 import type { NavigateDep } from '@minimalist-apps/navigator';
 import { typedObjectValues } from '@minimalist-apps/type-utils';
 import type { FC } from 'react';

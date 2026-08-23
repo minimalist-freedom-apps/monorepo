@@ -1,4 +1,3 @@
-import type { CurrencyCode } from '@evolu/common';
 import {
     type AmountBtc,
     type AmountSats,
@@ -8,7 +7,7 @@ import {
     satsToBtc,
 } from '@minimalist-apps/bitcoin';
 import { Input, type InputRef } from '@minimalist-apps/components';
-import { type FiatAmount, formatFiatWithCommas } from '@minimalist-apps/fiat';
+import { type CurrencyCode, type FiatAmount, formatFiatWithCommas } from '@minimalist-apps/fiat';
 import { isValidNumberInput, parseFormattedNumber, stripCommas } from '@minimalist-apps/number';
 import { type FC, useEffect, useRef, useState } from 'react';
 import { normalizeBtcInput, normalizeBtcInputPreservingMidEdit } from './normalizeBtcInput';

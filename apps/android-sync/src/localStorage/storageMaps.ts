@@ -24,7 +24,7 @@ export const mapLocalStorageToState: MapLocalStorageToState<AppState> = {
     },
     debugMode: value => value === 'true',
     evoluMnemonic: value => {
-        const mnemonic = Mnemonic.from(value);
+        const mnemonic = Mnemonic.fromUnknown(value);
 
         if (mnemonic.ok === false) {
             return null;

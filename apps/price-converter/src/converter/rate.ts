@@ -1,4 +1,5 @@
-import type { Brand, CurrencyCode } from '@evolu/common';
+import type { Brand } from '@evolu/common';
+import type { CurrencyCode } from '@minimalist-apps/fiat';
 
 /**
  * Formula: Rate = Bitcoin / Fiat

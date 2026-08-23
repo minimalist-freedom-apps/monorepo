@@ -1,4 +1,4 @@
-import type { EvoluSchema, Query, Row } from '@evolu/common';
+import type { EvoluSchema, Query, QueryRows, Row } from '@evolu/common';
 import type { Subscribable } from '@minimalist-apps/connect';
 import type { EnsureEvoluStorageDep } from './createEnsureEvoluStorage';
 import type { EvoluStorage } from './EvoluStorage';
@@ -10,10 +10,10 @@ import type { EvoluStorage } from './EvoluStorage';
  */
 export const createSubscribableQuery = <S extends EvoluSchema, R extends Row, MappedRow>(
     deps: EnsureEvoluStorageDep<S>,
-    queryFactory: (storage: EvoluStorage<S>) => Query<R>,
+    queryFactory: (storage: EvoluStorage<S>) => Query<S, R>,
 
     // Todo: This breaks the reference identity, mapping creates new objects triggering more updates.
-    mapRows: (rows: ReadonlyArray<R>) => ReadonlyArray<MappedRow>,
+    mapRows: (rows: QueryRows<R>) => ReadonlyArray<MappedRow>,
 ): Subscribable<ReadonlyArray<MappedRow>> => {
     let rows: ReadonlyArray<MappedRow> = [];
     let evoluUnsubscribe: (() => void) | null = null;

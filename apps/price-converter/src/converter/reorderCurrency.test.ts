@@ -1,14 +1,15 @@
-import { CurrencyCode, getOrThrow, type Owner } from '@evolu/common';
+import { getOrThrow, type Owner } from '@evolu/common';
+import { CurrencyCode } from '@minimalist-apps/fiat';
 import { asFractionalIndex } from '@minimalist-apps/fractional-indexing';
 import { describe, expect, test, vi } from 'vitest';
 import type { EvoluStorage } from '../state/evolu/schema.js';
 import type { SelectedCurrency } from '../state/SelectedCurrency/SelectedCurrency.js';
 import { createReorderCurrency, type ReorderCurrencyDeps } from './reorderCurrency.js';
 
-const USD = getOrThrow(CurrencyCode.from('USD'));
-const EUR = getOrThrow(CurrencyCode.from('EUR'));
-const GBP = getOrThrow(CurrencyCode.from('GBP'));
-const JPY = getOrThrow(CurrencyCode.from('JPY'));
+const USD = getOrThrow(CurrencyCode.fromUnknown('USD'));
+const EUR = getOrThrow(CurrencyCode.fromUnknown('EUR'));
+const GBP = getOrThrow(CurrencyCode.fromUnknown('GBP'));
+const JPY = getOrThrow(CurrencyCode.fromUnknown('JPY'));
 
 const createTestCurrency = (code: CurrencyCode, order: string): SelectedCurrency => ({
     code,

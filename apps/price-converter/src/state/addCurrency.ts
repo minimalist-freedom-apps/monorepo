@@ -1,5 +1,6 @@
-import { type CurrencyCode, createIdFromString, err, ok, type Result } from '@evolu/common';
+import { createIdFromString, err, ok, type Result } from '@evolu/common';
 import { satsToBtc } from '@minimalist-apps/bitcoin';
+import type { CurrencyCode } from '@minimalist-apps/fiat';
 import { generateIndexBetween } from '@minimalist-apps/fractional-indexing';
 import { bitcoinToFiat } from '../converter/bitcoinToFiat';
 import type { AppStoreDep } from './createAppStore';

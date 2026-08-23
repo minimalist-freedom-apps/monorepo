@@ -1,4 +1,4 @@
-import type { CurrencyCode } from '@evolu/common';
+import type { CurrencyCode } from '@minimalist-apps/fiat';
 import { describe, expect, test } from 'vitest';
 import { filterCurrencies } from './filterCurrencies.js';
 

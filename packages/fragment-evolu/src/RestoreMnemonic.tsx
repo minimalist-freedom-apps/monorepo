@@ -14,7 +14,7 @@ export const RestoreMnemonic = (deps: RestoreMnemonicDeps) => {
     const [isRestoreModalOpen, setIsRestoreModalOpen] = useState(false);
     const [restoreSeed, setRestoreSeed] = useState('');
 
-    const restoreResult = Mnemonic.from(restoreSeed);
+    const restoreResult = Mnemonic.fromUnknown(restoreSeed);
     const isRestoreSeedValid = restoreResult.ok === true;
 
     const openRestoreModal = () => {

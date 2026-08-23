@@ -1,4 +1,5 @@
-import { CurrencyCode, tryAsync } from '@evolu/common';
+import { tryAsync } from '@evolu/common';
+import { CurrencyCode } from '@minimalist-apps/fiat';
 import { typedObjectEntries } from '@minimalist-apps/type-utils';
 import { RateBtcPerFiat } from '../converter/rate.js';
 import { type CurrencyMap, type FetchRates, FetchRatesError } from './FetchRates.js';
@@ -38,7 +39,7 @@ export const createFetchCoingeckoRates =
                     (acc, [code, info]) => {
                         if (info.type === 'fiat') {
                             const upperCode = String(code).toUpperCase();
-                            const codeResult = CurrencyCode.from(upperCode);
+                            const codeResult = CurrencyCode.fromUnknown(upperCode);
 
                             if (codeResult.ok) {
                                 acc[codeResult.value] = {

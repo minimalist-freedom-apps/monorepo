@@ -1,13 +1,13 @@
-import { CurrencyCode, getOrThrow } from '@evolu/common';
+import { CurrencyCode, type CurrencyCode as CurrencyCodeType } from './types';
 
 export interface Territory {
     readonly flag: string;
     readonly name: string;
 }
 
-type CurrencyToTerritoryMap = Readonly<Record<CurrencyCode, ReadonlyArray<Territory>>>;
+type CurrencyToTerritoryMap = Readonly<Record<CurrencyCodeType, ReadonlyArray<Territory>>>;
 
-export const asCurrencyCodeUnsafe = (code: string) => getOrThrow(CurrencyCode.from(code));
+export const asCurrencyCodeUnsafe = (code: string): CurrencyCodeType => CurrencyCode.orThrow(code);
 
 /**
  * Map of ISO 4217 currency codes to the territories where they are used.
@@ -313,18 +313,19 @@ export const CURRENCY_TERRITORIES = {
     [asCurrencyCodeUnsafe('ZMW')]: [{ flag: '🇿🇲', name: 'Zambia' }],
 } satisfies CurrencyToTerritoryMap;
 
-export const getFlagsForCurrency = (currencyCode: CurrencyCode): ReadonlyArray<string> => [
+export const getFlagsForCurrency = (currencyCode: CurrencyCodeType): ReadonlyArray<string> => [
     ...new Set((CURRENCY_TERRITORIES[currencyCode] ?? []).map(t => t.flag)),
 ];
 
-export const getTerritoryNamesForCurrency = (currencyCode: CurrencyCode): ReadonlyArray<string> =>
-    (CURRENCY_TERRITORIES[currencyCode] ?? []).map(t => t.name);
+export const getTerritoryNamesForCurrency = (
+    currencyCode: CurrencyCodeType,
+): ReadonlyArray<string> => (CURRENCY_TERRITORIES[currencyCode] ?? []).map(t => t.name);
 
-export const isFiatCurrency = (currencyCode: CurrencyCode): boolean =>
+export const isFiatCurrency = (currencyCode: CurrencyCodeType): boolean =>
     Object.hasOwn(CURRENCY_TERRITORIES, currencyCode);
 
 export const currencyMatchesTerritory = (
-    currencyCode: CurrencyCode,
+    currencyCode: CurrencyCodeType,
     searchTerm: string,
 ): boolean => {
     const term = searchTerm.toLowerCase();

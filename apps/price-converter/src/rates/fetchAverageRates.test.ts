@@ -1,11 +1,12 @@
-import { CurrencyCode, err, getOrThrow, ok } from '@evolu/common';
+import { err, getOrThrow, ok } from '@evolu/common';
+import { CurrencyCode } from '@minimalist-apps/fiat';
 import { describe, expect, test } from 'vitest';
 import { type CurrencyMap, type FetchRates, FetchRatesError } from './FetchRates.js';
 import { createFetchAverageRates } from './fetchAverageRates.js';
 
-const USD = getOrThrow(CurrencyCode.from('USD'));
-const EUR = getOrThrow(CurrencyCode.from('EUR'));
-const GBP = getOrThrow(CurrencyCode.from('GBP'));
+const USD = getOrThrow(CurrencyCode.fromUnknown('USD'));
+const EUR = getOrThrow(CurrencyCode.fromUnknown('EUR'));
+const GBP = getOrThrow(CurrencyCode.fromUnknown('GBP'));
 
 const createMockFetchRates =
     (rates: CurrencyMap): FetchRates =>
