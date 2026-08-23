@@ -17,7 +17,7 @@ import {
     createThemeFragmentCompositionRoot,
     selectThemeMode,
 } from '@minimalist-apps/fragment-theme';
-import { createSecureStorageCompositionRoot } from '@minimalist-apps/secure-storage';
+import { createCapacitorSecureStorageCompositionRoot } from '@minimalist-apps/secure-storage-capacitor';
 import { createWindow } from '@minimalist-apps/window';
 import { createElement } from 'react';
 import { AddCurrencyButtonPure } from './app/AddCurrencyScreen/AddCurrencyButton';
@@ -62,7 +62,7 @@ export const createCompositionRoot = (): Main => {
     // Low Level
     const window = createWindow();
     const currentDateTime = createCurrentDateTime();
-    const secureStorage = createSecureStorageCompositionRoot();
+    const secureStorage = createCapacitorSecureStorageCompositionRoot();
 
     // Store
     const appStore = createAppStore();

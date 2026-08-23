@@ -116,9 +116,9 @@ importers:
       '@minimalist-apps/navigator':
         specifier: workspace:*
         version: link:../../packages/navigator
-      '@minimalist-apps/secure-storage':
+      '@minimalist-apps/secure-storage-capacitor':
         specifier: workspace:*
-        version: link:../../packages/secure-storage
+        version: link:../../packages/secure-storage-capacitor
       '@minimalist-apps/type-utils':
         specifier: workspace:*
         version: link:../../packages/type-utils
@@ -216,9 +216,9 @@ importers:
       '@minimalist-apps/navigator':
         specifier: workspace:*
         version: link:../../packages/navigator
-      '@minimalist-apps/secure-storage':
+      '@minimalist-apps/secure-storage-capacitor':
         specifier: workspace:*
-        version: link:../../packages/secure-storage
+        version: link:../../packages/secure-storage-capacitor
       '@minimalist-apps/type-utils':
         specifier: workspace:*
         version: link:../../packages/type-utils
@@ -407,9 +407,9 @@ importers:
       '@minimalist-apps/navigator':
         specifier: workspace:*
         version: link:../../packages/navigator
-      '@minimalist-apps/secure-storage':
+      '@minimalist-apps/secure-storage-capacitor':
         specifier: workspace:*
-        version: link:../../packages/secure-storage
+        version: link:../../packages/secure-storage-capacitor
       '@minimalist-apps/type-utils':
         specifier: workspace:*
         version: link:../../packages/type-utils
@@ -1005,6 +1005,15 @@ importers:
         version: 24.13.3
 
   packages/secure-storage:
+    devDependencies:
+      '@minimalist-apps/tsconfig':
+        specifier: workspace:*
+        version: link:../tsconfig
+      typescript:
+        specifier: ^7.0.2
+        version: 7.0.2
+
+  packages/secure-storage-capacitor:
     dependencies:
       '@aparajita/capacitor-secure-storage':
         specifier: ^8.0.0
@@ -1012,6 +1021,9 @@ importers:
       '@capacitor/core':
         specifier: ^8.5.0
         version: 8.5.0
+      '@minimalist-apps/secure-storage':
+        specifier: workspace:*
+        version: link:../secure-storage
     devDependencies:
       '@minimalist-apps/tsconfig':
         specifier: workspace:*
