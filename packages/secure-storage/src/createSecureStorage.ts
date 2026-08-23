@@ -2,10 +2,8 @@ import { SecureStorage as CapacitorSecureStorage } from '@aparajita/capacitor-se
 import { Capacitor } from '@capacitor/core';
 
 export interface SecureStorage {
-    readonly isPersistent: boolean;
     readonly load: (props: { readonly key: string }) => Promise<string | null>;
     readonly save: (props: { readonly key: string; readonly value: string }) => Promise<void>;
-    readonly remove: (props: { readonly key: string }) => Promise<void>;
 }
 
 export interface SecureStorageDep {
@@ -15,7 +13,6 @@ export interface SecureStorageDep {
 export interface NativeSecureStorage {
     readonly getItem: (key: string) => Promise<string | null>;
     readonly setItem: (key: string, value: string) => Promise<void>;
-    readonly removeItem: (key: string) => Promise<void>;
 }
 
 type SecureStoragePlatform = 'android' | 'ios' | 'web';
@@ -50,17 +47,7 @@ export const createSecureStorage = ({
         memoryStorage.set(key, value);
     };
 
-    const remove: SecureStorage['remove'] = async ({ key }) => {
-        if (isNative) {
-            await nativeStorage.removeItem(key);
-
-            return;
-        }
-
-        memoryStorage.delete(key);
-    };
-
-    return { isPersistent: isNative, load, save, remove };
+    return { load, save };
 };
 
 export const createSecureStorageCompositionRoot = (): SecureStorage => {

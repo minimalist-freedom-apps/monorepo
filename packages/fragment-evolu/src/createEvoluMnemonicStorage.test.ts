@@ -10,10 +10,8 @@ const mnemonic = Mnemonic.orThrow(
 describe(createEvoluMnemonicStorage.name, () => {
     test('loads and saves a valid mnemonic under the Evolu key', async () => {
         const secureStorage: SecureStorage = {
-            isPersistent: true,
             load: vi.fn(async () => mnemonic),
             save: vi.fn(async () => undefined),
-            remove: vi.fn(async () => undefined),
         };
         const storage = createEvoluMnemonicStorage({ secureStorage });
 
@@ -30,10 +28,8 @@ describe(createEvoluMnemonicStorage.name, () => {
     test('returns null when no secure mnemonic exists', async () => {
         const storage = createEvoluMnemonicStorage({
             secureStorage: {
-                isPersistent: true,
                 load: async () => null,
                 save: async () => undefined,
-                remove: async () => undefined,
             },
         });
 
@@ -43,10 +39,8 @@ describe(createEvoluMnemonicStorage.name, () => {
     test('rejects invalid secure data instead of silently creating a new owner', async () => {
         const storage = createEvoluMnemonicStorage({
             secureStorage: {
-                isPersistent: true,
                 load: async () => 'not a mnemonic',
                 save: async () => undefined,
-                remove: async () => undefined,
             },
         });
 

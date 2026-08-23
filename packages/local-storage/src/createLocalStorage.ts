@@ -8,7 +8,6 @@ export interface StorageError {
 export interface LocalStorage {
     readonly save: <T>(key: string, value: T) => Result<void, StorageError>;
     readonly load: <T>(key: string) => Result<T | null, StorageError>;
-    readonly remove: (key: string) => Result<void, StorageError>;
 }
 
 export interface LocalStorageDep {
@@ -36,15 +35,5 @@ export const createLocalStorage = (): LocalStorage => {
         }
     };
 
-    const remove = (key: string): Result<void, StorageError> => {
-        try {
-            globalThis.localStorage.removeItem(key);
-
-            return ok();
-        } catch (error) {
-            return err({ type: 'StorageError', caused: error });
-        }
-    };
-
-    return { save, load, remove };
+    return { save, load };
 };

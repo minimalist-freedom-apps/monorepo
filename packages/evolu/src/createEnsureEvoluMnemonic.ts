@@ -7,9 +7,7 @@ import {
 
 interface EnsureEvoluMnemonicDeps {
     readonly loadSecureMnemonic: () => Promise<Mnemonic | null>;
-    readonly getLegacyMnemonic: () => Mnemonic | null;
     readonly persistMnemonic: (mnemonic: Mnemonic) => Promise<void>;
-    readonly removeLegacyMnemonic: () => Promise<void>;
 }
 
 export type EnsureEvoluMnemonic = () => Promise<Mnemonic>;
@@ -25,11 +23,9 @@ export const createEnsureEvoluMnemonic = (deps: EnsureEvoluMnemonicDeps): Ensure
         const secureMnemonic = await deps.loadSecureMnemonic();
         const mnemonic =
             secureMnemonic ??
-            deps.getLegacyMnemonic() ??
             ownerSecretToMnemonic(createOwnerSecret({ randomBytes: createRandomBytes() }));
 
         await deps.persistMnemonic(mnemonic);
-        await deps.removeLegacyMnemonic();
 
         return mnemonic;
     };

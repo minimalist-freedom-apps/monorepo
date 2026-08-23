@@ -65,7 +65,6 @@ export const createCompositionRoot = (): Main => {
             schema: Schema,
             appName: 'chat-v1',
             secureStorage,
-            legacyMnemonicStorageKey: `${localStoragePrefix}:evoluMnemonic`,
         });
     const { DebugSettings } = createDebugFragmentCompositionRoot({
         connect: connectAppStore,
