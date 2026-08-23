@@ -1,7 +1,8 @@
+import { spawnSync } from 'node:child_process';
 import { mkdir, writeFile } from 'node:fs/promises';
 import { join } from 'node:path';
 import { BRAND_COLOR } from '@minimalist-apps/components/colors';
-import { createCanvas } from '@napi-rs/canvas';
+import { createCanvas, GlobalFonts } from '@napi-rs/canvas';
 
 // --- Types ---
 
@@ -13,8 +14,8 @@ interface GenerateIconsConfig {
 
 // --- Constants ---
 
-const EMOJI_FONT_FAMILY =
-    '"Noto Color Emoji", "Apple Color Emoji", "Segoe UI Emoji", "Twemoji Mozilla", sans-serif';
+const EMOJI_FONT_ALIAS = 'Minimalist Emoji';
+const EMOJI_FONT_FAMILY = `"${EMOJI_FONT_ALIAS}", "Noto Color Emoji", "Apple Color Emoji", "Segoe UI Emoji", "Twemoji Mozilla", sans-serif`;
 
 const EMOJI_PADDING_RATIO = 0.15;
 
@@ -38,6 +39,21 @@ const ANDROID_FOREGROUND_SIZE: Record<AndroidDensity, number> = {
     xhdpi: 216,
     xxhdpi: 324,
     xxxhdpi: 432,
+};
+
+const registerLinuxEmojiFont = (): void => {
+    if (process.platform !== 'linux' || GlobalFonts.has(EMOJI_FONT_ALIAS)) {
+        return;
+    }
+
+    const fontMatch = spawnSync('fc-match', ['-f', '%{file}', 'Noto Color Emoji'], {
+        encoding: 'utf8',
+    });
+    const fontPath = fontMatch.status === 0 ? fontMatch.stdout.trim() : '';
+
+    if (fontPath !== '') {
+        GlobalFonts.registerFromPath(fontPath, EMOJI_FONT_ALIAS);
+    }
 };
 
 // --- Helpers ---
@@ -182,6 +198,7 @@ export const generateIcons = async ({
     webOutputDir,
     androidResDir,
 }: GenerateIconsConfig): Promise<void> => {
+    registerLinuxEmojiFont();
     console.log(`Generating icons for emoji: ${emoji}`);
 
     await generateWebIcons({ emoji, outputDir: webOutputDir });

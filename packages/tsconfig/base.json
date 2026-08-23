@@ -1,4 +1,5 @@
 {
+    "files": ["./css.d.ts"],
     "compilerOptions": {
         "target": "ESNext",
         "lib": ["ESNext", "DOM", "DOM.Iterable"],

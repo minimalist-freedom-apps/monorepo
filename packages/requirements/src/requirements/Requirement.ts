@@ -1,6 +1,6 @@
 export type ProjectType = 'app' | 'package';
 
-export interface RequirementAppliesProps {
+interface RequirementAppliesProps {
     readonly projectType: ProjectType;
     readonly dirName: string;
 }

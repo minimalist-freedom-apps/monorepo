@@ -17,11 +17,11 @@
         "@minimalist-apps/cli": "workspace:*",
         "@minimalist-apps/components": "workspace:*",
         "@minimalist-apps/type-utils": "workspace:*",
-        "@napi-rs/canvas": "^0.1.65"
+        "@napi-rs/canvas": "^1.0.7"
     },
     "devDependencies": {
         "@minimalist-apps/tsconfig": "workspace:*",
-        "@types/node": "^22.0.0"
+        "@types/node": "^24.13.3"
     },
     "scripts": {
         "test": "vitest run",

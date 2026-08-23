@@ -20,13 +20,13 @@
         "@evolu/web": "^3.1.0",
         "@minimalist-apps/connect": "workspace:*",
         "@okikio/sharedworker": "^1.1.0",
-        "disposablestack": "^1.1.7",
+        "disposablestack": "^1.1.8",
         "promise.try": "^2.0.1"
     },
     "devDependencies": {
         "@minimalist-apps/tsconfig": "workspace:*",
-        "typescript": "^5.3.0",
-        "@types/better-sqlite3": "^7.6.13",
-        "better-sqlite3": "^12.6.2"
+        "@types/better-sqlite3": "^9.6.0",
+        "better-sqlite3": "^13.0.3",
+        "typescript": "^7.0.2"
     }
 }

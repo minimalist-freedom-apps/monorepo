@@ -17,6 +17,7 @@ jobs:
       APPIUM_HOME: ${{ github.workspace }}/.appium
       ANDROID_SDK_ROOT: /usr/local/lib/android/sdk
       ANDROID_API_LEVEL: '34'
+      ANDROID_COMPILE_API_LEVEL: '36'
       ANDROID_EMULATOR_ARCH: x86_64
       ANDROID_EMULATOR_PROFILE: pixel_6
       ANDROID_EMULATOR_TARGET: google_apis
@@ -26,7 +27,7 @@ jobs:
 
     steps:
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@v7
         with:
           fetch-depth: 0
 
@@ -59,7 +60,7 @@ jobs:
 
       - name: Setup Java
         if: steps.affected-e2e.outputs.has_e2e == 'true'
-        uses: actions/setup-java@v4
+        uses: actions/setup-java@v5
         with:
           distribution: temurin
           java-version: '21'
@@ -67,7 +68,7 @@ jobs:
       - name: Cache Gradle user home
         if: steps.affected-e2e.outputs.has_e2e == 'true'
         id: gradle-cache
-        uses: actions/cache@v4
+        uses: actions/cache@v6
         with:
           path: |
             ~/.gradle/caches
@@ -78,7 +79,7 @@ jobs:
 
       - name: Cache Appium extensions
         if: steps.affected-e2e.outputs.has_e2e == 'true'
-        uses: actions/cache@v4
+        uses: actions/cache@v6
         with:
           path: ${{ env.APPIUM_HOME }}
           key: appium-${{ runner.os }}-${{ hashFiles('apps/*/package.json') }}
@@ -93,6 +94,7 @@ jobs:
             "${ANDROID_SDK_ROOT}/cmdline-tools" \
             "${ANDROID_SDK_ROOT}/platform-tools" \
             "${ANDROID_SDK_ROOT}/platforms/android-${ANDROID_API_LEVEL}" \
+            "${ANDROID_SDK_ROOT}/platforms/android-${ANDROID_COMPILE_API_LEVEL}" \
             "${ANDROID_SDK_ROOT}/emulator" \
             "${ANDROID_SDK_ROOT}/licenses"
           sudo chown -R "$USER:$USER" \
@@ -100,24 +102,30 @@ jobs:
             "${ANDROID_SDK_ROOT}/cmdline-tools" \
             "${ANDROID_SDK_ROOT}/platform-tools" \
             "${ANDROID_SDK_ROOT}/platforms/android-${ANDROID_API_LEVEL}" \
+            "${ANDROID_SDK_ROOT}/platforms/android-${ANDROID_COMPILE_API_LEVEL}" \
             "${ANDROID_SDK_ROOT}/emulator" \
             "${ANDROID_SDK_ROOT}/licenses"
 
       - name: Cache Android SDK packages
         if: steps.affected-e2e.outputs.has_e2e == 'true'
         id: android-sdk-cache
-        uses: actions/cache@v4
+        uses: actions/cache@v6
         with:
           path: |
             ${{ env.ANDROID_SDK_ROOT }}/build-tools/35.0.0
             ${{ env.ANDROID_SDK_ROOT }}/cmdline-tools
             ${{ env.ANDROID_SDK_ROOT }}/platform-tools
             ${{ env.ANDROID_SDK_ROOT }}/platforms/android-${{ env.ANDROID_API_LEVEL }}
+            ${{ env.ANDROID_SDK_ROOT }}/platforms/android-${{ env.ANDROID_COMPILE_API_LEVEL }}
             ${{ env.ANDROID_SDK_ROOT }}/emulator
             ${{ env.ANDROID_SDK_ROOT }}/licenses
-          key: android-sdk-${{ runner.os }}-api${{ env.ANDROID_API_LEVEL }}-${{ env.ANDROID_EMULATOR_TARGET }}-${{ env.ANDROID_EMULATOR_ARCH }}-v2
+          key: android-sdk-${{ runner.os }}-api${{ env.ANDROID_API_LEVEL }}-compile${{ env.ANDROID_COMPILE_API_LEVEL }}-${{ env.ANDROID_EMULATOR_TARGET }}-${{ env.ANDROID_EMULATOR_ARCH }}-v3
           restore-keys: |
-            android-sdk-${{ runner.os }}-api${{ env.ANDROID_API_LEVEL }}-${{ env.ANDROID_EMULATOR_TARGET }}-${{ env.ANDROID_EMULATOR_ARCH }}-
+            android-sdk-${{ runner.os }}-api${{ env.ANDROID_API_LEVEL }}-compile${{ env.ANDROID_COMPILE_API_LEVEL }}-${{ env.ANDROID_EMULATOR_TARGET }}-${{ env.ANDROID_EMULATOR_ARCH }}-
+
+      - name: Install Android compile SDK
+        if: steps.affected-e2e.outputs.has_e2e == 'true'
+        run: sdkmanager "platforms;android-${ANDROID_COMPILE_API_LEVEL}" "build-tools;35.0.0"
 
       - name: Log cache status
         if: steps.affected-e2e.outputs.has_e2e == 'true'
@@ -136,23 +144,23 @@ jobs:
           echo "INSTALLED_DRIVERS:"
           printf '%s\n' "$INSTALLED_DRIVERS"
 
-          if printf '%s\n' "$INSTALLED_DRIVERS" | grep -Eq 'uiautomator2@4\.2\.3([[:space:]]|$)'; then
-            echo "Appium uiautomator2@4.2.3 already cached. Skipping install."
+          if printf '%s\n' "$INSTALLED_DRIVERS" | grep -Eq 'uiautomator2@8\.5\.0([[:space:]]|$)'; then
+            echo "Appium uiautomator2@8.5.0 already cached. Skipping install."
             exit 0
           fi
 
           if printf '%s\n' "$INSTALLED_DRIVERS" | grep -Eq 'uiautomator2@'; then
-            echo "Different uiautomator2 version detected. Reinstalling 4.2.3."
+            echo "Different uiautomator2 version detected. Reinstalling 8.5.0."
             pnpm --filter @minimalist-apps/android-sync exec appium driver uninstall uiautomator2 || true
           fi
 
-          pnpm --filter @minimalist-apps/android-sync exec appium driver install --source=npm appium-uiautomator2-driver@4.2.3
+          pnpm --filter @minimalist-apps/android-sync exec appium driver install --source=npm appium-uiautomator2-driver@8.5.0
 
       - name: Start Appium server
         if: steps.affected-e2e.outputs.has_e2e == 'true'
         run: |
           pnpm --filter @minimalist-apps/android-sync exec appium --base-path / --allow-insecure '*:chromedriver_autodownload' > appium.log 2>&1 &
-          for i in {1..30}; do
+          for _ in {1..30}; do
             if curl -sf http://127.0.0.1:4723/status > /dev/null; then
               exit 0
             fi
@@ -218,14 +226,14 @@ jobs:
 
       - name: Upload Appium log on failure
         if: failure()
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: appium-log
           path: appium.log
 
       - name: Upload E2E video on failure
         if: failure()
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: e2e-video
           path: e2e-video/*.mp4

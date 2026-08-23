@@ -16,8 +16,8 @@
         "typecheck": "tsc --noEmit"
     },
     "dependencies": {
-        "@minimalist-apps/connect": "workspace:*",
         "@minimalist-apps/components": "workspace:*",
+        "@minimalist-apps/connect": "workspace:*",
         "@minimalist-apps/mini-store": "workspace:*"
     },
     "peerDependencies": {
@@ -26,8 +26,8 @@
     },
     "devDependencies": {
         "@minimalist-apps/tsconfig": "workspace:*",
-        "@types/react": "^19.0.0",
-        "@types/react-dom": "^19.0.0",
-        "typescript": "^5.3.0"
+        "@types/react": "^19.2.18",
+        "@types/react-dom": "^19.2.4",
+        "typescript": "^7.0.2"
     }
 }

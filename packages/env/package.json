@@ -10,7 +10,7 @@
     },
     "devDependencies": {
         "@minimalist-apps/tsconfig": "workspace:*",
-        "@types/node": "^22.0.0"
+        "@types/node": "^24.13.3"
     },
     "scripts": {
         "test": "vitest run",

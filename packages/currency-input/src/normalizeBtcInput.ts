@@ -1,5 +1,5 @@
+import { groupBtcDecimalDigits } from '@minimalist-apps/bitcoin';
 import { addThousandSeparators, stripCommas } from '@minimalist-apps/number';
-import { groupBtcDecimalDigits } from '../../bitcoin/src/groupBtcDecimalDigits';
 
 interface NormalizeBtcInputResult {
     readonly display: string;

@@ -1,5 +1,5 @@
 import type { CapacitorConfig } from '@capacitor/cli';
-import { config as appConfig } from './config';
+import { config as appConfig } from './config.ts';
 
 const config: CapacitorConfig = {
     appId: 'com.minimalist.scalecake',

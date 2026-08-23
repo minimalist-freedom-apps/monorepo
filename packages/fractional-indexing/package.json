@@ -17,10 +17,10 @@
     },
     "dependencies": {
         "@evolu/common": "^8.5.0",
-        "fractional-indexing": "^3.2.0"
+        "fractional-indexing": "^4.0.0"
     },
     "devDependencies": {
         "@minimalist-apps/tsconfig": "workspace:*",
-        "typescript": "^5.3.0"
+        "typescript": "^7.0.2"
     }
 }
