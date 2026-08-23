@@ -1,6 +1,4 @@
-import 'disposablestack/auto';
-
-import SharedWorkerPolyfill from '@okikio/sharedworker';
+import { installPolyfills as installEvoluCommonPolyfills } from '@evolu/common/polyfills';
 
 // @ts-expect-error Runtime polyfill package has no TypeScript declarations.
 import promiseTry from 'promise.try';
@@ -48,9 +46,6 @@ const ensurePromiseTry = (): void => {
 };
 
 export const installPolyfills = (): void => {
-    if (typeof globalThis.SharedWorker === 'undefined') {
-        globalThis.SharedWorker = SharedWorkerPolyfill as typeof globalThis.SharedWorker;
-    }
-
+    installEvoluCommonPolyfills();
     ensurePromiseTry();
 };
