@@ -6,19 +6,19 @@ runs:
   using: composite
   steps:
     - name: Setup pnpm
-      uses: pnpm/setup@v1
+      uses: pnpm/setup@v2
       with:
         version: '11.22.0'
         install: false
 
     - name: Setup Node.js
-      uses: actions/setup-node@v4
+      uses: actions/setup-node@v7
       with:
         node-version-file: '.nvmrc'
         cache: pnpm
 
     - name: Cache node_modules
-      uses: actions/cache@v4
+      uses: actions/cache@v6
       with:
         path: |
           node_modules

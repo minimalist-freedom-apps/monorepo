@@ -1,5 +1,6 @@
 {
-    "$schema": "https://unpkg.com/knip@5/schema.json",
+    "$schema": "https://unpkg.com/knip@6/schema.json",
+    "ignoreBinaries": ["adb", "fc-match"],
     "ignoreFiles": ["**/android/**/build/**", "**/android/app/src/main/assets/public/**"],
     "tags": ["-lintignore", "-publicdep"],
     "workspaces": {

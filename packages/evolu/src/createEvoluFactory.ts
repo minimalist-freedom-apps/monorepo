@@ -16,14 +16,14 @@ import type {
     ValidateSchema,
 } from '@evolu/common/local-first';
 
-export type CreateEvoluProps<S extends EvoluSchema> = {
+type CreateEvoluProps<S extends EvoluSchema> = {
     readonly mnemonic: Mnemonic;
     readonly schema: ValidateSchema<S> extends never ? S : ValidateSchema<S>;
     readonly appName: string;
     readonly urls: ReadonlyArray<string>;
 };
 
-export type CreateEvoluResult<S extends EvoluSchema> = {
+type CreateEvoluResult<S extends EvoluSchema> = {
     readonly evolu: Evolu<S>;
     readonly owner: Owner;
 };

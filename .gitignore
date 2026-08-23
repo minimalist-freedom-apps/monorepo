@@ -31,3 +31,7 @@ keystore.properties
 
 # E2E video artifacts
 apps/*/e2e-video/
+.cursor/rules/nx-rules.mdc
+.github/instructions/nx.instructions.md
+
+.claude/worktrees

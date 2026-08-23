@@ -15,10 +15,10 @@
         "typecheck": "tsc --noEmit"
     },
     "dependencies": {
-        "@capacitor/core": "^7.2.0",
+        "@capacitor/core": "^8.5.0",
         "@evolu/common": "^8.5.0",
-        "@minimalist-apps/connect": "workspace:*",
         "@minimalist-apps/components": "workspace:*",
+        "@minimalist-apps/connect": "workspace:*",
         "@minimalist-apps/fragment-local-storage": "workspace:*",
         "@minimalist-apps/fragment-navigator": "workspace:*",
         "@minimalist-apps/fragment-settings": "workspace:*",
@@ -30,18 +30,18 @@
         "@minimalist-apps/type-utils": "workspace:*",
         "@minimalist-apps/undo": "workspace:*",
         "@minimalist-apps/window": "workspace:*",
-        "react": "^19.0.0",
-        "react-dom": "^19.0.0"
+        "react": "^19.2.8",
+        "react-dom": "^19.2.8"
     },
     "devDependencies": {
-        "@capacitor/android": "^7.2.0",
-        "@capacitor/cli": "^7.2.0",
+        "@capacitor/android": "^8.5.0",
+        "@capacitor/cli": "^8.5.0",
         "@minimalist-apps/requirements": "workspace:*",
         "@minimalist-apps/tsconfig": "workspace:*",
-        "@types/react": "^19.0.0",
-        "@types/react-dom": "^19.0.0",
-        "@vitejs/plugin-react": "^4.3.0",
-        "typescript": "^5.3.0",
-        "vite": "^7.3.1"
+        "@types/react": "^19.2.18",
+        "@types/react-dom": "^19.2.4",
+        "@vitejs/plugin-react": "^6.1.0",
+        "typescript": "^7.0.2",
+        "vite": "^8.2.2"
     }
 }

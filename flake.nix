@@ -30,6 +30,7 @@
         {
           default = pkgs.mkShell {
             packages = [
+              pkgs.jdk21
               pkgs.nodejs_24
               pkgs.pnpm
             ];

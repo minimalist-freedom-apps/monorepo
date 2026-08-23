@@ -75,7 +75,7 @@ export const createConnect = <Stores extends SubscribableRecord>(
                 [],
             );
 
-            const getSnapshot = useCallback(() => {
+            const getSnapshot = () => {
                 const currentVersion = versionRef.current;
 
                 if (
@@ -99,7 +99,7 @@ export const createConnect = <Stores extends SubscribableRecord>(
                 cacheRef.current = { version: currentVersion, ownProps, mapped };
 
                 return mapped;
-            }, [ownProps]);
+            };
 
             const stateProps = useSyncExternalStore(subscribeWithVersion, getSnapshot);
             const props = {
