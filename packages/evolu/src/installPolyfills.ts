@@ -1,4 +1,5 @@
 import { installPolyfills as installEvoluCommonPolyfills } from '@evolu/common/polyfills';
+import SharedWorkerPolyfill from '@okikio/sharedworker';
 
 // @ts-expect-error Runtime polyfill package has no TypeScript declarations.
 import promiseTry from 'promise.try';
@@ -38,6 +39,14 @@ const ensurePromiseWithResolvers = (): void => {
     };
 };
 
+const ensureSharedWorker = (): void => {
+    if (typeof globalThis.SharedWorker === 'function') {
+        return;
+    }
+
+    globalThis.SharedWorker = SharedWorkerPolyfill as typeof globalThis.SharedWorker;
+};
+
 const ensurePromiseTry = (): void => {
     const PromiseWithTry = Promise as PromiseWithTry;
 
@@ -70,6 +79,7 @@ const ensurePromiseTry = (): void => {
 
 export const installPolyfills = (): void => {
     installEvoluCommonPolyfills();
+    ensureSharedWorker();
     ensurePromiseWithResolvers();
     ensurePromiseTry();
 };

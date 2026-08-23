@@ -23,6 +23,7 @@
         "@evolu/common": "^8.5.0",
         "@evolu/web": "^3.1.0",
         "@minimalist-apps/connect": "workspace:*",
+        "@okikio/sharedworker": "^1.1.0",
         "promise.try": "^2.0.1"
     },
     "devDependencies": {
