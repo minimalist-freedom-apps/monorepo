@@ -1,26 +1,22 @@
 import type { E2ESession } from '../session.ts';
 import { attachWebdriverIoBrowser } from './attachWebdriverIoBrowser.ts';
 import { runWebViewAction } from './runWebViewAction.ts';
-import { defaultTimeoutMs } from './shared.ts';
 
-interface ClickElementByTestIdProps {
+interface IsElementExistingByTestIdProps {
     readonly session: E2ESession;
     readonly testId: string;
 }
 
-export const clickElementByTestId = async ({
+export const isElementExistingByTestId = ({
     session,
     testId,
-}: ClickElementByTestIdProps): Promise<void> => {
-    await runWebViewAction({
+}: IsElementExistingByTestIdProps): Promise<boolean> =>
+    runWebViewAction({
         action: async () => {
             const browser = await attachWebdriverIoBrowser({ session });
             const element = await browser.$(`[data-testid="${testId}"]`);
 
-            await element.waitForExist({ timeout: defaultTimeoutMs });
-            await element.click();
+            return element.isExisting();
         },
-        replay: 'never',
         session,
     });
-};
