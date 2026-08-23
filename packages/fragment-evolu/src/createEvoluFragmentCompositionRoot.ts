@@ -6,8 +6,6 @@ import {
     createEvoluCompositionRoot,
     type EnsureEvoluStorageDep,
 } from '@minimalist-apps/evolu';
-import { createLocalStorage } from '@minimalist-apps/local-storage';
-import { toGetter } from '@minimalist-apps/mini-store';
 import type { SecureStorageDep } from '@minimalist-apps/secure-storage';
 import { type BackupMnemonicDep, BackupMnemonic as BackupMnemonicPure } from './BackupMnemonic';
 import { createEvoluMnemonicStorage } from './createEvoluMnemonicStorage';
@@ -26,7 +24,6 @@ type EvoluFragmentCompositionRootDeps<Schema extends EvoluSchema> = EvoluStoreDe
         readonly connect: Connect<{ readonly store: EvoluState }>;
         readonly schema: ValidateSchema<Schema> extends never ? Schema : ValidateSchema<Schema>;
         readonly appName: string;
-        readonly legacyMnemonicStorageKey: string;
     };
 
 type EvoluFragment<Schema extends EvoluSchema> = BackupMnemonicDep &
@@ -46,28 +43,9 @@ export const createEvoluFragmentCompositionRoot = <Schema extends EvoluSchema>(
     });
     const setActiveOwnerAppId = createSetActiveOwnerAppId({ store: deps.store });
 
-    const getLegacyMnemonic = toGetter(deps.store.getState, selectEvoluMnemonic);
-    const localStorage = createLocalStorage();
-
     const ensureEvoluOwner = createEnsureEvoluMnemonic({
         loadSecureMnemonic: evoluMnemonicStorage.load,
-        getLegacyMnemonic,
         persistMnemonic: setEvoluMnemonic,
-        removeLegacyMnemonic: () => {
-            if (!deps.secureStorage.isPersistent) {
-                return Promise.resolve();
-            }
-
-            const result = localStorage.remove(deps.legacyMnemonicStorageKey);
-
-            if (result.ok === false) {
-                throw new Error('Failed to remove the legacy Evolu mnemonic', {
-                    cause: result.error,
-                });
-            }
-
-            return Promise.resolve();
-        },
     });
 
     const { ensureEvoluStorage } = createEvoluCompositionRoot<Schema>({

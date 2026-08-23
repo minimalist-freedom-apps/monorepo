@@ -803,9 +803,6 @@ importers:
       '@minimalist-apps/evolu':
         specifier: workspace:*
         version: link:../evolu
-      '@minimalist-apps/local-storage':
-        specifier: workspace:*
-        version: link:../local-storage
       '@minimalist-apps/mini-store':
         specifier: workspace:*
         version: link:../mini-store

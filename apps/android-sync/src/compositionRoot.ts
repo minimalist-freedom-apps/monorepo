@@ -65,7 +65,6 @@ export const createCompositionRoot = (): Main => {
             schema: Schema,
             appName: 'android-sync-v1',
             secureStorage,
-            legacyMnemonicStorageKey: `${localStoragePrefix}:evoluMnemonic`,
         });
 
     const { DebugSettings } = createDebugFragmentCompositionRoot({

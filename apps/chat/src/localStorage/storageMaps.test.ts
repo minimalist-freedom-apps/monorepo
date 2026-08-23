@@ -21,16 +21,11 @@ const initState: AppState = {
 };
 
 describe('storageMaps', () => {
-    test('does not persist the mnemonic but loads its legacy value', () => {
+    test('does not persist or load the mnemonic', () => {
         const data: Record<string, unknown> = {};
 
         const localStorage: LocalStorage = {
             load: <T>(key: string) => ok((data[key] ?? null) as T | null),
-            remove: key => {
-                delete data[key];
-
-                return ok();
-            },
             save: (key: string, value: unknown) => {
                 data[key] = value;
 
@@ -62,8 +57,6 @@ describe('storageMaps', () => {
         expect(state).toEqual({
             themeMode: 'dark',
             debugMode: true,
-            evoluMnemonic:
-                'abandon abandon abandon abandon abandon abandon abandon abandon abandon abandon abandon about',
         });
     });
 });

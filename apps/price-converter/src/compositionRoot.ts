@@ -98,7 +98,6 @@ export const createCompositionRoot = (): Main => {
             schema: Schema,
             appName: 'price-converter-v2',
             secureStorage,
-            legacyMnemonicStorageKey: `${localStoragePrefix}:evoluMnemonic`,
         });
 
     const selectedCurrenciesStore = createSelectedCurrenciesStore({
