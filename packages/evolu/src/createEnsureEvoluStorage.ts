@@ -36,7 +36,7 @@ export const createEnsureEvoluStorage = <S extends EvoluSchema>({
     return async () => {
         if (storage === null) {
             storage = await deps.createEvoluStorage({
-                mnemonic: deps.ensureEvoluOwner(),
+                mnemonic: await deps.ensureEvoluOwner(),
                 schema,
                 appName,
                 onOwnerUsed: deps.onOwnerUsed,

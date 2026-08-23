@@ -1,5 +1,10 @@
 export type { BackupMnemonicDep } from './BackupMnemonic';
 export { createEvoluFragmentCompositionRoot } from './createEvoluFragmentCompositionRoot';
+export {
+    createEvoluMnemonicStorage,
+    type EvoluMnemonicStorage,
+    type EvoluMnemonicStorageDep,
+} from './createEvoluMnemonicStorage';
 export type { RestoreMnemonicDep as RestoreMnemonicServiceDep } from './createRestoreMnemonic';
 export { createRestoreMnemonic } from './createRestoreMnemonic';
 export type { SetActiveOwnerAppIdDep } from './createSetActiveOwnerAppId';

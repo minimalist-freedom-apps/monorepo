@@ -27,6 +27,11 @@ describe('storageMaps', () => {
 
         const localStorage: LocalStorage = {
             load: <T>(key: string) => ok((data[key] ?? null) as T | null),
+            remove: key => {
+                delete data[key];
+
+                return ok();
+            },
             save: (key: string, value: unknown) => {
                 data[key] = value;
 
@@ -61,6 +66,11 @@ describe('storageMaps', () => {
 
         const localStorage: LocalStorage = {
             load: <T>(key: string) => ok((data[key] ?? null) as T | null),
+            remove: key => {
+                delete data[key];
+
+                return ok();
+            },
             save: (key: string, value: unknown) => {
                 data[key] = value;
 

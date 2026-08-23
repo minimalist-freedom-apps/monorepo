@@ -25,7 +25,9 @@
         "@minimalist-apps/components": "workspace:*",
         "@minimalist-apps/connect": "workspace:*",
         "@minimalist-apps/evolu": "workspace:*",
-        "@minimalist-apps/mini-store": "workspace:*"
+        "@minimalist-apps/local-storage": "workspace:*",
+        "@minimalist-apps/mini-store": "workspace:*",
+        "@minimalist-apps/secure-storage": "workspace:*"
     },
     "peerDependencies": {
         "react": "^19.0.0",

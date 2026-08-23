@@ -1,3 +1,8 @@
+export {
+    generateAndroidManifest,
+    generateBackupRules,
+    generateDataExtractionRules,
+} from './generateAndroidManifest';
 export { generateAppBuildGradle } from './generateAppBuildGradle';
 export { generateColorsXml, generateDebugIconBackgroundXml } from './generateColorsXml';
 export { generateDebugStringsXml, generateStringsXml } from './generateStringsXml';

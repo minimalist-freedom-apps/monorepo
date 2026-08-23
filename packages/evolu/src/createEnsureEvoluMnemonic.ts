@@ -6,29 +6,40 @@ import {
 } from '@evolu/common';
 
 interface EnsureEvoluMnemonicDeps {
-    readonly getPersistedMnemonic: () => Mnemonic | null;
-    readonly persistMnemonic: (mnemonic: Mnemonic) => void;
+    readonly loadSecureMnemonic: () => Promise<Mnemonic | null>;
+    readonly getLegacyMnemonic: () => Mnemonic | null;
+    readonly persistMnemonic: (mnemonic: Mnemonic) => Promise<void>;
+    readonly removeLegacyMnemonic: () => Promise<void>;
 }
 
-export type EnsureEvoluMnemonic = () => Mnemonic;
+export type EnsureEvoluMnemonic = () => Promise<Mnemonic>;
 
 export interface EnsureEvoluOwnerDep {
     readonly ensureEvoluOwner: EnsureEvoluMnemonic;
 }
 
-export const createEnsureEvoluMnemonic =
-    (deps: EnsureEvoluMnemonicDeps): EnsureEvoluMnemonic =>
-    () => {
-        let mnemonic = deps.getPersistedMnemonic();
+export const createEnsureEvoluMnemonic = (deps: EnsureEvoluMnemonicDeps): EnsureEvoluMnemonic => {
+    let ensurePromise: Promise<Mnemonic> | null = null;
 
-        if (mnemonic === null) {
-            const randomBytes = createRandomBytes();
-            const ownerSecret = createOwnerSecret({ randomBytes });
-            const newMnemonic = ownerSecretToMnemonic(ownerSecret);
-            mnemonic = newMnemonic;
+    const ensure = async (): Promise<Mnemonic> => {
+        const secureMnemonic = await deps.loadSecureMnemonic();
+        const mnemonic =
+            secureMnemonic ??
+            deps.getLegacyMnemonic() ??
+            ownerSecretToMnemonic(createOwnerSecret({ randomBytes: createRandomBytes() }));
 
-            deps.persistMnemonic(mnemonic);
-        }
+        await deps.persistMnemonic(mnemonic);
+        await deps.removeLegacyMnemonic();
 
         return mnemonic;
     };
+
+    return () => {
+        ensurePromise ??= ensure().catch((error: unknown) => {
+            ensurePromise = null;
+            throw error;
+        });
+
+        return ensurePromise;
+    };
+};

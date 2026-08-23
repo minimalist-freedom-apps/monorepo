@@ -22,7 +22,7 @@ export const BackupMnemonic = (
             return;
         }
 
-        deps.ensureEvoluOwner();
+        void deps.ensureEvoluOwner();
     }, [deps, evoluMnemonic]);
 
     if (evoluMnemonic === null) {

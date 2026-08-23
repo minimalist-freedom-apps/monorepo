@@ -1,6 +1,7 @@
 {
     "$schema": "https://unpkg.com/knip@6/schema.json",
     "ignoreBinaries": ["adb", "fc-match"],
+    "ignoreDependencies": ["@aparajita/capacitor-secure-storage"],
     "ignoreFiles": ["**/android/**/build/**", "**/android/app/src/main/assets/public/**"],
     "tags": ["-lintignore", "-publicdep"],
     "workspaces": {

@@ -2,8 +2,11 @@ import { copyFileSync, existsSync, mkdirSync, readdirSync, rmSync, writeFileSync
 import { join, relative, resolve } from 'node:path';
 import { pathToFileURL } from 'node:url';
 import {
+    generateAndroidManifest,
     generateAppBuildGradle,
+    generateBackupRules,
     generateColorsXml,
+    generateDataExtractionRules,
     generateDebugIconBackgroundXml,
     generateDebugStringsXml,
     generateStringsXml,
@@ -82,6 +85,16 @@ export const requireAndroidSetup: Requirement = {
         writeFileSync(appBuildGradlePath, generateAppBuildGradle({ appId: config.appId }));
         console.log('  ✓ app/build.gradle generated (version from package.json)');
 
+        const androidManifestPath = join(androidDir, 'app', 'src', 'main', 'AndroidManifest.xml');
+        writeFileSync(androidManifestPath, generateAndroidManifest());
+        console.log('  ✓ AndroidManifest.xml generated (app-data backup disabled)');
+
+        const xmlDir = join(androidDir, 'app', 'src', 'main', 'res', 'xml');
+        mkdirSync(xmlDir, { recursive: true });
+        writeFileSync(join(xmlDir, 'data_extraction_rules.xml'), generateDataExtractionRules());
+        writeFileSync(join(xmlDir, 'backup_rules.xml'), generateBackupRules());
+        console.log('  ✓ Android backup exclusion rules generated');
+
         // Generate strings.xml (app name from config.ts)
         const stringsDir = join(androidDir, 'app', 'src', 'main', 'res', 'values');
         mkdirSync(stringsDir, { recursive: true });
@@ -136,6 +149,9 @@ export const requireAndroidSetup: Requirement = {
         const requiredFiles = [
             // keystore.properties is gitignored (signing secret) — only generated locally by fix
             join('app', 'build.gradle'),
+            join('app', 'src', 'main', 'AndroidManifest.xml'),
+            join('app', 'src', 'main', 'res', 'xml', 'data_extraction_rules.xml'),
+            join('app', 'src', 'main', 'res', 'xml', 'backup_rules.xml'),
             join('app', 'src', 'main', 'res', 'values', 'strings.xml'),
             join('app', 'src', 'main', 'res', 'values', 'colors.xml'),
             join('app', 'src', 'main', 'res', 'values', 'styles.xml'),

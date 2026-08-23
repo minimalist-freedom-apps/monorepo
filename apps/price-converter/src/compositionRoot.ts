@@ -17,6 +17,7 @@ import {
     createThemeFragmentCompositionRoot,
     selectThemeMode,
 } from '@minimalist-apps/fragment-theme';
+import { createSecureStorageCompositionRoot } from '@minimalist-apps/secure-storage';
 import { createWindow } from '@minimalist-apps/window';
 import { createElement } from 'react';
 import { AddCurrencyButtonPure } from './app/AddCurrencyScreen/AddCurrencyButton';
@@ -61,6 +62,7 @@ export const createCompositionRoot = (): Main => {
     // Low Level
     const window = createWindow();
     const currentDateTime = createCurrentDateTime();
+    const secureStorage = createSecureStorageCompositionRoot();
 
     // Store
     const appStore = createAppStore();
@@ -95,6 +97,8 @@ export const createCompositionRoot = (): Main => {
             store: appStore,
             schema: Schema,
             appName: 'price-converter-v2',
+            secureStorage,
+            legacyMnemonicStorageKey: `${localStoragePrefix}:evoluMnemonic`,
         });
 
     const selectedCurrenciesStore = createSelectedCurrenciesStore({
