@@ -125,7 +125,10 @@ jobs:
 
       - name: Install Android compile SDK
         if: steps.affected-e2e.outputs.has_e2e == 'true'
-        run: sdkmanager "platforms;android-${ANDROID_COMPILE_API_LEVEL}" "build-tools;35.0.0"
+        run: >
+          "${ANDROID_SDK_ROOT}/cmdline-tools/latest/bin/sdkmanager"
+          "platforms;android-${ANDROID_COMPILE_API_LEVEL}"
+          "build-tools;35.0.0"
 
       - name: Log cache status
         if: steps.affected-e2e.outputs.has_e2e == 'true'
