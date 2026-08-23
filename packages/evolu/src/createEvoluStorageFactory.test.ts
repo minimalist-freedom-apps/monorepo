@@ -1,3 +1,5 @@
+// @vitest-environment node
+
 import { Mnemonic } from '@evolu/common';
 import { describe, expect, test } from 'vitest';
 import { createEvoluFactory } from './createEvoluFactory';
@@ -6,8 +8,7 @@ import { TodoTestSchema } from './mockEvoluStorage';
 import { testCreateRunWithEvoluDeps } from './testCreateRunWithEvoluDeps';
 
 describe(createEvoluStorageFactory.name, () => {
-    // Todo: once "Dependency 'port' already added" issue is resolved in Evolu
-    test.skip('restoreOwner recreates evolu instance and updates active owner', async () => {
+    test('restoreOwner recreates evolu instance and updates active owner', async () => {
         await using run = await testCreateRunWithEvoluDeps();
         const createEvolu = createEvoluFactory<TodoTestSchema>({ run });
 
