@@ -14,6 +14,7 @@ import {
     createThemeFragmentCompositionRoot,
     selectThemeMode,
 } from '@minimalist-apps/fragment-theme';
+import { createSecureStorageCompositionRoot } from '@minimalist-apps/secure-storage';
 import { createWindow } from '@minimalist-apps/window';
 import { createElement } from 'react';
 import { AppPure } from './app/App';
@@ -34,6 +35,7 @@ import {
 export const createCompositionRoot = (): Main => {
     const window = createWindow();
     const store = createAppStore();
+    const secureStorage = createSecureStorageCompositionRoot();
 
     const { goBack, navigate } = createNavigatorFragmentCompositionRoot<Screen>({
         store,
@@ -62,6 +64,8 @@ export const createCompositionRoot = (): Main => {
             store,
             schema: Schema,
             appName: 'android-sync-v1',
+            secureStorage,
+            legacyMnemonicStorageKey: `${localStoragePrefix}:evoluMnemonic`,
         });
 
     const { DebugSettings } = createDebugFragmentCompositionRoot({

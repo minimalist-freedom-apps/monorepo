@@ -39,11 +39,16 @@ const initState: State = {
 };
 
 describe('storageMaps', () => {
-    test('round-trips persisted values back to equivalent state', () => {
+    test('does not persist the mnemonic but loads its legacy value', () => {
         const data: Record<string, unknown> = {};
 
         const localStorage: LocalStorage = {
             load: <T>(key: string) => ok((data[key] ?? null) as T | null),
+            remove: key => {
+                delete data[key];
+
+                return ok();
+            },
             save: (key: string, value: unknown) => {
                 data[key] = value;
 
@@ -63,9 +68,10 @@ describe('storageMaps', () => {
             'test-prefix:lastUpdated': '123',
             'test-prefix:btcMode': 'sats',
             'test-prefix:debugMode': 'true',
-            'test-prefix:evoluMnemonic':
-                'abandon abandon abandon abandon abandon abandon abandon abandon abandon abandon abandon about',
         });
+
+        data['test-prefix:evoluMnemonic'] =
+            'abandon abandon abandon abandon abandon abandon abandon abandon abandon abandon abandon about';
 
         const state = applyMapLocalStorageToState({
             localStorage,

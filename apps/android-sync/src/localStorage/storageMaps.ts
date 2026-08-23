@@ -11,7 +11,6 @@ export const localStoragePrefix = 'android-sync-v1';
 export const mapStateLocalStorage: MapStateLocalStorage<AppState> = {
     themeMode: state => state.themeMode,
     debugMode: state => String(state.debugMode),
-    evoluMnemonic: state => (state.evoluMnemonic === null ? null : state.evoluMnemonic),
 };
 
 export const mapLocalStorageToState: MapLocalStorageToState<AppState> = {

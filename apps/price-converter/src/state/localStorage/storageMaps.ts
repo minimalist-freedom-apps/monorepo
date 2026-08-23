@@ -12,7 +12,6 @@ export const mapStateLocalStorage: MapStateLocalStorage<State> = {
     lastUpdated: state => (state.lastUpdated === null ? null : String(state.lastUpdated)),
     btcMode: state => state.btcMode,
     debugMode: state => String(state.debugMode),
-    evoluMnemonic: state => (state.evoluMnemonic === null ? null : state.evoluMnemonic),
 };
 
 export const mapLocalStorageToState: MapLocalStorageToState<State> = {

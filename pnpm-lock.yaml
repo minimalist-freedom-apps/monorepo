@@ -68,6 +68,9 @@ importers:
 
   apps/android-sync:
     dependencies:
+      '@aparajita/capacitor-secure-storage':
+        specifier: ^8.0.0
+        version: 8.0.0
       '@capacitor/core':
         specifier: ^8.5.0
         version: 8.5.0
@@ -113,6 +116,9 @@ importers:
       '@minimalist-apps/navigator':
         specifier: workspace:*
         version: link:../../packages/navigator
+      '@minimalist-apps/secure-storage':
+        specifier: workspace:*
+        version: link:../../packages/secure-storage
       '@minimalist-apps/type-utils':
         specifier: workspace:*
         version: link:../../packages/type-utils
@@ -162,6 +168,9 @@ importers:
 
   apps/chat:
     dependencies:
+      '@aparajita/capacitor-secure-storage':
+        specifier: ^8.0.0
+        version: 8.0.0
       '@capacitor/core':
         specifier: ^8.5.0
         version: 8.5.0
@@ -207,6 +216,9 @@ importers:
       '@minimalist-apps/navigator':
         specifier: workspace:*
         version: link:../../packages/navigator
+      '@minimalist-apps/secure-storage':
+        specifier: workspace:*
+        version: link:../../packages/secure-storage
       '@minimalist-apps/type-utils':
         specifier: workspace:*
         version: link:../../packages/type-utils
@@ -332,6 +344,9 @@ importers:
 
   apps/price-converter:
     dependencies:
+      '@aparajita/capacitor-secure-storage':
+        specifier: ^8.0.0
+        version: 8.0.0
       '@capacitor/core':
         specifier: ^8.5.0
         version: 8.5.0
@@ -392,6 +407,9 @@ importers:
       '@minimalist-apps/navigator':
         specifier: workspace:*
         version: link:../../packages/navigator
+      '@minimalist-apps/secure-storage':
+        specifier: workspace:*
+        version: link:../../packages/secure-storage
       '@minimalist-apps/type-utils':
         specifier: workspace:*
         version: link:../../packages/type-utils
@@ -785,9 +803,15 @@ importers:
       '@minimalist-apps/evolu':
         specifier: workspace:*
         version: link:../evolu
+      '@minimalist-apps/local-storage':
+        specifier: workspace:*
+        version: link:../local-storage
       '@minimalist-apps/mini-store':
         specifier: workspace:*
         version: link:../mini-store
+      '@minimalist-apps/secure-storage':
+        specifier: workspace:*
+        version: link:../secure-storage
       react:
         specifier: ^19.0.0
         version: 19.2.8
@@ -983,6 +1007,22 @@ importers:
         specifier: ^24.13.3
         version: 24.13.3
 
+  packages/secure-storage:
+    dependencies:
+      '@aparajita/capacitor-secure-storage':
+        specifier: ^8.0.0
+        version: 8.0.0
+      '@capacitor/core':
+        specifier: ^8.5.0
+        version: 8.5.0
+    devDependencies:
+      '@minimalist-apps/tsconfig':
+        specifier: workspace:*
+        version: link:../tsconfig
+      typescript:
+        specifier: ^7.0.2
+        version: 7.0.2
+
   packages/tsconfig: {}
 
   packages/type-utils:
@@ -1054,6 +1094,10 @@ packages:
     peerDependencies:
       react: ^0.14.0 || ^15.0.1 || ^16.0.0 || ^17.0.0 || ^18.0.0 || ^19.0.0
       react-dom: ^0.14.0 || ^15.0.1 || ^16.0.0 || ^17.0.0 || ^18.0.0 || ^19.0.0
+
+  '@aparajita/capacitor-secure-storage@8.0.0':
+    resolution: {integrity: sha512-oYnwSjdIh23aRNgz8982+TmFvQH/2yZkEdw1iIg+H2ziFJoOVELPTc7u6Ez2HwOuDIW5AGqBX75GvrzQ+D70Qg==}
+    engines: {node: '>=20.0.0'}
 
   '@appium/base-driver@10.7.2':
     resolution: {integrity: sha512-uYY84XZ0LFbXgNCePkVQXRshfSIbnajYSg1QBWYW3zvZodQyoXOInP5sylH8d/B0KM8b2Unn+VP9yoejX6v9CQ==}
@@ -1175,6 +1219,11 @@ packages:
     peerDependencies:
       '@capacitor/core': ^8.5.0
 
+  '@capacitor/app@8.1.1':
+    resolution: {integrity: sha512-xM2ZTX5jK60tFtmjsmJv+Cdj1Qsb6NcavkqmdEnCPQBeya9oKhamZJxYOnQNj1ZvcJM7sWfG6BEtSLx42pisbA==}
+    peerDependencies:
+      '@capacitor/core': '>=8.0.0'
+
   '@capacitor/cli@8.5.0':
     resolution: {integrity: sha512-rLdzMUM5QV4WITcqoWv04p32i14BXgUH2diqEH6MWQlWaJfiyNrvOyt/+d5vHAfOxOm1klBu637VDEobctlwBA==}
     engines: {node: '>=22.0.0'}
@@ -1182,6 +1231,16 @@ packages:
 
   '@capacitor/core@8.5.0':
     resolution: {integrity: sha512-Ca4krtqH1hothjtBIwf2J2TW7IhYq1ujp8QeItTiJohNsqij8ja2DYYH3DU0l8RmxCWaBAFTGA2TgOgOMCSNsQ==}
+
+  '@capacitor/ios@8.5.0':
+    resolution: {integrity: sha512-7k1TfohJu5BzRXc1F3g04Q8QQ0fyQgms6h1AvhnHb04VaNr9EdHOx03hL8O+OigEKMQnyJd1ZOjTPPNHCqL5Yw==}
+    peerDependencies:
+      '@capacitor/core': ^8.5.0
+
+  '@capacitor/keyboard@8.0.5':
+    resolution: {integrity: sha512-oFXygC4eKYA5l2MdpTR06L2M/4x6e2SLD5yS1T9+UBDKTkzyvhWKEhbYLUaTIBPpLKqlfGudJw1X73S1H9eUzQ==}
+    peerDependencies:
+      '@capacitor/core': '>=8.0.0'
 
   '@capacitor/status-bar@8.0.3':
     resolution: {integrity: sha512-csSpfNeN49Hx9JaQBSJEIiEbOLtXg3kcc2IpScq2fu5L520h3AWEvsxoH8Srk1jxfRKepaJ4S4sqSC3foI4AgA==}
@@ -5643,6 +5702,14 @@ snapshots:
       react-dom: 19.2.8(react@19.2.8)
       throttle-debounce: 5.0.2
 
+  '@aparajita/capacitor-secure-storage@8.0.0':
+    dependencies:
+      '@capacitor/android': 8.5.0(@capacitor/core@8.5.0)
+      '@capacitor/app': 8.1.1(@capacitor/core@8.5.0)
+      '@capacitor/core': 8.5.0
+      '@capacitor/ios': 8.5.0(@capacitor/core@8.5.0)
+      '@capacitor/keyboard': 8.0.5(@capacitor/core@8.5.0)
+
   '@appium/base-driver@10.7.2(@appium/logger@2.0.10)(@types/node@24.13.3)(debug@4.4.3(supports-color@8.1.1))(supports-color@8.1.1)':
     dependencies:
       '@appium/support': 7.2.6(@types/node@24.13.3)(debug@4.4.3(supports-color@8.1.1))(supports-color@8.1.1)
@@ -5825,6 +5892,10 @@ snapshots:
     dependencies:
       '@capacitor/core': 8.5.0
 
+  '@capacitor/app@8.1.1(@capacitor/core@8.5.0)':
+    dependencies:
+      '@capacitor/core': 8.5.0
+
   '@capacitor/cli@8.5.0(supports-color@8.1.1)':
     dependencies:
       '@ionic/cli-framework-output': 2.2.8(supports-color@8.1.1)
@@ -5851,6 +5922,14 @@ snapshots:
   '@capacitor/core@8.5.0':
     dependencies:
       tslib: 2.8.1
+
+  '@capacitor/ios@8.5.0(@capacitor/core@8.5.0)':
+    dependencies:
+      '@capacitor/core': 8.5.0
+
+  '@capacitor/keyboard@8.0.5(@capacitor/core@8.5.0)':
+    dependencies:
+      '@capacitor/core': 8.5.0
 
   '@capacitor/status-bar@8.0.3(@capacitor/core@8.5.0)':
     dependencies:

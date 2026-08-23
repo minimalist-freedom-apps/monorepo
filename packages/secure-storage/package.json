@@ -1,0 +1,24 @@
+{
+    "name": "@minimalist-apps/secure-storage",
+    "version": "1.0.0",
+    "private": true,
+    "type": "module",
+    "exports": {
+        ".": {
+            "types": "./src/index.ts",
+            "import": "./src/index.ts"
+        }
+    },
+    "scripts": {
+        "test": "vitest run",
+        "typecheck": "tsc --noEmit"
+    },
+    "dependencies": {
+        "@aparajita/capacitor-secure-storage": "^8.0.0",
+        "@capacitor/core": "^8.5.0"
+    },
+    "devDependencies": {
+        "@minimalist-apps/tsconfig": "workspace:*",
+        "typescript": "^7.0.2"
+    }
+}
