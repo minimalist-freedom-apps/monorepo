@@ -14,7 +14,7 @@ import {
     createThemeFragmentCompositionRoot,
     selectThemeMode,
 } from '@minimalist-apps/fragment-theme';
-import { createSecureStorageCompositionRoot } from '@minimalist-apps/secure-storage';
+import { createCapacitorSecureStorageCompositionRoot } from '@minimalist-apps/secure-storage-capacitor';
 import { createWindow } from '@minimalist-apps/window';
 import { createElement } from 'react';
 import { AppPure } from './app/App';
@@ -35,7 +35,7 @@ import {
 export const createCompositionRoot = (): Main => {
     const window = createWindow();
     const store = createAppStore();
-    const secureStorage = createSecureStorageCompositionRoot();
+    const secureStorage = createCapacitorSecureStorageCompositionRoot();
 
     const { goBack, navigate } = createNavigatorFragmentCompositionRoot<Screen>({
         store,

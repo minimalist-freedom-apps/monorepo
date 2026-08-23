@@ -35,7 +35,7 @@
         "@minimalist-apps/mini-store": "workspace:*",
         "@minimalist-apps/mobile-native": "workspace:*",
         "@minimalist-apps/navigator": "workspace:*",
-        "@minimalist-apps/secure-storage": "workspace:*",
+        "@minimalist-apps/secure-storage-capacitor": "workspace:*",
         "@minimalist-apps/type-utils": "workspace:*",
         "@minimalist-apps/window": "workspace:*",
         "react": "^19.2.8",

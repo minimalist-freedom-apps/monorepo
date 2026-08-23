@@ -1,7 +1,6 @@
-export {
-    createSecureStorage,
-    createSecureStorageCompositionRoot,
-    type NativeSecureStorage,
-    type SecureStorage,
-    type SecureStorageDep,
-} from './createSecureStorage';
+export type {
+    SecureStorage,
+    SecureStorageDep,
+    SecureStorageLoadProps,
+    SecureStorageSaveProps,
+} from './SecureStorage';
