@@ -26,11 +26,10 @@ describe(formatNumberWithCommas.name, () => {
         { value: 1.123456, precision: 5, expected: '1.12346', label: 'respects precision 5' },
     ];
 
-    test.each(testCases)('$label ($value, precision=$precision → $expected)', ({
-        value,
-        precision,
-        expected,
-    }) => {
-        expect(formatNumberWithCommas({ value, precision })).toBe(expected);
-    });
+    test.each(testCases)(
+        '$label ($value, precision=$precision → $expected)',
+        ({ value, precision, expected }) => {
+            expect(formatNumberWithCommas({ value, precision })).toBe(expected);
+        },
+    );
 });

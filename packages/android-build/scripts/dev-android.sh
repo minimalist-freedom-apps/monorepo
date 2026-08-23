@@ -104,7 +104,7 @@ target_device="$(get_first_connected_device)"
 
 if [[ -z "$target_device" ]]; then
 	echo "No connected Android device found. Starting emulator..."
-	bun run --filter @minimalist-apps/android-e2e e2e:emulator
+	pnpm --filter @minimalist-apps/android-e2e e2e:emulator
 	target_device="$(wait_for_connected_device)"
 fi
 
@@ -118,7 +118,7 @@ wait_for_device_boot "$target_device"
 
 dev_port="$(get_dev_port)"
 echo "Starting Vite dev server on port ${dev_port}..."
-bun run dev > /tmp/dev-android-vite.log 2>&1 &
+pnpm dev > /tmp/dev-android-vite.log 2>&1 &
 dev_server_pid=$!
 
 wait_for_dev_server "$dev_port"

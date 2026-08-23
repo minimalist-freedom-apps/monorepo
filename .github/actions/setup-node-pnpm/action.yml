@@ -1,0 +1,33 @@
+name: Setup Node and pnpm
+
+description: Setup pnpm, setup Node.js, restore caches, and install dependencies.
+
+runs:
+  using: composite
+  steps:
+    - name: Setup pnpm
+      uses: pnpm/setup@v1
+      with:
+        version: '11.22.0'
+        install: false
+
+    - name: Setup Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version-file: '.nvmrc'
+        cache: pnpm
+
+    - name: Cache node_modules
+      uses: actions/cache@v4
+      with:
+        path: |
+          node_modules
+          apps/*/node_modules
+          packages/*/node_modules
+        key: node-modules-${{ runner.os }}-${{ hashFiles('pnpm-lock.yaml') }}
+        restore-keys: |
+          node-modules-${{ runner.os }}-
+
+    - name: Install dependencies
+      shell: bash
+      run: pnpm install --frozen-lockfile

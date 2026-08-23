@@ -59,14 +59,13 @@ describe(requiredAppScripts.name, () => {
             const pkg = readPackageJson({ dir: appDir });
             expect(pkg.scripts).toEqual({
                 dev: 'vite',
-                'dev:android': 'APP_DIR=$PWD bun run --filter @minimalist-apps/android-build dev',
+                'dev:android': 'APP_DIR=$PWD pnpm --filter @minimalist-apps/android-build dev',
                 build: 'vite build',
-                'build:android':
-                    'APP_DIR=$PWD bun run --filter @minimalist-apps/android-build build',
+                'build:android': 'APP_DIR=$PWD pnpm --filter @minimalist-apps/android-build build',
                 'build:android:debug':
-                    'APP_DIR=$PWD bun run --filter @minimalist-apps/android-build build:debug',
+                    'APP_DIR=$PWD pnpm --filter @minimalist-apps/android-build build:debug',
                 'build:android:sign':
-                    'APP_DIR=$PWD bun run --filter @minimalist-apps/android-build sign',
+                    'APP_DIR=$PWD pnpm --filter @minimalist-apps/android-build sign',
                 preview: 'vite preview',
                 typecheck: 'tsc --noEmit',
             });
@@ -293,7 +292,7 @@ describe(requiredAppScripts.name, () => {
                 content: {
                     name: '@minimalist-apps/demo-package',
                     scripts: {
-                        test: 'bun test',
+                        test: 'node --test',
                         typecheck: 'tsc --noEmit',
                     },
                 },
@@ -301,7 +300,7 @@ describe(requiredAppScripts.name, () => {
 
             const errors = requiredAppScripts.verify({ appDir: packageDir });
             expect(errors).toEqual([
-                'script "test" value mismatch — expected "vitest run", found "bun test"',
+                'script "test" value mismatch — expected "vitest run", found "node --test"',
             ]);
         });
 

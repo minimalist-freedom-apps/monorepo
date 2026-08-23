@@ -76,26 +76,22 @@ describe(calculateRectangle.name, () => {
         },
     ];
 
-    test.each(testCases)('$description', ({
-        amount,
-        originalA,
-        originalB,
-        newA,
-        newB,
-        expected,
-    }) => {
-        const result = calculateRectangle({
-            amount,
-            originalA,
-            originalB,
-            newA,
-            newB,
-        });
+    test.each(testCases)(
+        '$description',
+        ({ amount, originalA, originalB, newA, newB, expected }) => {
+            const result = calculateRectangle({
+                amount,
+                originalA,
+                originalB,
+                newA,
+                newB,
+            });
 
-        if (expected === null) {
-            expect(result).toBeNull();
-        } else {
-            expect(result).toBeCloseTo(expected, 1);
-        }
-    });
+            if (expected === null) {
+                expect(result).toBeNull();
+            } else {
+                expect(result).toBeCloseTo(expected, 1);
+            }
+        },
+    );
 });

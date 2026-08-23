@@ -45,13 +45,13 @@ export const testCreateTime = (options?: {
 
 ```bash
 # Run all tests in a package
-bun test --filter @evolu/common
+pnpm --filter @evolu/common test
 
 # Run a single file
-bun test --filter @evolu/common -- Task
+pnpm --filter @evolu/common test -- Task
 
 # Run a single test by name (-t flag)
-bun test --filter @evolu/common -- -t "yields and returns ok"
+pnpm --filter @evolu/common test -- -t "yields and returns ok"
 ```
 
 ### Data-provider pattern for simple tests
