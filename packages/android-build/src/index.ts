@@ -1,4 +1,4 @@
 export { generateAppBuildGradle } from './generateAppBuildGradle';
-export { generateColorsXml } from './generateColorsXml';
-export { generateStringsXml } from './generateStringsXml';
+export { generateColorsXml, generateDebugIconBackgroundXml } from './generateColorsXml';
+export { generateDebugStringsXml, generateStringsXml } from './generateStringsXml';
 export { generateStylesXml } from './generateStylesXml';

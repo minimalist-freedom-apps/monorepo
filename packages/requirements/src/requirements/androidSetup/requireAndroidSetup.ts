@@ -4,6 +4,8 @@ import { pathToFileURL } from 'node:url';
 import {
     generateAppBuildGradle,
     generateColorsXml,
+    generateDebugIconBackgroundXml,
+    generateDebugStringsXml,
     generateStringsXml,
     generateStylesXml,
 } from '@minimalist-apps/android-build';
@@ -45,9 +47,10 @@ export const requireAndroidSetup: Requirement = {
     fix: async ({ appDir }) => {
         const workspaceRoot = resolve(appDir, '../..');
         const templatePath = join(workspaceRoot, 'keystore.properties');
+        const errors: Array<string> = [];
 
         if (!existsSync(templatePath)) {
-            return [`missing ${templatePath} — create it with storeFile and keyAlias fields`];
+            errors.push(`missing ${templatePath} — create it with storeFile and keyAlias fields`);
         }
 
         const androidDir = join(appDir, 'android');
@@ -68,8 +71,11 @@ export const requireAndroidSetup: Requirement = {
 
         // Copy keystore.properties
         const keystoreTarget = join(androidDir, 'keystore.properties');
-        copyFileSync(templatePath, keystoreTarget);
-        console.log('  ✓ keystore.properties copied');
+
+        if (existsSync(templatePath)) {
+            copyFileSync(templatePath, keystoreTarget);
+            console.log('  ✓ keystore.properties copied');
+        }
 
         // Generate app/build.gradle from shared template (version from package.json)
         const appBuildGradlePath = join(androidDir, 'app', 'build.gradle');
@@ -85,6 +91,19 @@ export const requireAndroidSetup: Requirement = {
             generateStringsXml({ appName: config.appName, appId: config.appId }),
         );
         console.log('  ✓ strings.xml generated (app name from config.ts)');
+
+        // Generate debug launcher branding (development suffix and blue icon background)
+        const debugValuesDir = join(androidDir, 'app', 'src', 'debug', 'res', 'values');
+        mkdirSync(debugValuesDir, { recursive: true });
+        writeFileSync(
+            join(debugValuesDir, 'strings.xml'),
+            generateDebugStringsXml({ appName: config.appName }),
+        );
+        writeFileSync(
+            join(debugValuesDir, 'ic_launcher_background.xml'),
+            generateDebugIconBackgroundXml(),
+        );
+        console.log('  ✓ debug launcher branding generated');
 
         // Generate colors.xml (uses shared BRAND_COLOR)
         const colorsPath = join(stringsDir, 'colors.xml');
@@ -104,7 +123,7 @@ export const requireAndroidSetup: Requirement = {
 
         console.log('  ✓ default Capacitor splash PNG assets removed');
 
-        return [];
+        return errors;
     },
     verify: ({ appDir }) => {
         const androidDir = join(appDir, 'android');
@@ -120,6 +139,8 @@ export const requireAndroidSetup: Requirement = {
             join('app', 'src', 'main', 'res', 'values', 'strings.xml'),
             join('app', 'src', 'main', 'res', 'values', 'colors.xml'),
             join('app', 'src', 'main', 'res', 'values', 'styles.xml'),
+            join('app', 'src', 'debug', 'res', 'values', 'strings.xml'),
+            join('app', 'src', 'debug', 'res', 'values', 'ic_launcher_background.xml'),
         ] as const;
 
         for (const file of requiredFiles) {

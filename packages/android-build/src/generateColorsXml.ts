@@ -8,3 +8,7 @@ import { readTemplate } from './readTemplate';
  */
 export const generateColorsXml = (): string =>
     injectTemplateVars(readTemplate('colors.xml'), { brandColor: BRAND_COLOR });
+
+/** Generates the blue debug launcher background used to distinguish development builds. */
+export const generateDebugIconBackgroundXml = (): string =>
+    readTemplate('debug-icon-background.xml');
