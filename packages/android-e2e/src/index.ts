@@ -1,6 +1,8 @@
 export { clickElementByTestId } from './actions/clickElementByTestId.ts';
 export { deleteSession } from './actions/deleteAppiumSession.ts';
 export { getElementAttributeByTestId } from './actions/getElementAttributeByTestId.ts';
+export { isElementExistingByTestId } from './actions/isElementExistingByTestId.ts';
+export { runWebViewFlow } from './actions/runWebViewAction.ts';
 export { typeIntoElementByTestId } from './actions/typeIntoElementByTestId.ts';
 export { waitForElementByTestId } from './actions/waitForElementByTestId.ts';
 export { waitForElementTextByTestIdContains } from './actions/waitForElementTextByTestIdContains.ts';
