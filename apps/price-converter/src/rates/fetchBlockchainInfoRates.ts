@@ -3,7 +3,7 @@ import { CurrencyCode, isFiatCurrency } from '@minimalist-apps/fiat';
 import { typedObjectEntries, typedObjectKeys } from '@minimalist-apps/type-utils';
 import { RateBtcPerFiat } from '../converter/rate.js';
 import { type CurrencyMap, type FetchRates, FetchRatesError } from './FetchRates.js';
-import { getPositiveFiniteReciprocal, isUnknownRecord } from './rateApiValidation.js';
+import { BlockchainInfoResponse, getPositiveFiniteReciprocal } from './rateApiValidation.js';
 
 interface FetchBlockchainInfoRatesDeps {
     readonly fetch: typeof globalThis.fetch;
@@ -21,33 +21,38 @@ export const createFetchBlockchainInfoRates =
                 if (!response.ok) {
                     throw new Error('Blockchain.info API failed');
                 }
-                const data: unknown = await response.json();
+                const dataResult = BlockchainInfoResponse.fromUnknown(await response.json());
 
-                if (!isUnknownRecord(data)) {
+                if (!dataResult.ok) {
                     throw new Error('Invalid Blockchain.info response');
                 }
 
-                const rates = typedObjectEntries(data).reduce<CurrencyMap>((acc, [code, info]) => {
-                    const reciprocal = isUnknownRecord(info)
-                        ? getPositiveFiniteReciprocal(info.last)
-                        : null;
+                const rates = typedObjectEntries(dataResult.value).reduce<CurrencyMap>(
+                    (acc, [code, info]) => {
+                        if (info === undefined) {
+                            return acc;
+                        }
 
-                    if (!isUnknownRecord(info) || reciprocal === null) {
-                        throw new Error('Invalid Blockchain.info rate');
-                    }
+                        const reciprocal = getPositiveFiniteReciprocal(info.last);
 
-                    const codeResult = CurrencyCode.fromUnknown(String(code));
+                        if (reciprocal === null) {
+                            throw new Error('Invalid Blockchain.info rate');
+                        }
 
-                    if (codeResult.ok && isFiatCurrency(codeResult.value)) {
-                        acc[codeResult.value] = {
-                            code: codeResult.value,
-                            name: String(codeResult.value),
-                            rate: RateBtcPerFiat(codeResult.value).from(reciprocal),
-                        };
-                    }
+                        const codeResult = CurrencyCode.fromUnknown(String(code));
 
-                    return acc;
-                }, {});
+                        if (codeResult.ok && isFiatCurrency(codeResult.value)) {
+                            acc[codeResult.value] = {
+                                code: codeResult.value,
+                                name: String(codeResult.value),
+                                rate: RateBtcPerFiat(codeResult.value).from(reciprocal),
+                            };
+                        }
+
+                        return acc;
+                    },
+                    {},
+                );
 
                 if (typedObjectKeys(rates).length === 0) {
                     throw new Error('Blockchain.info returned no fiat rates');

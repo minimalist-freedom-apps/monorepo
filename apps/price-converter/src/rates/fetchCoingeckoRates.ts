@@ -3,7 +3,7 @@ import { CurrencyCode, isFiatCurrency } from '@minimalist-apps/fiat';
 import { typedObjectEntries, typedObjectKeys } from '@minimalist-apps/type-utils';
 import { RateBtcPerFiat } from '../converter/rate.js';
 import { type CurrencyMap, type FetchRates, FetchRatesError } from './FetchRates.js';
-import { getPositiveFiniteReciprocal, isUnknownRecord } from './rateApiValidation.js';
+import { CoingeckoResponse, getPositiveFiniteReciprocal } from './rateApiValidation.js';
 
 interface FetchCoingeckoRatesDeps {
     readonly fetch: typeof globalThis.fetch;
@@ -24,26 +24,22 @@ export const createFetchCoingeckoRates =
                 if (!response.ok) {
                     throw new Error('Coingecko API failed');
                 }
-                const data: unknown = await response.json();
+                const dataResult = CoingeckoResponse.fromUnknown(await response.json());
 
-                if (!isUnknownRecord(data) || !isUnknownRecord(data.rates)) {
+                if (!dataResult.ok) {
                     throw new Error('Invalid Coingecko response');
                 }
 
-                const rates = typedObjectEntries(data.rates).reduce<CurrencyMap>(
+                const rates = typedObjectEntries(dataResult.value.rates).reduce<CurrencyMap>(
                     (acc, [code, info]) => {
-                        if (!isUnknownRecord(info) || typeof info.type !== 'string') {
-                            throw new Error('Invalid Coingecko rate');
+                        if (info === undefined) {
+                            return acc;
                         }
 
                         if (info.type === 'fiat') {
                             const reciprocal = getPositiveFiniteReciprocal(info.value);
 
-                            if (
-                                typeof info.name !== 'string' ||
-                                info.name.length === 0 ||
-                                reciprocal === null
-                            ) {
+                            if (reciprocal === null) {
                                 throw new Error('Invalid Coingecko fiat rate');
                             }
 
