@@ -12,29 +12,53 @@ export interface FetchAndStoreRatesDep {
 type FetchAndStoreRatesDeps = AppStoreDep &
     FetchRatesDep &
     RecalculateFromBtcDep &
-    CurrentDateTimeDep;
+    CurrentDateTimeDep & {
+        readonly createAbortController: () => AbortController;
+    };
 
-export const createFetchAndStoreRates =
-    (deps: FetchAndStoreRatesDeps): FetchAndStoreRates =>
-    async () => {
+export const createFetchAndStoreRates = (deps: FetchAndStoreRatesDeps): FetchAndStoreRates => {
+    let latestRequest = 0;
+    let activeAbortController: AbortController | null = null;
+
+    return async () => {
+        activeAbortController?.abort();
+        const abortController = deps.createAbortController();
+        activeAbortController = abortController;
+        latestRequest += 1;
+        const request = latestRequest;
         deps.appStore.setState({ loading: true, error: '' });
 
-        const result = await deps.fetchRates();
+        try {
+            const result = await deps.fetchRates({ signal: abortController.signal });
 
-        if (!result.ok) {
+            if (request !== latestRequest) {
+                return;
+            }
+
+            if (!result.ok) {
+                deps.appStore.setState({
+                    error: 'Failed to fetch rates. Please try again.',
+                });
+
+                return;
+            }
+
             deps.appStore.setState({
-                error: 'Failed to fetch rates. Please try again.',
-                loading: false,
+                rates: result.value,
+                lastUpdated: deps.currentDateTime(),
             });
-
-            return;
+            deps.recalculateFromBtc();
+        } catch {
+            if (request === latestRequest) {
+                deps.appStore.setState({
+                    error: 'Failed to fetch rates. Please try again.',
+                });
+            }
+        } finally {
+            if (request === latestRequest) {
+                activeAbortController = null;
+                deps.appStore.setState({ loading: false });
+            }
         }
-
-        deps.appStore.setState({
-            rates: result.value,
-            lastUpdated: deps.currentDateTime(),
-        });
-        deps.recalculateFromBtc();
-
-        deps.appStore.setState({ loading: false });
     };
+};

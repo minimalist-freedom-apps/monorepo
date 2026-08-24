@@ -1,7 +1,7 @@
 import { getOrThrow } from '@evolu/common';
 import { CurrencyCode, type CurrencyCode as CurrencyCodeType } from '@minimalist-apps/fiat';
 import { typedObjectKeys } from '@minimalist-apps/type-utils';
-import { describe, expect, test } from 'vitest';
+import { describe, expect, test, vi } from 'vitest';
 import { createFetchBitpayRates } from './fetchBitpayRates.js';
 import bitpayFixture from './fixtures/bitpay.json';
 
@@ -18,6 +18,18 @@ const createMockFetch = (response: unknown, ok = true): typeof globalThis.fetch 
         })) as unknown as typeof globalThis.fetch;
 
 describe('createFetchBitpayRates', () => {
+    test('passes the abort signal to fetch', async () => {
+        const fetch = vi.fn(createMockFetch(bitpayFixture));
+        const fetchBitpayRates = createFetchBitpayRates({ fetch });
+        const abortController = new AbortController();
+
+        await fetchBitpayRates({ signal: abortController.signal });
+
+        expect(fetch).toHaveBeenCalledWith('https://bitpay.com/rates/BTC', {
+            signal: abortController.signal,
+        });
+    });
+
     test('parses bitpay fixture into currency map', async () => {
         const fetchBitpayRates = createFetchBitpayRates({
             fetch: createMockFetch(bitpayFixture),
@@ -137,4 +149,31 @@ describe('createFetchBitpayRates', () => {
 
         expect(result.error.type).toBe('FetchRatesError');
     });
+
+    test('returns FetchRatesError for a malformed response', async () => {
+        const fetchBitpayRates = createFetchBitpayRates({
+            fetch: createMockFetch({ data: null }),
+        });
+
+        await expect(fetchBitpayRates()).resolves.toEqual({
+            ok: false,
+            error: { type: 'FetchRatesError' },
+        });
+    });
+
+    test.each([0, -1, Number.NaN, Number.MIN_VALUE, Number.POSITIVE_INFINITY])(
+        'returns FetchRatesError for invalid rate %s',
+        async rate => {
+            const fetchBitpayRates = createFetchBitpayRates({
+                fetch: createMockFetch({
+                    data: [{ code: 'USD', name: 'US Dollar', rate }],
+                }),
+            });
+
+            await expect(fetchBitpayRates()).resolves.toEqual({
+                ok: false,
+                error: { type: 'FetchRatesError' },
+            });
+        },
+    );
 });
