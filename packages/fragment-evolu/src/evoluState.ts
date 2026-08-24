@@ -4,6 +4,7 @@ import type { Store } from '@minimalist-apps/mini-store';
 export interface EvoluState {
     readonly evoluMnemonic: Mnemonic | null;
     readonly activeOwnerAppId: OwnerId | null;
+    readonly evoluRelayUrls: ReadonlyArray<string>;
 }
 
 export type EvoluStoreDep = {

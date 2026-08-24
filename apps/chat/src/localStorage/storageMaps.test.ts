@@ -18,6 +18,7 @@ const initState: AppState = {
     ),
     currentScreen: 'Chat',
     activeOwnerAppId: null,
+    evoluRelayUrls: ['wss://one.example', 'wss://two.example'],
 };
 
 describe('storageMaps', () => {
@@ -43,6 +44,7 @@ describe('storageMaps', () => {
         expect(data).toEqual({
             'test-prefix:themeMode': 'dark',
             'test-prefix:debugMode': 'true',
+            'test-prefix:evoluRelayUrls': 'wss://one.example\nwss://two.example',
         });
 
         data['test-prefix:evoluMnemonic'] =
@@ -57,6 +59,7 @@ describe('storageMaps', () => {
         expect(state).toEqual({
             themeMode: 'dark',
             debugMode: true,
+            evoluRelayUrls: ['wss://one.example', 'wss://two.example'],
         });
     });
 });

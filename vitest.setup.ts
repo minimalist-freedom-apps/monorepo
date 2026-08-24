@@ -2,10 +2,10 @@
 import '@testing-library/jest-dom/vitest';
 import { vi } from 'vitest';
 
-const testCreateResizeObserver = vi.fn(() => ({
-    disconnect: vi.fn(),
-    observe: vi.fn(),
-    unobserve: vi.fn(),
-}));
+class TestResizeObserver {
+    readonly disconnect = vi.fn();
+    readonly observe = vi.fn();
+    readonly unobserve = vi.fn();
+}
 
-vi.stubGlobal('ResizeObserver', testCreateResizeObserver);
+vi.stubGlobal('ResizeObserver', TestResizeObserver);

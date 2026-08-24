@@ -15,6 +15,8 @@ import {
 } from './createRestoreMnemonic';
 import { createSetActiveOwnerAppId } from './createSetActiveOwnerAppId';
 import { createSetEvoluMnemonic } from './createSetEvoluMnemonic';
+import { createSetEvoluRelayUrls } from './createSetEvoluRelayUrls';
+import { type EvoluRelaySettingsDep, EvoluRelaySettingsPure } from './EvoluRelaySettings';
 import type { EvoluState, EvoluStoreDep } from './evoluState';
 import { type RestoreMnemonicDep, RestoreMnemonic as RestoreMnemonicPure } from './RestoreMnemonic';
 import { selectEvoluMnemonic } from './selectEvoluMnemonic';
@@ -28,6 +30,7 @@ type EvoluFragmentCompositionRootDeps<Schema extends EvoluSchema> = EvoluStoreDe
 
 type EvoluFragment<Schema extends EvoluSchema> = BackupMnemonicDep &
     RestoreMnemonicDep &
+    EvoluRelaySettingsDep &
     RestoreMnemonicServiceDep &
     EnsureEvoluStorageDep<Schema>;
 
@@ -50,6 +53,7 @@ export const createEvoluFragmentCompositionRoot = <Schema extends EvoluSchema>(
 
     const { ensureEvoluStorage } = createEvoluCompositionRoot<Schema>({
         ensureEvoluOwner,
+        getEvoluRelayUrls: () => deps.store.getState().evoluRelayUrls,
         onOwnerUsed: owner => setActiveOwnerAppId(owner.id),
         schema: deps.schema,
         appName: deps.appName,
@@ -57,6 +61,10 @@ export const createEvoluFragmentCompositionRoot = <Schema extends EvoluSchema>(
 
     const restoreMnemonic = createRestoreMnemonic({
         setEvoluMnemonic,
+        ensureEvoluStorage,
+    });
+    const setEvoluRelayUrls = createSetEvoluRelayUrls({
+        store: deps.store,
         ensureEvoluStorage,
     });
 
@@ -74,5 +82,17 @@ export const createEvoluFragmentCompositionRoot = <Schema extends EvoluSchema>(
         restoreMnemonic,
     });
 
-    return { BackupMnemonic, RestoreMnemonic, restoreMnemonic, ensureEvoluStorage };
+    const EvoluRelaySettings = deps.connect(
+        EvoluRelaySettingsPure,
+        ({ store }) => ({ evoluRelayUrls: store.evoluRelayUrls }),
+        { setEvoluRelayUrls },
+    );
+
+    return {
+        BackupMnemonic,
+        RestoreMnemonic,
+        EvoluRelaySettings,
+        restoreMnemonic,
+        ensureEvoluStorage,
+    };
 };

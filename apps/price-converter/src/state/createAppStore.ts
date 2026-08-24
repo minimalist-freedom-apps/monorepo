@@ -1,4 +1,5 @@
 import type { AmountSats } from '@minimalist-apps/bitcoin';
+import { DEFAULT_EVOLU_RELAY_URLS } from '@minimalist-apps/evolu';
 import type { Store } from '@minimalist-apps/mini-store';
 import { createStore as createMiniStore } from '@minimalist-apps/mini-store';
 import type { State } from './State';
@@ -20,6 +21,7 @@ export const createAppStore = (): Store<State> => {
         debugMode: false,
         evoluMnemonic: null,
         activeOwnerAppId: null,
+        evoluRelayUrls: DEFAULT_EVOLU_RELAY_URLS,
     };
 
     return createMiniStore(initialState);

@@ -14,8 +14,15 @@ export interface OnOwnerUsedDep {
     readonly onOwnerUsed: (owner: Owner) => void;
 }
 
+export interface GetEvoluRelayUrlsDep {
+    readonly getEvoluRelayUrls: () => ReadonlyArray<string>;
+}
+
 interface CreateEnsureEvoluProps<S extends EvoluSchema> {
-    readonly deps: EnsureEvoluOwnerDep & OnOwnerUsedDep & CreateEvoluStorageDep<S>;
+    readonly deps: EnsureEvoluOwnerDep &
+        OnOwnerUsedDep &
+        GetEvoluRelayUrlsDep &
+        CreateEvoluStorageDep<S>;
     readonly schema: ValidateSchema<S> extends never ? S : ValidateSchema<S>;
     readonly appName: string;
     // readonly shardPath: NonEmptyReadonlyArray<string | number>;
@@ -40,7 +47,7 @@ export const createEnsureEvoluStorage = <S extends EvoluSchema>({
                 schema,
                 appName,
                 onOwnerUsed: deps.onOwnerUsed,
-                urls: ['https://free.evoluhq.com'],
+                urls: deps.getEvoluRelayUrls(),
                 // shardPath,
             });
         }
