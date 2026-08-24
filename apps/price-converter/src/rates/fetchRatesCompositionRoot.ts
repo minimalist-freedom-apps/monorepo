@@ -1,8 +1,8 @@
+import { createFetchBitpayRates } from './bitpay/fetchBitpayRates';
+import { createFetchBlockchainInfoRates } from './blockchainInfo/fetchBlockchainInfoRates';
+import { createFetchCoingeckoRates } from './coingecko/fetchCoingeckoRates';
 import type { FetchRates } from './FetchRates';
 import { createFetchAverageRates } from './fetchAverageRates';
-import { createFetchBitpayRates } from './fetchBitpayRates';
-import { createFetchBlockchainInfoRates } from './fetchBlockchainInfoRates';
-import { createFetchCoingeckoRates } from './fetchCoingeckoRates';
 
 const RATE_SOURCE_TIMEOUT_MILLISECONDS = 10_000;
 
