@@ -1,13 +1,13 @@
+import { PositiveFiniteNumber } from '@evolu/common';
 import { CurrencyCode, isFiatCurrency } from '@minimalist-apps/fiat';
 import { typedObjectKeys } from '@minimalist-apps/type-utils';
 import { RateBtcPerFiat } from '../../converter/rate.js';
 import type { CurrencyMap } from '../FetchRates.js';
-import { getPositiveFiniteReciprocal } from '../positiveFiniteNumber.js';
 import type { BitpayResponse } from './BitpayResponse.js';
 
 export const bitpayResponseToCurrencyMap = (response: BitpayResponse): CurrencyMap => {
     const rates = response.data.reduce<CurrencyMap>((acc, item) => {
-        const reciprocal = getPositiveFiniteReciprocal(item.rate);
+        const reciprocal = PositiveFiniteNumber.orNull(1 / item.rate);
 
         if (reciprocal === null) {
             throw new Error('Invalid Bitpay rate');

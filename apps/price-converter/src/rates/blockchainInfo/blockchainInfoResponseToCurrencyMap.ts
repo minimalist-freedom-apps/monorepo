@@ -1,8 +1,8 @@
+import { PositiveFiniteNumber } from '@evolu/common';
 import { CurrencyCode, isFiatCurrency } from '@minimalist-apps/fiat';
 import { typedObjectEntries, typedObjectKeys } from '@minimalist-apps/type-utils';
 import { RateBtcPerFiat } from '../../converter/rate.js';
 import type { CurrencyMap } from '../FetchRates.js';
-import { getPositiveFiniteReciprocal } from '../positiveFiniteNumber.js';
 import type { BlockchainInfoResponse } from './BlockchainInfoResponse.js';
 
 export const blockchainInfoResponseToCurrencyMap = (
@@ -13,7 +13,7 @@ export const blockchainInfoResponseToCurrencyMap = (
             return acc;
         }
 
-        const reciprocal = getPositiveFiniteReciprocal(info.last);
+        const reciprocal = PositiveFiniteNumber.orNull(1 / info.last);
 
         if (reciprocal === null) {
             throw new Error('Invalid Blockchain.info rate');

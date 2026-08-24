@@ -1,8 +1,8 @@
+import { PositiveFiniteNumber } from '@evolu/common';
 import { CurrencyCode, isFiatCurrency } from '@minimalist-apps/fiat';
 import { typedObjectEntries, typedObjectKeys } from '@minimalist-apps/type-utils';
 import { RateBtcPerFiat } from '../../converter/rate.js';
 import type { CurrencyMap } from '../FetchRates.js';
-import { getPositiveFiniteReciprocal } from '../positiveFiniteNumber.js';
 import type { CoingeckoResponse } from './CoingeckoResponse.js';
 
 export const coingeckoResponseToCurrencyMap = (response: CoingeckoResponse): CurrencyMap => {
@@ -12,7 +12,7 @@ export const coingeckoResponseToCurrencyMap = (response: CoingeckoResponse): Cur
         }
 
         if (info.type === 'fiat') {
-            const reciprocal = getPositiveFiniteReciprocal(info.value);
+            const reciprocal = PositiveFiniteNumber.orNull(1 / info.value);
 
             if (reciprocal === null) {
                 throw new Error('Invalid Coingecko fiat rate');

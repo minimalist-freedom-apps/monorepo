@@ -1,5 +1,11 @@
-import { String as EvoluString, minLength, object, record, Unknown } from '@evolu/common';
-import { PositiveFiniteNumber } from '../positiveFiniteNumber.js';
+import {
+    String as EvoluString,
+    minLength,
+    object,
+    PositiveFiniteNumber,
+    record,
+    Unknown,
+} from '@evolu/common';
 
 const UnknownProperties = record(EvoluString, Unknown);
 const NonEmptyString = minLength(1)(EvoluString);
