@@ -25,6 +25,7 @@ const createTestDeps = (
 });
 
 const mockEvoluStorage = (upsert: EvoluStorage['evolu']['upsert']): EvoluStorage => ({
+    status: 'ready',
     evolu: { upsert } as EvoluStorage['evolu'],
     activeOwner: { id: 'test-owner' } as Owner,
     updateRelayUrls: vi.fn(),

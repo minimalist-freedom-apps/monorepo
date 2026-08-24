@@ -55,6 +55,7 @@ describe(createSubscribableQuery.name, () => {
         const ownerChangeListeners = new Set<() => void>();
         let activeStorage = firstStorage;
         const storage: EvoluStorage<TodoTestSchema> = {
+            status: 'ready',
             get evolu() {
                 return activeStorage.evolu;
             },
