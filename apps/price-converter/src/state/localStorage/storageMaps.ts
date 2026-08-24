@@ -1,3 +1,4 @@
+import { parseEvoluRelayUrls } from '@minimalist-apps/evolu';
 import type {
     MapLocalStorageToState,
     MapStateLocalStorage,
@@ -11,6 +12,7 @@ export const mapStateLocalStorage: MapStateLocalStorage<State> = {
     lastUpdated: state => (state.lastUpdated === null ? null : String(state.lastUpdated)),
     btcMode: state => state.btcMode,
     debugMode: state => String(state.debugMode),
+    evoluRelayUrls: state => state.evoluRelayUrls.join('\n'),
 };
 
 export const mapLocalStorageToState: MapLocalStorageToState<State> = {
@@ -22,4 +24,9 @@ export const mapLocalStorageToState: MapLocalStorageToState<State> = {
     },
     btcMode: value => (value === 'sats' ? 'sats' : 'btc'),
     debugMode: value => value === 'true',
+    evoluRelayUrls: value => {
+        const result = parseEvoluRelayUrls(value);
+
+        return result.ok ? result.value : undefined;
+    },
 };

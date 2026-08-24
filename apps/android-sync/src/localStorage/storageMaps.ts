@@ -1,4 +1,5 @@
 import { isTheme, type Theme } from '@minimalist-apps/components';
+import { parseEvoluRelayUrls } from '@minimalist-apps/evolu';
 import type {
     MapLocalStorageToState,
     MapStateLocalStorage,
@@ -10,6 +11,7 @@ export const localStoragePrefix = 'android-sync-v1';
 export const mapStateLocalStorage: MapStateLocalStorage<AppState> = {
     themeMode: state => state.themeMode,
     debugMode: state => String(state.debugMode),
+    evoluRelayUrls: state => state.evoluRelayUrls.join('\n'),
 };
 
 export const mapLocalStorageToState: MapLocalStorageToState<AppState> = {
@@ -21,4 +23,9 @@ export const mapLocalStorageToState: MapLocalStorageToState<AppState> = {
         return value as Theme;
     },
     debugMode: value => value === 'true',
+    evoluRelayUrls: value => {
+        const result = parseEvoluRelayUrls(value);
+
+        return result.ok ? result.value : undefined;
+    },
 };

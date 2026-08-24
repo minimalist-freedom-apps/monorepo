@@ -36,6 +36,7 @@ const initState: State = {
     activeOwnerAppId: null,
     themeMode: 'dark',
     currentScreen: 'Converter',
+    evoluRelayUrls: ['wss://one.example', 'wss://two.example'],
 };
 
 describe('storageMaps', () => {
@@ -63,6 +64,7 @@ describe('storageMaps', () => {
             'test-prefix:lastUpdated': '123',
             'test-prefix:btcMode': 'sats',
             'test-prefix:debugMode': 'true',
+            'test-prefix:evoluRelayUrls': 'wss://one.example\nwss://two.example',
         });
 
         data['test-prefix:evoluMnemonic'] =
@@ -79,6 +81,7 @@ describe('storageMaps', () => {
             lastUpdated: 123,
             btcMode: 'sats',
             debugMode: true,
+            evoluRelayUrls: ['wss://one.example', 'wss://two.example'],
         });
     });
 });

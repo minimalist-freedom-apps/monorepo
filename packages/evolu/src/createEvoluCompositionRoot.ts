@@ -5,12 +5,14 @@ import type { EnsureEvoluOwnerDep } from '@minimalist-apps/evolu';
 import {
     createEnsureEvoluStorage,
     type EnsureEvoluStorageDep,
+    type GetEvoluRelayUrlsDep,
     type OnOwnerUsedDep,
 } from './createEnsureEvoluStorage';
 import { createEvoluFactory } from './createEvoluFactory';
 import { createEvoluStorageFactory } from './createEvoluStorageFactory';
 
 type CreateEvoluCompositionRootDeps<S extends EvoluSchema> = EnsureEvoluOwnerDep &
+    GetEvoluRelayUrlsDep &
     OnOwnerUsedDep & {
         readonly schema: ValidateSchema<S> extends never ? S : ValidateSchema<S>;
         readonly appName: string;
@@ -27,6 +29,7 @@ export const createEvoluCompositionRoot = <S extends EvoluSchema>(
         deps: {
             createEvoluStorage,
             ensureEvoluOwner: deps.ensureEvoluOwner,
+            getEvoluRelayUrls: deps.getEvoluRelayUrls,
             onOwnerUsed: deps.onOwnerUsed,
         },
         schema: deps.schema,

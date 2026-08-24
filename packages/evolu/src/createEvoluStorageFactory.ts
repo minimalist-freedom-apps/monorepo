@@ -43,13 +43,18 @@ export const createEvoluStorageFactory =
 
         let evolu = createdEvolu.evolu;
         let activeOwner = createdEvolu.owner;
+        let relayUrls = props.urls;
+        let updateActiveRelayUrls = createdEvolu.updateRelayUrls;
 
         props.onOwnerUsed?.(activeOwner);
 
         let isDisposed = false;
 
-        const updateRelayUrls = (/*urls?: ReadonlyArray<string>*/): Promise<void> =>
-            Promise.resolve();
+        const updateRelayUrls = (urls: ReadonlyArray<string>): Promise<void> =>
+            Promise.resolve().then(() => {
+                updateActiveRelayUrls(urls);
+                relayUrls = urls;
+            });
 
         const restoreOwner = async (mnemonic: Mnemonic): Promise<void> => {
             const previousEvolu = evolu;
@@ -58,10 +63,11 @@ export const createEvoluStorageFactory =
                 mnemonic,
                 schema: props.schema,
                 appName: props.appName,
-                urls: props.urls,
+                urls: relayUrls,
             });
             evolu = created.evolu;
             activeOwner = created.owner;
+            updateActiveRelayUrls = created.updateRelayUrls;
 
             props.onOwnerUsed?.(activeOwner);
             await disposeEvolu(previousEvolu);

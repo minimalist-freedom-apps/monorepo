@@ -58,7 +58,7 @@ export const createCompositionRoot = (): Main => {
 
     const { ThemeModeSettings } = createThemeFragmentCompositionRoot({ connect, store });
 
-    const { BackupMnemonic, RestoreMnemonic, ensureEvoluStorage } =
+    const { BackupMnemonic, RestoreMnemonic, EvoluRelaySettings, ensureEvoluStorage } =
         createEvoluFragmentCompositionRoot({
             connect,
             store,
@@ -89,6 +89,7 @@ export const createCompositionRoot = (): Main => {
             ThemeModeSettings,
             BackupMnemonic,
             RestoreMnemonic,
+            EvoluRelaySettings,
             DebugSettings,
             goBack,
         });

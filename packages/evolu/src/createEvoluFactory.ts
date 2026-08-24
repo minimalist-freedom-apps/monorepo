@@ -2,7 +2,6 @@ import {
     AppName,
     createAppOwner,
     createEvolu,
-    createOwnerWebSocketTransport,
     getOrThrow,
     type Mnemonic,
     mnemonicToOwnerSecret,
@@ -15,6 +14,7 @@ import type {
     Owner,
     ValidateSchema,
 } from '@evolu/common/local-first';
+import { createOwnerRelayController } from './createOwnerRelayController';
 
 type CreateEvoluProps<S extends EvoluSchema> = {
     readonly mnemonic: Mnemonic;
@@ -26,6 +26,7 @@ type CreateEvoluProps<S extends EvoluSchema> = {
 type CreateEvoluResult<S extends EvoluSchema> = {
     readonly evolu: Evolu<S>;
     readonly owner: Owner;
+    readonly updateRelayUrls: (relayUrls: ReadonlyArray<string>) => void;
 };
 
 export type CreateEvolu<S extends EvoluSchema> = (
@@ -46,16 +47,18 @@ export const createEvoluFactory =
             await deps.run(
                 createEvolu(props.schema, {
                     appName: AppName.orThrow(props.appName),
-                    transports: props.urls.map(url =>
-                        createOwnerWebSocketTransport({
-                            url,
-                            ownerId: owner.id,
-                        }),
-                    ),
+                    transports: [],
                     appOwner: owner,
                 }),
             ),
         );
 
-        return { evolu, owner };
+        const relayController = createOwnerRelayController({ evolu, owner });
+        relayController.updateRelayUrls(props.urls);
+
+        return {
+            evolu,
+            owner,
+            updateRelayUrls: relayController.updateRelayUrls,
+        };
     };

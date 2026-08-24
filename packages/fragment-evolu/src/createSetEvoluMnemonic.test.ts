@@ -9,7 +9,11 @@ const mnemonic = Mnemonic.orThrow(
 );
 
 const createEvoluStore = () =>
-    createStore<EvoluState>({ evoluMnemonic: null, activeOwnerAppId: null });
+    createStore<EvoluState>({
+        evoluMnemonic: null,
+        activeOwnerAppId: null,
+        evoluRelayUrls: ['wss://free.evoluhq.com'],
+    });
 
 describe(createSetEvoluMnemonic.name, () => {
     test('updates state only after secure persistence succeeds', async () => {
