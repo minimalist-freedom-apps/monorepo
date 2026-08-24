@@ -1,6 +1,6 @@
 import { err, getOrThrow, ok } from '@evolu/common';
 import { CurrencyCode } from '@minimalist-apps/fiat';
-import { describe, expect, test } from 'vitest';
+import { afterEach, describe, expect, test, vi } from 'vitest';
 import { type CurrencyMap, type FetchRates, FetchRatesError } from './FetchRates.js';
 import { createFetchAverageRates } from './fetchAverageRates.js';
 
@@ -14,6 +14,20 @@ const createMockFetchRates =
         ok(rates);
 
 const createFailingFetchRates = (): FetchRates => async () => err(FetchRatesError());
+
+const createFetchAverageRatesDeps = (fetchRates: ReadonlyArray<FetchRates>) => ({
+    fetchRates,
+    timeoutMilliseconds: 1000,
+    createAbortController: () => new AbortController(),
+    setTimeout: (listener: () => void, milliseconds: number) =>
+        globalThis.setTimeout(listener, milliseconds),
+    clearTimeout: (timeoutId: ReturnType<typeof globalThis.setTimeout>) =>
+        globalThis.clearTimeout(timeoutId),
+});
+
+afterEach(() => {
+    vi.useRealTimers();
+});
 
 describe('createFetchAverageRates', () => {
     test('calculates average rate from multiple sources', async () => {
@@ -30,13 +44,13 @@ describe('createFetchAverageRates', () => {
             [EUR]: { code: EUR, name: 'Euro', rate: 95 },
         } as CurrencyMap;
 
-        const fetchAverageRates = createFetchAverageRates({
-            fetchRates: [
+        const fetchAverageRates = createFetchAverageRates(
+            createFetchAverageRatesDeps([
                 createMockFetchRates(source1),
                 createMockFetchRates(source2),
                 createMockFetchRates(source3),
-            ],
-        });
+            ]),
+        );
 
         const result = await fetchAverageRates();
 
@@ -59,9 +73,12 @@ describe('createFetchAverageRates', () => {
             [GBP]: { code: GBP, name: 'British Pound', rate: 80 },
         } as CurrencyMap;
 
-        const fetchAverageRates = createFetchAverageRates({
-            fetchRates: [createMockFetchRates(source1), createMockFetchRates(source2)],
-        });
+        const fetchAverageRates = createFetchAverageRates(
+            createFetchAverageRatesDeps([
+                createMockFetchRates(source1),
+                createMockFetchRates(source2),
+            ]),
+        );
 
         const result = await fetchAverageRates();
 
@@ -80,13 +97,13 @@ describe('createFetchAverageRates', () => {
             [USD]: { code: USD, name: 'US Dollar', rate: 42000 },
         } as CurrencyMap;
 
-        const fetchAverageRates = createFetchAverageRates({
-            fetchRates: [
+        const fetchAverageRates = createFetchAverageRates(
+            createFetchAverageRatesDeps([
                 createMockFetchRates(source1),
                 createFailingFetchRates(),
                 createFailingFetchRates(),
-            ],
-        });
+            ]),
+        );
 
         const result = await fetchAverageRates();
 
@@ -100,9 +117,9 @@ describe('createFetchAverageRates', () => {
     });
 
     test('returns AllApisFailed error when all sources fail', async () => {
-        const fetchAverageRates = createFetchAverageRates({
-            fetchRates: [createFailingFetchRates(), createFailingFetchRates()],
-        });
+        const fetchAverageRates = createFetchAverageRates(
+            createFetchAverageRatesDeps([createFailingFetchRates(), createFailingFetchRates()]),
+        );
 
         const result = await fetchAverageRates();
 
@@ -127,9 +144,12 @@ describe('createFetchAverageRates', () => {
             },
         } as CurrencyMap;
 
-        const fetchAverageRates = createFetchAverageRates({
-            fetchRates: [createMockFetchRates(source1), createMockFetchRates(source2)],
-        });
+        const fetchAverageRates = createFetchAverageRates(
+            createFetchAverageRatesDeps([
+                createMockFetchRates(source1),
+                createMockFetchRates(source2),
+            ]),
+        );
 
         const result = await fetchAverageRates();
 
@@ -140,5 +160,75 @@ describe('createFetchAverageRates', () => {
         }
 
         expect(result.value[USD]?.name).toBe('US Dollar');
+    });
+
+    test('settles an unexpected source rejection independently', async () => {
+        const source = {
+            [USD]: { code: USD, name: 'US Dollar', rate: 100 },
+        } as CurrencyMap;
+        const rejectingSource: FetchRates = () => Promise.reject(new Error('unexpected failure'));
+        const fetchAverageRates = createFetchAverageRates(
+            createFetchAverageRatesDeps([rejectingSource, createMockFetchRates(source)]),
+        );
+
+        const result = await fetchAverageRates();
+
+        expect(result.ok).toBe(true);
+
+        if (result.ok) {
+            expect(result.value[USD]?.rate).toBe(100);
+        }
+    });
+
+    test('aborts a hanging source after timeout and keeps successful rates', async () => {
+        vi.useFakeTimers();
+        let hangingSignal: AbortSignal | undefined;
+        const hangingSource: FetchRates = options => {
+            hangingSignal = options?.signal;
+
+            return new Promise(() => {});
+        };
+        const source = {
+            [USD]: { code: USD, name: 'US Dollar', rate: 100 },
+        } as CurrencyMap;
+        const deps = createFetchAverageRatesDeps([hangingSource, createMockFetchRates(source)]);
+        const setTimeout = vi.fn(deps.setTimeout);
+        const fetchAverageRates = createFetchAverageRates({ ...deps, setTimeout });
+
+        const resultPromise = fetchAverageRates();
+        expect(setTimeout).toHaveBeenCalledTimes(2);
+
+        await vi.advanceTimersByTimeAsync(1000);
+        const result = await resultPromise;
+
+        expect(hangingSignal?.aborted).toBe(true);
+        expect(result.ok).toBe(true);
+
+        if (result.ok) {
+            expect(result.value[USD]?.rate).toBe(100);
+        }
+    });
+
+    test('ignores non-finite and non-positive rates before averaging', async () => {
+        const invalidSource = {
+            [USD]: { code: USD, name: 'US Dollar', rate: Number.NaN },
+        } as CurrencyMap;
+        const validSource = {
+            [USD]: { code: USD, name: 'US Dollar', rate: 100 },
+        } as CurrencyMap;
+        const fetchAverageRates = createFetchAverageRates(
+            createFetchAverageRatesDeps([
+                createMockFetchRates(invalidSource),
+                createMockFetchRates(validSource),
+            ]),
+        );
+
+        const result = await fetchAverageRates();
+
+        expect(result.ok).toBe(true);
+
+        if (result.ok) {
+            expect(result.value[USD]?.rate).toBe(100);
+        }
     });
 });

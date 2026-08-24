@@ -2,16 +2,73 @@ import { err, ok } from '@evolu/common';
 import { CurrencyCode } from '@minimalist-apps/fiat';
 import { typedObjectKeys } from '@minimalist-apps/type-utils';
 import { RateBtcPerFiat } from '../converter/rate.js';
-import { type CurrencyMap, type FetchRates, FetchRatesError } from './FetchRates.js';
+import {
+    type CurrencyMap,
+    type FetchRates,
+    FetchRatesError,
+    type FetchRatesOptions,
+} from './FetchRates.js';
+import { isPositiveFiniteNumber } from './rateApiValidation.js';
 
 interface FetchAverageRatesDeps {
     readonly fetchRates: readonly FetchRates[];
+    readonly timeoutMilliseconds: number;
+    readonly createAbortController: () => AbortController;
+    readonly setTimeout: (listener: () => void, milliseconds: number) => TimeoutId;
+    readonly clearTimeout: (timeoutId: TimeoutId) => void;
 }
+
+type FetchRatesResult = Awaited<ReturnType<FetchRates>>;
+type TimeoutId = ReturnType<typeof globalThis.setTimeout>;
+
+const settleSource = (
+    deps: FetchAverageRatesDeps,
+    fetchRates: FetchRates,
+    options: FetchRatesOptions | undefined,
+): Promise<FetchRatesResult> => {
+    const abortController = deps.createAbortController();
+
+    return new Promise<FetchRatesResult>(resolve => {
+        let isSettled = false;
+
+        const settle = (result: FetchRatesResult) => {
+            if (isSettled) {
+                return;
+            }
+
+            isSettled = true;
+            deps.clearTimeout(timeoutId);
+            options?.signal?.removeEventListener('abort', abort);
+            resolve(result);
+        };
+
+        const abort = () => {
+            abortController.abort();
+            settle(err(FetchRatesError()));
+        };
+
+        const timeoutId = deps.setTimeout(abort, deps.timeoutMilliseconds);
+
+        if (options?.signal !== undefined) {
+            if (options.signal.aborted) {
+                abort();
+            } else {
+                options.signal.addEventListener('abort', abort, { once: true });
+            }
+        }
+
+        void Promise.resolve()
+            .then(() => fetchRates({ signal: abortController.signal }))
+            .then(settle, () => settle(err(FetchRatesError())));
+    });
+};
 
 export const createFetchAverageRates =
     (deps: FetchAverageRatesDeps): FetchRates =>
-    async () => {
-        const results = await Promise.all(deps.fetchRates.map(fetch => fetch()));
+    async options => {
+        const results = await Promise.all(
+            deps.fetchRates.map(fetchRates => settleSource(deps, fetchRates, options)),
+        );
 
         const sources = results.filter(result => result.ok).map(result => result.value);
 
@@ -30,25 +87,32 @@ export const createFetchAverageRates =
             }
 
             const validCode = codeResult.value;
-            const rates = sources
-                .filter(source => source[validCode])
-                .map(source => source[validCode]?.rate);
+            const entities = sources.flatMap(source => {
+                const entity = source[validCode];
 
-            if (rates.length > 0) {
-                const avgRate = rates.reduce((sum, rate) => sum + (rate ?? 0), 0) / rates.length;
-                const firstSource = sources.find(s => s[validCode]);
+                return entity !== undefined && isPositiveFiniteNumber(entity.rate) ? [entity] : [];
+            });
 
-                if (firstSource) {
-                    acc[code] = {
-                        code: validCode,
-                        name: firstSource[validCode]?.name ?? validCode,
-                        rate: RateBtcPerFiat(validCode).from(avgRate),
-                    };
-                }
+            const firstEntity = entities.at(0);
+
+            if (firstEntity === undefined) {
+                return acc;
             }
+
+            const avgRate =
+                entities.reduce((sum, entity) => sum + entity.rate, 0) / entities.length;
+            acc[code] = {
+                code: validCode,
+                name: firstEntity.name,
+                rate: RateBtcPerFiat(validCode).from(avgRate),
+            };
 
             return acc;
         }, {});
+
+        if (typedObjectKeys(allRates).length === 0) {
+            return err(FetchRatesError());
+        }
 
         return ok(allRates);
     };

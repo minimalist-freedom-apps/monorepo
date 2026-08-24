@@ -159,6 +159,7 @@ export const createCompositionRoot = (): Main => {
         fetchRates,
         recalculateFromBtc,
         currentDateTime,
+        createAbortController: () => new AbortController(),
     });
 
     // Components

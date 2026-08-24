@@ -47,7 +47,7 @@ export const RatesLoadingPure = (
     const intervalRef = useRef<IntervalId | null>(null);
 
     useEffect(() => {
-        fetchAndStoreRates();
+        void fetchAndStoreRates();
     }, [fetchAndStoreRates]);
 
     useEffect(() => {

@@ -20,7 +20,13 @@ export const FetchRatesError = (): FetchRatesError => ({
     type: 'FetchRatesError' as const,
 });
 
-export type FetchRates = () => Promise<Result<CurrencyMap, FetchRatesError>>;
+export type FetchRatesOptions = {
+    readonly signal?: AbortSignal;
+};
+
+export type FetchRates = (
+    options?: FetchRatesOptions,
+) => Promise<Result<CurrencyMap, FetchRatesError>>;
 
 export interface FetchRatesDep {
     readonly fetchRates: FetchRates;
