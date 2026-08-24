@@ -1,8 +1,8 @@
-import { getOrThrow } from '@evolu/common';
+import { getOrThrow, testCreateNativeFetch, testCreateRun } from '@evolu/common';
 import { CurrencyCode, type CurrencyCode as CurrencyCodeType } from '@minimalist-apps/fiat';
 import { typedObjectKeys } from '@minimalist-apps/type-utils';
-import { describe, expect, test, vi } from 'vitest';
-import { createFetchBitpayRates } from './fetchBitpayRates.js';
+import { describe, expect, test } from 'vitest';
+import { fetchBitpayRates } from './fetchBitpayRates.js';
 import bitpayFixture from './fixtures/bitpay.json';
 
 const USD = getOrThrow(CurrencyCode.fromUnknown('USD'));
@@ -10,32 +10,32 @@ const EUR = getOrThrow(CurrencyCode.fromUnknown('EUR'));
 const GBP = getOrThrow(CurrencyCode.fromUnknown('GBP'));
 const JPY = getOrThrow(CurrencyCode.fromUnknown('JPY'));
 
-const createMockFetch = (response: unknown, ok = true): typeof globalThis.fetch =>
-    (() =>
-        Promise.resolve({
-            ok,
-            json: () => Promise.resolve(response),
-        })) as unknown as typeof globalThis.fetch;
+const createResponse = (payload: unknown, status = 200): Response =>
+    new Response(JSON.stringify(payload), {
+        status,
+        headers: { 'content-type': 'application/json' },
+    });
 
-describe('createFetchBitpayRates', () => {
-    test('passes the abort signal to fetch', async () => {
-        const fetch = vi.fn(createMockFetch(bitpayFixture));
-        const fetchBitpayRates = createFetchBitpayRates({ fetch });
-        const abortController = new AbortController();
+const runWithResponse = async (payload: unknown, status = 200) => {
+    const nativeFetch = testCreateNativeFetch(() => createResponse(payload, status));
+    await using run = testCreateRun({ nativeFetch });
 
-        await fetchBitpayRates({ signal: abortController.signal });
+    return {
+        result: await run(fetchBitpayRates),
+        nativeFetch,
+    };
+};
 
-        expect(fetch).toHaveBeenCalledWith('https://bitpay.com/rates/BTC', {
-            signal: abortController.signal,
-        });
+describe('fetchBitpayRates', () => {
+    test('uses the Fiber abort signal for fetch', async () => {
+        const { nativeFetch } = await runWithResponse(bitpayFixture);
+
+        expect(nativeFetch.calls[0]?.input).toBe('https://bitpay.com/rates/BTC');
+        expect(nativeFetch.calls[0]?.init?.signal).toBeInstanceOf(AbortSignal);
     });
 
     test('parses bitpay fixture into currency map', async () => {
-        const fetchBitpayRates = createFetchBitpayRates({
-            fetch: createMockFetch(bitpayFixture),
-        });
-
-        const result = await fetchBitpayRates();
+        const { result } = await runWithResponse(bitpayFixture);
 
         expect(result.ok).toBe(true);
 
@@ -61,11 +61,7 @@ describe('createFetchBitpayRates', () => {
     });
 
     test('excludes BTC from the currency map', async () => {
-        const fetchBitpayRates = createFetchBitpayRates({
-            fetch: createMockFetch(bitpayFixture),
-        });
-
-        const result = await fetchBitpayRates();
+        const { result } = await runWithResponse(bitpayFixture);
 
         expect(result.ok).toBe(true);
 
@@ -77,11 +73,7 @@ describe('createFetchBitpayRates', () => {
     });
 
     test('excludes non-bitcoin crypto currencies', async () => {
-        const fetchBitpayRates = createFetchBitpayRates({
-            fetch: createMockFetch(bitpayFixture),
-        });
-
-        const result = await fetchBitpayRates();
+        const { result } = await runWithResponse(bitpayFixture);
 
         expect(result.ok).toBe(true);
 
@@ -98,11 +90,7 @@ describe('createFetchBitpayRates', () => {
     });
 
     test('excludes invalid currency codes', async () => {
-        const fetchBitpayRates = createFetchBitpayRates({
-            fetch: createMockFetch(bitpayFixture),
-        });
-
-        const result = await fetchBitpayRates();
+        const { result } = await runWithResponse(bitpayFixture);
 
         expect(result.ok).toBe(true);
 
@@ -119,43 +107,30 @@ describe('createFetchBitpayRates', () => {
     });
 
     test('returns FetchRatesError when response is not ok', async () => {
-        const fetchBitpayRates = createFetchBitpayRates({
-            fetch: createMockFetch(null, false),
+        const { result } = await runWithResponse(null, 500);
+
+        expect(result).toEqual({
+            ok: false,
+            error: { type: 'FetchRatesError' },
         });
-
-        const result = await fetchBitpayRates();
-
-        expect(result.ok).toBe(false);
-
-        if (result.ok) {
-            return;
-        }
-
-        expect(result.error.type).toBe('FetchRatesError');
     });
 
     test('returns FetchRatesError when fetch throws', async () => {
-        const fetchBitpayRates = createFetchBitpayRates({
-            fetch: (() => Promise.reject(new Error('Network error'))) as typeof globalThis.fetch,
+        const nativeFetch = testCreateNativeFetch(() => {
+            throw new Error('Network error');
         });
+        await using run = testCreateRun({ nativeFetch });
 
-        const result = await fetchBitpayRates();
-
-        expect(result.ok).toBe(false);
-
-        if (result.ok) {
-            return;
-        }
-
-        expect(result.error.type).toBe('FetchRatesError');
+        await expect(run(fetchBitpayRates)).resolves.toEqual({
+            ok: false,
+            error: { type: 'FetchRatesError' },
+        });
     });
 
     test('returns FetchRatesError for a malformed response', async () => {
-        const fetchBitpayRates = createFetchBitpayRates({
-            fetch: createMockFetch({ data: null }),
-        });
+        const { result } = await runWithResponse({ data: null });
 
-        await expect(fetchBitpayRates()).resolves.toEqual({
+        expect(result).toEqual({
             ok: false,
             error: { type: 'FetchRatesError' },
         });
@@ -164,13 +139,11 @@ describe('createFetchBitpayRates', () => {
     test.each([0, -1, Number.NaN, Number.MIN_VALUE, Number.POSITIVE_INFINITY])(
         'returns FetchRatesError for invalid rate %s',
         async rate => {
-            const fetchBitpayRates = createFetchBitpayRates({
-                fetch: createMockFetch({
-                    data: [{ code: 'USD', name: 'US Dollar', rate }],
-                }),
+            const { result } = await runWithResponse({
+                data: [{ code: 'USD', name: 'US Dollar', rate }],
             });
 
-            await expect(fetchBitpayRates()).resolves.toEqual({
+            expect(result).toEqual({
                 ok: false,
                 error: { type: 'FetchRatesError' },
             });

@@ -1,4 +1,4 @@
-import type { Result } from '@evolu/common';
+import type { Task } from '@evolu/common';
 import type { CurrencyCode } from '@minimalist-apps/fiat';
 import type { RateBtcPerFiat } from '../converter/rate';
 
@@ -20,13 +20,7 @@ export const FetchRatesError = (): FetchRatesError => ({
     type: 'FetchRatesError' as const,
 });
 
-export type FetchRatesOptions = {
-    readonly signal?: AbortSignal;
-};
-
-export type FetchRates = (
-    options?: FetchRatesOptions,
-) => Promise<Result<CurrencyMap, FetchRatesError>>;
+export type FetchRates = Task<CurrencyMap, FetchRatesError>;
 
 export interface FetchRatesDep {
     readonly fetchRates: FetchRates;

@@ -1,72 +1,31 @@
-import { err, ok, PositiveFiniteNumber } from '@evolu/common';
+import {
+    allSettled,
+    err,
+    ok,
+    type PositiveDuration,
+    PositiveFiniteNumber,
+    timeout,
+} from '@evolu/common';
 import { CurrencyCode } from '@minimalist-apps/fiat';
 import { typedObjectKeys } from '@minimalist-apps/type-utils';
 import { RateBtcPerFiat } from '../converter/rate.js';
-import {
-    type CurrencyMap,
-    type FetchRates,
-    FetchRatesError,
-    type FetchRatesOptions,
-} from './FetchRates.js';
+import { type CurrencyMap, type FetchRates, FetchRatesError } from './FetchRates.js';
 
 interface FetchAverageRatesDeps {
     readonly fetchRates: readonly FetchRates[];
-    readonly timeoutMilliseconds: number;
-    readonly createAbortController: () => AbortController;
-    readonly setTimeout: (listener: () => void, milliseconds: number) => TimeoutId;
-    readonly clearTimeout: (timeoutId: TimeoutId) => void;
+    readonly sourceTimeout: PositiveDuration;
 }
 
-type FetchRatesResult = Awaited<ReturnType<FetchRates>>;
-type TimeoutId = ReturnType<typeof globalThis.setTimeout>;
-
-const settleSource = (
-    deps: FetchAverageRatesDeps,
-    fetchRates: FetchRates,
-    options: FetchRatesOptions | undefined,
-): Promise<FetchRatesResult> => {
-    const abortController = deps.createAbortController();
-
-    return new Promise<FetchRatesResult>(resolve => {
-        let isSettled = false;
-
-        const settle = (result: FetchRatesResult) => {
-            if (isSettled) {
-                return;
-            }
-
-            isSettled = true;
-            deps.clearTimeout(timeoutId);
-            options?.signal?.removeEventListener('abort', abort);
-            resolve(result);
-        };
-
-        const abort = () => {
-            abortController.abort();
-            settle(err(FetchRatesError()));
-        };
-
-        const timeoutId = deps.setTimeout(abort, deps.timeoutMilliseconds);
-
-        if (options?.signal !== undefined) {
-            if (options.signal.aborted) {
-                abort();
-            } else {
-                options.signal.addEventListener('abort', abort, { once: true });
-            }
-        }
-
-        void Promise.resolve()
-            .then(() => fetchRates({ signal: abortController.signal }))
-            .then(settle, () => settle(err(FetchRatesError())));
-    });
-};
+const RATE_SOURCE_CONCURRENCY = 3;
 
 export const createFetchAverageRates =
     (deps: FetchAverageRatesDeps): FetchRates =>
-    async options => {
-        const results = await Promise.all(
-            deps.fetchRates.map(fetchRates => settleSource(deps, fetchRates, options)),
+    async run => {
+        const sourceTasks = deps.fetchRates.map(fetchRates =>
+            timeout(fetchRates, deps.sourceTimeout),
+        );
+        const results = await run.ok(
+            allSettled(sourceTasks, { concurrency: RATE_SOURCE_CONCURRENCY }),
         );
 
         const sources = results.filter(result => result.ok).map(result => result.value);

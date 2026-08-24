@@ -1,24 +1,25 @@
-import { getOrThrow } from '@evolu/common';
+import { getOrThrow, testCreateNativeFetch, testCreateRun } from '@evolu/common';
 import { CurrencyCode } from '@minimalist-apps/fiat';
 import { describe, expect, test } from 'vitest';
-import { createFetchBlockchainInfoRates } from './fetchBlockchainInfoRates';
+import { fetchBlockchainInfoRates } from './fetchBlockchainInfoRates';
 
 const USD = getOrThrow(CurrencyCode.fromUnknown('USD'));
 
-const createMockFetch = (payload: unknown): typeof globalThis.fetch =>
-    (() =>
-        Promise.resolve({
-            ok: true,
-            json: () => Promise.resolve(payload),
-        })) as unknown as typeof globalThis.fetch;
+const runWithPayload = async (payload: unknown) => {
+    const nativeFetch = testCreateNativeFetch(
+        () =>
+            new Response(JSON.stringify(payload), {
+                headers: { 'content-type': 'application/json' },
+            }),
+    );
+    await using run = testCreateRun({ nativeFetch });
 
-describe(createFetchBlockchainInfoRates.name, () => {
+    return await run(fetchBlockchainInfoRates);
+};
+
+describe('fetchBlockchainInfoRates', () => {
     test('parses finite positive rates', async () => {
-        const fetchRates = createFetchBlockchainInfoRates({
-            fetch: createMockFetch({ USD: { last: 50_000 } }),
-        });
-
-        const result = await fetchRates();
+        const result = await runWithPayload({ USD: { last: 50_000 } });
 
         expect(result.ok).toBe(true);
 
@@ -30,11 +31,7 @@ describe(createFetchBlockchainInfoRates.name, () => {
     test.each([null, [], { USD: null }, { USD: { last: 0 } }, { USD: { last: '50000' } }])(
         'rejects malformed payload %#',
         async payload => {
-            const fetchRates = createFetchBlockchainInfoRates({
-                fetch: createMockFetch(payload),
-            });
-
-            await expect(fetchRates()).resolves.toEqual({
+            await expect(runWithPayload(payload)).resolves.toEqual({
                 ok: false,
                 error: { type: 'FetchRatesError' },
             });

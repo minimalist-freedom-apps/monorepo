@@ -1,6 +1,6 @@
-import { err, getOrThrow, ok } from '@evolu/common';
+import { AbortError, err, getOrThrow, ok, testCreateRun } from '@evolu/common';
 import { CurrencyCode } from '@minimalist-apps/fiat';
-import { afterEach, describe, expect, test, vi } from 'vitest';
+import { describe, expect, test } from 'vitest';
 import { type CurrencyMap, type FetchRates, FetchRatesError } from './FetchRates.js';
 import { createFetchAverageRates } from './fetchAverageRates.js';
 
@@ -10,26 +10,17 @@ const GBP = getOrThrow(CurrencyCode.fromUnknown('GBP'));
 
 const createMockFetchRates =
     (rates: CurrencyMap): FetchRates =>
-    async () =>
+    () =>
         ok(rates);
 
-const createFailingFetchRates = (): FetchRates => async () => err(FetchRatesError());
+const createFailingFetchRates = (): FetchRates => () => err(FetchRatesError());
 
 const createFetchAverageRatesDeps = (fetchRates: ReadonlyArray<FetchRates>) => ({
     fetchRates,
-    timeoutMilliseconds: 1000,
-    createAbortController: () => new AbortController(),
-    setTimeout: (listener: () => void, milliseconds: number) =>
-        globalThis.setTimeout(listener, milliseconds),
-    clearTimeout: (timeoutId: ReturnType<typeof globalThis.setTimeout>) =>
-        globalThis.clearTimeout(timeoutId),
+    sourceTimeout: '1s' as const,
 });
 
-afterEach(() => {
-    vi.useRealTimers();
-});
-
-describe('createFetchAverageRates', () => {
+describe(createFetchAverageRates.name, () => {
     test('calculates average rate from multiple sources', async () => {
         const source1 = {
             [USD]: { code: USD, name: 'US Dollar', rate: 100 },
@@ -43,7 +34,6 @@ describe('createFetchAverageRates', () => {
             [USD]: { code: USD, name: 'US Dollar', rate: 105 },
             [EUR]: { code: EUR, name: 'Euro', rate: 95 },
         } as CurrencyMap;
-
         const fetchAverageRates = createFetchAverageRates(
             createFetchAverageRatesDeps([
                 createMockFetchRates(source1),
@@ -51,8 +41,9 @@ describe('createFetchAverageRates', () => {
                 createMockFetchRates(source3),
             ]),
         );
+        await using run = testCreateRun();
 
-        const result = await fetchAverageRates();
+        const result = await run(fetchAverageRates);
 
         expect(result.ok).toBe(true);
 
@@ -72,15 +63,15 @@ describe('createFetchAverageRates', () => {
             [USD]: { code: USD, name: 'US Dollar', rate: 200 },
             [GBP]: { code: GBP, name: 'British Pound', rate: 80 },
         } as CurrencyMap;
-
         const fetchAverageRates = createFetchAverageRates(
             createFetchAverageRatesDeps([
                 createMockFetchRates(source1),
                 createMockFetchRates(source2),
             ]),
         );
+        await using run = testCreateRun();
 
-        const result = await fetchAverageRates();
+        const result = await run(fetchAverageRates);
 
         expect(result.ok).toBe(true);
 
@@ -93,43 +84,37 @@ describe('createFetchAverageRates', () => {
     });
 
     test('returns single source rates when only one source succeeds', async () => {
-        const source1 = {
-            [USD]: { code: USD, name: 'US Dollar', rate: 42000 },
+        const source = {
+            [USD]: { code: USD, name: 'US Dollar', rate: 42_000 },
         } as CurrencyMap;
-
         const fetchAverageRates = createFetchAverageRates(
             createFetchAverageRatesDeps([
-                createMockFetchRates(source1),
+                createMockFetchRates(source),
                 createFailingFetchRates(),
                 createFailingFetchRates(),
             ]),
         );
+        await using run = testCreateRun();
 
-        const result = await fetchAverageRates();
+        const result = await run(fetchAverageRates);
 
         expect(result.ok).toBe(true);
 
-        if (!result.ok) {
-            return;
+        if (result.ok) {
+            expect(result.value[USD]?.rate).toBe(42_000);
         }
-
-        expect(result.value[USD]?.rate).toBe(42000);
     });
 
-    test('returns AllApisFailed error when all sources fail', async () => {
+    test('returns FetchRatesError when all sources fail', async () => {
         const fetchAverageRates = createFetchAverageRates(
             createFetchAverageRatesDeps([createFailingFetchRates(), createFailingFetchRates()]),
         );
+        await using run = testCreateRun();
 
-        const result = await fetchAverageRates();
-
-        expect(result.ok).toBe(false);
-
-        if (result.ok) {
-            return;
-        }
-
-        expect(result.error.type).toBe('FetchRatesError');
+        await expect(run(fetchAverageRates)).resolves.toEqual({
+            ok: false,
+            error: { type: 'FetchRatesError' },
+        });
     });
 
     test('preserves currency name from first available source', async () => {
@@ -143,69 +128,81 @@ describe('createFetchAverageRates', () => {
                 rate: 200,
             },
         } as CurrencyMap;
-
         const fetchAverageRates = createFetchAverageRates(
             createFetchAverageRatesDeps([
                 createMockFetchRates(source1),
                 createMockFetchRates(source2),
             ]),
         );
+        await using run = testCreateRun();
 
-        const result = await fetchAverageRates();
-
-        expect(result.ok).toBe(true);
-
-        if (!result.ok) {
-            return;
-        }
-
-        expect(result.value[USD]?.name).toBe('US Dollar');
-    });
-
-    test('settles an unexpected source rejection independently', async () => {
-        const source = {
-            [USD]: { code: USD, name: 'US Dollar', rate: 100 },
-        } as CurrencyMap;
-        const rejectingSource: FetchRates = () => Promise.reject(new Error('unexpected failure'));
-        const fetchAverageRates = createFetchAverageRates(
-            createFetchAverageRatesDeps([rejectingSource, createMockFetchRates(source)]),
-        );
-
-        const result = await fetchAverageRates();
+        const result = await run(fetchAverageRates);
 
         expect(result.ok).toBe(true);
 
         if (result.ok) {
-            expect(result.value[USD]?.rate).toBe(100);
+            expect(result.value[USD]?.name).toBe('US Dollar');
         }
     });
 
     test('aborts a hanging source after timeout and keeps successful rates', async () => {
-        vi.useFakeTimers();
         let hangingSignal: AbortSignal | undefined;
-        const hangingSource: FetchRates = options => {
-            hangingSignal = options?.signal;
+        const hangingSource: FetchRates = run => {
+            hangingSignal = run.signal;
 
-            return new Promise(() => {});
+            return new Promise((_resolve, reject) => {
+                run.signal.addEventListener('abort', () => reject(run.signal.reason), {
+                    once: true,
+                });
+            });
         };
         const source = {
             [USD]: { code: USD, name: 'US Dollar', rate: 100 },
         } as CurrencyMap;
-        const deps = createFetchAverageRatesDeps([hangingSource, createMockFetchRates(source)]);
-        const setTimeout = vi.fn(deps.setTimeout);
-        const fetchAverageRates = createFetchAverageRates({ ...deps, setTimeout });
+        const fetchAverageRates = createFetchAverageRates(
+            createFetchAverageRatesDeps([hangingSource, createMockFetchRates(source)]),
+        );
+        await using run = testCreateRun();
 
-        const resultPromise = fetchAverageRates();
-        expect(setTimeout).toHaveBeenCalledTimes(2);
-
-        await vi.advanceTimersByTimeAsync(1000);
-        const result = await resultPromise;
+        const resultFiber = run(fetchAverageRates);
+        expect(hangingSignal?.aborted).toBe(false);
+        run.deps.time.advance('1s');
+        const result = await resultFiber;
 
         expect(hangingSignal?.aborted).toBe(true);
         expect(result.ok).toBe(true);
 
         if (result.ok) {
             expect(result.value[USD]?.rate).toBe(100);
+        }
+    });
+
+    test('propagates parent Fiber cancellation to every source', async () => {
+        const sourceSignals: Array<AbortSignal> = [];
+        const hangingSource: FetchRates = run => {
+            sourceSignals.push(run.signal);
+
+            return new Promise((_resolve, reject) => {
+                run.signal.addEventListener('abort', () => reject(run.signal.reason), {
+                    once: true,
+                });
+            });
+        };
+        const fetchAverageRates = createFetchAverageRates(
+            createFetchAverageRatesDeps([hangingSource, hangingSource]),
+        );
+        await using run = testCreateRun();
+
+        const fiber = run.abortable(fetchAverageRates);
+        expect(sourceSignals).toHaveLength(2);
+        fiber.abort();
+        const result = await fiber;
+
+        expect(sourceSignals.every(signal => signal.aborted)).toBe(true);
+        expect(result.ok).toBe(false);
+
+        if (!result.ok) {
+            expect(AbortError.is(result.error)).toBe(true);
         }
     });
 
@@ -222,8 +219,9 @@ describe('createFetchAverageRates', () => {
                 createMockFetchRates(validSource),
             ]),
         );
+        await using run = testCreateRun();
 
-        const result = await fetchAverageRates();
+        const result = await run(fetchAverageRates);
 
         expect(result.ok).toBe(true);
 
@@ -242,8 +240,9 @@ describe('createFetchAverageRates', () => {
                 createMockFetchRates(source),
             ]),
         );
+        await using run = testCreateRun();
 
-        await expect(fetchAverageRates()).resolves.toEqual({
+        await expect(run(fetchAverageRates)).resolves.toEqual({
             ok: false,
             error: { type: 'FetchRatesError' },
         });

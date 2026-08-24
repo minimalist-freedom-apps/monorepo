@@ -1,5 +1,6 @@
+import type { AbortableFiber, Run } from '@evolu/common';
 import type { CurrentDateTimeDep } from '@minimalist-apps/datetime';
-import type { FetchRatesDep } from '../rates/FetchRates';
+import type { CurrencyMap, FetchRatesDep, FetchRatesError } from '../rates/FetchRates';
 import type { AppStoreDep } from '../state/createAppStore';
 import type { RecalculateFromBtcDep } from './recalculateFromBtc';
 
@@ -13,25 +14,35 @@ type FetchAndStoreRatesDeps = AppStoreDep &
     FetchRatesDep &
     RecalculateFromBtcDep &
     CurrentDateTimeDep & {
-        readonly createAbortController: () => AbortController;
+        readonly run: Run;
     };
 
 export const createFetchAndStoreRates = (deps: FetchAndStoreRatesDeps): FetchAndStoreRates => {
-    let latestRequest = 0;
-    let activeAbortController: AbortController | null = null;
+    let activeFiber: AbortableFiber<CurrencyMap, FetchRatesError> | null = null;
 
     return async () => {
-        activeAbortController?.abort();
-        const abortController = deps.createAbortController();
-        activeAbortController = abortController;
-        latestRequest += 1;
-        const request = latestRequest;
+        activeFiber?.abort();
         deps.appStore.setState({ loading: true, error: '' });
 
-        try {
-            const result = await deps.fetchRates({ signal: abortController.signal });
+        let fiber: AbortableFiber<CurrencyMap, FetchRatesError>;
 
-            if (request !== latestRequest) {
+        try {
+            fiber = deps.run.abortable(deps.fetchRates);
+        } catch {
+            deps.appStore.setState({
+                loading: false,
+                error: 'Failed to fetch rates. Please try again.',
+            });
+
+            return;
+        }
+
+        activeFiber = fiber;
+
+        try {
+            const result = await fiber;
+
+            if (activeFiber !== fiber) {
                 return;
             }
 
@@ -49,14 +60,14 @@ export const createFetchAndStoreRates = (deps: FetchAndStoreRatesDeps): FetchAnd
             });
             deps.recalculateFromBtc();
         } catch {
-            if (request === latestRequest) {
+            if (activeFiber === fiber) {
                 deps.appStore.setState({
                     error: 'Failed to fetch rates. Please try again.',
                 });
             }
         } finally {
-            if (request === latestRequest) {
-                activeAbortController = null;
+            if (activeFiber === fiber) {
+                activeFiber = null;
                 deps.appStore.setState({ loading: false });
             }
         }
