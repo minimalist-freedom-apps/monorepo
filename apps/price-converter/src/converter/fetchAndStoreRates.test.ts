@@ -1,4 +1,4 @@
-import { err, getOrThrow, ok, type Run, testCreateRun } from '@evolu/common';
+import { AbortError, err, getOrThrow, ok, type Result, testCreateRun } from '@evolu/common';
 import { CurrencyCode } from '@minimalist-apps/fiat';
 import { describe, expect, test, vi } from 'vitest';
 import { type CurrencyMap, type FetchRates, FetchRatesError } from '../rates/FetchRates';
@@ -16,45 +16,46 @@ const createRates = (rate: number): CurrencyMap => ({
     },
 });
 
-const createPendingFetchRates = () => {
-    let resolve: ((rates: CurrencyMap) => void) | undefined;
+const createPendingRateRequest = () => {
+    let resolve: ((result: Result<CurrencyMap, FetchRatesError>) => void) | undefined;
     let signal: AbortSignal | undefined;
-    const fetchRates: FetchRates = run => {
-        signal = run.signal;
-
-        return new Promise(resolvePromise => {
-            resolve = rates => resolvePromise(ok(rates));
-        });
-    };
 
     return {
-        fetchRates,
         getSignal: () => signal,
-        resolve: (rates: CurrencyMap) => resolve?.(rates),
+        resolve: (rates: CurrencyMap) => resolve?.(ok(rates)),
+        start: (requestSignal: AbortSignal): Promise<Result<CurrencyMap, FetchRatesError>> => {
+            signal = requestSignal;
+
+            return new Promise(resolvePromise => {
+                resolve = resolvePromise;
+            });
+        },
     };
 };
 
-const createSequentialFetchRates = (fetchRates: ReadonlyArray<FetchRates>): FetchRates => {
+const createSequentialFetchRates = (
+    requests: ReadonlyArray<ReturnType<typeof createPendingRateRequest>>,
+): FetchRates => {
     let index = 0;
 
-    return (run: Run) => {
-        const currentFetchRates = fetchRates.at(index);
+    return run => {
+        const request = requests.at(index);
         index += 1;
 
-        if (currentFetchRates === undefined) {
+        if (request === undefined) {
             throw new Error('Unexpected fetch rates call');
         }
 
-        return currentFetchRates(run);
+        return request.start(run.signal);
     };
 };
 
 describe(createFetchAndStoreRates.name, () => {
     test('aborts the older Fiber and keeps the newest result', async () => {
         const appStore = createAppStore();
-        const older = createPendingFetchRates();
-        const newer = createPendingFetchRates();
-        const fetchRates = createSequentialFetchRates([older.fetchRates, newer.fetchRates]);
+        const older = createPendingRateRequest();
+        const newer = createPendingRateRequest();
+        const fetchRates = createSequentialFetchRates([older, newer]);
         const recalculateFromBtc = vi.fn();
         await using run = testCreateRun();
         const fetchAndStoreRates = createFetchAndStoreRates({
@@ -80,11 +81,12 @@ describe(createFetchAndStoreRates.name, () => {
         expect(recalculateFromBtc).toHaveBeenCalledOnce();
     });
 
-    test('handles unexpected defects and preserves the last known-good rates', async () => {
+    test('reports unexpected defects without disguising them as domain errors', async () => {
         const appStore = createAppStore();
         const existingRates = createRates(100);
         appStore.setState({ rates: existingRates, lastUpdated: 100 });
-        const fetchRates: FetchRates = () => Promise.reject(new Error('unexpected failure'));
+        const defect = new Error('unexpected failure');
+        const fetchRates: FetchRates = () => Promise.reject(defect);
         await using run = testCreateRun();
         const fetchAndStoreRates = createFetchAndStoreRates({
             appStore,
@@ -99,7 +101,36 @@ describe(createFetchAndStoreRates.name, () => {
         expect(appStore.getState().rates).toBe(existingRates);
         expect(appStore.getState().lastUpdated).toBe(100);
         expect(appStore.getState().loading).toBe(false);
-        expect(appStore.getState().error).toBe('Failed to fetch rates. Please try again.');
+        expect(appStore.getState().error).toBe('');
+
+        const reportedDefect = await run.deps.reportDefect.next();
+        expect(AbortError.is(reportedDefect)).toBe(true);
+
+        if (AbortError.is(reportedDefect)) {
+            expect(reportedDefect.reason.type).toBe('PanicAbortReason');
+
+            if (reportedDefect.reason.type === 'PanicAbortReason') {
+                expect(reportedDefect.reason.defect).toBe(defect);
+            }
+        }
+    });
+
+    test('does not turn use of a disposed Run into a fetch error', async () => {
+        const appStore = createAppStore();
+        const run = testCreateRun();
+        await run[Symbol.asyncDispose]();
+        const fetchAndStoreRates = createFetchAndStoreRates({
+            appStore,
+            fetchRates: () => ok(createRates(100)),
+            recalculateFromBtc: vi.fn(),
+            currentDateTime: () => 200,
+            run,
+        });
+
+        await expect(fetchAndStoreRates()).rejects.toThrow('Cannot use a disposed object.');
+
+        expect(appStore.getState().loading).toBe(false);
+        expect(appStore.getState().error).toBe('');
     });
 
     test('preserves the last known-good rates when every source fails', async () => {

@@ -66,7 +66,7 @@ export const createCompositionRoot = (): Main => {
     const secureStorage = createCapacitorSecureStorageCompositionRoot();
     const ratesRun = createRun();
     window.addEventListener('beforeunload', () => {
-        void ratesRun[Symbol.asyncDispose]();
+        ratesRun[Symbol.dispose]();
     });
 
     // Store
