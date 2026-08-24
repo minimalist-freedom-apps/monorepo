@@ -11,7 +11,7 @@ export {
 } from './createEnsureEvoluStorage';
 export { createEvoluCompositionRoot } from './createEvoluCompositionRoot';
 export { createSubscribableQuery } from './createSubscribableQuery';
-export type { EvoluStorage } from './EvoluStorage';
+export type { EvoluStorage, RestoreOwnerParams } from './EvoluStorage';
 export { installPolyfills } from './installPolyfills';
 export {
     DEFAULT_EVOLU_RELAY_URLS,

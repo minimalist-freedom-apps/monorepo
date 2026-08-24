@@ -1,7 +1,7 @@
 import type { Mnemonic } from '@evolu/common';
 import type { Evolu, EvoluSchema, Owner, ValidateSchema } from '@evolu/common/local-first';
 import type { CreateEvolu } from './createEvoluFactory';
-import type { EvoluStorage } from './EvoluStorage';
+import type { EvoluStorage, RestoreOwnerParams } from './EvoluStorage';
 
 type CreateEvoluStorageFactoryDeps<S extends EvoluSchema> = {
     readonly createEvolu: CreateEvolu<S>;
@@ -45,6 +45,7 @@ export const createEvoluStorageFactory =
         let activeOwner = createdEvolu.owner;
         let relayUrls = props.urls;
         let updateActiveRelayUrls = createdEvolu.updateRelayUrls;
+        const ownerChangeListeners = new Set<() => void>();
 
         props.onOwnerUsed?.(activeOwner);
 
@@ -56,21 +57,46 @@ export const createEvoluStorageFactory =
                 relayUrls = urls;
             });
 
-        const restoreOwner = async (mnemonic: Mnemonic): Promise<void> => {
-            const previousEvolu = evolu;
+        const notifyOwnerChange = () => {
+            for (const listener of ownerChangeListeners) {
+                listener();
+            }
+        };
 
-            const created = await deps.createEvolu({
-                mnemonic,
+        const activateOwner = (created: Awaited<ReturnType<CreateEvolu<S>>>) => {
+            evolu = created.evolu;
+            activeOwner = created.owner;
+            updateActiveRelayUrls = created.updateRelayUrls;
+            props.onOwnerUsed?.(activeOwner);
+            notifyOwnerChange();
+        };
+
+        const restoreOwner = async (params: RestoreOwnerParams): Promise<void> => {
+            const previous = {
+                evolu,
+                owner: activeOwner,
+                updateRelayUrls: updateActiveRelayUrls,
+            };
+            const candidate = await deps.createEvolu({
+                mnemonic: params.mnemonic,
                 schema: props.schema,
                 appName: props.appName,
                 urls: relayUrls,
             });
-            evolu = created.evolu;
-            activeOwner = created.owner;
-            updateActiveRelayUrls = created.updateRelayUrls;
 
-            props.onOwnerUsed?.(activeOwner);
-            await disposeEvolu(previousEvolu);
+            try {
+                activateOwner(candidate);
+                await params.persistMnemonic();
+            } catch (error) {
+                try {
+                    activateOwner(previous);
+                } finally {
+                    await disposeEvolu(candidate.evolu);
+                }
+                throw error;
+            }
+
+            await disposeEvolu(previous.evolu);
         };
 
         return {
@@ -82,6 +108,13 @@ export const createEvoluStorageFactory =
             },
             updateRelayUrls,
             restoreOwner,
+            subscribeOwnerChange: listener => {
+                ownerChangeListeners.add(listener);
+
+                return () => {
+                    ownerChangeListeners.delete(listener);
+                };
+            },
             dispose: async () => {
                 if (isDisposed) {
                     return;
