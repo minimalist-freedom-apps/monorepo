@@ -1,7 +1,7 @@
-import { err, getOrThrow, ok } from '@evolu/common';
+import { err, getOrThrow, ok, type Run, testCreateRun } from '@evolu/common';
 import { CurrencyCode } from '@minimalist-apps/fiat';
 import { describe, expect, test, vi } from 'vitest';
-import { type CurrencyMap, FetchRatesError } from '../rates/FetchRates';
+import { type CurrencyMap, type FetchRates, FetchRatesError } from '../rates/FetchRates';
 import { createAppStore } from '../state/createAppStore';
 import { createFetchAndStoreRates } from './fetchAndStoreRates';
 import { asRateBtcPerFiat } from './rate';
@@ -16,45 +16,58 @@ const createRates = (rate: number): CurrencyMap => ({
     },
 });
 
-const createPendingResult = () => {
-    let resolve: ((result: ReturnType<typeof ok<CurrencyMap>>) => void) | undefined;
-    const promise = new Promise<ReturnType<typeof ok<CurrencyMap>>>(promiseResolve => {
-        resolve = promiseResolve;
-    });
+const createPendingFetchRates = () => {
+    let resolve: ((rates: CurrencyMap) => void) | undefined;
+    let signal: AbortSignal | undefined;
+    const fetchRates: FetchRates = run => {
+        signal = run.signal;
+
+        return new Promise(resolvePromise => {
+            resolve = rates => resolvePromise(ok(rates));
+        });
+    };
 
     return {
-        promise,
-        resolve: (rates: CurrencyMap) => resolve?.(ok(rates)),
+        fetchRates,
+        getSignal: () => signal,
+        resolve: (rates: CurrencyMap) => resolve?.(rates),
+    };
+};
+
+const createSequentialFetchRates = (fetchRates: ReadonlyArray<FetchRates>): FetchRates => {
+    let index = 0;
+
+    return (run: Run) => {
+        const currentFetchRates = fetchRates.at(index);
+        index += 1;
+
+        if (currentFetchRates === undefined) {
+            throw new Error('Unexpected fetch rates call');
+        }
+
+        return currentFetchRates(run);
     };
 };
 
 describe(createFetchAndStoreRates.name, () => {
-    test('keeps the newest result when requests finish out of order', async () => {
+    test('aborts the older Fiber and keeps the newest result', async () => {
         const appStore = createAppStore();
-        const older = createPendingResult();
-        const newer = createPendingResult();
-        const fetchRates = vi
-            .fn()
-            .mockReturnValueOnce(older.promise)
-            .mockReturnValueOnce(newer.promise);
+        const older = createPendingFetchRates();
+        const newer = createPendingFetchRates();
+        const fetchRates = createSequentialFetchRates([older.fetchRates, newer.fetchRates]);
         const recalculateFromBtc = vi.fn();
-        const abortControllers: Array<AbortController> = [];
+        await using run = testCreateRun();
         const fetchAndStoreRates = createFetchAndStoreRates({
             appStore,
             fetchRates,
             recalculateFromBtc,
             currentDateTime: () => 123,
-            createAbortController: () => {
-                const abortController = new AbortController();
-                abortControllers.push(abortController);
-
-                return abortController;
-            },
+            run,
         });
 
         const olderRefresh = fetchAndStoreRates();
         const newerRefresh = fetchAndStoreRates();
-        expect(abortControllers[0]?.signal.aborted).toBe(true);
+        expect(older.getSignal()?.aborted).toBe(true);
         newer.resolve(createRates(200));
         await newerRefresh;
         older.resolve(createRates(100));
@@ -63,19 +76,22 @@ describe(createFetchAndStoreRates.name, () => {
         expect(appStore.getState().rates[USD]?.rate).toBe(200);
         expect(appStore.getState().lastUpdated).toBe(123);
         expect(appStore.getState().loading).toBe(false);
+        expect(appStore.getState().error).toBe('');
         expect(recalculateFromBtc).toHaveBeenCalledOnce();
     });
 
-    test('handles unexpected rejections and preserves the last known-good rates', async () => {
+    test('handles unexpected defects and preserves the last known-good rates', async () => {
         const appStore = createAppStore();
         const existingRates = createRates(100);
         appStore.setState({ rates: existingRates, lastUpdated: 100 });
+        const fetchRates: FetchRates = () => Promise.reject(new Error('unexpected failure'));
+        await using run = testCreateRun();
         const fetchAndStoreRates = createFetchAndStoreRates({
             appStore,
-            fetchRates: () => Promise.reject(new Error('unexpected failure')),
+            fetchRates,
             recalculateFromBtc: vi.fn(),
             currentDateTime: () => 200,
-            createAbortController: () => new AbortController(),
+            run,
         });
 
         await expect(fetchAndStoreRates()).resolves.toBeUndefined();
@@ -91,12 +107,14 @@ describe(createFetchAndStoreRates.name, () => {
         const existingRates = createRates(100);
         appStore.setState({ rates: existingRates, lastUpdated: 100 });
         const recalculateFromBtc = vi.fn();
+        const fetchRates: FetchRates = () => err(FetchRatesError());
+        await using run = testCreateRun();
         const fetchAndStoreRates = createFetchAndStoreRates({
             appStore,
-            fetchRates: () => Promise.resolve(err(FetchRatesError())),
+            fetchRates,
             recalculateFromBtc,
             currentDateTime: () => 200,
-            createAbortController: () => new AbortController(),
+            run,
         });
 
         await fetchAndStoreRates();
@@ -104,6 +122,7 @@ describe(createFetchAndStoreRates.name, () => {
         expect(appStore.getState().rates).toBe(existingRates);
         expect(appStore.getState().lastUpdated).toBe(100);
         expect(appStore.getState().loading).toBe(false);
+        expect(appStore.getState().error).toBe('Failed to fetch rates. Please try again.');
         expect(recalculateFromBtc).not.toHaveBeenCalled();
     });
 });

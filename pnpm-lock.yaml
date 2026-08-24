@@ -353,6 +353,9 @@ importers:
       '@evolu/common':
         specifier: ^8.5.0
         version: 8.5.0
+      '@evolu/web':
+        specifier: ^3.1.0
+        version: 3.1.0(@evolu/common@8.5.0)
       '@minimalist-apps/bitcoin':
         specifier: workspace:*
         version: link:../../packages/bitcoin

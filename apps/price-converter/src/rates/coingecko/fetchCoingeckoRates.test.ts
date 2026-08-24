@@ -1,26 +1,27 @@
-import { getOrThrow } from '@evolu/common';
+import { getOrThrow, testCreateNativeFetch, testCreateRun } from '@evolu/common';
 import { CurrencyCode } from '@minimalist-apps/fiat';
 import { describe, expect, test } from 'vitest';
-import { createFetchCoingeckoRates } from './fetchCoingeckoRates';
+import { fetchCoingeckoRates } from './fetchCoingeckoRates';
 
 const USD = getOrThrow(CurrencyCode.fromUnknown('USD'));
 
-const createMockFetch = (payload: unknown): typeof globalThis.fetch =>
-    (() =>
-        Promise.resolve({
-            ok: true,
-            json: () => Promise.resolve(payload),
-        })) as unknown as typeof globalThis.fetch;
-
-describe(createFetchCoingeckoRates.name, () => {
-    test('parses finite positive fiat rates', async () => {
-        const fetchRates = createFetchCoingeckoRates({
-            fetch: createMockFetch({
-                rates: { usd: { name: 'US Dollar', type: 'fiat', value: 50_000 } },
+const runWithPayload = async (payload: unknown) => {
+    const nativeFetch = testCreateNativeFetch(
+        () =>
+            new Response(JSON.stringify(payload), {
+                headers: { 'content-type': 'application/json' },
             }),
-        });
+    );
+    await using run = testCreateRun({ nativeFetch });
 
-        const result = await fetchRates();
+    return await run(fetchCoingeckoRates);
+};
+
+describe('fetchCoingeckoRates', () => {
+    test('parses finite positive fiat rates', async () => {
+        const result = await runWithPayload({
+            rates: { usd: { name: 'US Dollar', type: 'fiat', value: 50_000 } },
+        });
 
         expect(result.ok).toBe(true);
 
@@ -36,11 +37,7 @@ describe(createFetchCoingeckoRates.name, () => {
         { rates: { usd: { name: 'US Dollar', type: 'fiat', value: 0 } } },
         { rates: { usd: { name: 1, type: 'fiat', value: 50_000 } } },
     ])('rejects malformed payload %#', async payload => {
-        const fetchRates = createFetchCoingeckoRates({
-            fetch: createMockFetch(payload),
-        });
-
-        await expect(fetchRates()).resolves.toEqual({
+        await expect(runWithPayload(payload)).resolves.toEqual({
             ok: false,
             error: { type: 'FetchRatesError' },
         });

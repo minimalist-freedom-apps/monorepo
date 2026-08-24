@@ -1,3 +1,4 @@
+import { createRun } from '@evolu/web';
 import { Notification } from '@minimalist-apps/components';
 import { createConnect } from '@minimalist-apps/connect';
 import { CurrencyInputPure } from '@minimalist-apps/currency-input';
@@ -63,6 +64,10 @@ export const createCompositionRoot = (): Main => {
     const window = createWindow();
     const currentDateTime = createCurrentDateTime();
     const secureStorage = createCapacitorSecureStorageCompositionRoot();
+    const ratesRun = createRun();
+    window.addEventListener('beforeunload', () => {
+        void ratesRun[Symbol.asyncDispose]();
+    });
 
     // Store
     const appStore = createAppStore();
@@ -159,7 +164,7 @@ export const createCompositionRoot = (): Main => {
         fetchRates,
         recalculateFromBtc,
         currentDateTime,
-        createAbortController: () => new AbortController(),
+        run: ratesRun,
     });
 
     // Components
