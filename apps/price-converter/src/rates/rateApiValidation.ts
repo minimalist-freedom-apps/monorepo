@@ -1,17 +1,70 @@
-export type UnknownRecord = Readonly<Record<string, unknown>>;
+import {
+    array,
+    brand,
+    String as EvoluString,
+    FiniteNumber,
+    minLength,
+    object,
+    positive,
+    record,
+    Unknown,
+} from '@evolu/common';
 
-export const isUnknownRecord = (value: unknown): value is UnknownRecord =>
-    typeof value === 'object' && value !== null && !Array.isArray(value);
+const UnknownProperties = record(EvoluString, Unknown);
+const NonEmptyString = minLength(1)(EvoluString);
 
-export const isPositiveFiniteNumber = (value: unknown): value is number =>
-    typeof value === 'number' && Number.isFinite(value) && value > 0;
+export const PositiveFiniteNumber = brand('PositiveFiniteNumber', positive(FiniteNumber));
+export type PositiveFiniteNumber = typeof PositiveFiniteNumber.Output;
 
-export const getPositiveFiniteReciprocal = (value: unknown): number | null => {
-    if (!isPositiveFiniteNumber(value)) {
+const BitpayRate = object(
+    {
+        code: NonEmptyString,
+        name: NonEmptyString,
+        rate: PositiveFiniteNumber,
+    },
+    UnknownProperties,
+);
+
+export const BitpayResponse = object(
+    {
+        data: array(BitpayRate),
+    },
+    UnknownProperties,
+);
+
+const BlockchainInfoRate = object(
+    {
+        last: PositiveFiniteNumber,
+    },
+    UnknownProperties,
+);
+
+export const BlockchainInfoResponse = record(EvoluString, BlockchainInfoRate);
+
+const CoingeckoRate = object(
+    {
+        name: NonEmptyString,
+        type: NonEmptyString,
+        value: PositiveFiniteNumber,
+    },
+    UnknownProperties,
+);
+
+export const CoingeckoResponse = object(
+    {
+        rates: record(EvoluString, CoingeckoRate),
+    },
+    UnknownProperties,
+);
+
+export const getPositiveFiniteReciprocal = (value: unknown): PositiveFiniteNumber | null => {
+    const valueResult = PositiveFiniteNumber.fromUnknown(value);
+
+    if (!valueResult.ok) {
         return null;
     }
 
-    const reciprocal = 1 / value;
+    const reciprocal = PositiveFiniteNumber.orNull(1 / valueResult.value);
 
-    return isPositiveFiniteNumber(reciprocal) ? reciprocal : null;
+    return reciprocal;
 };

@@ -8,7 +8,7 @@ import {
     FetchRatesError,
     type FetchRatesOptions,
 } from './FetchRates.js';
-import { isPositiveFiniteNumber } from './rateApiValidation.js';
+import { PositiveFiniteNumber } from './rateApiValidation.js';
 
 interface FetchAverageRatesDeps {
     readonly fetchRates: readonly FetchRates[];
@@ -90,7 +90,7 @@ export const createFetchAverageRates =
             const entities = sources.flatMap(source => {
                 const entity = source[validCode];
 
-                return entity !== undefined && isPositiveFiniteNumber(entity.rate) ? [entity] : [];
+                return entity !== undefined && PositiveFiniteNumber.is(entity.rate) ? [entity] : [];
             });
 
             const firstEntity = entities.at(0);
@@ -101,10 +101,16 @@ export const createFetchAverageRates =
 
             const avgRate =
                 entities.reduce((sum, entity) => sum + entity.rate, 0) / entities.length;
+            const avgRateResult = PositiveFiniteNumber.fromUnknown(avgRate);
+
+            if (!avgRateResult.ok) {
+                return acc;
+            }
+
             acc[code] = {
                 code: validCode,
                 name: firstEntity.name,
-                rate: RateBtcPerFiat(validCode).from(avgRate),
+                rate: RateBtcPerFiat(validCode).from(avgRateResult.value),
             };
 
             return acc;

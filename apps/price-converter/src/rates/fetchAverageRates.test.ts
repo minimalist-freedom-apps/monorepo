@@ -231,4 +231,21 @@ describe('createFetchAverageRates', () => {
             expect(result.value[USD]?.rate).toBe(100);
         }
     });
+
+    test('rejects an average that overflows to a non-finite rate', async () => {
+        const source = {
+            [USD]: { code: USD, name: 'US Dollar', rate: Number.MAX_VALUE },
+        } as CurrencyMap;
+        const fetchAverageRates = createFetchAverageRates(
+            createFetchAverageRatesDeps([
+                createMockFetchRates(source),
+                createMockFetchRates(source),
+            ]),
+        );
+
+        await expect(fetchAverageRates()).resolves.toEqual({
+            ok: false,
+            error: { type: 'FetchRatesError' },
+        });
+    });
 });

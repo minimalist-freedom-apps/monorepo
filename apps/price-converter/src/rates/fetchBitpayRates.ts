@@ -3,7 +3,7 @@ import { CurrencyCode, isFiatCurrency } from '@minimalist-apps/fiat';
 import { typedObjectKeys } from '@minimalist-apps/type-utils';
 import { RateBtcPerFiat } from '../converter/rate.js';
 import { type CurrencyMap, type FetchRates, FetchRatesError } from './FetchRates.js';
-import { getPositiveFiniteReciprocal, isUnknownRecord } from './rateApiValidation.js';
+import { BitpayResponse, getPositiveFiniteReciprocal } from './rateApiValidation.js';
 
 interface FetchBitpayRatesDeps {
     readonly fetch: typeof globalThis.fetch;
@@ -23,24 +23,16 @@ export const createFetchBitpayRates =
                 if (!response.ok) {
                     throw new Error('Bitpay API failed');
                 }
-                const data: unknown = await response.json();
+                const dataResult = BitpayResponse.fromUnknown(await response.json());
 
-                if (!isUnknownRecord(data) || !Array.isArray(data.data)) {
+                if (!dataResult.ok) {
                     throw new Error('Invalid Bitpay response');
                 }
 
-                const rates = data.data.reduce<CurrencyMap>((acc, item) => {
-                    const reciprocal = isUnknownRecord(item)
-                        ? getPositiveFiniteReciprocal(item.rate)
-                        : null;
+                const rates = dataResult.value.data.reduce<CurrencyMap>((acc, item) => {
+                    const reciprocal = getPositiveFiniteReciprocal(item.rate);
 
-                    if (
-                        !isUnknownRecord(item) ||
-                        typeof item.code !== 'string' ||
-                        typeof item.name !== 'string' ||
-                        item.name.length === 0 ||
-                        reciprocal === null
-                    ) {
+                    if (reciprocal === null) {
                         throw new Error('Invalid Bitpay rate');
                     }
 
