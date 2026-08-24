@@ -24,8 +24,12 @@ type MockEvoluStorage = EvoluStorage<TodoTestSchema> & {
 export const mockEvoluStorage = (initialRows: ReadonlyArray<TodoRow>): MockEvoluStorage => {
     let rows = initialRows;
     let onQueryChanged: (() => void) | undefined;
+    let status: EvoluStorage<TodoTestSchema>['status'] = 'ready';
 
     return {
+        get status() {
+            return status;
+        },
         evolu: {
             subscribeQuery: () => (listener: Listener) => {
                 onQueryChanged = listener;
@@ -44,7 +48,11 @@ export const mockEvoluStorage = (initialRows: ReadonlyArray<TodoRow>): MockEvolu
         updateRelayUrls: async () => {},
         restoreOwner: async () => {},
         subscribeOwnerChange: () => () => {},
-        dispose: async () => {},
+        dispose: () => {
+            status = 'disposed';
+
+            return Promise.resolve();
+        },
 
         emitUpdate: nextRows => {
             rows = nextRows;

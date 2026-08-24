@@ -39,19 +39,74 @@ export const createEnsureEvoluStorage = <S extends EvoluSchema>({
     // shardPath,
 }: CreateEnsureEvoluProps<S>): EnsureEvoluStorage<S> => {
     let storage: EvoluStorage<S> | null = null;
+    let pendingStorage: Promise<EvoluStorage<S>> | null = null;
 
-    return async () => {
-        if (storage === null) {
-            storage = await deps.createEvoluStorage({
+    const createStorage = () => {
+        const creation = (async () =>
+            deps.createEvoluStorage({
                 mnemonic: await deps.ensureEvoluOwner(),
                 schema,
                 appName,
                 onOwnerUsed: deps.onOwnerUsed,
                 urls: deps.getEvoluRelayUrls(),
                 // shardPath,
-            });
+            }))();
+        pendingStorage = creation;
+
+        void creation.then(
+            createdStorage => {
+                storage = createdStorage;
+
+                if (pendingStorage === creation) {
+                    pendingStorage = null;
+                }
+            },
+            () => {
+                if (pendingStorage === creation) {
+                    pendingStorage = null;
+                }
+            },
+        );
+
+        return creation;
+    };
+
+    const ensureEvoluStorage: EnsureEvoluStorage<S> = () => {
+        if (pendingStorage !== null) {
+            return pendingStorage;
         }
 
-        return storage;
+        if (storage?.status === 'disposing') {
+            const disposingStorage = storage;
+            const waitForDisposal = disposingStorage
+                .dispose()
+                .catch(() => undefined)
+                .then(() => {
+                    if (storage === disposingStorage) {
+                        storage = null;
+                    }
+
+                    if (pendingStorage === waitForDisposal) {
+                        pendingStorage = null;
+                    }
+
+                    return ensureEvoluStorage();
+                });
+            pendingStorage = waitForDisposal;
+
+            return waitForDisposal;
+        }
+
+        if (storage?.status === 'disposed') {
+            storage = null;
+        }
+
+        if (storage === null) {
+            return createStorage();
+        }
+
+        return Promise.resolve(storage);
     };
+
+    return ensureEvoluStorage;
 };

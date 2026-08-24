@@ -5,7 +5,10 @@ export type RestoreOwnerParams = {
     readonly persistMnemonic: () => Promise<void>;
 };
 
+export type EvoluStorageStatus = 'ready' | 'restoring' | 'disposing' | 'disposed';
+
 export type EvoluStorage<S extends EvoluSchema> = {
+    readonly status: EvoluStorageStatus;
     readonly evolu: Evolu<S>;
     readonly activeOwner: Owner;
     readonly updateRelayUrls: (urls: ReadonlyArray<string>) => Promise<void>;

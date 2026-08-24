@@ -8,6 +8,7 @@ import type { EvoluStorage } from './evolu/schema.js';
 const USD = getOrThrow(CurrencyCode.fromUnknown('USD'));
 
 const mockEvoluStorage = (upsert: unknown): EvoluStorage => ({
+    status: 'ready',
     evolu: { upsert: upsert as EvoluStorage['evolu']['upsert'] } as EvoluStorage['evolu'],
     activeOwner: { id: 'test-owner' } as Owner,
     updateRelayUrls: vi.fn(),

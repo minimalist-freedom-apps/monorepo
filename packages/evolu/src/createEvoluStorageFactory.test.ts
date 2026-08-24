@@ -8,6 +8,22 @@ import { createEvoluStorageFactory } from './createEvoluStorageFactory';
 import { TodoTestSchema } from './mockEvoluStorage';
 import { testCreateRunWithEvoluDeps } from './testCreateRunWithEvoluDeps';
 
+const restoredMnemonic = Mnemonic.orThrow(
+    'legal winner thank year wave sausage worth useful legal winner thank yellow',
+);
+
+const createPendingPromise = <T>() => {
+    let resolve: ((value: T) => void) | undefined;
+    const promise = new Promise<T>(promiseResolve => {
+        resolve = promiseResolve;
+    });
+
+    return {
+        promise,
+        resolve: (value: T) => resolve?.(value),
+    };
+};
+
 describe(createEvoluStorageFactory.name, () => {
     test('restoreOwner recreates evolu instance and updates active owner', async () => {
         await using run = await testCreateRunWithEvoluDeps();
@@ -90,6 +106,7 @@ describe(createEvoluStorageFactory.name, () => {
             }),
         ).rejects.toBe(persistenceError);
 
+        expect(storage.status).toBe('ready');
         expect(storage.evolu).toBe(first.evolu);
         expect(storage.activeOwner).toBe(first.owner);
         expect(first.evolu[Symbol.asyncDispose]).not.toHaveBeenCalled();
@@ -105,5 +122,129 @@ describe(createEvoluStorageFactory.name, () => {
         ]);
 
         await storage.dispose();
+    });
+
+    test('rejects concurrent owner restoration', async () => {
+        const first = {
+            evolu: {
+                [Symbol.asyncDispose]: vi.fn(() => Promise.resolve()),
+            } as unknown as Evolu<TodoTestSchema>,
+            owner: { id: 'first-owner' } as Owner,
+            updateRelayUrls: vi.fn(),
+        };
+        const candidate = {
+            evolu: {
+                [Symbol.asyncDispose]: vi.fn(() => Promise.resolve()),
+            } as unknown as Evolu<TodoTestSchema>,
+            owner: { id: 'candidate-owner' } as Owner,
+            updateRelayUrls: vi.fn(),
+        };
+        const pendingCandidate = createPendingPromise<typeof candidate>();
+        const createEvolu = vi
+            .fn()
+            .mockResolvedValueOnce(first)
+            .mockReturnValueOnce(
+                pendingCandidate.promise,
+            ) as unknown as CreateEvolu<TodoTestSchema>;
+        const storage = await createEvoluStorageFactory<TodoTestSchema>({ createEvolu })({
+            mnemonic: Mnemonic.orThrow(
+                'abandon abandon abandon abandon abandon abandon abandon abandon abandon abandon abandon about',
+            ),
+            schema: TodoTestSchema,
+            appName: 'minimalist-apps-test',
+            urls: [],
+        });
+
+        const firstRestore = storage.restoreOwner({
+            mnemonic: restoredMnemonic,
+            persistMnemonic: () => Promise.resolve(),
+        });
+
+        expect(storage.status).toBe('restoring');
+        await expect(
+            storage.restoreOwner({
+                mnemonic: restoredMnemonic,
+                persistMnemonic: () => Promise.resolve(),
+            }),
+        ).rejects.toThrow('restoring');
+
+        pendingCandidate.resolve(candidate);
+        await firstRestore;
+        expect(storage.status).toBe('ready');
+
+        await storage.dispose();
+    });
+
+    test('waits for restoration before disposing and rejects use after disposal', async () => {
+        const events: Array<string> = [];
+        const first = {
+            evolu: {
+                [Symbol.asyncDispose]: vi.fn(() => {
+                    events.push('dispose:first');
+
+                    return Promise.resolve();
+                }),
+            } as unknown as Evolu<TodoTestSchema>,
+            owner: { id: 'first-owner' } as Owner,
+            updateRelayUrls: vi.fn(),
+        };
+        const candidate = {
+            evolu: {
+                [Symbol.asyncDispose]: vi.fn(() => {
+                    events.push('dispose:candidate');
+
+                    return Promise.resolve();
+                }),
+            } as unknown as Evolu<TodoTestSchema>,
+            owner: { id: 'candidate-owner' } as Owner,
+            updateRelayUrls: vi.fn(),
+        };
+        const pendingCandidate = createPendingPromise<typeof candidate>();
+        const createEvolu = vi
+            .fn()
+            .mockResolvedValueOnce(first)
+            .mockReturnValueOnce(
+                pendingCandidate.promise,
+            ) as unknown as CreateEvolu<TodoTestSchema>;
+        const storage = await createEvoluStorageFactory<TodoTestSchema>({ createEvolu })({
+            mnemonic: Mnemonic.orThrow(
+                'abandon abandon abandon abandon abandon abandon abandon abandon abandon abandon abandon about',
+            ),
+            schema: TodoTestSchema,
+            appName: 'minimalist-apps-test',
+            urls: [],
+        });
+        const restore = storage.restoreOwner({
+            mnemonic: restoredMnemonic,
+            persistMnemonic: () => {
+                events.push('persist:candidate');
+
+                return Promise.resolve();
+            },
+        });
+        const firstDispose = storage.dispose();
+        const secondDispose = storage.dispose();
+
+        expect(firstDispose).toBe(secondDispose);
+        expect(storage.status).toBe('disposing');
+        expect(events).toEqual([]);
+
+        pendingCandidate.resolve(candidate);
+        await restore;
+        await firstDispose;
+
+        expect(events).toEqual(['persist:candidate', 'dispose:first', 'dispose:candidate']);
+        expect(storage.status).toBe('disposed');
+        expect(() => storage.evolu).toThrow('disposed');
+        expect(() => storage.activeOwner).toThrow('disposed');
+        await expect(storage.updateRelayUrls([])).rejects.toThrow('disposed');
+        await expect(
+            storage.restoreOwner({
+                mnemonic: restoredMnemonic,
+                persistMnemonic: () => Promise.resolve(),
+            }),
+        ).rejects.toThrow('disposed');
+        expect(() => storage.subscribeOwnerChange(vi.fn())).toThrow('disposed');
+        await expect(storage.dispose()).resolves.toBeUndefined();
     });
 });
