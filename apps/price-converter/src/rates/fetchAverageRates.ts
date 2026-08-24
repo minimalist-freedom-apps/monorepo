@@ -8,7 +8,7 @@ import {
     FetchRatesError,
     type FetchRatesOptions,
 } from './FetchRates.js';
-import { PositiveFiniteNumber } from './rateApiValidation.js';
+import { PositiveFiniteNumber } from './positiveFiniteNumber.js';
 
 interface FetchAverageRatesDeps {
     readonly fetchRates: readonly FetchRates[];
