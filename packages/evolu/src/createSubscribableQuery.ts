@@ -17,6 +17,8 @@ export const createSubscribableQuery = <S extends EvoluSchema, R extends Row, Ma
 ): Subscribable<ReadonlyArray<MappedRow>> => {
     let rows: ReadonlyArray<MappedRow> = [];
     let evoluUnsubscribe: (() => void) | null = null;
+    let ownerChangeUnsubscribe: (() => void) | null = null;
+    let bindingVersion = 0;
     let isInitializing = false;
     const listeners = new Set<() => void>();
 
@@ -27,7 +29,7 @@ export const createSubscribableQuery = <S extends EvoluSchema, R extends Row, Ma
     };
 
     const initialize = () => {
-        if (isInitializing || evoluUnsubscribe !== null) {
+        if (isInitializing || ownerChangeUnsubscribe !== null) {
             return;
         }
 
@@ -36,17 +38,30 @@ export const createSubscribableQuery = <S extends EvoluSchema, R extends Row, Ma
         void deps
             .ensureEvoluStorage()
             .then(storage => {
-                const query = queryFactory(storage);
+                const bindActiveOwner = () => {
+                    bindingVersion += 1;
+                    const currentBindingVersion = bindingVersion;
+                    const evolu = storage.evolu;
+                    const query = queryFactory(storage);
 
-                const refreshRows = () => {
-                    rows = mapRows(storage.evolu.getQueryRows(query));
-                    notifyListeners();
+                    const refreshRows = () => {
+                        if (currentBindingVersion !== bindingVersion) {
+                            return;
+                        }
+
+                        rows = mapRows(evolu.getQueryRows(query));
+                        notifyListeners();
+                    };
+
+                    evoluUnsubscribe?.();
+                    evoluUnsubscribe = evolu.subscribeQuery(query)(refreshRows);
+                    refreshRows();
+
+                    void evolu.loadQuery(query).then(refreshRows);
                 };
 
-                evoluUnsubscribe = storage.evolu.subscribeQuery(query)(refreshRows);
-                refreshRows();
-
-                void storage.evolu.loadQuery(query).then(refreshRows);
+                ownerChangeUnsubscribe = storage.subscribeOwnerChange(bindActiveOwner);
+                bindActiveOwner();
             })
             .finally(() => {
                 isInitializing = false;

@@ -48,4 +48,55 @@ describe(createSubscribableQuery.name, () => {
         expect(listener).toHaveBeenCalled();
         expect(subscribable.getState()).toEqual([{ id: 'todo-2', value: 'walk dog' }]);
     });
+
+    test('rebinds to the restored owner and ignores stale owner updates', async () => {
+        const firstStorage = mockEvoluStorage([{ id: 'old', value: 'old owner' }]);
+        const secondStorage = mockEvoluStorage([{ id: 'new', value: 'new owner' }]);
+        const ownerChangeListeners = new Set<() => void>();
+        let activeStorage = firstStorage;
+        const storage: EvoluStorage<TodoTestSchema> = {
+            get evolu() {
+                return activeStorage.evolu;
+            },
+            get activeOwner() {
+                return activeStorage.activeOwner;
+            },
+            subscribeOwnerChange: (listener: () => void) => {
+                ownerChangeListeners.add(listener);
+
+                return () => {
+                    ownerChangeListeners.delete(listener);
+                };
+            },
+            updateRelayUrls: async () => {},
+            restoreOwner: async () => {},
+            dispose: async () => {},
+        };
+        const subscribable = createSubscribableQuery(
+            { ensureEvoluStorage: () => Promise.resolve(storage) },
+            () => query,
+            rows => rows,
+        );
+        const listener = vi.fn();
+        subscribable.subscribe(listener);
+        await Promise.resolve();
+        await Promise.resolve();
+
+        expect(subscribable.getState()).toEqual([{ id: 'old', value: 'old owner' }]);
+
+        activeStorage = secondStorage;
+
+        for (const ownerChangeListener of ownerChangeListeners) {
+            ownerChangeListener();
+        }
+        await Promise.resolve();
+
+        expect(subscribable.getState()).toEqual([{ id: 'new', value: 'new owner' }]);
+
+        secondStorage.emitUpdate([{ id: 'newer', value: 'new owner update' }]);
+        expect(subscribable.getState()).toEqual([{ id: 'newer', value: 'new owner update' }]);
+
+        firstStorage.emitUpdate([{ id: 'stale', value: 'stale owner update' }]);
+        expect(subscribable.getState()).toEqual([{ id: 'newer', value: 'new owner update' }]);
+    });
 });

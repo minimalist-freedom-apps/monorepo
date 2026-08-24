@@ -43,6 +43,7 @@ export const mockEvoluStorage = (initialRows: ReadonlyArray<TodoRow>): MockEvolu
         activeOwner: { id: 'test-owner' } as EvoluStorage<TodoTestSchema>['activeOwner'],
         updateRelayUrls: async () => {},
         restoreOwner: async () => {},
+        subscribeOwnerChange: () => () => {},
         dispose: async () => {},
 
         emitUpdate: nextRows => {

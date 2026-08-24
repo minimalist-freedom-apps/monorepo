@@ -8,6 +8,7 @@ interface BannerProps {
     readonly intent?: Intent;
     readonly showIcon?: boolean;
     readonly style?: React.CSSProperties;
+    readonly testId?: string;
 }
 
 const buildBannerType = (intent: Intent | undefined): 'info' | 'warning' | 'error' => {
@@ -28,11 +29,12 @@ const buildBannerType = (intent: Intent | undefined): 'info' | 'warning' | 'erro
     }
 };
 
-export const Banner = ({ children, intent, showIcon = true, style }: BannerProps) => (
+export const Banner = ({ children, intent, showIcon = true, style, testId }: BannerProps) => (
     <Alert
         {...(children !== undefined ? { description: children } : {})}
         type={buildBannerType(intent)}
         showIcon={showIcon}
         {...(style !== undefined ? { style } : {})}
+        {...(testId !== undefined ? { id: testId, 'data-testid': testId } : {})}
     />
 );

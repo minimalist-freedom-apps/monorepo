@@ -14,6 +14,8 @@ export const createRestoreMnemonic =
     <S extends EvoluSchema>(deps: RestoreMnemonicDeps<S>): RestoreMnemonic =>
     async mnemonic => {
         const storage = await deps.ensureEvoluStorage();
-        await deps.setEvoluMnemonic(mnemonic);
-        await storage.restoreOwner(mnemonic);
+        await storage.restoreOwner({
+            mnemonic,
+            persistMnemonic: () => deps.setEvoluMnemonic(mnemonic),
+        });
     };
