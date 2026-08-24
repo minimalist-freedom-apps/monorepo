@@ -1,4 +1,4 @@
-import { err, ok } from '@evolu/common';
+import { err, ok, PositiveFiniteNumber } from '@evolu/common';
 import { CurrencyCode } from '@minimalist-apps/fiat';
 import { typedObjectKeys } from '@minimalist-apps/type-utils';
 import { RateBtcPerFiat } from '../converter/rate.js';
@@ -8,7 +8,6 @@ import {
     FetchRatesError,
     type FetchRatesOptions,
 } from './FetchRates.js';
-import { PositiveFiniteNumber } from './positiveFiniteNumber.js';
 
 interface FetchAverageRatesDeps {
     readonly fetchRates: readonly FetchRates[];
