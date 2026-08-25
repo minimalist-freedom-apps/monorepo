@@ -1,5 +1,4 @@
 import { join } from 'node:path';
-import { pathToFileURL } from 'node:url';
 
 type TestProfile = 'project' | 'workspace' | 'e2e';
 
@@ -96,7 +95,7 @@ const createE2ETestArguments = ({
     '--import=tsx',
     '--test',
     '--test-concurrency=1',
-    `--test-global-setup=${pathToFileURL(join(cwd, 'e2e/globalSetup.ts')).href}`,
+    `--test-global-setup=${join(cwd, 'e2e/globalSetup.ts')}`,
     ...additionalArguments,
     'e2e/*.e2e.ts',
 ];
