@@ -12,10 +12,9 @@ describe(stripCommas.name, () => {
         [',,,', '', 'removes all commas'],
     ];
 
-    for (const testCase of testCases) {
-        test('%s → %s — %s' + ': ' + JSON.stringify(testCase), () => {
-            const [input, expected] = testCase;
+    testCases.forEach(([input, expected, description]) => {
+        test(`${input} → ${expected} — ${description}`, () => {
             assert.strictEqual(stripCommas(input), expected);
         });
-    }
+    });
 });
