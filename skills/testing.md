@@ -70,7 +70,7 @@ pnpm --filter @evolu/common test -- --test-name-pattern="yields and returns ok"
 
 ### Data-provider pattern for simple tests
 
-When tests are simple input/output assertions (no setup, no deps, single function call), iterate over a readonly data array and register a `test` for each case instead of repeating test boilerplate. Include the human-readable description in each test name.
+When tests are simple input/output assertions (no setup, no deps, single function call), use `forEach` on a readonly data array to register a `test` for each case instead of repeating test boilerplate. Destructure the case in the callback and build an explicit test name that includes its human-readable description. Do not append `JSON.stringify(testCase)` as a generic name fallback.
 
 Only use this for simple tests — not for tests that need setup, mocking, or multi-step assertions.
 
