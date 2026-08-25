@@ -10,7 +10,7 @@
             "entry": ["src/**/*.test.{ts,tsx}", "e2e/{globalSetup.ts,*.e2e.ts}"]
         },
         "packages/*": {
-            "entry": ["src/**/*.{test,spec}.{ts,tsx}"]
+            "entry": ["src/**/*.test.{ts,tsx}"]
         }
     }
 }
