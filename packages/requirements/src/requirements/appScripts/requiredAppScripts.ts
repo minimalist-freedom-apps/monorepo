@@ -1,9 +1,10 @@
 import { existsSync, readFileSync, writeFileSync } from 'node:fs';
-import { join, sep } from 'node:path';
+import { basename, join, sep } from 'node:path';
 import { typedObjectKeys } from '@minimalist-apps/type-utils';
 import type { Requirement } from '../Requirement';
 
 const nodeTestCommand = 'minimalist-test';
+const windowTestCommand = 'vitest run --environment=jsdom src/createWindow.spec.ts';
 
 const expectedScripts: ReadonlyArray<readonly [name: string, value: string]> = [
     ['dev', 'vite'],
@@ -22,8 +23,10 @@ const expectedScripts: ReadonlyArray<readonly [name: string, value: string]> = [
 
 const optionalAllowedScriptNames = ['e2e', 'e2e-ci', 'e2e:appium', 'e2e:emulator'] as const;
 
-const requiredPackageScripts: ReadonlyArray<readonly [string, string]> = [
-    ['test', nodeTestCommand],
+const getRequiredPackageScripts = (
+    packageDir: string,
+): ReadonlyArray<readonly [string, string]> => [
+    ['test', basename(packageDir) === 'window' ? windowTestCommand : nodeTestCommand],
     ['typecheck', 'tsc --noEmit'],
 ];
 
@@ -50,7 +53,7 @@ export const requiredAppScripts: Requirement = {
         if (isPackageDir(appDir)) {
             const requiredScripts: Record<string, string> = {};
 
-            for (const [name, value] of requiredPackageScripts) {
+            for (const [name, value] of getRequiredPackageScripts(appDir)) {
                 requiredScripts[name] = value;
             }
 
@@ -98,7 +101,7 @@ export const requiredAppScripts: Requirement = {
         }
 
         if (isPackageDir(appDir)) {
-            for (const [scriptName, scriptValue] of requiredPackageScripts) {
+            for (const [scriptName, scriptValue] of getRequiredPackageScripts(appDir)) {
                 if (!(scriptName in scripts)) {
                     return [`missing script "${scriptName}"`];
                 }

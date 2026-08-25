@@ -27,11 +27,14 @@ const readPackageJson = ({ dir }: ReadPackageJsonProps): Record<string, unknown>
 describe(requiredAppScripts.name, () => {
     let appDir: string;
     let packageDir: string;
+    let windowPackageDir: string;
 
     beforeEach(() => {
         appDir = createTempDir();
         packageDir = join(appDir, 'packages', 'demo-package');
+        windowPackageDir = join(appDir, 'packages', 'window');
         mkdirSync(packageDir, { recursive: true });
+        mkdirSync(windowPackageDir, { recursive: true });
     });
 
     afterEach(() => {
@@ -237,6 +240,24 @@ describe(requiredAppScripts.name, () => {
                 typecheck: 'tsc --noEmit',
             });
         });
+
+        test('window package fix preserves the scoped Vitest timer suite', async () => {
+            writePackageJson({
+                dir: windowPackageDir,
+                content: {
+                    name: '@minimalist-apps/window',
+                },
+            });
+
+            const errors = await requiredAppScripts.fix({ appDir: windowPackageDir });
+            assert.deepStrictEqual(errors, []);
+
+            const pkg = readPackageJson({ dir: windowPackageDir });
+            assert.deepStrictEqual(pkg.scripts, {
+                test: 'vitest run --environment=jsdom src/createWindow.spec.ts',
+                typecheck: 'tsc --noEmit',
+            });
+        });
     });
 
     describe('verify', () => {
@@ -349,6 +370,22 @@ describe(requiredAppScripts.name, () => {
             });
 
             const errors = requiredAppScripts.verify({ appDir: packageDir });
+            assert.deepStrictEqual(errors, []);
+        });
+
+        test('window package verify accepts the scoped Vitest timer suite', () => {
+            writePackageJson({
+                dir: windowPackageDir,
+                content: {
+                    name: '@minimalist-apps/window',
+                    scripts: {
+                        test: 'vitest run --environment=jsdom src/createWindow.spec.ts',
+                        typecheck: 'tsc --noEmit',
+                    },
+                },
+            });
+
+            const errors = requiredAppScripts.verify({ appDir: windowPackageDir });
             assert.deepStrictEqual(errors, []);
         });
     });
