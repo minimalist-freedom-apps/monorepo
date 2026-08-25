@@ -15,7 +15,7 @@
         "lint:eslint": "eslint .",
         "lint:eslint:fix": "eslint --fix .",
         "typecheck": "pnpm -r --if-present typecheck",
-        "test": "minimalist-test --workspace",
+        "test": "node --import=tsx --import=@minimalist-apps/test-runner/setup --test --test-concurrency=1 --test-force-exit \"apps/**/*.test.ts\" \"apps/**/*.test.tsx\" \"packages/**/*.test.ts\" \"packages/**/*.test.tsx\"",
         "test:no-cache": "pnpm test",
         "test:affected": "nx affected -t test",
         "e2e:affected": "nx affected -t e2e-ci",

@@ -3,7 +3,8 @@ import { join, sep } from 'node:path';
 import { typedObjectKeys } from '@minimalist-apps/type-utils';
 import type { Requirement } from '../Requirement';
 
-const nodeTestCommand = 'minimalist-test';
+export const nodeTestCommand =
+    'node --import=tsx --import=@minimalist-apps/test-runner/setup --test --test-concurrency=1 --test-force-exit "src/**/*.test.ts" "src/**/*.test.tsx"';
 
 const expectedScripts: ReadonlyArray<readonly [name: string, value: string]> = [
     ['dev', 'vite'],

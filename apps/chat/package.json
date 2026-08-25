@@ -12,7 +12,7 @@
         "build:android:debug": "APP_DIR=$PWD pnpm --filter @minimalist-apps/android-build build:debug",
         "build:android:sign": "APP_DIR=$PWD pnpm --filter @minimalist-apps/android-build sign",
         "preview": "vite preview",
-        "test": "minimalist-test",
+        "test": "node --import=tsx --import=@minimalist-apps/test-runner/setup --test --test-concurrency=1 --test-force-exit \"src/**/*.test.ts\" \"src/**/*.test.tsx\"",
         "typecheck": "tsc --noEmit"
     },
     "dependencies": {
