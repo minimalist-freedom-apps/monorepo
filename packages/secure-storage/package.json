@@ -15,6 +15,7 @@
     },
     "devDependencies": {
         "@minimalist-apps/tsconfig": "workspace:*",
+        "@minimalist-apps/type-utils": "workspace:*",
         "typescript": "^7.0.2"
     }
 }
