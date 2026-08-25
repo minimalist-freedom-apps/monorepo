@@ -1,35 +1,46 @@
-import { describe, expect, test, vi } from 'vitest';
+import assert from 'node:assert/strict';
+import { describe, mock, test } from 'node:test';
 import { createCapacitorSecureStorage } from './createCapacitorSecureStorage';
 
 describe(createCapacitorSecureStorage.name, () => {
-    test.each(['android', 'ios'] as const)('delegates persistence on %s', async platform => {
-        const nativeStorage = {
-            getItem: vi.fn(async () => 'secret'),
-            setItem: vi.fn(async () => undefined),
-        };
-        const storage = createCapacitorSecureStorage({ platform, nativeStorage });
-
-        await expect(storage.load({ key: 'mnemonic' })).resolves.toBe('secret');
-        await storage.save({ key: 'mnemonic', value: 'new-secret' });
-
-        expect(nativeStorage.getItem).toHaveBeenCalledWith('mnemonic');
-        expect(nativeStorage.setItem).toHaveBeenCalledWith('mnemonic', 'new-secret');
-    });
+    for (const testCase of ['android', 'ios'] as const) {
+        test('delegates persistence on %s' + ': ' + JSON.stringify(testCase), async () => {
+            const platform = testCase;
+            const nativeStorage = {
+                getItem: mock.fn(async () => 'secret'),
+                setItem: mock.fn(async () => undefined),
+            };
+            const storage = createCapacitorSecureStorage({ platform, nativeStorage });
+            assert.strictEqual(await storage.load({ key: 'mnemonic' }), 'secret');
+            await storage.save({ key: 'mnemonic', value: 'new-secret' });
+            assert.deepStrictEqual(nativeStorage.getItem.mock.calls.at(-1)?.arguments, [
+                'mnemonic',
+            ]);
+            assert.deepStrictEqual(nativeStorage.setItem.mock.calls.at(-1)?.arguments, [
+                'mnemonic',
+                'new-secret',
+            ]);
+        });
+    }
 
     test('refuses the Capacitor plugin plaintext web fallback', () => {
         const nativeStorage = {
-            getItem: vi.fn(async () => null),
-            setItem: vi.fn(async () => undefined),
+            getItem: mock.fn(async () => null),
+            setItem: mock.fn(async () => undefined),
         };
 
-        expect(() =>
-            createCapacitorSecureStorage({
-                platform: 'web',
-                nativeStorage,
-            }),
-        ).toThrow('Capacitor secure storage requires a native platform');
+        assert.throws(
+            () =>
+                createCapacitorSecureStorage({
+                    platform: 'web',
+                    nativeStorage,
+                }),
+            (error: unknown) =>
+                error instanceof Error &&
+                error.message.includes('Capacitor secure storage requires a native platform'),
+        );
 
-        expect(nativeStorage.getItem).not.toHaveBeenCalled();
-        expect(nativeStorage.setItem).not.toHaveBeenCalled();
+        assert.strictEqual(nativeStorage.getItem.mock.callCount(), 0);
+        assert.strictEqual(nativeStorage.setItem.mock.callCount(), 0);
     });
 });

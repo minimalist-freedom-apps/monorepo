@@ -1,4 +1,5 @@
-import { describe, expect, test } from 'vitest';
+import assert from 'node:assert/strict';
+import { describe, test } from 'node:test';
 import { calculateRectangle } from './calculateRectangle';
 
 describe(calculateRectangle.name, () => {
@@ -76,9 +77,9 @@ describe(calculateRectangle.name, () => {
         },
     ];
 
-    test.each(testCases)(
-        '$description',
-        ({ amount, originalA, originalB, newA, newB, expected }) => {
+    for (const testCase of testCases) {
+        test('$description' + ': ' + JSON.stringify(testCase), () => {
+            const { amount, originalA, originalB, newA, newB, expected } = testCase;
             const result = calculateRectangle({
                 amount,
                 originalA,
@@ -88,10 +89,13 @@ describe(calculateRectangle.name, () => {
             });
 
             if (expected === null) {
-                expect(result).toBeNull();
+                assert.strictEqual(result, null);
             } else {
-                expect(result).toBeCloseTo(expected, 1);
+                if (result === null) {
+                    assert.fail('Expected a calculated result.');
+                }
+                assert.ok(Math.abs(result - expected) < 10 ** -1 / 2);
             }
-        },
-    );
+        });
+    }
 });

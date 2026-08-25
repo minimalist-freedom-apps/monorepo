@@ -1,10 +1,11 @@
+import assert from 'node:assert/strict';
+import { afterEach, describe, mock, test } from 'node:test';
 import { getOrThrow } from '@evolu/common';
 import type { CurrencyInputDep } from '@minimalist-apps/currency-input';
 import { CurrencyCode } from '@minimalist-apps/fiat';
-import { render, screen, waitFor } from '@testing-library/react';
+import { cleanup, render, screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import type { FC } from 'react';
-import { describe, expect, test, vi } from 'vitest';
 import {
     BTC_EASTER_EGG_MODAL_CONTENT_TEST_ID,
     BTC_EASTER_EGG_MODAL_OK_BUTTON_TEST_ID,
@@ -20,6 +21,8 @@ import type { MoscowTimeDep } from './MoscowTime.js';
 type TestDeps = CurrencyInputDep & MoscowTimeDep;
 const USD = getOrThrow(CurrencyCode.fromUnknown('USD'));
 
+afterEach(cleanup);
+
 const createTestDeps = (): TestDeps => ({
     CurrencyInput: ({ code, value, onChange }) => (
         <input
@@ -34,20 +37,20 @@ const createTestDeps = (): TestDeps => ({
 describe('CurrencyRowPure', () => {
     test('renders remove icon button for fiat rows', () => {
         const deps = createTestDeps();
-        const onRemove = vi.fn();
+        const onRemove = mock.fn();
         const TestComponent: FC = () =>
             CurrencyRowPure(deps, {
                 btcMode: 'btc',
                 code: USD,
                 value: 100,
-                onChange: vi.fn(),
+                onChange: mock.fn(),
                 onRemove,
             });
 
         render(<TestComponent />);
 
-        expect(screen.getByTestId(REMOVE_CURRENCY_BUTTON_TEST_ID)).toBeInTheDocument();
-        expect(screen.queryByTestId(BTC_NOTE_BUTTON_TEST_ID)).not.toBeInTheDocument();
+        assert.ok(document.body.contains(screen.getByTestId(REMOVE_CURRENCY_BUTTON_TEST_ID)));
+        assert.strictEqual(screen.queryByTestId(BTC_NOTE_BUTTON_TEST_ID), null);
     });
 
     test('opens BTC easter-egg modal on click and closes with OK', async () => {
@@ -58,31 +61,33 @@ describe('CurrencyRowPure', () => {
                 btcMode: 'btc',
                 code: 'BTC',
                 value: 0,
-                onChange: vi.fn(),
+                onChange: mock.fn(),
             });
 
         render(<TestComponent />);
         const btcNoteButton = screen.getByTestId(BTC_NOTE_BUTTON_TEST_ID);
-        expect(screen.queryByTestId(BTC_EASTER_EGG_MODAL_CONTENT_TEST_ID)).not.toBeInTheDocument();
-        expect(screen.getByTestId(BTC_EASTER_EGG_MODAL_STATE_TEST_ID)).toHaveAttribute(
-            'data-open',
+        assert.strictEqual(screen.queryByTestId(BTC_EASTER_EGG_MODAL_CONTENT_TEST_ID), null);
+        assert.strictEqual(
+            screen.getByTestId(BTC_EASTER_EGG_MODAL_STATE_TEST_ID).getAttribute('data-open'),
             'false',
         );
 
         await user.click(btcNoteButton);
 
-        expect(screen.getByTestId(BTC_EASTER_EGG_MODAL_CONTENT_TEST_ID)).toBeInTheDocument();
-        expect(screen.getByTestId(BTC_EASTER_EGG_MODAL_STATE_TEST_ID)).toHaveAttribute(
-            'data-open',
+        assert.ok(document.body.contains(screen.getByTestId(BTC_EASTER_EGG_MODAL_CONTENT_TEST_ID)));
+        assert.strictEqual(
+            screen.getByTestId(BTC_EASTER_EGG_MODAL_STATE_TEST_ID).getAttribute('data-open'),
             'true',
         );
-        expect(screen.getByTestId(BTC_EASTER_EGG_MODAL_OK_BUTTON_TEST_ID)).toBeInTheDocument();
+        assert.ok(
+            document.body.contains(screen.getByTestId(BTC_EASTER_EGG_MODAL_OK_BUTTON_TEST_ID)),
+        );
 
         await user.click(screen.getByTestId(BTC_EASTER_EGG_MODAL_OK_BUTTON_TEST_ID));
 
         await waitFor(() => {
-            expect(screen.getByTestId(BTC_EASTER_EGG_MODAL_STATE_TEST_ID)).toHaveAttribute(
-                'data-open',
+            assert.strictEqual(
+                screen.getByTestId(BTC_EASTER_EGG_MODAL_STATE_TEST_ID).getAttribute('data-open'),
                 'false',
             );
         });

@@ -1,4 +1,5 @@
-import { describe, expect, test } from 'vitest';
+import assert from 'node:assert/strict';
+import { describe, test } from 'node:test';
 import { BlockchainInfoResponse } from './BlockchainInfoResponse';
 
 describe('BlockchainInfoResponse', () => {
@@ -7,10 +8,10 @@ describe('BlockchainInfoResponse', () => {
             USD: { last: 50_000, symbol: '$' },
         });
 
-        expect(result.ok).toBe(true);
+        assert.strictEqual(result.ok, true);
     });
 
     test('rejects malformed payloads', () => {
-        expect(BlockchainInfoResponse.fromUnknown({ USD: { last: 0 } }).ok).toBe(false);
+        assert.strictEqual(BlockchainInfoResponse.fromUnknown({ USD: { last: 0 } }).ok, false);
     });
 });

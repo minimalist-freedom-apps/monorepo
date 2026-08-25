@@ -1,6 +1,8 @@
+import assert from 'node:assert/strict';
+import { describe, mock, test } from 'node:test';
 import { Mnemonic } from '@evolu/common';
-import { describe, expect, test, vi } from 'vitest';
 import { createEnsureEvoluStorage } from './createEnsureEvoluStorage';
+import type { CreateEvoluStorageDep } from './createEvoluStorageFactory';
 import { mockEvoluStorage, TodoTestSchema } from './mockEvoluStorage';
 
 const mnemonic = Mnemonic.orThrow(
@@ -14,14 +16,16 @@ describe(createEnsureEvoluStorage.name, () => {
             resolveOwner = resolve;
         });
         const storage = mockEvoluStorage([]);
-        const createEvoluStorage = vi.fn(() => Promise.resolve(storage));
-        const ensureEvoluOwner = vi.fn(() => ownerPromise);
+        const createEvoluStorage = mock.fn<
+            CreateEvoluStorageDep<typeof TodoTestSchema>['createEvoluStorage']
+        >(() => Promise.resolve(storage));
+        const ensureEvoluOwner = mock.fn(() => ownerPromise);
         const ensureEvoluStorage = createEnsureEvoluStorage({
             deps: {
                 createEvoluStorage,
                 ensureEvoluOwner,
                 getEvoluRelayUrls: () => [],
-                onOwnerUsed: vi.fn(),
+                onOwnerUsed: mock.fn(),
             },
             schema: TodoTestSchema,
             appName: 'minimalist-apps-test',
@@ -30,70 +34,72 @@ describe(createEnsureEvoluStorage.name, () => {
         const first = ensureEvoluStorage();
         const second = ensureEvoluStorage();
 
-        expect(first).toBe(second);
-        expect(ensureEvoluOwner).toHaveBeenCalledOnce();
+        assert.strictEqual(first, second);
+        assert.strictEqual(ensureEvoluOwner.mock.callCount(), 1);
         resolveOwner?.(mnemonic);
-        await expect(Promise.all([first, second])).resolves.toEqual([storage, storage]);
-        expect(createEvoluStorage).toHaveBeenCalledOnce();
+        assert.deepStrictEqual(await Promise.all([first, second]), [storage, storage]);
+        assert.strictEqual(createEvoluStorage.mock.callCount(), 1);
     });
 
     test('retries creation after a failed attempt', async () => {
         const storage = mockEvoluStorage([]);
         const creationError = new Error('worker creation failed');
-        const createEvoluStorage = vi
-            .fn()
-            .mockRejectedValueOnce(creationError)
-            .mockResolvedValueOnce(storage);
+        const createEvoluStorage = mock.fn(async () => storage);
+        createEvoluStorage.mock.mockImplementationOnce(() => Promise.reject(creationError));
         const ensureEvoluStorage = createEnsureEvoluStorage({
             deps: {
                 createEvoluStorage,
                 ensureEvoluOwner: () => Promise.resolve(mnemonic),
                 getEvoluRelayUrls: () => [],
-                onOwnerUsed: vi.fn(),
+                onOwnerUsed: mock.fn(),
             },
             schema: TodoTestSchema,
             appName: 'minimalist-apps-test',
         });
 
-        await expect(ensureEvoluStorage()).rejects.toBe(creationError);
-        await expect(ensureEvoluStorage()).resolves.toBe(storage);
-        expect(createEvoluStorage).toHaveBeenCalledTimes(2);
+        await assert.rejects(ensureEvoluStorage(), (error: unknown) => {
+            assert.strictEqual(error, creationError);
+
+            return true;
+        });
+        assert.strictEqual(await ensureEvoluStorage(), storage);
+        assert.strictEqual(createEvoluStorage.mock.callCount(), 2);
     });
 
     test('creates a fresh instance after the cached storage is disposed', async () => {
         const firstStorage = mockEvoluStorage([]);
         const secondStorage = mockEvoluStorage([]);
-        const createEvoluStorage = vi
-            .fn()
-            .mockResolvedValueOnce(firstStorage)
-            .mockResolvedValueOnce(secondStorage);
+        const createEvoluStorage = mock.fn(async () => secondStorage);
+        createEvoluStorage.mock.mockImplementationOnce(async () => firstStorage);
         const ensureEvoluStorage = createEnsureEvoluStorage({
             deps: {
                 createEvoluStorage,
                 ensureEvoluOwner: () => Promise.resolve(mnemonic),
                 getEvoluRelayUrls: () => [],
-                onOwnerUsed: vi.fn(),
+                onOwnerUsed: mock.fn(),
             },
             schema: TodoTestSchema,
             appName: 'minimalist-apps-test',
         });
 
-        await expect(ensureEvoluStorage()).resolves.toBe(firstStorage);
+        assert.strictEqual(await ensureEvoluStorage(), firstStorage);
         await firstStorage.dispose();
-        await expect(ensureEvoluStorage()).resolves.toBe(secondStorage);
-        expect(createEvoluStorage).toHaveBeenCalledTimes(2);
+        assert.strictEqual(await ensureEvoluStorage(), secondStorage);
+        assert.strictEqual(createEvoluStorage.mock.callCount(), 2);
     });
 
     test('reads the latest configured relays when storage is first created', async () => {
         const storage = mockEvoluStorage([]);
-        const createEvoluStorage = vi.fn(() => Promise.resolve(storage));
+        const createEvoluStorage = mock.fn<
+            CreateEvoluStorageDep<typeof TodoTestSchema>['createEvoluStorage']
+        >(() => Promise.resolve(storage));
         let relayUrls: ReadonlyArray<string> = ['wss://one.example'];
         const ensureEvoluStorage = createEnsureEvoluStorage({
             deps: {
                 createEvoluStorage,
                 ensureEvoluOwner: () => Promise.resolve(mnemonic),
                 getEvoluRelayUrls: () => relayUrls,
-                onOwnerUsed: vi.fn(),
+                onOwnerUsed: mock.fn(),
             },
             schema: TodoTestSchema,
             appName: 'minimalist-apps-test',
@@ -102,8 +108,7 @@ describe(createEnsureEvoluStorage.name, () => {
         relayUrls = ['wss://two.example', 'wss://three.example'];
         await ensureEvoluStorage();
 
-        expect(createEvoluStorage).toHaveBeenCalledWith(
-            expect.objectContaining({ urls: relayUrls }),
-        );
+        const createStorageParams = createEvoluStorage.mock.calls.at(-1)?.arguments[0];
+        assert.deepStrictEqual(createStorageParams?.urls, relayUrls);
     });
 });

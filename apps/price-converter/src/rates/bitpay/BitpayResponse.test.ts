@@ -1,4 +1,5 @@
-import { describe, expect, test } from 'vitest';
+import assert from 'node:assert/strict';
+import { describe, test } from 'node:test';
 import { BitpayResponse } from './BitpayResponse';
 
 describe('BitpayResponse', () => {
@@ -8,14 +9,15 @@ describe('BitpayResponse', () => {
             extra: true,
         });
 
-        expect(result.ok).toBe(true);
+        assert.strictEqual(result.ok, true);
     });
 
     test('rejects malformed payloads', () => {
-        expect(
+        assert.strictEqual(
             BitpayResponse.fromUnknown({
                 data: [{ code: 'USD', name: '', rate: 50_000 }],
             }).ok,
-        ).toBe(false);
+            false,
+        );
     });
 });

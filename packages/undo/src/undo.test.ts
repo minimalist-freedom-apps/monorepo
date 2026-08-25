@@ -1,4 +1,5 @@
-import { describe, expect, test } from 'vitest';
+import assert from 'node:assert/strict';
+import { describe, test } from 'node:test';
 import { canRedo, canUndo, createUndoState, redo, undo, write } from './undo';
 
 describe(undo.name, () => {
@@ -8,37 +9,37 @@ describe(undo.name, () => {
         state = write({ state, next: 'B' });
         state = write({ state, next: 'C' });
 
-        expect(state).toEqual({
+        assert.deepStrictEqual(state, {
             past: ['A', 'B'],
             present: 'C',
             future: [],
         });
-        expect(canUndo({ state })).toBe(true);
-        expect(canRedo({ state })).toBe(false);
+        assert.strictEqual(canUndo({ state }), true);
+        assert.strictEqual(canRedo({ state }), false);
 
         state = undo({ state });
 
-        expect(state).toEqual({
+        assert.deepStrictEqual(state, {
             past: ['A'],
             present: 'B',
             future: ['C'],
         });
-        expect(canUndo({ state })).toBe(true);
-        expect(canRedo({ state })).toBe(true);
+        assert.strictEqual(canUndo({ state }), true);
+        assert.strictEqual(canRedo({ state }), true);
 
         state = undo({ state });
 
-        expect(state).toEqual({
+        assert.deepStrictEqual(state, {
             past: [],
             present: 'A',
             future: ['B', 'C'],
         });
-        expect(canUndo({ state })).toBe(false);
-        expect(canRedo({ state })).toBe(true);
+        assert.strictEqual(canUndo({ state }), false);
+        assert.strictEqual(canRedo({ state }), true);
 
         state = redo({ state });
 
-        expect(state).toEqual({
+        assert.deepStrictEqual(state, {
             past: ['A'],
             present: 'B',
             future: ['C'],
@@ -53,7 +54,7 @@ describe(undo.name, () => {
 
         state = undo({ state });
 
-        expect(state).toEqual({
+        assert.deepStrictEqual(state, {
             past: [1],
             present: 2,
             future: [3],
@@ -61,11 +62,11 @@ describe(undo.name, () => {
 
         state = write({ state, next: 99 });
 
-        expect(state).toEqual({
+        assert.deepStrictEqual(state, {
             past: [1, 2],
             present: 99,
             future: [],
         });
-        expect(canRedo({ state })).toBe(false);
+        assert.strictEqual(canRedo({ state }), false);
     });
 });

@@ -1,4 +1,5 @@
-import { expect, test } from 'vitest';
+import assert from 'node:assert/strict';
+import { test } from 'node:test';
 import {
     generateAndroidManifest,
     generateBackupRules,
@@ -9,21 +10,21 @@ test('generates an Android manifest with app-data backup disabled', () => {
     const result = generateAndroidManifest();
     const applicationIdPlaceholder = '$' + '{applicationId}';
 
-    expect(result).toContain('android:allowBackup="false"');
-    expect(result).not.toContain('android:allowBackup="true"');
-    expect(result).toContain('android:dataExtractionRules="@xml/data_extraction_rules"');
-    expect(result).toContain('android:fullBackupContent="@xml/backup_rules"');
-    expect(result).toContain(`android:authorities="${applicationIdPlaceholder}.fileprovider"`);
+    assert.ok(result.includes('android:allowBackup="false"'));
+    assert.ok(!result.includes('android:allowBackup="true"'));
+    assert.ok(result.includes('android:dataExtractionRules="@xml/data_extraction_rules"'));
+    assert.ok(result.includes('android:fullBackupContent="@xml/backup_rules"'));
+    assert.ok(result.includes(`android:authorities="${applicationIdPlaceholder}.fileprovider"`));
 });
 
 test('excludes app data from cloud backup and device transfer', () => {
     const dataExtractionRules = generateDataExtractionRules();
     const backupRules = generateBackupRules();
 
-    expect(dataExtractionRules).toContain('<cloud-backup>');
-    expect(dataExtractionRules).toContain('<device-transfer>');
-    expect(dataExtractionRules).toContain('<exclude domain="sharedpref" path="." />');
-    expect(dataExtractionRules).toContain('<exclude domain="database" path="." />');
-    expect(backupRules).toContain('<full-backup-content>');
-    expect(backupRules).toContain('<exclude domain="root" path="." />');
+    assert.ok(dataExtractionRules.includes('<cloud-backup>'));
+    assert.ok(dataExtractionRules.includes('<device-transfer>'));
+    assert.ok(dataExtractionRules.includes('<exclude domain="sharedpref" path="." />'));
+    assert.ok(dataExtractionRules.includes('<exclude domain="database" path="." />'));
+    assert.ok(backupRules.includes('<full-backup-content>'));
+    assert.ok(backupRules.includes('<exclude domain="root" path="." />'));
 });

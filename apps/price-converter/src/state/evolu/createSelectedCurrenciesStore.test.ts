@@ -1,7 +1,8 @@
+import assert from 'node:assert/strict';
+import { describe, mock, test } from 'node:test';
 import { getOrThrow } from '@evolu/common';
 import { CurrencyCode } from '@minimalist-apps/fiat';
 import { asFractionalIndex } from '@minimalist-apps/fractional-indexing';
-import { describe, expect, test, vi } from 'vitest';
 import { createSelectedCurrenciesStore } from './createSelectedCurrenciesStore';
 
 // biome-ignore lint/suspicious/noExplicitAny: test mocks
@@ -20,7 +21,7 @@ const createMockEvolu = (initialCurrency: CurrencyCode) => {
     ];
     let queryListener: (() => void) | undefined;
     const evolu = {
-        subscribeQuery: vi.fn(() => (listener: () => void) => {
+        subscribeQuery: mock.fn(() => (listener: () => void) => {
             queryListener = listener;
 
             return () => {
@@ -29,8 +30,8 @@ const createMockEvolu = (initialCurrency: CurrencyCode) => {
                 }
             };
         }),
-        loadQuery: vi.fn(() => Promise.resolve(rows)),
-        getQueryRows: vi.fn(() => rows),
+        loadQuery: mock.fn(() => Promise.resolve(rows)),
+        getQueryRows: mock.fn(() => rows),
     };
 
     return {
@@ -50,36 +51,36 @@ const createMockEvolu = (initialCurrency: CurrencyCode) => {
 
 describe('createSelectedCurrenciesStore', () => {
     test('defers ensureEvoluStorage call to subscribe/getState time', () => {
-        const ensureEvoluStorage = vi.fn();
+        const ensureEvoluStorage = mock.fn();
 
         createSelectedCurrenciesStore({ ensureEvoluStorage: asAny(ensureEvoluStorage) });
 
-        expect(ensureEvoluStorage).not.toHaveBeenCalled();
+        assert.strictEqual(ensureEvoluStorage.mock.callCount(), 0);
     });
 
     test('calls ensureEvoluStorage when subscribing', () => {
         const query = Symbol('query');
-        const unsubscribe = vi.fn();
-        const listenerRegistrar = vi.fn(() => unsubscribe);
+        const unsubscribe = mock.fn();
+        const listenerRegistrar = mock.fn(() => unsubscribe);
         const evolu = {
-            createQuery: vi.fn(() => query),
-            subscribeQuery: vi.fn(() => listenerRegistrar),
-            loadQuery: vi.fn(() => Promise.resolve([])),
-            getQueryRows: vi.fn(() => []),
+            createQuery: mock.fn(() => query),
+            subscribeQuery: mock.fn(() => listenerRegistrar),
+            loadQuery: mock.fn(() => Promise.resolve([])),
+            getQueryRows: mock.fn(() => []),
         };
         const storage = {
             evolu,
             activeOwner: { id: 'owner-id' },
-            subscribeOwnerChange: vi.fn(() => () => {}),
+            subscribeOwnerChange: mock.fn(() => () => {}),
         };
-        const ensureEvoluStorage = vi.fn(() => Promise.resolve(asAny(storage)));
+        const ensureEvoluStorage = mock.fn(() => Promise.resolve(asAny(storage)));
         const selectedCurrenciesStore = createSelectedCurrenciesStore({
             ensureEvoluStorage: asAny(ensureEvoluStorage),
         });
 
-        selectedCurrenciesStore.subscribe(vi.fn());
+        selectedCurrenciesStore.subscribe(mock.fn());
 
-        expect(ensureEvoluStorage).toHaveBeenCalledOnce();
+        assert.strictEqual(ensureEvoluStorage.mock.callCount(), 1);
     });
 
     test('switches to restored owner currencies and keeps receiving their updates', async () => {
@@ -105,11 +106,14 @@ describe('createSelectedCurrenciesStore', () => {
         const selectedCurrenciesStore = createSelectedCurrenciesStore({
             ensureEvoluStorage: () => Promise.resolve(asAny(storage)),
         });
-        selectedCurrenciesStore.subscribe(vi.fn());
+        selectedCurrenciesStore.subscribe(mock.fn());
         await Promise.resolve();
         await Promise.resolve();
 
-        expect(selectedCurrenciesStore.getState().map(currency => currency.code)).toEqual([USD]);
+        assert.deepStrictEqual(
+            selectedCurrenciesStore.getState().map(currency => currency.code),
+            [USD],
+        );
 
         active = { evolu: restored.evolu, ownerId: 'restored-owner' };
 
@@ -117,12 +121,21 @@ describe('createSelectedCurrenciesStore', () => {
             listener();
         }
 
-        expect(selectedCurrenciesStore.getState().map(currency => currency.code)).toEqual([EUR]);
+        assert.deepStrictEqual(
+            selectedCurrenciesStore.getState().map(currency => currency.code),
+            [EUR],
+        );
 
         restored.emitCurrency(USD);
-        expect(selectedCurrenciesStore.getState().map(currency => currency.code)).toEqual([USD]);
+        assert.deepStrictEqual(
+            selectedCurrenciesStore.getState().map(currency => currency.code),
+            [USD],
+        );
 
         first.emitCurrency(EUR);
-        expect(selectedCurrenciesStore.getState().map(currency => currency.code)).toEqual([USD]);
+        assert.deepStrictEqual(
+            selectedCurrenciesStore.getState().map(currency => currency.code),
+            [USD],
+        );
     });
 });

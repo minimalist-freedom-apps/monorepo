@@ -1,4 +1,5 @@
-import { describe, expect, test } from 'vitest';
+import assert from 'node:assert/strict';
+import { describe, test } from 'node:test';
 import { stripCommas } from './stripCommas';
 
 describe(stripCommas.name, () => {
@@ -11,7 +12,10 @@ describe(stripCommas.name, () => {
         [',,,', '', 'removes all commas'],
     ];
 
-    test.each(testCases)('%s → %s — %s', (input, expected) => {
-        expect(stripCommas(input)).toBe(expected);
-    });
+    for (const testCase of testCases) {
+        test('%s → %s — %s' + ': ' + JSON.stringify(testCase), () => {
+            const [input, expected] = testCase;
+            assert.strictEqual(stripCommas(input), expected);
+        });
+    }
 });

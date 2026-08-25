@@ -3,6 +3,6 @@
     "compilerOptions": {
         "useDefineForClassFields": true,
         "jsx": "react-jsx",
-        "types": ["@testing-library/jest-dom", "vite/client"]
+        "types": ["node", "vite/client"]
     }
 }

@@ -1,4 +1,5 @@
-import { describe, expect, test } from 'vitest';
+import assert from 'node:assert/strict';
+import { describe, test } from 'node:test';
 import { parseEvoluRelayUrls } from './parseEvoluRelayUrls';
 
 describe(parseEvoluRelayUrls.name, () => {
@@ -9,20 +10,22 @@ describe(parseEvoluRelayUrls.name, () => {
             wss://relay-one.example
         `);
 
-        expect(result).toEqual({
+        assert.deepStrictEqual(result, {
             ok: true,
             value: ['wss://relay-one.example', 'ws://localhost:4000/sync'],
         });
     });
 
-    test.each([
+    for (const [input, description] of [
         ['', 'an empty list'],
         ['https://relay.example', 'a non-WebSocket URL'],
         ['wss://relay.example?token=secret', 'a URL with a query'],
         ['wss://relay.example#fragment', 'a URL with a fragment'],
         ['wss://user:secret@relay.example', 'a URL with credentials'],
         ['not a URL', 'an invalid URL'],
-    ])('rejects %s (%s)', input => {
-        expect(parseEvoluRelayUrls(input).ok).toBe(false);
-    });
+    ]) {
+        test(`rejects ${input} (${description})`, () => {
+            assert.strictEqual(parseEvoluRelayUrls(input).ok, false);
+        });
+    }
 });

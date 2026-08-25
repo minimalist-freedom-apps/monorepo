@@ -1,6 +1,7 @@
+import assert from 'node:assert/strict';
+import { describe, test } from 'node:test';
 import { Mnemonic } from '@evolu/common';
 import { createStore } from '@minimalist-apps/mini-store';
-import { describe, expect, test } from 'vitest';
 import { createSetEvoluMnemonic } from './createSetEvoluMnemonic';
 import type { EvoluState } from './evoluState';
 
@@ -33,8 +34,8 @@ describe(createSetEvoluMnemonic.name, () => {
 
         await setEvoluMnemonic(mnemonic);
 
-        expect(statesDuringSave[0]?.evoluMnemonic).toBeNull();
-        expect(store.getState().evoluMnemonic).toBe(mnemonic);
+        assert.strictEqual(statesDuringSave[0]?.evoluMnemonic, null);
+        assert.strictEqual(store.getState().evoluMnemonic, mnemonic);
     });
 
     test('does not update state when secure persistence fails', async () => {
@@ -47,7 +48,10 @@ describe(createSetEvoluMnemonic.name, () => {
             },
         });
 
-        await expect(setEvoluMnemonic(mnemonic)).rejects.toThrow('write failed');
-        expect(store.getState().evoluMnemonic).toBeNull();
+        await assert.rejects(
+            setEvoluMnemonic(mnemonic),
+            (error: unknown) => error instanceof Error && error.message.includes('write failed'),
+        );
+        assert.strictEqual(store.getState().evoluMnemonic, null);
     });
 });

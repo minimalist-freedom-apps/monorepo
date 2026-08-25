@@ -1,4 +1,5 @@
-import { describe, expect, test } from 'vitest';
+import assert from 'node:assert/strict';
+import { describe, test } from 'node:test';
 import { isValidNumberInput } from './isValidNumberInput';
 
 describe(isValidNumberInput.name, () => {
@@ -14,9 +15,11 @@ describe(isValidNumberInput.name, () => {
         ['-1,000.50', 'allows negative number'],
     ];
 
-    test.each(valid)('%s — %s', input => {
-        expect(isValidNumberInput(input)).toBe(true);
-    });
+    for (const [input, description] of valid) {
+        test(`${input} — ${description}`, () => {
+            assert.strictEqual(isValidNumberInput(input), true);
+        });
+    }
 
     const invalid: ReadonlyArray<readonly [string, string]> = [
         ['abc', 'rejects letters'],
@@ -28,7 +31,9 @@ describe(isValidNumberInput.name, () => {
         ['1-2', 'rejects minus not at start'],
     ];
 
-    test.each(invalid)('%s — %s', input => {
-        expect(isValidNumberInput(input)).toBe(false);
-    });
+    for (const [input, description] of invalid) {
+        test(`${input} — ${description}`, () => {
+            assert.strictEqual(isValidNumberInput(input), false);
+        });
+    }
 });

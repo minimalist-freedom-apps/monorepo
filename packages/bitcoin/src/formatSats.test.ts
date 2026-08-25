@@ -1,4 +1,5 @@
-import { describe, expect, test } from 'vitest';
+import assert from 'node:assert/strict';
+import { describe, test } from 'node:test';
 import { formatSats } from './formatSats.js';
 import type { AmountSats } from './types.js';
 
@@ -17,7 +18,10 @@ describe(formatSats.name, () => {
         { input: -1234567.89, expected: '-1,234,567.89' },
     ];
 
-    test.each(testCases)('formats $input to $expected', ({ input, expected }) => {
-        expect(formatSats(input as AmountSats)).toBe(expected);
-    });
+    for (const testCase of testCases) {
+        test('formats $input to $expected' + ': ' + JSON.stringify(testCase), () => {
+            const { input, expected } = testCase;
+            assert.strictEqual(formatSats(input as AmountSats), expected);
+        });
+    }
 });

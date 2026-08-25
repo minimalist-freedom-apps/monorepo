@@ -1,4 +1,5 @@
-import { describe, expect, test } from 'vitest';
+import assert from 'node:assert/strict';
+import { describe, test } from 'node:test';
 import { addThousandSeparators } from './addThousandSeparators';
 
 describe(addThousandSeparators.name, () => {
@@ -15,7 +16,10 @@ describe(addThousandSeparators.name, () => {
         ['-1234', '-1,234', 'handles negative sign'],
     ];
 
-    test.each(testCases)('%s → %s — %s', (input, expected) => {
-        expect(addThousandSeparators(input)).toBe(expected);
-    });
+    for (const testCase of testCases) {
+        test('%s → %s — %s' + ': ' + JSON.stringify(testCase), () => {
+            const [input, expected] = testCase;
+            assert.strictEqual(addThousandSeparators(input), expected);
+        });
+    }
 });

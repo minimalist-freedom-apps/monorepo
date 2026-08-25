@@ -1,14 +1,17 @@
-import { fireEvent, render, screen, waitFor } from '@testing-library/react';
-import { describe, expect, test, vi } from 'vitest';
+import assert from 'node:assert/strict';
+import { afterEach, describe, mock, test } from 'node:test';
+import { cleanup, fireEvent, render, screen, waitFor } from '@testing-library/react';
 import {
     EVOLU_RELAY_SETTINGS_SAVE_BUTTON,
     EVOLU_RELAY_SETTINGS_TEXTAREA,
     EvoluRelaySettingsPure,
 } from './EvoluRelaySettings';
 
+afterEach(cleanup);
+
 describe(EvoluRelaySettingsPure.name, () => {
     test('shows all configured relays', () => {
-        const setEvoluRelayUrls = vi.fn();
+        const setEvoluRelayUrls = mock.fn(async () => undefined);
         const Component = () =>
             EvoluRelaySettingsPure(
                 { setEvoluRelayUrls },
@@ -17,13 +20,14 @@ describe(EvoluRelaySettingsPure.name, () => {
 
         render(<Component />);
 
-        expect(
+        assert.strictEqual(
             (screen.getByTestId(EVOLU_RELAY_SETTINGS_TEXTAREA) as HTMLTextAreaElement).value,
-        ).toBe('wss://one.example\nwss://two.example');
+            'wss://one.example\nwss://two.example',
+        );
     });
 
     test('saves a validated list of relays', async () => {
-        const setEvoluRelayUrls = vi.fn().mockResolvedValue(undefined);
+        const setEvoluRelayUrls = mock.fn(async () => undefined);
         const Component = () =>
             EvoluRelaySettingsPure(
                 { setEvoluRelayUrls },
@@ -39,15 +43,14 @@ describe(EvoluRelaySettingsPure.name, () => {
         fireEvent.click(screen.getByTestId(EVOLU_RELAY_SETTINGS_SAVE_BUTTON));
 
         await waitFor(() => {
-            expect(setEvoluRelayUrls).toHaveBeenCalledWith([
-                'wss://two.example',
-                'wss://three.example',
+            assert.deepStrictEqual(setEvoluRelayUrls.mock.calls.at(-1)?.arguments, [
+                ['wss://two.example', 'wss://three.example'],
             ]);
         });
     });
 
     test('does not allow an invalid relay URL to be saved', () => {
-        const setEvoluRelayUrls = vi.fn();
+        const setEvoluRelayUrls = mock.fn(async () => undefined);
         const Component = () =>
             EvoluRelaySettingsPure(
                 { setEvoluRelayUrls },
@@ -61,9 +64,10 @@ describe(EvoluRelaySettingsPure.name, () => {
             target: { value: 'https://not-a-websocket.example' },
         });
 
-        expect(
+        assert.strictEqual(
             (screen.getByTestId(EVOLU_RELAY_SETTINGS_SAVE_BUTTON) as HTMLButtonElement).disabled,
-        ).toBe(true);
-        expect(setEvoluRelayUrls).not.toHaveBeenCalled();
+            true,
+        );
+        assert.strictEqual(setEvoluRelayUrls.mock.callCount(), 0);
     });
 });

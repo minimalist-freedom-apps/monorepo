@@ -7,16 +7,25 @@ interface IsElementExistingByTestIdProps {
     readonly testId: string;
 }
 
-export const isElementExistingByTestId = ({
-    session,
-    testId,
-}: IsElementExistingByTestIdProps): Promise<boolean> =>
-    runWebViewAction({
-        action: async () => {
-            const browser = await attachWebdriverIoBrowser({ session });
-            const element = await browser.$(`[data-testid="${testId}"]`);
+interface IsElementExistingByTestIdDeps {
+    readonly attachWebdriverIoBrowser: typeof attachWebdriverIoBrowser;
+}
 
-            return element.isExisting();
-        },
-        session,
-    });
+type IsElementExistingByTestId = (props: IsElementExistingByTestIdProps) => Promise<boolean>;
+
+export const createIsElementExistingByTestId =
+    (deps: IsElementExistingByTestIdDeps): IsElementExistingByTestId =>
+    ({ session, testId }) =>
+        runWebViewAction({
+            action: async () => {
+                const browser = await deps.attachWebdriverIoBrowser({ session });
+                const element = await browser.$(`[data-testid="${testId}"]`);
+
+                return element.isExisting();
+            },
+            session,
+        });
+
+export const isElementExistingByTestId = createIsElementExistingByTestId({
+    attachWebdriverIoBrowser,
+});

@@ -1,6 +1,7 @@
-import { render, screen } from '@testing-library/react';
+import assert from 'node:assert/strict';
+import { afterEach, describe, mock, test } from 'node:test';
+import { cleanup, render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
-import { describe, expect, test, vi } from 'vitest';
 import type { NavigatorScreen } from '../../state/State.js';
 import { ADD_CURRENCY_BUTTON_TEST_ID, AddCurrencyButtonPure } from './AddCurrencyButton.js';
 
@@ -8,7 +9,11 @@ interface CreateTestComponentProps {
     readonly navigate?: (screen: NavigatorScreen) => void;
 }
 
-const createTestComponent = ({ navigate = vi.fn() }: CreateTestComponentProps = {}) => {
+afterEach(cleanup);
+
+const createTestComponent = ({
+    navigate = mock.fn<(screen: NavigatorScreen) => void>(),
+}: CreateTestComponentProps = {}) => {
     const deps = { navigate };
     const AddCurrencyButton = () => <>{AddCurrencyButtonPure(deps)}</>;
 
@@ -21,17 +26,17 @@ describe('AddCurrencyButtonPure', () => {
 
         render(<AddCurrencyButton />);
 
-        expect(screen.getByTestId(ADD_CURRENCY_BUTTON_TEST_ID)).toBeInTheDocument();
+        assert.ok(document.body.contains(screen.getByTestId(ADD_CURRENCY_BUTTON_TEST_ID)));
     });
 
     test('calls navigate with AddCurrency on click', async () => {
         const user = userEvent.setup();
-        const navigate = vi.fn();
+        const navigate = mock.fn<(screen: NavigatorScreen) => void>();
         const AddCurrencyButton = createTestComponent({ navigate });
 
         render(<AddCurrencyButton />);
         await user.click(screen.getByTestId(ADD_CURRENCY_BUTTON_TEST_ID));
 
-        expect(navigate).toHaveBeenCalledWith('AddCurrency');
+        assert.deepStrictEqual(navigate.mock.calls.at(-1)?.arguments, ['AddCurrency']);
     });
 });

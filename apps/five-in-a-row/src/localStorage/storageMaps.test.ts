@@ -1,10 +1,11 @@
+import assert from 'node:assert/strict';
+import { describe, test } from 'node:test';
 import { ok } from '@evolu/common';
 import {
     applyMapLocalStorageToState,
     applyMapStateLocalStorage,
 } from '@minimalist-apps/fragment-local-storage';
 import type { LocalStorage } from '@minimalist-apps/local-storage';
-import { describe, expect, test } from 'vitest';
 import { createGameStore } from '../app/game/store/createGameStore';
 import type { AppState } from '../appStore/AppState';
 import {
@@ -41,7 +42,7 @@ describe('storageMaps', () => {
             state: appInitState,
         });
 
-        expect(data).toEqual({
+        assert.deepStrictEqual(data, {
             'test-prefix:themeMode': 'dark',
         });
 
@@ -51,7 +52,7 @@ describe('storageMaps', () => {
             mapLocalStorageToState: mapAppLocalStorageToState,
         });
 
-        expect(state).toEqual({
+        assert.deepStrictEqual(state, {
             themeMode: 'dark',
         });
     });
@@ -75,7 +76,7 @@ describe('storageMaps', () => {
             state: gameInitState,
         });
 
-        expect(data).toEqual({
+        assert.deepStrictEqual(data, {
             'test-prefix:history': JSON.stringify(gameInitState.history),
             'test-prefix:gameMode': 'human',
         });
@@ -86,7 +87,7 @@ describe('storageMaps', () => {
             mapLocalStorageToState: mapGameLocalStorageToState,
         });
 
-        expect(state).toEqual({
+        assert.deepStrictEqual(state, {
             history: gameInitState.history,
             gameMode: 'human',
         });

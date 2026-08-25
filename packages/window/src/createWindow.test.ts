@@ -1,54 +1,66 @@
-import { afterEach, expect, test, vi } from 'vitest';
+import assert from 'node:assert/strict';
+import { test } from 'node:test';
 
 import { createWindow } from './index.js';
 
-afterEach(() => {
-    vi.useRealTimers();
-});
-
-test('runs timeout listener', () => {
-    vi.useFakeTimers();
+test('runs timeout listener', testContext => {
+    testContext.mock.timers.enable({ apis: ['setTimeout'] });
     const window = createWindow();
-    const listener = vi.fn();
+    const listener = testContext.mock.fn();
 
     window.setTimeout(listener, 1000);
-    vi.advanceTimersByTime(1000);
+    testContext.mock.timers.tick(1000);
 
-    expect(listener).toHaveBeenCalledOnce();
+    assert.strictEqual(listener.mock.callCount(), 1);
 });
 
-test('clears timeout listener', () => {
-    vi.useFakeTimers();
+test('clears timeout listener', testContext => {
+    testContext.mock.timers.enable({ apis: ['setTimeout'] });
     const window = createWindow();
-    const listener = vi.fn();
+    const listener = testContext.mock.fn();
 
     const timeoutId = window.setTimeout(listener, 1000);
     window.clearTimeout(timeoutId);
-    vi.advanceTimersByTime(1000);
+    testContext.mock.timers.tick(1000);
 
-    expect(listener).not.toHaveBeenCalled();
+    assert.strictEqual(listener.mock.callCount(), 0);
 });
 
-test('runs interval listener repeatedly', () => {
-    vi.useFakeTimers();
+test('runs interval listener repeatedly', testContext => {
+    testContext.mock.timers.enable({ apis: ['setInterval'] });
+    testContext.mock.method(
+        globalThis.window,
+        'setInterval',
+        (listener: TimerHandler, timeout?: number) =>
+            globalThis.setInterval(listener as () => void, timeout) as unknown as number,
+    );
     const window = createWindow();
-    const listener = vi.fn();
+    const listener = testContext.mock.fn();
 
     window.setInterval(listener, 1000);
-    vi.advanceTimersByTime(3000);
+    testContext.mock.timers.tick(3000);
 
-    expect(listener).toHaveBeenCalledTimes(3);
+    assert.strictEqual(listener.mock.callCount(), 3);
 });
 
-test('clears interval listener', () => {
-    vi.useFakeTimers();
+test('clears interval listener', testContext => {
+    testContext.mock.timers.enable({ apis: ['setInterval'] });
+    testContext.mock.method(
+        globalThis.window,
+        'setInterval',
+        (listener: TimerHandler, timeout?: number) =>
+            globalThis.setInterval(listener as () => void, timeout) as unknown as number,
+    );
+    testContext.mock.method(globalThis.window, 'clearInterval', (intervalId: number) => {
+        globalThis.clearInterval(intervalId);
+    });
     const window = createWindow();
-    const listener = vi.fn();
+    const listener = testContext.mock.fn();
 
     const intervalId = window.setInterval(listener, 1000);
-    vi.advanceTimersByTime(1000);
+    testContext.mock.timers.tick(1000);
     window.clearInterval(intervalId);
-    vi.advanceTimersByTime(2000);
+    testContext.mock.timers.tick(2000);
 
-    expect(listener).toHaveBeenCalledOnce();
+    assert.strictEqual(listener.mock.callCount(), 1);
 });

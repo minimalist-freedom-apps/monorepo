@@ -7,7 +7,7 @@
     "workspaces": {
         ".": {},
         "apps/*": {
-            "entry": ["vitest.e2e.config.ts", "e2e/globalSetup.ts", "e2e/*.e2e.ts"]
+            "entry": ["e2e/globalSetup.ts", "e2e/*.e2e.ts"]
         }
     }
 }

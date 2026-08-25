@@ -14,7 +14,7 @@
         "@minimalist-apps/tsconfig": "workspace:*"
     },
     "scripts": {
-        "test": "vitest run",
+        "test": "node --import=tsx --import=../../test.setup.ts --test --test-concurrency=1 --test-force-exit \"src/**/*.test.ts\" \"src/**/*.test.tsx\"",
         "typecheck": "tsc --noEmit"
     }
 }

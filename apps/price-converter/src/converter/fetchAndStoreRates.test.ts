@@ -1,6 +1,7 @@
+import assert from 'node:assert/strict';
+import { describe, mock, test } from 'node:test';
 import { AbortError, err, getOrThrow, ok, type Result, testCreateRun } from '@evolu/common';
 import { CurrencyCode } from '@minimalist-apps/fiat';
-import { describe, expect, test, vi } from 'vitest';
 import { type CurrencyMap, type FetchRates, FetchRatesError } from '../rates/FetchRates';
 import { createAppStore } from '../state/createAppStore';
 import { createFetchAndStoreRates } from './fetchAndStoreRates';
@@ -56,7 +57,7 @@ describe(createFetchAndStoreRates.name, () => {
         const older = createPendingRateRequest();
         const newer = createPendingRateRequest();
         const fetchRates = createSequentialFetchRates([older, newer]);
-        const recalculateFromBtc = vi.fn();
+        const recalculateFromBtc = mock.fn();
         await using run = testCreateRun();
         const fetchAndStoreRates = createFetchAndStoreRates({
             appStore,
@@ -68,17 +69,17 @@ describe(createFetchAndStoreRates.name, () => {
 
         const olderRefresh = fetchAndStoreRates();
         const newerRefresh = fetchAndStoreRates();
-        expect(older.getSignal()?.aborted).toBe(true);
+        assert.strictEqual(older.getSignal()?.aborted, true);
         newer.resolve(createRates(200));
         await newerRefresh;
         older.resolve(createRates(100));
         await olderRefresh;
 
-        expect(appStore.getState().rates[USD]?.rate).toBe(200);
-        expect(appStore.getState().lastUpdated).toBe(123);
-        expect(appStore.getState().loading).toBe(false);
-        expect(appStore.getState().error).toBe('');
-        expect(recalculateFromBtc).toHaveBeenCalledOnce();
+        assert.strictEqual(appStore.getState().rates[USD]?.rate, 200);
+        assert.strictEqual(appStore.getState().lastUpdated, 123);
+        assert.strictEqual(appStore.getState().loading, false);
+        assert.strictEqual(appStore.getState().error, '');
+        assert.strictEqual(recalculateFromBtc.mock.callCount(), 1);
     });
 
     test('reports unexpected defects without disguising them as domain errors', async () => {
@@ -91,27 +92,24 @@ describe(createFetchAndStoreRates.name, () => {
         const fetchAndStoreRates = createFetchAndStoreRates({
             appStore,
             fetchRates,
-            recalculateFromBtc: vi.fn(),
+            recalculateFromBtc: mock.fn(),
             currentDateTime: () => 200,
             run,
         });
 
-        await expect(fetchAndStoreRates()).resolves.toBeUndefined();
+        assert.strictEqual(await fetchAndStoreRates(), undefined);
 
-        expect(appStore.getState().rates).toBe(existingRates);
-        expect(appStore.getState().lastUpdated).toBe(100);
-        expect(appStore.getState().loading).toBe(false);
-        expect(appStore.getState().error).toBe('');
+        assert.strictEqual(appStore.getState().rates, existingRates);
+        assert.strictEqual(appStore.getState().lastUpdated, 100);
+        assert.strictEqual(appStore.getState().loading, false);
+        assert.strictEqual(appStore.getState().error, '');
 
         const reportedDefect = await run.deps.reportDefect.next();
-        expect(AbortError.is(reportedDefect)).toBe(true);
+        assert.strictEqual(AbortError.is(reportedDefect), true);
 
         if (AbortError.is(reportedDefect)) {
-            expect(reportedDefect.reason.type).toBe('PanicAbortReason');
-
-            if (reportedDefect.reason.type === 'PanicAbortReason') {
-                expect(reportedDefect.reason.defect).toBe(defect);
-            }
+            assert.strictEqual(reportedDefect.reason.type, 'PanicAbortReason');
+            assert.strictEqual(reportedDefect.reason.defect, defect);
         }
     });
 
@@ -122,22 +120,26 @@ describe(createFetchAndStoreRates.name, () => {
         const fetchAndStoreRates = createFetchAndStoreRates({
             appStore,
             fetchRates: () => ok(createRates(100)),
-            recalculateFromBtc: vi.fn(),
+            recalculateFromBtc: mock.fn(),
             currentDateTime: () => 200,
             run,
         });
 
-        await expect(fetchAndStoreRates()).rejects.toThrow('Cannot use a disposed object.');
+        await assert.rejects(
+            fetchAndStoreRates(),
+            (error: unknown) =>
+                error instanceof Error && error.message.includes('Cannot use a disposed object.'),
+        );
 
-        expect(appStore.getState().loading).toBe(false);
-        expect(appStore.getState().error).toBe('');
+        assert.strictEqual(appStore.getState().loading, false);
+        assert.strictEqual(appStore.getState().error, '');
     });
 
     test('preserves the last known-good rates when every source fails', async () => {
         const appStore = createAppStore();
         const existingRates = createRates(100);
         appStore.setState({ rates: existingRates, lastUpdated: 100 });
-        const recalculateFromBtc = vi.fn();
+        const recalculateFromBtc = mock.fn();
         const fetchRates: FetchRates = () => err(FetchRatesError());
         await using run = testCreateRun();
         const fetchAndStoreRates = createFetchAndStoreRates({
@@ -150,10 +152,10 @@ describe(createFetchAndStoreRates.name, () => {
 
         await fetchAndStoreRates();
 
-        expect(appStore.getState().rates).toBe(existingRates);
-        expect(appStore.getState().lastUpdated).toBe(100);
-        expect(appStore.getState().loading).toBe(false);
-        expect(appStore.getState().error).toBe('Failed to fetch rates. Please try again.');
-        expect(recalculateFromBtc).not.toHaveBeenCalled();
+        assert.strictEqual(appStore.getState().rates, existingRates);
+        assert.strictEqual(appStore.getState().lastUpdated, 100);
+        assert.strictEqual(appStore.getState().loading, false);
+        assert.strictEqual(appStore.getState().error, 'Failed to fetch rates. Please try again.');
+        assert.strictEqual(recalculateFromBtc.mock.callCount(), 0);
     });
 });

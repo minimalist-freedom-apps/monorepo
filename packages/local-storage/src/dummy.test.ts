@@ -1,5 +1,6 @@
-import { expect, test } from 'vitest';
+import assert from 'node:assert/strict';
+import { test } from 'node:test';
 
 test('dummy', () => {
-    expect(true).toBe(true);
+    assert.strictEqual(true, true);
 });

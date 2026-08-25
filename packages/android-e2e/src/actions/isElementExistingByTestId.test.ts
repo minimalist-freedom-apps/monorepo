@@ -1,44 +1,30 @@
-import { afterEach, describe, expect, it, vi } from 'vitest';
+import assert from 'node:assert/strict';
+import { describe, test } from 'node:test';
 import type { E2ESession } from '../session';
-
-const actionMocks = vi.hoisted(() => ({
-    attachWebdriverIoBrowser: vi.fn(),
-    findElement: vi.fn(),
-    isExisting: vi.fn(),
-}));
-
-vi.mock('./attachWebdriverIoBrowser.ts', () => ({
-    attachWebdriverIoBrowser: actionMocks.attachWebdriverIoBrowser,
-}));
-
-const { isElementExistingByTestId } = await import('./isElementExistingByTestId');
+import { createIsElementExistingByTestId } from './isElementExistingByTestId';
 
 const session: E2ESession = {
     serverUrl: 'http://localhost:4723',
     sessionId: 'session-id',
-    [Symbol.asyncDispose]: vi.fn(),
+    [Symbol.asyncDispose]: async () => undefined,
 };
 
-afterEach(() => {
-    vi.resetAllMocks();
-});
-
-describe(isElementExistingByTestId.name, () => {
-    it('returns whether the test element exists', async () => {
-        actionMocks.isExisting.mockResolvedValue(true);
-        actionMocks.findElement.mockResolvedValue({
-            isExisting: actionMocks.isExisting,
-        });
-        actionMocks.attachWebdriverIoBrowser.mockResolvedValue({
-            $: actionMocks.findElement,
+describe(createIsElementExistingByTestId.name, () => {
+    test('returns whether the test element exists', async testContext => {
+        const isExisting = testContext.mock.fn(async () => true);
+        const findElement = testContext.mock.fn(async () => ({ isExisting }));
+        const attachWebdriverIoBrowser = testContext.mock.fn(async () => ({ $: findElement }));
+        const isElementExistingByTestId = createIsElementExistingByTestId({
+            attachWebdriverIoBrowser: attachWebdriverIoBrowser as never,
         });
 
-        await expect(
-            isElementExistingByTestId({ session, testId: 'settings-back-button' }),
-        ).resolves.toBe(true);
-
-        expect(actionMocks.findElement).toHaveBeenCalledExactlyOnceWith(
-            '[data-testid="settings-back-button"]',
+        assert.strictEqual(
+            await isElementExistingByTestId({ session, testId: 'settings-back-button' }),
+            true,
         );
+        assert.strictEqual(findElement.mock.callCount(), 1);
+        assert.deepStrictEqual(findElement.mock.calls[0]?.arguments, [
+            '[data-testid="settings-back-button"]',
+        ]);
     });
 });
