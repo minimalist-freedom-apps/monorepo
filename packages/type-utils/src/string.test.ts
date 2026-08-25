@@ -15,12 +15,11 @@ describe(isNonEmpty.name, () => {
         { input: undefined, expected: false },
     ];
 
-    for (const testCase of testCases) {
-        test('returns $expected for $input' + ': ' + JSON.stringify(testCase), () => {
-            const { input, expected } = testCase;
+    testCases.forEach(({ input, expected }) => {
+        test(`returns ${expected} for ${String(input)}`, () => {
             assert.strictEqual(isNonEmpty(input), expected);
         });
-    }
+    });
 
     test('narrows string | null | undefined to string', () => {
         const value: string | null | undefined = 'test';

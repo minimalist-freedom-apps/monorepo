@@ -4,7 +4,7 @@ import { createEmptyBoard } from './createRootSnapshot';
 import { findWinner, type GameBoard, getNextPlayer, isBoardFull } from './game';
 
 describe(getNextPlayer.name, () => {
-    for (const testCase of [
+    [
         {
             label: 'toggles from cross to ring',
             player: 'cross' as const,
@@ -15,16 +15,15 @@ describe(getNextPlayer.name, () => {
             player: 'ring' as const,
             expected: 'cross' as const,
         },
-    ]) {
-        test('$label' + ': ' + JSON.stringify(testCase), () => {
-            const { player, expected } = testCase;
+    ].forEach(({ label, player, expected }) => {
+        test(label, () => {
             assert.strictEqual(getNextPlayer({ player }), expected);
         });
-    }
+    });
 });
 
 describe(isBoardFull.name, () => {
-    for (const testCase of [
+    [
         {
             label: 'returns false if at least one cell is empty',
             board: ['cross', null] as GameBoard,
@@ -35,16 +34,15 @@ describe(isBoardFull.name, () => {
             board: ['cross', 'ring'] as GameBoard,
             expected: true,
         },
-    ]) {
-        test('$label' + ': ' + JSON.stringify(testCase), () => {
-            const { board, expected } = testCase;
+    ].forEach(({ label, board, expected }) => {
+        test(label, () => {
             assert.strictEqual(isBoardFull({ board }), expected);
         });
-    }
+    });
 });
 
 describe(findWinner.name, () => {
-    for (const testCase of [
+    [
         {
             label: 'detects horizontal winner on 10x10 board',
             size: 10,
@@ -110,11 +108,10 @@ describe(findWinner.name, () => {
             lastMoveIndex: 4,
             expected: null,
         },
-    ]) {
-        test('$label' + ': ' + JSON.stringify(testCase), () => {
-            const { size, boardBuilder, lastMoveIndex, expected } = testCase;
+    ].forEach(({ label, size, boardBuilder, lastMoveIndex, expected }) => {
+        test(label, () => {
             const board = boardBuilder();
             assert.deepStrictEqual(findWinner({ board, size, lastMoveIndex }), expected);
         });
-    }
+    });
 });

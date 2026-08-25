@@ -3,9 +3,8 @@ import { describe, mock, test } from 'node:test';
 import { createCapacitorSecureStorage } from './createCapacitorSecureStorage';
 
 describe(createCapacitorSecureStorage.name, () => {
-    for (const testCase of ['android', 'ios'] as const) {
-        test('delegates persistence on %s' + ': ' + JSON.stringify(testCase), async () => {
-            const platform = testCase;
+    (['android', 'ios'] as const).forEach(platform => {
+        test(`delegates persistence on ${platform}`, async () => {
             const nativeStorage = {
                 getItem: mock.fn(async () => 'secret'),
                 setItem: mock.fn(async () => undefined),
@@ -21,7 +20,7 @@ describe(createCapacitorSecureStorage.name, () => {
                 'new-secret',
             ]);
         });
-    }
+    });
 
     test('refuses the Capacitor plugin plaintext web fallback', () => {
         const nativeStorage = {

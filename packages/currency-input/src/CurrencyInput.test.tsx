@@ -83,41 +83,34 @@ describe(CurrencyInputPure.name, () => {
         assert.ok(document.body.contains(screen.getByDisplayValue('12,345,678,912,345,678')));
     });
 
-    for (const testCase of [
+    [
         { value: '-', finalValue: '' },
         { value: '0', finalValue: '0' },
         { value: '1,234', finalValue: '1,234' },
-    ]) {
-        test(
-            'de-focus does not change currency (input: $value)' + ': ' + JSON.stringify(testCase),
-            () => {
-                const { value, finalValue } = testCase;
-                const initial = createCurrencyInput({
-                    mode: 'btc',
-                    focusedCurrency: 'BTC',
-                    value: 0,
-                    code: 'BTC',
-                });
-                const { rerender } = render(<initial.TestCurrencyInput />);
-                const input = screen.getByRole('textbox');
-                fireEvent.change(input, { target: { value } });
-                assert.strictEqual((input as HTMLInputElement).value, value);
-                const defocused = createCurrencyInput({
-                    mode: 'btc',
-                    focusedCurrency: 'USD' as CurrencyCode,
-                    value: 0,
-                    code: 'BTC',
-                });
-                rerender(<defocused.TestCurrencyInput />);
-                assert.strictEqual(
-                    (screen.getByRole('textbox') as HTMLInputElement).value,
-                    finalValue,
-                );
-            },
-        );
-    }
+    ].forEach(({ value, finalValue }) => {
+        test(`de-focus does not change currency (input: ${value})`, () => {
+            const initial = createCurrencyInput({
+                mode: 'btc',
+                focusedCurrency: 'BTC',
+                value: 0,
+                code: 'BTC',
+            });
+            const { rerender } = render(<initial.TestCurrencyInput />);
+            const input = screen.getByRole('textbox');
+            fireEvent.change(input, { target: { value } });
+            assert.strictEqual((input as HTMLInputElement).value, value);
+            const defocused = createCurrencyInput({
+                mode: 'btc',
+                focusedCurrency: 'USD' as CurrencyCode,
+                value: 0,
+                code: 'BTC',
+            });
+            rerender(<defocused.TestCurrencyInput />);
+            assert.strictEqual((screen.getByRole('textbox') as HTMLInputElement).value, finalValue);
+        });
+    });
 
-    for (const testCase of [
+    [
         { value: '0', finalValue: '0' },
         { value: '-', finalValue: '-' },
         { value: '-1', finalValue: '-1' },
@@ -128,25 +121,21 @@ describe(CurrencyInputPure.name, () => {
         { value: '1234.56', finalValue: '1,234.56' },
         { value: '0.234', finalValue: '0.23,4' },
         { value: '0.1234456789', finalValue: '0.12,345,678' },
-    ]) {
-        test(
-            'typing rules for focused BTC (input: $value)' + ': ' + JSON.stringify(testCase),
-            () => {
-                const { value, finalValue } = testCase;
-                const { TestCurrencyInput } = createCurrencyInput({
-                    mode: 'btc',
-                    focusedCurrency: 'BTC',
-                    code: 'BTC',
-                });
-                render(<TestCurrencyInput />);
-                const input = screen.getByRole('textbox');
-                fireEvent.change(input, { target: { value } });
-                assert.strictEqual((input as HTMLInputElement).value, finalValue);
-            },
-        );
-    }
+    ].forEach(({ value, finalValue }) => {
+        test(`typing rules for focused BTC (input: ${value})`, () => {
+            const { TestCurrencyInput } = createCurrencyInput({
+                mode: 'btc',
+                focusedCurrency: 'BTC',
+                code: 'BTC',
+            });
+            render(<TestCurrencyInput />);
+            const input = screen.getByRole('textbox');
+            fireEvent.change(input, { target: { value } });
+            assert.strictEqual((input as HTMLInputElement).value, finalValue);
+        });
+    });
 
-    for (const testCase of [
+    [
         { value: '0', finalValue: '0' },
         { value: '-', finalValue: '-' },
         { value: '-1', finalValue: '-1' },
@@ -159,25 +148,21 @@ describe(CurrencyInputPure.name, () => {
         { value: '1,234,567,900.123', finalValue: '1,234,567,900.123' },
         { value: '0.234', finalValue: '0.234' },
         { value: '1.2345', finalValue: '1.234' },
-    ]) {
-        test(
-            'typing rules for focused SATS (input: $value)' + ': ' + JSON.stringify(testCase),
-            () => {
-                const { value, finalValue } = testCase;
-                const { TestCurrencyInput } = createCurrencyInput({
-                    mode: 'sats',
-                    focusedCurrency: 'BTC',
-                    code: 'BTC',
-                });
-                render(<TestCurrencyInput />);
-                const input = screen.getByRole('textbox');
-                fireEvent.change(input, { target: { value } });
-                assert.strictEqual((input as HTMLInputElement).value, finalValue);
-            },
-        );
-    }
+    ].forEach(({ value, finalValue }) => {
+        test(`typing rules for focused SATS (input: ${value})`, () => {
+            const { TestCurrencyInput } = createCurrencyInput({
+                mode: 'sats',
+                focusedCurrency: 'BTC',
+                code: 'BTC',
+            });
+            render(<TestCurrencyInput />);
+            const input = screen.getByRole('textbox');
+            fireEvent.change(input, { target: { value } });
+            assert.strictEqual((input as HTMLInputElement).value, finalValue);
+        });
+    });
 
-    for (const testCase of [
+    [
         { value: '0', finalValue: '0' },
         { value: '-', finalValue: '-' },
         { value: '-1', finalValue: '-1' },
@@ -186,26 +171,20 @@ describe(CurrencyInputPure.name, () => {
         { value: '1234.56', finalValue: '1,234.56' },
         { value: '1,234.', finalValue: '1,234.' },
         { value: '1234.5678', finalValue: '1,234.568' },
-    ]) {
-        test(
-            'typing rules for focused fiat currency (input: $value)' +
-                ': ' +
-                JSON.stringify(testCase),
-            () => {
-                const { value, finalValue } = testCase;
-                const { TestCurrencyInput } = createCurrencyInput({
-                    code: 'USD' as CurrencyCode,
-                    focusedCurrency: 'USD' as CurrencyCode,
-                });
-                render(<TestCurrencyInput />);
-                const input = screen.getByRole('textbox');
-                fireEvent.change(input, { target: { value } });
-                assert.strictEqual((input as HTMLInputElement).value, finalValue);
-            },
-        );
-    }
+    ].forEach(({ value, finalValue }) => {
+        test(`typing rules for focused fiat currency (input: ${value})`, () => {
+            const { TestCurrencyInput } = createCurrencyInput({
+                code: 'USD' as CurrencyCode,
+                focusedCurrency: 'USD' as CurrencyCode,
+            });
+            render(<TestCurrencyInput />);
+            const input = screen.getByRole('textbox');
+            fireEvent.change(input, { target: { value } });
+            assert.strictEqual((input as HTMLInputElement).value, finalValue);
+        });
+    });
 
-    for (const testCase of [
+    [
         {
             it: "adding a ',' after adding digit to the end shifts cursor right to stay after the same digit",
             initial: { value: '123', start: 3, end: 3 },
@@ -236,9 +215,8 @@ describe(CurrencyInputPure.name, () => {
             // Cursors is moved after written 1 => "12,345,678.1|1,234,567" and last precision value is dropped
             final: { value: '12,345,678.11,234,567', start: 12, end: 12 },
         },
-    ]) {
-        test('$it' + ': ' + JSON.stringify(testCase), () => {
-            const { initial, change, final } = testCase;
+    ].forEach(({ it, initial, change, final }) => {
+        test(it, () => {
             const { TestCurrencyInput } = createCurrencyInput({
                 code: 'BTC' as CurrencyCode,
                 focusedCurrency: 'BTC' as CurrencyCode,
@@ -264,5 +242,5 @@ describe(CurrencyInputPure.name, () => {
             assert.strictEqual(input.selectionStart, final.start);
             assert.strictEqual(input.selectionEnd, final.end);
         });
-    }
+    });
 });

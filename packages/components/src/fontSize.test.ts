@@ -18,13 +18,9 @@ describe(decreaseFontSize.name, () => {
         { fontSize: 'large', steps: 0, expected: 'large' },
     ] as const;
 
-    for (const testCase of dataProvider) {
-        test(
-            'returns $expected for $fontSize decreased by $steps' + ': ' + JSON.stringify(testCase),
-            () => {
-                const value = testCase;
-                assert.strictEqual(decreaseFontSize(value.fontSize, value.steps), value.expected);
-            },
-        );
-    }
+    dataProvider.forEach(({ fontSize, steps, expected }) => {
+        test(`returns ${expected} for ${fontSize} decreased by ${steps}`, () => {
+            assert.strictEqual(decreaseFontSize(fontSize, steps), expected);
+        });
+    });
 });

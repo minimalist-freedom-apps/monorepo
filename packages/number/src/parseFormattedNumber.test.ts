@@ -13,10 +13,9 @@ describe(parseFormattedNumber.name, () => {
         ['0.5', 0.5, 'parses decimal'],
     ];
 
-    for (const testCase of testCases) {
-        test('%s → %s — %s' + ': ' + JSON.stringify(testCase), () => {
-            const [input, expected] = testCase;
+    testCases.forEach(([input, expected, description]) => {
+        test(`${input} → ${expected} — ${description}`, () => {
             assert.strictEqual(parseFormattedNumber(input), expected);
         });
-    }
+    });
 });

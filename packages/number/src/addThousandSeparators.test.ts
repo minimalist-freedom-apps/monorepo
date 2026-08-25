@@ -16,10 +16,9 @@ describe(addThousandSeparators.name, () => {
         ['-1234', '-1,234', 'handles negative sign'],
     ];
 
-    for (const testCase of testCases) {
-        test('%s → %s — %s' + ': ' + JSON.stringify(testCase), () => {
-            const [input, expected] = testCase;
+    testCases.forEach(([input, expected, description]) => {
+        test(`${input} → ${expected} — ${description}`, () => {
             assert.strictEqual(addThousandSeparators(input), expected);
         });
-    }
+    });
 });
