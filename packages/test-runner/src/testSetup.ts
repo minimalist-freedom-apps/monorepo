@@ -1,6 +1,6 @@
 import { registerHooks } from 'node:module';
 import { JSDOM } from 'jsdom';
-import React from 'react';
+import { createElement, Fragment } from 'react';
 
 registerHooks({
     load: (url, context, nextLoad) =>
@@ -23,13 +23,12 @@ Object.defineProperty(dom.window.navigator, 'locks', {
     value: nativeLockManager,
 });
 
-const installGlobal = ({
-    name,
-    value,
-}: {
+interface InstallGlobalProps {
     readonly name: string;
     readonly value: unknown;
-}): void => {
+}
+
+const installGlobal = ({ name, value }: InstallGlobalProps): void => {
     Object.defineProperty(globalThis, name, {
         configurable: true,
         writable: true,
@@ -54,7 +53,7 @@ installGlobal({ name: 'getComputedStyle', value: dom.window.getComputedStyle.bin
 installGlobal({ name: 'localStorage', value: dom.window.localStorage });
 installGlobal({ name: 'sessionStorage', value: dom.window.sessionStorage });
 installGlobal({ name: 'IS_REACT_ACT_ENVIRONMENT', value: true });
-installGlobal({ name: 'React', value: React });
+installGlobal({ name: 'React', value: { createElement, Fragment } });
 
 for (const name of Object.getOwnPropertyNames(dom.window)) {
     if (name in globalThis) {

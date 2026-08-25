@@ -13,7 +13,7 @@
         "@types/node": "^24.13.3"
     },
     "scripts": {
-        "test": "node --import=tsx --import=../../test.setup.ts --test --test-concurrency=1 --test-force-exit \"src/**/*.test.ts\" \"src/**/*.test.tsx\"",
+        "test": "minimalist-test",
         "typecheck": "tsc --noEmit"
     }
 }

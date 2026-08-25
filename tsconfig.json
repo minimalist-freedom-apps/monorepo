@@ -1,8 +1,4 @@
 {
     "extends": "@minimalist-apps/tsconfig/base.json",
-    "compilerOptions": {
-        "jsx": "react-jsx",
-        "types": ["node"]
-    },
-    "include": ["test.setup.ts"]
+    "include": ["packages/test-runner/src"]
 }
