@@ -7,7 +7,10 @@
     "workspaces": {
         ".": {},
         "apps/*": {
-            "entry": ["e2e/globalSetup.ts", "e2e/*.e2e.ts"]
+            "entry": ["src/**/*.test.{ts,tsx}", "e2e/{globalSetup.ts,*.e2e.ts}"]
+        },
+        "packages/*": {
+            "entry": ["src/**/*.test.{ts,tsx}"]
         }
     }
 }

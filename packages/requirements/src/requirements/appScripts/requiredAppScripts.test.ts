@@ -69,7 +69,7 @@ describe(requiredAppScripts.name, () => {
                 'build:android:sign':
                     'APP_DIR=$PWD pnpm --filter @minimalist-apps/android-build sign',
                 preview: 'vite preview',
-                test: 'node --import=tsx --import=../../test.setup.ts --test --test-concurrency=1 --test-force-exit "src/**/*.test.ts" "src/**/*.test.tsx"',
+                test: 'minimalist-test',
                 typecheck: 'tsc --noEmit',
             });
         });
@@ -233,7 +233,7 @@ describe(requiredAppScripts.name, () => {
             const pkg = readPackageJson({ dir: packageDir });
             assert.deepStrictEqual(pkg.scripts, {
                 lint: 'eslint .',
-                test: 'node --import=tsx --import=../../test.setup.ts --test --test-concurrency=1 --test-force-exit "src/**/*.test.ts" "src/**/*.test.tsx"',
+                test: 'minimalist-test',
                 typecheck: 'tsc --noEmit',
             });
         });
@@ -289,7 +289,7 @@ describe(requiredAppScripts.name, () => {
                 content: {
                     name: '@minimalist-apps/demo-package',
                     scripts: {
-                        test: 'node --import=tsx --import=../../test.setup.ts --test --test-concurrency=1 --test-force-exit "src/**/*.test.ts" "src/**/*.test.tsx"',
+                        test: 'minimalist-test',
                         lint: 'eslint .',
                     },
                 },
@@ -305,7 +305,7 @@ describe(requiredAppScripts.name, () => {
                 content: {
                     name: '@minimalist-apps/demo-package',
                     scripts: {
-                        test: 'node --import=tsx --import=../../test.setup.ts --test --test-concurrency=1 --test-force-exit "src/**/*.test.ts" "src/**/*.test.tsx"',
+                        test: 'minimalist-test',
                         typecheck: 'tsc --pretty --noEmit',
                     },
                 },
@@ -331,7 +331,7 @@ describe(requiredAppScripts.name, () => {
 
             const errors = requiredAppScripts.verify({ appDir: packageDir });
             assert.deepStrictEqual(errors, [
-                'script "test" value mismatch — expected "node --import=tsx --import=../../test.setup.ts --test --test-concurrency=1 --test-force-exit "src/**/*.test.ts" "src/**/*.test.tsx"", found "jest"',
+                'script "test" value mismatch — expected "minimalist-test", found "jest"',
             ]);
         });
 
@@ -341,7 +341,7 @@ describe(requiredAppScripts.name, () => {
                 content: {
                     name: '@minimalist-apps/demo-package',
                     scripts: {
-                        test: 'node --import=tsx --import=../../test.setup.ts --test --test-concurrency=1 --test-force-exit "src/**/*.test.ts" "src/**/*.test.tsx"',
+                        test: 'minimalist-test',
                         typecheck: 'tsc --noEmit',
                         lint: 'eslint .',
                     },
