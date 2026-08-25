@@ -54,9 +54,8 @@ describe(calculateCircle.name, () => {
         },
     ];
 
-    for (const testCase of testCases) {
-        test('$description' + ': ' + JSON.stringify(testCase), () => {
-            const { amount, originalDiameter, newDiameter, expected } = testCase;
+    testCases.forEach(({ description, amount, originalDiameter, newDiameter, expected }) => {
+        test(description, () => {
             const result = calculateCircle({ amount, originalDiameter, newDiameter });
 
             if (expected === null) {
@@ -68,5 +67,5 @@ describe(calculateCircle.name, () => {
                 assert.ok(Math.abs(result - expected) < 10 ** -1 / 2);
             }
         });
-    }
+    });
 });

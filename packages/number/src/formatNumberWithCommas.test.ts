@@ -27,13 +27,9 @@ describe(formatNumberWithCommas.name, () => {
         { value: 1.123456, precision: 5, expected: '1.12346', label: 'respects precision 5' },
     ];
 
-    for (const testCase of testCases) {
-        test(
-            '$label ($value, precision=$precision → $expected)' + ': ' + JSON.stringify(testCase),
-            () => {
-                const { value, precision, expected } = testCase;
-                assert.strictEqual(formatNumberWithCommas({ value, precision }), expected);
-            },
-        );
-    }
+    testCases.forEach(({ label, value, precision, expected }) => {
+        test(`${label} (${value}, precision=${precision} → ${expected})`, () => {
+            assert.strictEqual(formatNumberWithCommas({ value, precision }), expected);
+        });
+    });
 });

@@ -15,11 +15,11 @@ describe(isValidNumberInput.name, () => {
         ['-1,000.50', 'allows negative number'],
     ];
 
-    for (const [input, description] of valid) {
+    valid.forEach(([input, description]) => {
         test(`${input} — ${description}`, () => {
             assert.strictEqual(isValidNumberInput(input), true);
         });
-    }
+    });
 
     const invalid: ReadonlyArray<readonly [string, string]> = [
         ['abc', 'rejects letters'],
@@ -31,9 +31,9 @@ describe(isValidNumberInput.name, () => {
         ['1-2', 'rejects minus not at start'],
     ];
 
-    for (const [input, description] of invalid) {
+    invalid.forEach(([input, description]) => {
         test(`${input} — ${description}`, () => {
             assert.strictEqual(isValidNumberInput(input), false);
         });
-    }
+    });
 });

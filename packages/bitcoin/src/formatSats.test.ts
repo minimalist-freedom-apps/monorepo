@@ -18,10 +18,9 @@ describe(formatSats.name, () => {
         { input: -1234567.89, expected: '-1,234,567.89' },
     ];
 
-    for (const testCase of testCases) {
-        test('formats $input to $expected' + ': ' + JSON.stringify(testCase), () => {
-            const { input, expected } = testCase;
+    testCases.forEach(({ input, expected }) => {
+        test(`formats ${input} to ${expected}`, () => {
             assert.strictEqual(formatSats(input as AmountSats), expected);
         });
-    }
+    });
 });

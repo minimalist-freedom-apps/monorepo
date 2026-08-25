@@ -22,10 +22,9 @@ describe(compareFractionalIndex.name, () => {
         ],
     ];
 
-    for (const testCase of cases) {
-        test('%s' + ': ' + JSON.stringify(testCase), () => {
-            const [_, a, b, expected] = testCase;
+    cases.forEach(([description, a, b, expected]) => {
+        test(description, () => {
             assert.strictEqual(compareFractionalIndex(a, b), expected);
         });
-    }
+    });
 });

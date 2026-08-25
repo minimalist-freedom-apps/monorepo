@@ -16,16 +16,16 @@ describe(parseEvoluRelayUrls.name, () => {
         });
     });
 
-    for (const [input, description] of [
+    [
         ['', 'an empty list'],
         ['https://relay.example', 'a non-WebSocket URL'],
         ['wss://relay.example?token=secret', 'a URL with a query'],
         ['wss://relay.example#fragment', 'a URL with a fragment'],
         ['wss://user:secret@relay.example', 'a URL with credentials'],
         ['not a URL', 'an invalid URL'],
-    ]) {
+    ].forEach(([input, description]) => {
         test(`rejects ${input} (${description})`, () => {
             assert.strictEqual(parseEvoluRelayUrls(input).ok, false);
         });
-    }
+    });
 });

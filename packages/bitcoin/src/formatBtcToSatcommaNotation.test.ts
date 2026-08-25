@@ -25,10 +25,9 @@ describe(formatBtcToSatcommaNotation.name, () => {
         { input: -1.23456789, expected: '-1.23,456,789' },
     ];
 
-    for (const testCase of testCases) {
-        test('formats $input to $expected' + ': ' + JSON.stringify(testCase), () => {
-            const { input, expected } = testCase;
+    testCases.forEach(({ input, expected }) => {
+        test(`formats ${input} to ${expected}`, () => {
             assert.strictEqual(formatBtcToSatcommaNotation(input as AmountBtc), expected);
         });
-    }
+    });
 });

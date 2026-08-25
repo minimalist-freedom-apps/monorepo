@@ -126,19 +126,15 @@ describe('fetchBitpayRates', () => {
         });
     });
 
-    for (const testCase of [0, -1, Number.NaN, Number.MIN_VALUE, Number.POSITIVE_INFINITY]) {
-        test(
-            'returns FetchRatesError for invalid rate %s' + ': ' + JSON.stringify(testCase),
-            async () => {
-                const rate = testCase;
-                const { result } = await runWithResponse({
-                    data: [{ code: 'USD', name: 'US Dollar', rate }],
-                });
-                assert.deepStrictEqual(result, {
-                    ok: false,
-                    error: { type: 'FetchRatesError' },
-                });
-            },
-        );
-    }
+    [0, -1, Number.NaN, Number.MIN_VALUE, Number.POSITIVE_INFINITY].forEach(rate => {
+        test(`returns FetchRatesError for invalid rate ${rate}`, async () => {
+            const { result } = await runWithResponse({
+                data: [{ code: 'USD', name: 'US Dollar', rate }],
+            });
+            assert.deepStrictEqual(result, {
+                ok: false,
+                error: { type: 'FetchRatesError' },
+            });
+        });
+    });
 });

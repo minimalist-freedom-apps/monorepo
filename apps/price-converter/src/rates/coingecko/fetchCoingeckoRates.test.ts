@@ -29,19 +29,24 @@ describe('fetchCoingeckoRates', () => {
         assert.strictEqual(result.value[USD]?.rate, 1 / 50_000);
     });
 
-    for (const testCase of [
-        null,
-        { rates: null },
-        { rates: { usd: null } },
-        { rates: { usd: { name: 'US Dollar', type: 'fiat', value: 0 } } },
-        { rates: { usd: { name: 1, type: 'fiat', value: 50_000 } } },
-    ]) {
-        test('rejects malformed payload %#' + ': ' + JSON.stringify(testCase), async () => {
-            const payload = testCase;
+    [
+        { description: 'null root', payload: null },
+        { description: 'null rates', payload: { rates: null } },
+        { description: 'null currency entry', payload: { rates: { usd: null } } },
+        {
+            description: 'zero rate',
+            payload: { rates: { usd: { name: 'US Dollar', type: 'fiat', value: 0 } } },
+        },
+        {
+            description: 'non-string currency name',
+            payload: { rates: { usd: { name: 1, type: 'fiat', value: 50_000 } } },
+        },
+    ].forEach(({ description, payload }) => {
+        test(`rejects malformed payload with ${description}`, async () => {
             assert.deepStrictEqual(await runWithPayload(payload), {
                 ok: false,
                 error: { type: 'FetchRatesError' },
             });
         });
-    }
+    });
 });

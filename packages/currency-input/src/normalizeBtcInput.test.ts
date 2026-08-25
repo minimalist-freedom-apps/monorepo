@@ -45,12 +45,11 @@ describe(normalizeBtcInput.name, () => {
         },
     ];
 
-    for (const testCase of testCases) {
-        test('$label ($input → $display)' + ': ' + JSON.stringify(testCase), () => {
-            const { input, display, numeric } = testCase;
+    testCases.forEach(({ label, input, display, numeric }) => {
+        test(`${label} (${input} → ${display})`, () => {
             const result = normalizeBtcInput(input);
             assert.strictEqual(result.display, display);
             assert.strictEqual(result.numeric, numeric);
         });
-    }
+    });
 });

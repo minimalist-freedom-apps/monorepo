@@ -198,12 +198,11 @@ describe(buildPlayerLineScore.name, () => {
         },
     ] as const;
 
-    for (const testCase of dataProvider) {
-        test('scores $description as $expected' + ': ' + JSON.stringify(testCase), () => {
-            const { asciiArt, expected } = testCase;
+    dataProvider.forEach(({ description, asciiArt, expected }) => {
+        test(`scores ${description} as ${expected}`, () => {
             const snapshot = createSnapshotFromAsciiArt(asciiArt);
             const score = buildPlayerLineScore({ snapshot, player: 'cross' });
             assert.strictEqual(score, expected);
         });
-    }
+    });
 });

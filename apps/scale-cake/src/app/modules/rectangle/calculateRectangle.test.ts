@@ -77,9 +77,8 @@ describe(calculateRectangle.name, () => {
         },
     ];
 
-    for (const testCase of testCases) {
-        test('$description' + ': ' + JSON.stringify(testCase), () => {
-            const { amount, originalA, originalB, newA, newB, expected } = testCase;
+    testCases.forEach(({ description, amount, originalA, originalB, newA, newB, expected }) => {
+        test(description, () => {
             const result = calculateRectangle({
                 amount,
                 originalA,
@@ -97,5 +96,5 @@ describe(calculateRectangle.name, () => {
                 assert.ok(Math.abs(result - expected) < 10 ** -1 / 2);
             }
         });
-    }
+    });
 });
