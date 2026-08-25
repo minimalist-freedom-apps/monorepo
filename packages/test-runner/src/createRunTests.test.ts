@@ -1,6 +1,5 @@
 import assert from 'node:assert/strict';
 import { describe, test } from 'node:test';
-import { pathToFileURL } from 'node:url';
 import {
     createRunTests,
     parseTestRunnerArguments,
@@ -84,7 +83,7 @@ describe(createRunTests.name, () => {
             '--import=tsx',
             '--test',
             '--test-concurrency=1',
-            `--test-global-setup=${pathToFileURL(`${cwd}/e2e/globalSetup.ts`).href}`,
+            `--test-global-setup=${cwd}/e2e/globalSetup.ts`,
             'e2e/*.e2e.ts',
         ]);
     });
