@@ -1,13 +1,11 @@
 import assert from 'node:assert/strict';
-import { afterEach, describe, mock, test } from 'node:test';
-import { cleanup, fireEvent, render, screen, waitFor } from '@testing-library/react';
+import { describe, mock, test } from 'node:test';
+import { fireEvent, render, screen, waitFor } from '@testing-library/react';
 import {
     EVOLU_RELAY_SETTINGS_SAVE_BUTTON,
     EVOLU_RELAY_SETTINGS_TEXTAREA,
     EvoluRelaySettingsPure,
 } from './EvoluRelaySettings';
-
-afterEach(cleanup);
 
 describe(EvoluRelaySettingsPure.name, () => {
     test('shows all configured relays', () => {

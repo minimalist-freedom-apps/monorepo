@@ -1,10 +1,8 @@
 import assert from 'node:assert/strict';
-import { afterEach, describe, mock, test } from 'node:test';
+import { describe, mock, test } from 'node:test';
 import { DebugSettingsPure } from '@minimalist-apps/fragment-debug';
-import { cleanup, render, screen } from '@testing-library/react';
+import { render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
-
-afterEach(cleanup);
 
 const createTestComponent = (debugMode: boolean) => {
     const setDebugMode = mock.fn();

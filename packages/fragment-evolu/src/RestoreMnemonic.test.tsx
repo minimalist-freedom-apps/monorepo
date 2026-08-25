@@ -1,6 +1,6 @@
 import assert from 'node:assert/strict';
-import { afterEach, describe, mock, test } from 'node:test';
-import { act, cleanup, fireEvent, render, screen } from '@testing-library/react';
+import { describe, mock, test } from 'node:test';
+import { act, fireEvent, render, screen } from '@testing-library/react';
 import {
     RESTORE_MNEMONIC_ERROR,
     RESTORE_MNEMONIC_INPUT,
@@ -8,8 +8,6 @@ import {
     RESTORE_MNEMONIC_OPEN_BUTTON,
     RestoreMnemonic,
 } from './RestoreMnemonic';
-
-afterEach(cleanup);
 
 const validMnemonic = 'legal winner thank year wave sausage worth useful legal winner thank yellow';
 

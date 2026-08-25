@@ -7,8 +7,10 @@
         "minimalist-test": "./src/runTestsCli.ts"
     },
     "dependencies": {
+        "@testing-library/react": "^16.3.2",
         "jsdom": "^30.0.1",
-        "react": "^19.2.8"
+        "react": "^19.2.8",
+        "react-dom": "^19.2.8"
     },
     "scripts": {
         "test": "minimalist-test",
@@ -19,6 +21,7 @@
         "@types/jsdom": "^27.0.0",
         "@types/node": "^24.13.3",
         "@types/react": "^19.2.18",
+        "@types/react-dom": "^19.2.4",
         "typescript": "^7.0.2"
     }
 }

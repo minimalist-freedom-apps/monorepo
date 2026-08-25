@@ -1,6 +1,6 @@
 import assert from 'node:assert/strict';
-import { afterEach, describe, mock, test } from 'node:test';
-import { cleanup, render, screen } from '@testing-library/react';
+import { describe, mock, test } from 'node:test';
+import { render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import type { NavigatorScreen } from '../../state/State.js';
 import { ADD_CURRENCY_BUTTON_TEST_ID, AddCurrencyButtonPure } from './AddCurrencyButton.js';
@@ -8,8 +8,6 @@ import { ADD_CURRENCY_BUTTON_TEST_ID, AddCurrencyButtonPure } from './AddCurrenc
 interface CreateTestComponentProps {
     readonly navigate?: (screen: NavigatorScreen) => void;
 }
-
-afterEach(cleanup);
 
 const createTestComponent = ({
     navigate = mock.fn<(screen: NavigatorScreen) => void>(),

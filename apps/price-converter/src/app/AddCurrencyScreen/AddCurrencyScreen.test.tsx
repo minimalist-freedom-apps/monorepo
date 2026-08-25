@@ -1,17 +1,15 @@
 import assert from 'node:assert/strict';
-import { afterEach, describe, mock, test } from 'node:test';
+import { describe, mock, test } from 'node:test';
 import { err, ok } from '@evolu/common';
 import type { NotificationApi } from '@minimalist-apps/components';
 import type { CurrencyCode } from '@minimalist-apps/fiat';
-import { cleanup, render, screen } from '@testing-library/react';
+import { render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { asRateBtcPerFiat } from '../../converter/rate.js';
 import type { CurrencyMap } from '../../rates/FetchRates.js';
 import { type AddCurrency, AddCurrencyUpdateError } from '../../state/addCurrency.js';
 import type { NavigatorScreen } from '../../state/State.js';
 import { AddCurrencyScreenPure } from './AddCurrencyScreen.js';
-
-afterEach(cleanup);
 
 const createTestRates = (): CurrencyMap =>
     ({

@@ -1,9 +1,9 @@
 import assert from 'node:assert/strict';
-import { afterEach, describe, mock, test } from 'node:test';
+import { describe, mock, test } from 'node:test';
 import { getOrThrow } from '@evolu/common';
 import type { CurrencyInputDep } from '@minimalist-apps/currency-input';
 import { CurrencyCode } from '@minimalist-apps/fiat';
-import { cleanup, render, screen, waitFor } from '@testing-library/react';
+import { render, screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import type { FC } from 'react';
 import {
@@ -20,8 +20,6 @@ import type { MoscowTimeDep } from './MoscowTime.js';
 
 type TestDeps = CurrencyInputDep & MoscowTimeDep;
 const USD = getOrThrow(CurrencyCode.fromUnknown('USD'));
-
-afterEach(cleanup);
 
 const createTestDeps = (): TestDeps => ({
     CurrencyInput: ({ code, value, onChange }) => (
