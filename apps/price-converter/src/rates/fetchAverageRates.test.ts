@@ -1,6 +1,7 @@
+import assert from 'node:assert/strict';
+import { describe, test } from 'node:test';
 import { AbortError, err, getOrThrow, ok, testCreateRun } from '@evolu/common';
 import { CurrencyCode } from '@minimalist-apps/fiat';
-import { describe, expect, test } from 'vitest';
 import { type CurrencyMap, type FetchRates, FetchRatesError } from './FetchRates.js';
 import { createFetchAverageRates } from './fetchAverageRates.js';
 
@@ -45,14 +46,10 @@ describe(createFetchAverageRates.name, () => {
 
         const result = await run(fetchAverageRates);
 
-        expect(result.ok).toBe(true);
+        assert.strictEqual(result.ok, true);
 
-        if (!result.ok) {
-            return;
-        }
-
-        expect(result.value[USD]?.rate).toBe(105); // (100 + 110 + 105) / 3
-        expect(result.value[EUR]?.rate).toBe(95); // (90 + 100 + 95) / 3
+        assert.strictEqual(result.value[USD]?.rate, 105); // (100 + 110 + 105) / 3
+        assert.strictEqual(result.value[EUR]?.rate, 95); // (90 + 100 + 95) / 3
     });
 
     test('calculates average when sources have different currencies', async () => {
@@ -73,14 +70,10 @@ describe(createFetchAverageRates.name, () => {
 
         const result = await run(fetchAverageRates);
 
-        expect(result.ok).toBe(true);
+        assert.strictEqual(result.ok, true);
 
-        if (!result.ok) {
-            return;
-        }
-
-        expect(result.value[USD]?.rate).toBe(150); // (100 + 200) / 2
-        expect(result.value[GBP]?.rate).toBe(80); // only one source
+        assert.strictEqual(result.value[USD]?.rate, 150); // (100 + 200) / 2
+        assert.strictEqual(result.value[GBP]?.rate, 80); // only one source
     });
 
     test('returns single source rates when only one source succeeds', async () => {
@@ -98,11 +91,9 @@ describe(createFetchAverageRates.name, () => {
 
         const result = await run(fetchAverageRates);
 
-        expect(result.ok).toBe(true);
+        assert.strictEqual(result.ok, true);
 
-        if (result.ok) {
-            expect(result.value[USD]?.rate).toBe(42_000);
-        }
+        assert.strictEqual(result.value[USD]?.rate, 42_000);
     });
 
     test('returns FetchRatesError when all sources fail', async () => {
@@ -111,7 +102,7 @@ describe(createFetchAverageRates.name, () => {
         );
         await using run = testCreateRun();
 
-        await expect(run(fetchAverageRates)).resolves.toEqual({
+        assert.deepStrictEqual(await run(fetchAverageRates), {
             ok: false,
             error: { type: 'FetchRatesError' },
         });
@@ -138,11 +129,9 @@ describe(createFetchAverageRates.name, () => {
 
         const result = await run(fetchAverageRates);
 
-        expect(result.ok).toBe(true);
+        assert.strictEqual(result.ok, true);
 
-        if (result.ok) {
-            expect(result.value[USD]?.name).toBe('US Dollar');
-        }
+        assert.strictEqual(result.value[USD]?.name, 'US Dollar');
     });
 
     test('aborts a hanging source after timeout and keeps successful rates', async () => {
@@ -165,16 +154,13 @@ describe(createFetchAverageRates.name, () => {
         await using run = testCreateRun();
 
         const resultFiber = run(fetchAverageRates);
-        expect(hangingSignal?.aborted).toBe(false);
+        assert.strictEqual(hangingSignal?.aborted, false);
         run.deps.time.advance('1s');
         const result = await resultFiber;
 
-        expect(hangingSignal?.aborted).toBe(true);
-        expect(result.ok).toBe(true);
-
-        if (result.ok) {
-            expect(result.value[USD]?.rate).toBe(100);
-        }
+        assert.strictEqual(hangingSignal.aborted, true);
+        assert.strictEqual(result.ok, true);
+        assert.strictEqual(result.value[USD]?.rate, 100);
     });
 
     test('propagates parent Fiber cancellation to every source', async () => {
@@ -194,16 +180,16 @@ describe(createFetchAverageRates.name, () => {
         await using run = testCreateRun();
 
         const fiber = run.abortable(fetchAverageRates);
-        expect(sourceSignals).toHaveLength(2);
+        assert.strictEqual(sourceSignals.length, 2);
         fiber.abort();
         const result = await fiber;
 
-        expect(sourceSignals.every(signal => signal.aborted)).toBe(true);
-        expect(result.ok).toBe(false);
-
-        if (!result.ok) {
-            expect(AbortError.is(result.error)).toBe(true);
-        }
+        assert.strictEqual(
+            sourceSignals.every(signal => signal.aborted),
+            true,
+        );
+        assert.strictEqual(result.ok, false);
+        assert.strictEqual(AbortError.is(result.error), true);
     });
 
     test('ignores non-finite and non-positive rates before averaging', async () => {
@@ -223,11 +209,9 @@ describe(createFetchAverageRates.name, () => {
 
         const result = await run(fetchAverageRates);
 
-        expect(result.ok).toBe(true);
+        assert.strictEqual(result.ok, true);
 
-        if (result.ok) {
-            expect(result.value[USD]?.rate).toBe(100);
-        }
+        assert.strictEqual(result.value[USD]?.rate, 100);
     });
 
     test('rejects an average that overflows to a non-finite rate', async () => {
@@ -242,7 +226,7 @@ describe(createFetchAverageRates.name, () => {
         );
         await using run = testCreateRun();
 
-        await expect(run(fetchAverageRates)).resolves.toEqual({
+        assert.deepStrictEqual(await run(fetchAverageRates), {
             ok: false,
             error: { type: 'FetchRatesError' },
         });

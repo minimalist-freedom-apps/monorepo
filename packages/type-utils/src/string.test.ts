@@ -1,4 +1,5 @@
-import { describe, expect, expectTypeOf, test } from 'vitest';
+import assert from 'node:assert/strict';
+import { describe, test } from 'node:test';
 import { isNonEmpty } from './string.js';
 
 describe(isNonEmpty.name, () => {
@@ -14,15 +15,19 @@ describe(isNonEmpty.name, () => {
         { input: undefined, expected: false },
     ];
 
-    test.each(testCases)('returns $expected for $input', ({ input, expected }) => {
-        expect(isNonEmpty(input)).toBe(expected);
-    });
+    for (const testCase of testCases) {
+        test('returns $expected for $input' + ': ' + JSON.stringify(testCase), () => {
+            const { input, expected } = testCase;
+            assert.strictEqual(isNonEmpty(input), expected);
+        });
+    }
 
     test('narrows string | null | undefined to string', () => {
         const value: string | null | undefined = 'test';
 
         if (isNonEmpty(value)) {
-            expectTypeOf(value).toEqualTypeOf<string>();
+            const narrowed: string = value;
+            assert.strictEqual(narrowed, 'test');
         }
     });
 
@@ -30,7 +35,8 @@ describe(isNonEmpty.name, () => {
         const value: 'foo' | 'bar' | '' | null = 'foo';
 
         if (isNonEmpty(value)) {
-            expectTypeOf(value).toExtend<'foo' | 'bar'>();
+            const narrowed: 'foo' | 'bar' = value;
+            assert.strictEqual(narrowed, 'foo');
         }
     });
 
@@ -39,7 +45,8 @@ describe(isNonEmpty.name, () => {
         const value: TestType | null = { a: 1 };
 
         if (isNonEmpty(value)) {
-            expectTypeOf(value).toExtend<TestType>();
+            const narrowed: TestType = value;
+            assert.deepStrictEqual(narrowed, { a: 1 });
         }
     });
 });

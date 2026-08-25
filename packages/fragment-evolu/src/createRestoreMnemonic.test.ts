@@ -1,5 +1,6 @@
+import assert from 'node:assert/strict';
+import { describe, mock, test } from 'node:test';
 import { type EvoluSchema, Mnemonic } from '@evolu/common';
-import { describe, expect, test, vi } from 'vitest';
 import { createRestoreMnemonic } from './createRestoreMnemonic';
 
 const mnemonic = Mnemonic.orThrow(
@@ -8,9 +9,9 @@ const mnemonic = Mnemonic.orThrow(
 
 describe(createRestoreMnemonic.name, () => {
     test('persists the mnemonic inside the owner restoration transaction', async () => {
-        const setEvoluMnemonic = vi.fn(() => Promise.resolve());
-        const restoreOwner = vi.fn(async params => {
-            expect(setEvoluMnemonic).not.toHaveBeenCalled();
+        const setEvoluMnemonic = mock.fn(() => Promise.resolve());
+        const restoreOwner = mock.fn(async params => {
+            assert.strictEqual(setEvoluMnemonic.mock.callCount(), 0);
             await params.persistMnemonic();
         });
         const restoreMnemonic = createRestoreMnemonic<EvoluSchema>({
@@ -20,10 +21,10 @@ describe(createRestoreMnemonic.name, () => {
 
         await restoreMnemonic(mnemonic);
 
-        expect(restoreOwner).toHaveBeenCalledWith({
-            mnemonic,
-            persistMnemonic: expect.any(Function),
-        });
-        expect(setEvoluMnemonic).toHaveBeenCalledExactlyOnceWith(mnemonic);
+        const restoreOwnerParams = restoreOwner.mock.calls.at(-1)?.arguments[0];
+        assert.strictEqual(restoreOwnerParams?.mnemonic, mnemonic);
+        assert.strictEqual(typeof restoreOwnerParams?.persistMnemonic, 'function');
+        assert.strictEqual(setEvoluMnemonic.mock.callCount(), 1);
+        assert.deepStrictEqual(setEvoluMnemonic.mock.calls[0]?.arguments, [mnemonic]);
     });
 });

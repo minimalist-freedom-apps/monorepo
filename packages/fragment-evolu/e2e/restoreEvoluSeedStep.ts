@@ -19,39 +19,58 @@ type RestoreEvoluSeedStepProps = {
     readonly session: E2ESession;
 };
 
-const ensureHome = async ({ session }: RestoreEvoluSeedStepProps) => {
-    const isSettingsOpen = await isElementExistingByTestId({
+interface RestoreEvoluSeedStepDeps {
+    readonly clickElementByTestId: typeof clickElementByTestId;
+    readonly getElementAttributeByTestId: typeof getElementAttributeByTestId;
+    readonly isElementExistingByTestId: typeof isElementExistingByTestId;
+    readonly runWebViewFlow: typeof runWebViewFlow;
+    readonly typeIntoElementByTestId: typeof typeIntoElementByTestId;
+    readonly waitForElementByTestId: typeof waitForElementByTestId;
+    readonly waitForElementTextByTestIdContains: typeof waitForElementTextByTestIdContains;
+}
+
+type RestoreEvoluSeedStepContext = RestoreEvoluSeedStepProps & {
+    readonly deps: RestoreEvoluSeedStepDeps;
+};
+
+type RestoreEvoluSeedStep = (props: RestoreEvoluSeedStepProps) => Promise<void>;
+
+const ensureHome = async ({ deps, session }: RestoreEvoluSeedStepContext) => {
+    const isSettingsOpen = await deps.isElementExistingByTestId({
         session,
         testId: 'settings-back-button',
     });
 
     if (isSettingsOpen) {
-        await clickElementByTestId({
+        await deps.clickElementByTestId({
             session,
             testId: 'settings-back-button',
         });
     }
 
-    await waitForElementByTestId({
+    await deps.waitForElementByTestId({
         session,
         testId: 'open-settings-button',
     });
 };
 
-const openSettings = async ({ session }: RestoreEvoluSeedStepProps) => {
-    await clickElementByTestId({
+const openSettings = async ({ deps, session }: RestoreEvoluSeedStepContext) => {
+    await deps.clickElementByTestId({
         session,
         testId: 'open-settings-button',
     });
 
-    await waitForElementByTestId({
+    await deps.waitForElementByTestId({
         session,
         testId: 'settings-back-button',
     });
 };
 
-const waitForExpectedOwner = async ({ session }: RestoreEvoluSeedStepProps): Promise<boolean> => {
-    const isDebugOwnerVisible = await isElementExistingByTestId({
+const waitForExpectedOwner = async ({
+    deps,
+    session,
+}: RestoreEvoluSeedStepContext): Promise<boolean> => {
+    const isDebugOwnerVisible = await deps.isElementExistingByTestId({
         session,
         testId: 'debug-owner-id',
     });
@@ -61,7 +80,7 @@ const waitForExpectedOwner = async ({ session }: RestoreEvoluSeedStepProps): Pro
     }
 
     for (let attempt = 1; attempt <= 10; attempt += 1) {
-        const ownerText = await getElementAttributeByTestId({
+        const ownerText = await deps.getElementAttributeByTestId({
             session,
             attribute: 'textContent',
             testId: 'debug-owner-id',
@@ -79,37 +98,37 @@ const waitForExpectedOwner = async ({ session }: RestoreEvoluSeedStepProps): Pro
     return false;
 };
 
-const restoreSeed = async ({ session }: RestoreEvoluSeedStepProps) => {
-    await clickElementByTestId({
+const restoreSeed = async ({ deps, session }: RestoreEvoluSeedStepContext) => {
+    await deps.clickElementByTestId({
         session,
         testId: 'restore-backup-button',
     });
 
-    await waitForElementByTestId({
+    await deps.waitForElementByTestId({
         session,
         testId: 'restore-seed-input',
     });
 
-    await typeIntoElementByTestId({
+    await deps.typeIntoElementByTestId({
         session,
         testId: 'restore-seed-input',
         text: EVOLU_ABANDON_TEST_SEED,
     });
 
-    await clickElementByTestId({
+    await deps.clickElementByTestId({
         session,
         testId: 'restore-modal-ok',
     });
 };
 
-const enableDebug = async ({ session }: RestoreEvoluSeedStepProps) => {
-    await waitForElementByTestId({
+const enableDebug = async ({ deps, session }: RestoreEvoluSeedStepContext) => {
+    await deps.waitForElementByTestId({
         session,
         testId: 'debug-mode-switch',
     });
 
     const isDebugEnabled =
-        (await getElementAttributeByTestId({
+        (await deps.getElementAttributeByTestId({
             session,
             attribute: 'aria-checked',
             testId: 'debug-mode-switch',
@@ -119,38 +138,38 @@ const enableDebug = async ({ session }: RestoreEvoluSeedStepProps) => {
         return;
     }
 
-    await clickElementByTestId({
+    await deps.clickElementByTestId({
         session,
         testId: 'debug-mode-switch',
     });
 };
 
-const assertDebugOwnerSuffix = async ({ session }: RestoreEvoluSeedStepProps) => {
-    await waitForElementTextByTestIdContains({
+const assertDebugOwnerSuffix = async ({ deps, session }: RestoreEvoluSeedStepContext) => {
+    await deps.waitForElementTextByTestIdContains({
         session,
         testId: 'debug-owner-id',
         text: expectedOwnerSuffix,
     });
 };
 
-const goBackFromSettings = async ({ session }: RestoreEvoluSeedStepProps) => {
-    await waitForElementByTestId({
+const goBackFromSettings = async ({ deps, session }: RestoreEvoluSeedStepContext) => {
+    await deps.waitForElementByTestId({
         session,
         testId: 'settings-back-button',
     });
 
-    await clickElementByTestId({
+    await deps.clickElementByTestId({
         session,
         testId: 'settings-back-button',
     });
 
-    await waitForElementByTestId({
+    await deps.waitForElementByTestId({
         session,
         testId: 'open-settings-button',
     });
 };
 
-const restoreEvoluSeed = async (props: RestoreEvoluSeedStepProps): Promise<void> => {
+const restoreEvoluSeed = async (props: RestoreEvoluSeedStepContext): Promise<void> => {
     await ensureHome(props);
 
     if (await waitForExpectedOwner(props)) {
@@ -164,7 +183,19 @@ const restoreEvoluSeed = async (props: RestoreEvoluSeedStepProps): Promise<void>
     await assertDebugOwnerSuffix(props);
 };
 
-export const restoreEvoluSeedStep = (props: RestoreEvoluSeedStepProps): Promise<void> =>
-    runWebViewFlow({
-        flow: () => restoreEvoluSeed(props),
-    });
+export const createRestoreEvoluSeedStep =
+    (deps: RestoreEvoluSeedStepDeps): RestoreEvoluSeedStep =>
+    ({ session }) =>
+        deps.runWebViewFlow({
+            flow: () => restoreEvoluSeed({ deps, session }),
+        });
+
+export const restoreEvoluSeedStep = createRestoreEvoluSeedStep({
+    clickElementByTestId,
+    getElementAttributeByTestId,
+    isElementExistingByTestId,
+    runWebViewFlow,
+    typeIntoElementByTestId,
+    waitForElementByTestId,
+    waitForElementTextByTestIdContains,
+});

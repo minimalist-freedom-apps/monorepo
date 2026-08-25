@@ -1,10 +1,11 @@
+import assert from 'node:assert/strict';
+import { describe, test } from 'node:test';
 import { type Mnemonic, ok } from '@evolu/common';
 import {
     applyMapLocalStorageToState,
     applyMapStateLocalStorage,
 } from '@minimalist-apps/fragment-local-storage';
 import type { LocalStorage } from '@minimalist-apps/local-storage';
-import { describe, expect, test } from 'vitest';
 import type { AppState } from '../appStore/AppState';
 import { mapLocalStorageToState, mapStateLocalStorage } from './storageMaps';
 
@@ -38,13 +39,13 @@ describe('storageMaps', () => {
             state: initState,
         });
 
-        expect(data).toEqual({
+        assert.deepStrictEqual(data, {
             'test-prefix:themeMode': 'dark',
             'test-prefix:debugMode': 'true',
             'test-prefix:evoluRelayUrls': 'wss://one.example\nwss://two.example',
         });
 
-        data['test-prefix:evoluMnemonic'] =
+        (data as Record<string, unknown>)['test-prefix:evoluMnemonic'] =
             'abandon abandon abandon abandon abandon abandon abandon abandon abandon abandon abandon about';
 
         const state = applyMapLocalStorageToState({
@@ -53,7 +54,7 @@ describe('storageMaps', () => {
             mapLocalStorageToState,
         });
 
-        expect(state).toEqual({
+        assert.deepStrictEqual(state, {
             themeMode: 'dark',
             debugMode: true,
             evoluRelayUrls: ['wss://one.example', 'wss://two.example'],

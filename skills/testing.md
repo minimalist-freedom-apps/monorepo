@@ -11,18 +11,20 @@ Create fresh deps at the start of each test for isolation. Each call creates ind
 
 ```ts
 import { createTestDeps, createId } from '@evolu/common';
+import assert from 'node:assert/strict';
+import { test } from 'node:test';
 
 test('creates unique IDs', () => {
     const deps = createTestDeps();
     const id1 = createId(deps);
     const id2 = createId(deps);
-    expect(id1).not.toBe(id2);
+    assert.notStrictEqual(id1, id2);
 });
 
 test('with custom seed for reproducibility', () => {
     const deps = createTestDeps({ seed: 'my-test' });
     const id = createId(deps);
-    expect(id).toMatchInlineSnapshot(`"..."`);
+    assert.strictEqual(id, '...');
 });
 ```
 
@@ -41,22 +43,19 @@ export const testCreateTime = (options?: {
 }): TestTime => { ... };
 ```
 
-### Vitest filtering (https://vitest.dev/guide/filtering)
+### Node test filtering
 
 ```bash
 # Run all tests in a package
 pnpm --filter @evolu/common test
 
-# Run a single file
-pnpm --filter @evolu/common test -- Task
-
 # Run a single test by name (-t flag)
-pnpm --filter @evolu/common test -- -t "yields and returns ok"
+pnpm --filter @evolu/common test -- --test-name-pattern="yields and returns ok"
 ```
 
 ### Data-provider pattern for simple tests
 
-When tests are simple input/output assertions (no setup, no deps, single function call), use `test.each` with a data array instead of repeating test boilerplate. Keep the human-readable description as the second tuple element so it appears in test output via `%s`.
+When tests are simple input/output assertions (no setup, no deps, single function call), iterate over a readonly data array and register a `test` for each case instead of repeating test boilerplate. Include the human-readable description in each test name.
 
 Only use this for simple tests — not for tests that need setup, mocking, or multi-step assertions.
 

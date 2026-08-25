@@ -1,7 +1,8 @@
+import assert from 'node:assert/strict';
+import { describe, test } from 'node:test';
 import { getOrThrow, testCreateNativeFetch, testCreateRun } from '@evolu/common';
 import { CurrencyCode, type CurrencyCode as CurrencyCodeType } from '@minimalist-apps/fiat';
 import { typedObjectKeys } from '@minimalist-apps/type-utils';
-import { describe, expect, test } from 'vitest';
 import { fetchBitpayRates } from './fetchBitpayRates.js';
 import bitpayFixture from './fixtures/bitpay.json';
 
@@ -30,86 +31,75 @@ describe('fetchBitpayRates', () => {
     test('uses the Fiber abort signal for fetch', async () => {
         const { nativeFetch } = await runWithResponse(bitpayFixture);
 
-        expect(nativeFetch.calls[0]?.input).toBe('https://bitpay.com/rates/BTC');
-        expect(nativeFetch.calls[0]?.init?.signal).toBeInstanceOf(AbortSignal);
+        assert.strictEqual(nativeFetch.calls[0]?.input, 'https://bitpay.com/rates/BTC');
+        assert.ok(nativeFetch.calls[0]?.init?.signal instanceof AbortSignal);
     });
 
     test('parses bitpay fixture into currency map', async () => {
         const { result } = await runWithResponse(bitpayFixture);
 
-        expect(result.ok).toBe(true);
+        assert.ok(result.ok);
 
-        if (!result.ok) {
-            return;
-        }
-
-        expect(result.value[USD]?.code).toBe(USD);
-        expect(result.value[USD]?.name).toBe('US Dollar');
-        expect(result.value[USD]?.rate).toBe(1 / 68430.88);
-
-        expect(result.value[EUR]?.code).toBe(EUR);
-        expect(result.value[EUR]?.name).toBe('Eurozone Euro');
-        expect(result.value[EUR]?.rate).toBe(1 / 58045.62);
-
-        expect(result.value[GBP]?.code).toBe(GBP);
-        expect(result.value[GBP]?.name).toBe('Pound Sterling');
-        expect(result.value[GBP]?.rate).toBe(1 / 50259.54);
-
-        expect(result.value[JPY]?.code).toBe(JPY);
-        expect(result.value[JPY]?.name).toBe('Japanese Yen');
-        expect(result.value[JPY]?.rate).toBe(1 / 10757368.39);
+        assert.deepStrictEqual(result.value[USD], {
+            code: USD,
+            name: 'US Dollar',
+            rate: 1 / 68430.88,
+        });
+        assert.deepStrictEqual(result.value[EUR], {
+            code: EUR,
+            name: 'Eurozone Euro',
+            rate: 1 / 58045.62,
+        });
+        assert.deepStrictEqual(result.value[GBP], {
+            code: GBP,
+            name: 'Pound Sterling',
+            rate: 1 / 50259.54,
+        });
+        assert.deepStrictEqual(result.value[JPY], {
+            code: JPY,
+            name: 'Japanese Yen',
+            rate: 1 / 10757368.39,
+        });
     });
 
     test('excludes BTC from the currency map', async () => {
         const { result } = await runWithResponse(bitpayFixture);
 
-        expect(result.ok).toBe(true);
+        assert.ok(result.ok);
 
-        if (!result.ok) {
-            return;
-        }
-
-        expect(result.value['BTC' as keyof typeof result.value]).toBeUndefined();
+        assert.strictEqual(result.value['BTC' as keyof typeof result.value], undefined);
     });
 
     test('excludes non-bitcoin crypto currencies', async () => {
         const { result } = await runWithResponse(bitpayFixture);
 
-        expect(result.ok).toBe(true);
+        assert.ok(result.ok);
 
-        if (!result.ok) {
-            return;
-        }
-
-        expect(result.value['ETH' as CurrencyCodeType]).toBeUndefined();
-        expect(result.value['BCH' as CurrencyCodeType]).toBeUndefined();
-        expect(result.value['LTC' as CurrencyCodeType]).toBeUndefined();
-        expect(result.value['XRP' as CurrencyCodeType]).toBeUndefined();
-        expect(result.value['SOL' as CurrencyCodeType]).toBeUndefined();
-        expect(result.value['APE' as CurrencyCodeType]).toBeUndefined();
+        assert.strictEqual(result.value['ETH' as CurrencyCodeType], undefined);
+        assert.strictEqual(result.value['BCH' as CurrencyCodeType], undefined);
+        assert.strictEqual(result.value['LTC' as CurrencyCodeType], undefined);
+        assert.strictEqual(result.value['XRP' as CurrencyCodeType], undefined);
+        assert.strictEqual(result.value['SOL' as CurrencyCodeType], undefined);
+        assert.strictEqual(result.value['APE' as CurrencyCodeType], undefined);
     });
 
     test('excludes invalid currency codes', async () => {
         const { result } = await runWithResponse(bitpayFixture);
 
-        expect(result.ok).toBe(true);
-
-        if (!result.ok) {
-            return;
-        }
+        assert.ok(result.ok);
 
         // Codes like "MATIC_e", "ETH_m" etc. are not valid CurrencyCodes
         const keys = typedObjectKeys(result.value);
 
         for (const key of keys) {
-            expect(key).toMatch(/^[A-Z]{3}$/);
+            assert.match(key, /^[A-Z]{3}$/);
         }
     });
 
     test('returns FetchRatesError when response is not ok', async () => {
         const { result } = await runWithResponse(null, 500);
 
-        expect(result).toEqual({
+        assert.deepStrictEqual(result, {
             ok: false,
             error: { type: 'FetchRatesError' },
         });
@@ -121,7 +111,7 @@ describe('fetchBitpayRates', () => {
         });
         await using run = testCreateRun({ nativeFetch });
 
-        await expect(run(fetchBitpayRates)).resolves.toEqual({
+        assert.deepStrictEqual(await run(fetchBitpayRates), {
             ok: false,
             error: { type: 'FetchRatesError' },
         });
@@ -130,23 +120,25 @@ describe('fetchBitpayRates', () => {
     test('returns FetchRatesError for a malformed response', async () => {
         const { result } = await runWithResponse({ data: null });
 
-        expect(result).toEqual({
+        assert.deepStrictEqual(result, {
             ok: false,
             error: { type: 'FetchRatesError' },
         });
     });
 
-    test.each([0, -1, Number.NaN, Number.MIN_VALUE, Number.POSITIVE_INFINITY])(
-        'returns FetchRatesError for invalid rate %s',
-        async rate => {
-            const { result } = await runWithResponse({
-                data: [{ code: 'USD', name: 'US Dollar', rate }],
-            });
-
-            expect(result).toEqual({
-                ok: false,
-                error: { type: 'FetchRatesError' },
-            });
-        },
-    );
+    for (const testCase of [0, -1, Number.NaN, Number.MIN_VALUE, Number.POSITIVE_INFINITY]) {
+        test(
+            'returns FetchRatesError for invalid rate %s' + ': ' + JSON.stringify(testCase),
+            async () => {
+                const rate = testCase;
+                const { result } = await runWithResponse({
+                    data: [{ code: 'USD', name: 'US Dollar', rate }],
+                });
+                assert.deepStrictEqual(result, {
+                    ok: false,
+                    error: { type: 'FetchRatesError' },
+                });
+            },
+        );
+    }
 });

@@ -1,7 +1,8 @@
+import assert from 'node:assert/strict';
 import { mkdtempSync, rmSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
-import { afterEach, beforeEach, describe, expect, test } from 'vitest';
+import { afterEach, beforeEach, describe, test } from 'node:test';
 import type { Requirement } from './requirements/Requirement';
 import { verifyProjects } from './verifyProjects';
 
@@ -36,7 +37,7 @@ describe(verifyProjects.name, () => {
             filteredRequirements: [createMockRequirement({ name: 'passing-req' })],
         });
 
-        expect(errors).toEqual([]);
+        assert.deepStrictEqual(errors, []);
     });
 
     test('returns errors from a failing requirement', async () => {
@@ -51,7 +52,7 @@ describe(verifyProjects.name, () => {
             ],
         });
 
-        expect(errors).toEqual([`${appDir} [failing-req]: something is wrong`]);
+        assert.deepStrictEqual(errors, [`${appDir} [failing-req]: something is wrong`]);
     });
 
     test('collects errors from multiple requirements', async () => {
@@ -70,7 +71,7 @@ describe(verifyProjects.name, () => {
             ],
         });
 
-        expect(errors).toEqual([
+        assert.deepStrictEqual(errors, [
             `${appDir} [req-a]: error from a`,
             `${appDir} [req-b]: error from b`,
         ]);
@@ -90,7 +91,10 @@ describe(verifyProjects.name, () => {
             ],
         });
 
-        expect(errors).toEqual([`${appDir} [req-a]: broken`, `${secondDir} [req-a]: broken`]);
+        assert.deepStrictEqual(errors, [
+            `${appDir} [req-a]: broken`,
+            `${secondDir} [req-a]: broken`,
+        ]);
 
         rmSync(secondDir, { recursive: true, force: true });
     });
@@ -108,7 +112,7 @@ describe(verifyProjects.name, () => {
             ],
         });
 
-        expect(errors).toEqual([]);
+        assert.deepStrictEqual(errors, []);
     });
 
     test('applies is called with correct projectType and dirName', async () => {
@@ -129,8 +133,8 @@ describe(verifyProjects.name, () => {
             ],
         });
 
-        expect(appliesCalls).toHaveLength(1);
-        expect(appliesCalls[0]?.projectType).toBe('package');
+        assert.strictEqual(appliesCalls.length, 1);
+        assert.strictEqual(appliesCalls[0]?.projectType, 'package');
     });
 
     test('returns no errors when project dirs are empty', async () => {
@@ -145,7 +149,7 @@ describe(verifyProjects.name, () => {
             ],
         });
 
-        expect(errors).toEqual([]);
+        assert.deepStrictEqual(errors, []);
     });
 
     test('collects multiple errors from a single requirement', async () => {
@@ -160,7 +164,7 @@ describe(verifyProjects.name, () => {
             ],
         });
 
-        expect(errors).toEqual([
+        assert.deepStrictEqual(errors, [
             `${appDir} [multi-error-req]: first error`,
             `${appDir} [multi-error-req]: second error`,
         ]);

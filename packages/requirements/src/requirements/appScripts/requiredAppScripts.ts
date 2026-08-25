@@ -3,6 +3,9 @@ import { join, sep } from 'node:path';
 import { typedObjectKeys } from '@minimalist-apps/type-utils';
 import type { Requirement } from '../Requirement';
 
+const nodeTestCommand =
+    'node --import=tsx --import=../../test.setup.ts --test --test-concurrency=1 --test-force-exit "src/**/*.test.ts" "src/**/*.test.tsx"';
+
 const expectedScripts: ReadonlyArray<readonly [name: string, value: string]> = [
     ['dev', 'vite'],
     ['dev:android', 'APP_DIR=$PWD pnpm --filter @minimalist-apps/android-build dev'],
@@ -14,14 +17,14 @@ const expectedScripts: ReadonlyArray<readonly [name: string, value: string]> = [
     ],
     ['build:android:sign', 'APP_DIR=$PWD pnpm --filter @minimalist-apps/android-build sign'],
     ['preview', 'vite preview'],
-    ['test', 'vitest run --config ../../vitest.config.ts --root .'],
+    ['test', nodeTestCommand],
     ['typecheck', 'tsc --noEmit'],
 ];
 
 const optionalAllowedScriptNames = ['e2e', 'e2e-ci', 'e2e:appium', 'e2e:emulator'] as const;
 
 const requiredPackageScripts: ReadonlyArray<readonly [string, string]> = [
-    ['test', 'vitest run'],
+    ['test', nodeTestCommand],
     ['typecheck', 'tsc --noEmit'],
 ];
 

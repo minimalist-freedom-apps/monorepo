@@ -1,4 +1,5 @@
-import { describe, expect, test } from 'vitest';
+import assert from 'node:assert/strict';
+import { describe, test } from 'node:test';
 import { parseFormattedNumber } from './parseFormattedNumber';
 
 describe(parseFormattedNumber.name, () => {
@@ -12,7 +13,10 @@ describe(parseFormattedNumber.name, () => {
         ['0.5', 0.5, 'parses decimal'],
     ];
 
-    test.each(testCases)('%s → %s — %s', (input, expected) => {
-        expect(parseFormattedNumber(input)).toBe(expected);
-    });
+    for (const testCase of testCases) {
+        test('%s → %s — %s' + ': ' + JSON.stringify(testCase), () => {
+            const [input, expected] = testCase;
+            assert.strictEqual(parseFormattedNumber(input), expected);
+        });
+    }
 });

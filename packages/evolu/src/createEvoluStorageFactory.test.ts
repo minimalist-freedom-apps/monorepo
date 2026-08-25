@@ -1,8 +1,7 @@
-// @vitest-environment node
-
+import assert from 'node:assert/strict';
+import { describe, mock, test } from 'node:test';
 import type { Evolu, Owner } from '@evolu/common';
 import { Mnemonic } from '@evolu/common';
-import { describe, expect, test, vi } from 'vitest';
 import { type CreateEvolu, createEvoluFactory } from './createEvoluFactory';
 import { createEvoluStorageFactory } from './createEvoluStorageFactory';
 import { TodoTestSchema } from './mockEvoluStorage';
@@ -43,7 +42,7 @@ describe(createEvoluStorageFactory.name, () => {
         });
 
         const firstEvolu = storage.evolu;
-        expect(storage.activeOwner.id).toBe('F0xh0HpiAx5shgCgtGENww');
+        assert.strictEqual(storage.activeOwner.id, 'F0xh0HpiAx5shgCgtGENww');
 
         await storage.restoreOwner({
             mnemonic: Mnemonic.orThrow(
@@ -52,8 +51,8 @@ describe(createEvoluStorageFactory.name, () => {
             persistMnemonic: () => Promise.resolve(),
         });
 
-        expect(storage.evolu).not.toBe(firstEvolu);
-        expect(storage.activeOwner.id).toBe('9ac66DowyF8lV0ioma5_2Q');
+        assert.notStrictEqual(storage.evolu, firstEvolu);
+        assert.strictEqual(storage.activeOwner.id, '9ac66DowyF8lV0ioma5_2Q');
 
         await storage.dispose();
     });
@@ -61,26 +60,27 @@ describe(createEvoluStorageFactory.name, () => {
     test('rolls back the active owner when mnemonic persistence fails', async () => {
         const events: Array<string> = [];
         const createFakeEvolu = (ownerId: string) => {
-            const evolu = {
-                [Symbol.asyncDispose]: vi.fn(() => {
-                    events.push(`dispose:${ownerId}`);
+            const dispose = mock.fn(() => {
+                events.push(`dispose:${ownerId}`);
 
-                    return Promise.resolve();
-                }),
+                return Promise.resolve();
+            });
+            const evolu = {
+                [Symbol.asyncDispose]: dispose,
             } as unknown as Evolu<TodoTestSchema>;
 
             return {
+                dispose,
                 evolu,
                 owner: { id: ownerId } as Owner,
-                updateRelayUrls: vi.fn(),
+                updateRelayUrls: mock.fn(),
             };
         };
         const first = createFakeEvolu('first-owner');
         const candidate = createFakeEvolu('candidate-owner');
-        const createEvolu = vi
-            .fn()
-            .mockResolvedValueOnce(first)
-            .mockResolvedValueOnce(candidate) as unknown as CreateEvolu<TodoTestSchema>;
+        const createEvoluMock = mock.fn(async () => candidate);
+        createEvoluMock.mock.mockImplementationOnce(async () => first);
+        const createEvolu = createEvoluMock as unknown as CreateEvolu<TodoTestSchema>;
         const storage = await createEvoluStorageFactory<TodoTestSchema>({ createEvolu })({
             mnemonic: Mnemonic.orThrow(
                 'abandon abandon abandon abandon abandon abandon abandon abandon abandon abandon abandon about',
@@ -93,7 +93,7 @@ describe(createEvoluStorageFactory.name, () => {
         storage.subscribeOwnerChange(() => events.push('owner-change'));
         const persistenceError = new Error('secure storage failed');
 
-        await expect(
+        await assert.rejects(
             storage.restoreOwner({
                 mnemonic: Mnemonic.orThrow(
                     'legal winner thank year wave sausage worth useful legal winner thank yellow',
@@ -104,14 +104,19 @@ describe(createEvoluStorageFactory.name, () => {
                     return Promise.reject(persistenceError);
                 },
             }),
-        ).rejects.toBe(persistenceError);
+            (error: unknown) => {
+                assert.strictEqual(error, persistenceError);
 
-        expect(storage.status).toBe('ready');
-        expect(storage.evolu).toBe(first.evolu);
-        expect(storage.activeOwner).toBe(first.owner);
-        expect(first.evolu[Symbol.asyncDispose]).not.toHaveBeenCalled();
-        expect(candidate.evolu[Symbol.asyncDispose]).toHaveBeenCalledOnce();
-        expect(events).toEqual([
+                return true;
+            },
+        );
+
+        assert.strictEqual(storage.status, 'ready');
+        assert.strictEqual(storage.evolu, first.evolu);
+        assert.strictEqual(storage.activeOwner, first.owner);
+        assert.strictEqual(first.dispose.mock.callCount(), 0);
+        assert.strictEqual(candidate.dispose.mock.callCount(), 1);
+        assert.deepStrictEqual(events, [
             'owner:first-owner',
             'owner:candidate-owner',
             'owner-change',
@@ -127,25 +132,22 @@ describe(createEvoluStorageFactory.name, () => {
     test('rejects concurrent owner restoration', async () => {
         const first = {
             evolu: {
-                [Symbol.asyncDispose]: vi.fn(() => Promise.resolve()),
+                [Symbol.asyncDispose]: mock.fn(() => Promise.resolve()),
             } as unknown as Evolu<TodoTestSchema>,
             owner: { id: 'first-owner' } as Owner,
-            updateRelayUrls: vi.fn(),
+            updateRelayUrls: mock.fn(),
         };
         const candidate = {
             evolu: {
-                [Symbol.asyncDispose]: vi.fn(() => Promise.resolve()),
+                [Symbol.asyncDispose]: mock.fn(() => Promise.resolve()),
             } as unknown as Evolu<TodoTestSchema>,
             owner: { id: 'candidate-owner' } as Owner,
-            updateRelayUrls: vi.fn(),
+            updateRelayUrls: mock.fn(),
         };
         const pendingCandidate = createPendingPromise<typeof candidate>();
-        const createEvolu = vi
-            .fn()
-            .mockResolvedValueOnce(first)
-            .mockReturnValueOnce(
-                pendingCandidate.promise,
-            ) as unknown as CreateEvolu<TodoTestSchema>;
+        const createEvoluMock = mock.fn(() => pendingCandidate.promise);
+        createEvoluMock.mock.mockImplementationOnce(async () => first);
+        const createEvolu = createEvoluMock as unknown as CreateEvolu<TodoTestSchema>;
         const storage = await createEvoluStorageFactory<TodoTestSchema>({ createEvolu })({
             mnemonic: Mnemonic.orThrow(
                 'abandon abandon abandon abandon abandon abandon abandon abandon abandon abandon abandon about',
@@ -160,17 +162,18 @@ describe(createEvoluStorageFactory.name, () => {
             persistMnemonic: () => Promise.resolve(),
         });
 
-        expect(storage.status).toBe('restoring');
-        await expect(
+        assert.strictEqual(storage.status, 'restoring');
+        await assert.rejects(
             storage.restoreOwner({
                 mnemonic: restoredMnemonic,
                 persistMnemonic: () => Promise.resolve(),
             }),
-        ).rejects.toThrow('restoring');
+            (error: unknown) => error instanceof Error && error.message.includes('restoring'),
+        );
 
         pendingCandidate.resolve(candidate);
         await firstRestore;
-        expect(storage.status).toBe('ready');
+        assert.strictEqual(storage.status, 'ready');
 
         await storage.dispose();
     });
@@ -179,33 +182,30 @@ describe(createEvoluStorageFactory.name, () => {
         const events: Array<string> = [];
         const first = {
             evolu: {
-                [Symbol.asyncDispose]: vi.fn(() => {
+                [Symbol.asyncDispose]: mock.fn(() => {
                     events.push('dispose:first');
 
                     return Promise.resolve();
                 }),
             } as unknown as Evolu<TodoTestSchema>,
             owner: { id: 'first-owner' } as Owner,
-            updateRelayUrls: vi.fn(),
+            updateRelayUrls: mock.fn(),
         };
         const candidate = {
             evolu: {
-                [Symbol.asyncDispose]: vi.fn(() => {
+                [Symbol.asyncDispose]: mock.fn(() => {
                     events.push('dispose:candidate');
 
                     return Promise.resolve();
                 }),
             } as unknown as Evolu<TodoTestSchema>,
             owner: { id: 'candidate-owner' } as Owner,
-            updateRelayUrls: vi.fn(),
+            updateRelayUrls: mock.fn(),
         };
         const pendingCandidate = createPendingPromise<typeof candidate>();
-        const createEvolu = vi
-            .fn()
-            .mockResolvedValueOnce(first)
-            .mockReturnValueOnce(
-                pendingCandidate.promise,
-            ) as unknown as CreateEvolu<TodoTestSchema>;
+        const createEvoluMock = mock.fn(() => pendingCandidate.promise);
+        createEvoluMock.mock.mockImplementationOnce(async () => first);
+        const createEvolu = createEvoluMock as unknown as CreateEvolu<TodoTestSchema>;
         const storage = await createEvoluStorageFactory<TodoTestSchema>({ createEvolu })({
             mnemonic: Mnemonic.orThrow(
                 'abandon abandon abandon abandon abandon abandon abandon abandon abandon abandon abandon about',
@@ -225,26 +225,39 @@ describe(createEvoluStorageFactory.name, () => {
         const firstDispose = storage.dispose();
         const secondDispose = storage.dispose();
 
-        expect(firstDispose).toBe(secondDispose);
-        expect(storage.status).toBe('disposing');
-        expect(events).toEqual([]);
+        assert.strictEqual(firstDispose, secondDispose);
+        assert.strictEqual(storage.status, 'disposing');
+        assert.deepStrictEqual(events, []);
 
         pendingCandidate.resolve(candidate);
         await restore;
         await firstDispose;
 
-        expect(events).toEqual(['persist:candidate', 'dispose:first', 'dispose:candidate']);
-        expect(storage.status).toBe('disposed');
-        expect(() => storage.evolu).toThrow('disposed');
-        expect(() => storage.activeOwner).toThrow('disposed');
-        await expect(storage.updateRelayUrls([])).rejects.toThrow('disposed');
-        await expect(
+        assert.deepStrictEqual(events, ['persist:candidate', 'dispose:first', 'dispose:candidate']);
+        assert.strictEqual(storage.status, 'disposed');
+        assert.throws(
+            () => storage.evolu,
+            (error: unknown) => error instanceof Error && error.message.includes('disposed'),
+        );
+        assert.throws(
+            () => storage.activeOwner,
+            (error: unknown) => error instanceof Error && error.message.includes('disposed'),
+        );
+        await assert.rejects(
+            storage.updateRelayUrls([]),
+            (error: unknown) => error instanceof Error && error.message.includes('disposed'),
+        );
+        await assert.rejects(
             storage.restoreOwner({
                 mnemonic: restoredMnemonic,
                 persistMnemonic: () => Promise.resolve(),
             }),
-        ).rejects.toThrow('disposed');
-        expect(() => storage.subscribeOwnerChange(vi.fn())).toThrow('disposed');
-        await expect(storage.dispose()).resolves.toBeUndefined();
+            (error: unknown) => error instanceof Error && error.message.includes('disposed'),
+        );
+        assert.throws(
+            () => storage.subscribeOwnerChange(mock.fn()),
+            (error: unknown) => error instanceof Error && error.message.includes('disposed'),
+        );
+        assert.strictEqual(await storage.dispose(), undefined);
     });
 });

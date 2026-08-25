@@ -1,9 +1,10 @@
-import { describe, expect, test } from 'vitest';
+import assert from 'node:assert/strict';
+import { describe, test } from 'node:test';
 import { buildSpacingStyle } from './spacing';
 
 describe(buildSpacingStyle.name, () => {
     test('applies scalar spacing to all sides', () => {
-        expect(buildSpacingStyle({ padding: 16 })).toEqual({
+        assert.deepStrictEqual(buildSpacingStyle({ padding: 16 }), {
             paddingTop: 16,
             paddingRight: 16,
             paddingBottom: 16,
@@ -12,7 +13,7 @@ describe(buildSpacingStyle.name, () => {
     });
 
     test('supports horizontal and vertical shorthands', () => {
-        expect(buildSpacingStyle({ padding: { vertical: 8, horizontal: 12 } })).toEqual({
+        assert.deepStrictEqual(buildSpacingStyle({ padding: { vertical: 8, horizontal: 12 } }), {
             paddingTop: 8,
             paddingRight: 12,
             paddingBottom: 8,
@@ -21,15 +22,16 @@ describe(buildSpacingStyle.name, () => {
     });
 
     test('prefers explicit sides over horizontal and vertical values', () => {
-        expect(
+        assert.deepStrictEqual(
             buildSpacingStyle({
                 padding: { top: 4, right: 6, vertical: 8, horizontal: 10 },
             }),
-        ).toEqual({
-            paddingTop: 4,
-            paddingRight: 6,
-            paddingBottom: 8,
-            paddingLeft: 10,
-        });
+            {
+                paddingTop: 4,
+                paddingRight: 6,
+                paddingBottom: 8,
+                paddingLeft: 10,
+            },
+        );
     });
 });

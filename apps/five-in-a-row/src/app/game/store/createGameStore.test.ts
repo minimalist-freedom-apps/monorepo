@@ -1,4 +1,5 @@
-import { describe, expect, test } from 'vitest';
+import assert from 'node:assert/strict';
+import { describe, test } from 'node:test';
 import { createGameStore, selectGameViewState } from './createGameStore';
 import { createPlayMove } from './playMove';
 import { createRedoMove } from './redoMove';
@@ -26,7 +27,7 @@ describe(createGameStore.name, () => {
         playMove({ index: 0 });
         playMove({ index: 1 });
 
-        expect(selectGameViewState(gameStore.getState()).board).toEqual([
+        assert.deepStrictEqual(selectGameViewState(gameStore.getState()).board, [
             'cross',
             'ring',
             null,
@@ -40,7 +41,7 @@ describe(createGameStore.name, () => {
 
         undoMove();
 
-        expect(selectGameViewState(gameStore.getState()).board).toEqual([
+        assert.deepStrictEqual(selectGameViewState(gameStore.getState()).board, [
             'cross',
             null,
             null,
@@ -54,7 +55,7 @@ describe(createGameStore.name, () => {
 
         redoMove();
 
-        expect(selectGameViewState(gameStore.getState()).board).toEqual([
+        assert.deepStrictEqual(selectGameViewState(gameStore.getState()).board, [
             'cross',
             'ring',
             null,
@@ -74,14 +75,24 @@ describe(createGameStore.name, () => {
         playMove({ index: 1 });
         undoMove();
 
-        expect(selectGameViewState(gameStore.getState()).canRedo).toBe(true);
+        assert.strictEqual(selectGameViewState(gameStore.getState()).canRedo, true);
 
         playMove({ index: 2 });
 
         const view = selectGameViewState(gameStore.getState());
 
-        expect(view.board).toEqual(['cross', null, 'ring', null, null, null, null, null, null]);
-        expect(view.canRedo).toBe(false);
+        assert.deepStrictEqual(view.board, [
+            'cross',
+            null,
+            'ring',
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+        ]);
+        assert.strictEqual(view.canRedo, false);
     });
 
     test('limits board size to 15 in bot mode', () => {
@@ -92,7 +103,7 @@ describe(createGameStore.name, () => {
         setGameMode('bot');
         setBoardSize(30);
 
-        expect(selectGameViewState(gameStore.getState()).boardSize).toBe(15);
+        assert.strictEqual(selectGameViewState(gameStore.getState()).boardSize, 15);
     });
 
     test('stores selected opening protocol and bot level in view state', () => {
@@ -103,7 +114,7 @@ describe(createGameStore.name, () => {
 
         const view = selectGameViewState(gameStore.getState());
 
-        expect(view.gameMode).toBe('bot');
+        assert.strictEqual(view.gameMode, 'bot');
     });
 
     test('does not play bot move automatically in store service', () => {
@@ -112,7 +123,7 @@ describe(createGameStore.name, () => {
         setGameMode('bot');
         playMove({ index: 0 });
 
-        expect(selectGameViewState(gameStore.getState()).board).toEqual([
+        assert.deepStrictEqual(selectGameViewState(gameStore.getState()).board, [
             'cross',
             null,
             null,

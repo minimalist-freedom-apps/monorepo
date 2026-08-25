@@ -1,6 +1,7 @@
+import assert from 'node:assert/strict';
+import { describe, test } from 'node:test';
 import { getOrThrow, testCreateNativeFetch, testCreateRun } from '@evolu/common';
 import { CurrencyCode } from '@minimalist-apps/fiat';
-import { describe, expect, test } from 'vitest';
 import { fetchBlockchainInfoRates } from './fetchBlockchainInfoRates';
 
 const USD = getOrThrow(CurrencyCode.fromUnknown('USD'));
@@ -21,20 +22,24 @@ describe('fetchBlockchainInfoRates', () => {
     test('parses finite positive rates', async () => {
         const result = await runWithPayload({ USD: { last: 50_000 } });
 
-        expect(result.ok).toBe(true);
+        assert.strictEqual(result.ok, true);
 
-        if (result.ok) {
-            expect(result.value[USD]?.rate).toBe(1 / 50_000);
-        }
+        assert.strictEqual(result.value[USD]?.rate, 1 / 50_000);
     });
 
-    test.each([null, [], { USD: null }, { USD: { last: 0 } }, { USD: { last: '50000' } }])(
-        'rejects malformed payload %#',
-        async payload => {
-            await expect(runWithPayload(payload)).resolves.toEqual({
+    for (const testCase of [
+        null,
+        [],
+        { USD: null },
+        { USD: { last: 0 } },
+        { USD: { last: '50000' } },
+    ]) {
+        test('rejects malformed payload %#' + ': ' + JSON.stringify(testCase), async () => {
+            const payload = testCase;
+            assert.deepStrictEqual(await runWithPayload(payload), {
                 ok: false,
                 error: { type: 'FetchRatesError' },
             });
-        },
-    );
+        });
+    }
 });

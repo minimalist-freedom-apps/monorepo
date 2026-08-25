@@ -2,7 +2,7 @@
     "extends": "@minimalist-apps/tsconfig/library.json",
     "compilerOptions": {
         "jsx": "react-jsx",
-        "types": ["@testing-library/jest-dom"]
+        "types": ["node"]
     },
     "include": ["src"]
 }

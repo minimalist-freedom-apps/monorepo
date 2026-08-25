@@ -1,55 +1,37 @@
-import { afterEach, describe, expect, it, vi } from 'vitest';
+import assert from 'node:assert/strict';
+import { describe, test } from 'node:test';
+import { createCreateSession } from './createSession';
 import type { E2ESession } from './session';
 
-const actionMocks = vi.hoisted(() => ({
-    attachWebdriverIoBrowser: vi.fn(),
-    createAppiumSession: vi.fn<() => Promise<{ readonly sessionId: string }>>(),
-    deleteSession: vi.fn<({ session }: { readonly session: E2ESession }) => Promise<void>>(),
-    setAppiumContext: vi.fn(),
-    waitForWebViewContext: vi.fn<() => Promise<string>>(),
-}));
-
-vi.mock('./actions/attachWebdriverIoBrowser.ts', () => ({
-    attachWebdriverIoBrowser: actionMocks.attachWebdriverIoBrowser,
-}));
-vi.mock('./actions/createAppiumSession.ts', () => ({
-    createAppiumSession: actionMocks.createAppiumSession,
-}));
-vi.mock('./actions/deleteAppiumSession.ts', () => ({
-    deleteSession: actionMocks.deleteSession,
-}));
-vi.mock('./actions/setAppiumContext.ts', () => ({
-    setAppiumContext: actionMocks.setAppiumContext,
-}));
-vi.mock('./actions/waitForWebViewContext.ts', () => ({
-    waitForWebViewContext: actionMocks.waitForWebViewContext,
-}));
-
-const { createSession } = await import('./createSession');
-
-afterEach(() => {
-    vi.resetAllMocks();
-});
-
-describe(createSession.name, () => {
-    it('deletes the Appium session when WebView setup fails', async () => {
+describe(createCreateSession.name, () => {
+    test('deletes the Appium session when WebView setup fails', async testContext => {
         const setupError = new Error('WebView setup failed');
-        actionMocks.createAppiumSession.mockResolvedValue({ sessionId: 'session-id' });
-        actionMocks.waitForWebViewContext.mockRejectedValue(setupError);
-        actionMocks.deleteSession.mockResolvedValue();
+        const deleteSession = testContext.mock.fn(
+            async (_props: { readonly session: E2ESession }) => undefined,
+        );
+        const createSession = createCreateSession({
+            attachWebdriverIoBrowser: testContext.mock.fn() as never,
+            createAppiumSession: testContext.mock.fn(async () => ({ sessionId: 'session-id' })),
+            deleteSession,
+            setAppiumContext: testContext.mock.fn(),
+            waitForWebViewContext: testContext.mock.fn(() => Promise.reject(setupError)),
+        });
 
-        await expect(
+        await assert.rejects(
             createSession({
                 appPath: '/tmp/app.apk',
                 serverUrl: 'http://localhost:4723',
             }),
-        ).rejects.toBe(setupError);
+            error => {
+                assert.strictEqual(error, setupError);
 
-        expect(actionMocks.deleteSession).toHaveBeenCalledExactlyOnceWith({
-            session: expect.objectContaining({
-                serverUrl: 'http://localhost:4723',
-                sessionId: 'session-id',
-            }),
-        });
+                return true;
+            },
+        );
+
+        assert.strictEqual(deleteSession.mock.callCount(), 1);
+        const deleteSessionParams = deleteSession.mock.calls[0]?.arguments[0];
+        assert.strictEqual(deleteSessionParams.session.serverUrl, 'http://localhost:4723');
+        assert.strictEqual(deleteSessionParams.session.sessionId, 'session-id');
     });
 });

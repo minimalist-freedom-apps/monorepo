@@ -1,16 +1,19 @@
-import { describe, expect, test } from 'vitest';
+import assert from 'node:assert/strict';
+import { describe, test } from 'node:test';
 import { createEmptyBoard } from './createRootSnapshot';
 
 describe(createEmptyBoard.name, () => {
-    test.each([
+    for (const testCase of [
         {
             label: 'creates board with expected number of cells',
             size: 3,
             expected: [null, null, null, null, null, null, null, null, null],
         },
-    ])('$label', ({ size, expected }) => {
-        const board = createEmptyBoard({ size });
-
-        expect(board).toEqual(expected);
-    });
+    ]) {
+        test('$label' + ': ' + JSON.stringify(testCase), () => {
+            const { size, expected } = testCase;
+            const board = createEmptyBoard({ size });
+            assert.deepStrictEqual(board, expected);
+        });
+    }
 });

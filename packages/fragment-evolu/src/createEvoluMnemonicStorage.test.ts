@@ -1,6 +1,7 @@
+import assert from 'node:assert/strict';
+import { describe, mock, test } from 'node:test';
 import { Mnemonic } from '@evolu/common';
 import type { SecureStorage } from '@minimalist-apps/secure-storage';
-import { describe, expect, test, vi } from 'vitest';
 import { createEvoluMnemonicStorage } from './createEvoluMnemonicStorage';
 
 const mnemonic = Mnemonic.orThrow(
@@ -9,20 +10,24 @@ const mnemonic = Mnemonic.orThrow(
 
 describe(createEvoluMnemonicStorage.name, () => {
     test('loads and saves a valid mnemonic under the Evolu key', async () => {
+        const load = mock.fn<SecureStorage['load']>(async () => mnemonic);
+        const save = mock.fn<SecureStorage['save']>(async () => undefined);
         const secureStorage: SecureStorage = {
-            load: vi.fn(async () => mnemonic),
-            save: vi.fn(async () => undefined),
+            load,
+            save,
         };
         const storage = createEvoluMnemonicStorage({ secureStorage });
 
-        await expect(storage.load()).resolves.toBe(mnemonic);
+        assert.strictEqual(await storage.load(), mnemonic);
         await storage.save(mnemonic);
 
-        expect(secureStorage.load).toHaveBeenCalledWith({ key: 'evoluMnemonic' });
-        expect(secureStorage.save).toHaveBeenCalledWith({
-            key: 'evoluMnemonic',
-            value: mnemonic,
-        });
+        assert.deepStrictEqual(load.mock.calls.at(-1)?.arguments, [{ key: 'evoluMnemonic' }]);
+        assert.deepStrictEqual(save.mock.calls.at(-1)?.arguments, [
+            {
+                key: 'evoluMnemonic',
+                value: mnemonic,
+            },
+        ]);
     });
 
     test('returns null when no secure mnemonic exists', async () => {
@@ -33,7 +38,7 @@ describe(createEvoluMnemonicStorage.name, () => {
             },
         });
 
-        await expect(storage.load()).resolves.toBeNull();
+        assert.strictEqual(await storage.load(), null);
     });
 
     test('rejects invalid secure data instead of silently creating a new owner', async () => {
@@ -44,6 +49,11 @@ describe(createEvoluMnemonicStorage.name, () => {
             },
         });
 
-        await expect(storage.load()).rejects.toThrow('Invalid Evolu mnemonic in secure storage');
+        await assert.rejects(
+            storage.load(),
+            (error: unknown) =>
+                error instanceof Error &&
+                error.message.includes('Invalid Evolu mnemonic in secure storage'),
+        );
     });
 });

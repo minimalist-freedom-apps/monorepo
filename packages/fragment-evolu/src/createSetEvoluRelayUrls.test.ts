@@ -1,6 +1,7 @@
+import assert from 'node:assert/strict';
+import { describe, mock, test } from 'node:test';
 import type { EvoluSchema } from '@evolu/common';
 import { createStore } from '@minimalist-apps/mini-store';
-import { describe, expect, test, vi } from 'vitest';
 import { createSetEvoluRelayUrls } from './createSetEvoluRelayUrls';
 import type { EvoluState } from './evoluState';
 
@@ -13,8 +14,8 @@ const initialState: EvoluState = {
 describe(createSetEvoluRelayUrls.name, () => {
     test('updates live transports before publishing the new setting', async () => {
         const store = createStore(initialState);
-        const updateRelayUrls = vi.fn(() => {
-            expect(store.getState().evoluRelayUrls).toEqual(['wss://free.evoluhq.com']);
+        const updateRelayUrls = mock.fn(() => {
+            assert.deepStrictEqual(store.getState().evoluRelayUrls, ['wss://free.evoluhq.com']);
 
             return Promise.resolve();
         });
@@ -26,8 +27,8 @@ describe(createSetEvoluRelayUrls.name, () => {
 
         await setEvoluRelayUrls(relayUrls);
 
-        expect(updateRelayUrls).toHaveBeenCalledWith(relayUrls);
-        expect(store.getState().evoluRelayUrls).toEqual(relayUrls);
+        assert.deepStrictEqual(updateRelayUrls.mock.calls.at(-1)?.arguments, [relayUrls]);
+        assert.deepStrictEqual(store.getState().evoluRelayUrls, relayUrls);
     });
 
     test('keeps the previous setting when updating live transports fails', async () => {
@@ -37,11 +38,15 @@ describe(createSetEvoluRelayUrls.name, () => {
             store,
             ensureEvoluStorage: async () =>
                 ({
-                    updateRelayUrls: vi.fn().mockRejectedValue(updateError),
+                    updateRelayUrls: mock.fn(() => Promise.reject(updateError)),
                 }) as never,
         });
 
-        await expect(setEvoluRelayUrls(['wss://one.example'])).rejects.toBe(updateError);
-        expect(store.getState()).toEqual(initialState);
+        await assert.rejects(setEvoluRelayUrls(['wss://one.example']), (error: unknown) => {
+            assert.strictEqual(error, updateError);
+
+            return true;
+        });
+        assert.deepStrictEqual(store.getState(), initialState);
     });
 });

@@ -1,4 +1,5 @@
-import { describe, expect, test } from 'vitest';
+import assert from 'node:assert/strict';
+import { describe, test } from 'node:test';
 import { groupBtcDecimalDigits } from './groupBtcDecimalDigits';
 
 describe(groupBtcDecimalDigits.name, () => {
@@ -14,7 +15,10 @@ describe(groupBtcDecimalDigits.name, () => {
         ['23456789', '23,456,789', 'groups without padding'],
     ];
 
-    test.each(testCases)('%s → %s — %s', (input, expected) => {
-        expect(groupBtcDecimalDigits(input)).toBe(expected);
-    });
+    for (const testCase of testCases) {
+        test('%s → %s — %s' + ': ' + JSON.stringify(testCase), () => {
+            const [input, expected] = testCase;
+            assert.strictEqual(groupBtcDecimalDigits(input), expected);
+        });
+    }
 });

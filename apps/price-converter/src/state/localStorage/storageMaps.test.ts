@@ -1,3 +1,5 @@
+import assert from 'node:assert/strict';
+import { describe, test } from 'node:test';
 import { ok } from '@evolu/common';
 import type { AmountSats } from '@minimalist-apps/bitcoin';
 import { type CurrencyCode, FiatAmount } from '@minimalist-apps/fiat';
@@ -6,7 +8,6 @@ import {
     applyMapStateLocalStorage,
 } from '@minimalist-apps/fragment-local-storage';
 import type { LocalStorage } from '@minimalist-apps/local-storage';
-import { describe, expect, test } from 'vitest';
 import { RateBtcPerFiat } from '../../converter/rate';
 import type { State } from '../State';
 import { mapLocalStorageToState, mapStateLocalStorage } from './storageMaps';
@@ -59,7 +60,7 @@ describe('storageMaps', () => {
             state: initState,
         });
 
-        expect(data).toEqual({
+        assert.deepStrictEqual(data, {
             'test-prefix:rates': '{"USD":{"code":"USD","name":"US Dollar","rate":0.00001}}',
             'test-prefix:lastUpdated': '123',
             'test-prefix:btcMode': 'sats',
@@ -67,7 +68,7 @@ describe('storageMaps', () => {
             'test-prefix:evoluRelayUrls': 'wss://one.example\nwss://two.example',
         });
 
-        data['test-prefix:evoluMnemonic'] =
+        (data as Record<string, unknown>)['test-prefix:evoluMnemonic'] =
             'abandon abandon abandon abandon abandon abandon abandon abandon abandon abandon abandon about';
 
         const state = applyMapLocalStorageToState({
@@ -76,7 +77,7 @@ describe('storageMaps', () => {
             mapLocalStorageToState,
         });
 
-        expect(state).toEqual({
+        assert.deepStrictEqual(state, {
             rates: initState.rates,
             lastUpdated: 123,
             btcMode: 'sats',

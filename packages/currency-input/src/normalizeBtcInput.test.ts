@@ -1,4 +1,5 @@
-import { describe, expect, test } from 'vitest';
+import assert from 'node:assert/strict';
+import { describe, test } from 'node:test';
 import { normalizeBtcInput } from './normalizeBtcInput';
 
 describe(normalizeBtcInput.name, () => {
@@ -44,10 +45,12 @@ describe(normalizeBtcInput.name, () => {
         },
     ];
 
-    test.each(testCases)('$label ($input → $display)', ({ input, display, numeric }) => {
-        const result = normalizeBtcInput(input);
-
-        expect(result.display).toBe(display);
-        expect(result.numeric).toBe(numeric);
-    });
+    for (const testCase of testCases) {
+        test('$label ($input → $display)' + ': ' + JSON.stringify(testCase), () => {
+            const { input, display, numeric } = testCase;
+            const result = normalizeBtcInput(input);
+            assert.strictEqual(result.display, display);
+            assert.strictEqual(result.numeric, numeric);
+        });
+    }
 });

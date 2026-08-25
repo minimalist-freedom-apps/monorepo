@@ -1,4 +1,5 @@
-import { describe, expect, test } from 'vitest';
+import assert from 'node:assert/strict';
+import { describe, test } from 'node:test';
 import { createEmptyBoard } from '../createRootSnapshot';
 import type { GameState } from '../game';
 import { botMove } from './botMove';
@@ -37,7 +38,7 @@ describe(botMove.name, () => {
 
         const moveIndex = botMove(state);
 
-        expect(moveIndex).toBe(12);
+        assert.strictEqual(moveIndex, 12);
     });
 
     test('returns best scoring response after opponent opening move', () => {
@@ -54,6 +55,6 @@ describe(botMove.name, () => {
 
         const moveIndex = botMove(state);
 
-        expect(moveIndex).toBe(12);
+        assert.strictEqual(moveIndex, 12);
     });
 });

@@ -1,4 +1,5 @@
-import { describe, expect, test } from 'vitest';
+import assert from 'node:assert/strict';
+import { describe, test } from 'node:test';
 import { formatNumberWithCommas } from './formatNumberWithCommas';
 
 describe(formatNumberWithCommas.name, () => {
@@ -26,10 +27,13 @@ describe(formatNumberWithCommas.name, () => {
         { value: 1.123456, precision: 5, expected: '1.12346', label: 'respects precision 5' },
     ];
 
-    test.each(testCases)(
-        '$label ($value, precision=$precision → $expected)',
-        ({ value, precision, expected }) => {
-            expect(formatNumberWithCommas({ value, precision })).toBe(expected);
-        },
-    );
+    for (const testCase of testCases) {
+        test(
+            '$label ($value, precision=$precision → $expected)' + ': ' + JSON.stringify(testCase),
+            () => {
+                const { value, precision, expected } = testCase;
+                assert.strictEqual(formatNumberWithCommas({ value, precision }), expected);
+            },
+        );
+    }
 });

@@ -15,8 +15,8 @@
         "lint:eslint": "eslint .",
         "lint:eslint:fix": "eslint --fix .",
         "typecheck": "pnpm -r --if-present typecheck",
-        "test": "vitest run",
-        "test:no-cache": "vitest run --no-cache",
+        "test": "node --import=tsx --import=./test.setup.ts --test --test-concurrency=1 --test-force-exit \"apps/**/*.test.ts\" \"apps/**/*.test.tsx\" \"packages/**/*.test.ts\" \"packages/**/*.test.tsx\"",
+        "test:no-cache": "pnpm test",
         "test:affected": "nx affected -t test",
         "e2e:affected": "nx affected -t e2e-ci",
         "requirements:verify": "requirements-verify",
@@ -30,9 +30,11 @@
         "@minimalist-apps/requirements": "workspace:*",
         "@minimalist-apps/tsconfig": "workspace:*",
         "@stylistic/eslint-plugin": "^5.10.0",
-        "@testing-library/jest-dom": "^7.0.1",
         "@testing-library/react": "^16.3.2",
+        "@types/jsdom": "^27.0.0",
         "@types/node": "^24.13.3",
+        "@types/react": "^19.2.18",
+        "@types/react-dom": "^19.2.4",
         "@typescript/native": "npm:typescript@^7.0.2",
         "@typescript-eslint/eslint-plugin": "^8.67.0",
         "@typescript-eslint/parser": "^8.67.0",
@@ -41,8 +43,9 @@
         "jsdom": "^30.0.1",
         "knip": "^6.32.2",
         "nx": "23.1.1",
+        "react": "^19.2.8",
+        "react-dom": "^19.2.8",
         "tsx": "^4.23.12",
-        "typescript": "npm:@typescript/typescript6@^6.0.2",
-        "vitest": "^4.1.11"
+        "typescript": "npm:@typescript/typescript6@^6.0.2"
     }
 }

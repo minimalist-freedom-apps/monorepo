@@ -1,9 +1,10 @@
-import { describe, expect, test } from 'vitest';
+import assert from 'node:assert/strict';
+import { describe, test } from 'node:test';
 import { createEmptyBoard } from './createRootSnapshot';
 import { findWinner, type GameBoard, getNextPlayer, isBoardFull } from './game';
 
 describe(getNextPlayer.name, () => {
-    test.each([
+    for (const testCase of [
         {
             label: 'toggles from cross to ring',
             player: 'cross' as const,
@@ -14,13 +15,16 @@ describe(getNextPlayer.name, () => {
             player: 'ring' as const,
             expected: 'cross' as const,
         },
-    ])('$label', ({ player, expected }) => {
-        expect(getNextPlayer({ player })).toBe(expected);
-    });
+    ]) {
+        test('$label' + ': ' + JSON.stringify(testCase), () => {
+            const { player, expected } = testCase;
+            assert.strictEqual(getNextPlayer({ player }), expected);
+        });
+    }
 });
 
 describe(isBoardFull.name, () => {
-    test.each([
+    for (const testCase of [
         {
             label: 'returns false if at least one cell is empty',
             board: ['cross', null] as GameBoard,
@@ -31,13 +35,16 @@ describe(isBoardFull.name, () => {
             board: ['cross', 'ring'] as GameBoard,
             expected: true,
         },
-    ])('$label', ({ board, expected }) => {
-        expect(isBoardFull({ board })).toBe(expected);
-    });
+    ]) {
+        test('$label' + ': ' + JSON.stringify(testCase), () => {
+            const { board, expected } = testCase;
+            assert.strictEqual(isBoardFull({ board }), expected);
+        });
+    }
 });
 
 describe(findWinner.name, () => {
-    test.each([
+    for (const testCase of [
         {
             label: 'detects horizontal winner on 10x10 board',
             size: 10,
@@ -103,9 +110,11 @@ describe(findWinner.name, () => {
             lastMoveIndex: 4,
             expected: null,
         },
-    ])('$label', ({ size, boardBuilder, lastMoveIndex, expected }) => {
-        const board = boardBuilder();
-
-        expect(findWinner({ board, size, lastMoveIndex })).toEqual(expected);
-    });
+    ]) {
+        test('$label' + ': ' + JSON.stringify(testCase), () => {
+            const { size, boardBuilder, lastMoveIndex, expected } = testCase;
+            const board = boardBuilder();
+            assert.deepStrictEqual(findWinner({ board, size, lastMoveIndex }), expected);
+        });
+    }
 });

@@ -1,4 +1,5 @@
-import { afterEach, describe, expect, it } from 'vitest';
+import assert from 'node:assert/strict';
+import { afterEach, describe, it } from 'node:test';
 import { installPolyfills } from './installPolyfills';
 
 const nativeWithResolversDescriptor = Object.getOwnPropertyDescriptor(Promise, 'withResolvers');
@@ -26,6 +27,6 @@ describe(installPolyfills.name, () => {
         const deferred = Promise.withResolvers<string>();
         deferred.resolve('resolved');
 
-        await expect(deferred.promise).resolves.toBe('resolved');
+        assert.strictEqual(await deferred.promise, 'resolved');
     });
 });

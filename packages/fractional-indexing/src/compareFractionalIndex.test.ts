@@ -1,4 +1,5 @@
-import { describe, expect, test } from 'vitest';
+import assert from 'node:assert/strict';
+import { describe, test } from 'node:test';
 import { compareFractionalIndex } from './compareFractionalIndex';
 import type { FractionalIndex } from './FractionalIndex';
 
@@ -21,7 +22,10 @@ describe(compareFractionalIndex.name, () => {
         ],
     ];
 
-    test.each(cases)('%s', (_, a, b, expected) => {
-        expect(compareFractionalIndex(a, b)).toBe(expected);
-    });
+    for (const testCase of cases) {
+        test('%s' + ': ' + JSON.stringify(testCase), () => {
+            const [_, a, b, expected] = testCase;
+            assert.strictEqual(compareFractionalIndex(a, b), expected);
+        });
+    }
 });

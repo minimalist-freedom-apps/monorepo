@@ -1,4 +1,5 @@
-import { describe, expect, test } from 'vitest';
+import assert from 'node:assert/strict';
+import { describe, test } from 'node:test';
 import { formatBtcToSatcommaNotation } from './formatBtcToSatcommaNotation.js';
 import type { AmountBtc } from './types.js';
 
@@ -24,7 +25,10 @@ describe(formatBtcToSatcommaNotation.name, () => {
         { input: -1.23456789, expected: '-1.23,456,789' },
     ];
 
-    test.each(testCases)('formats $input to $expected', ({ input, expected }) => {
-        expect(formatBtcToSatcommaNotation(input as AmountBtc)).toBe(expected);
-    });
+    for (const testCase of testCases) {
+        test('formats $input to $expected' + ': ' + JSON.stringify(testCase), () => {
+            const { input, expected } = testCase;
+            assert.strictEqual(formatBtcToSatcommaNotation(input as AmountBtc), expected);
+        });
+    }
 });

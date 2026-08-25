@@ -1,11 +1,17 @@
+import assert from 'node:assert/strict';
+import { afterEach, describe, mock, test } from 'node:test';
+import { err, ok } from '@evolu/common';
 import type { NotificationApi } from '@minimalist-apps/components';
 import type { CurrencyCode } from '@minimalist-apps/fiat';
-import { render, screen } from '@testing-library/react';
+import { cleanup, render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
-import { describe, expect, test, vi } from 'vitest';
 import { asRateBtcPerFiat } from '../../converter/rate.js';
 import type { CurrencyMap } from '../../rates/FetchRates.js';
+import { type AddCurrency, AddCurrencyUpdateError } from '../../state/addCurrency.js';
+import type { NavigatorScreen } from '../../state/State.js';
 import { AddCurrencyScreenPure } from './AddCurrencyScreen.js';
+
+afterEach(cleanup);
 
 const createTestRates = (): CurrencyMap =>
     ({
@@ -32,14 +38,15 @@ const createTestRates = (): CurrencyMap =>
     }) as CurrencyMap;
 
 const createTestComponent = (selectedCurrencies: ReadonlyArray<CurrencyCode> = []) => {
-    const navigate = vi.fn();
-    const addCurrency = vi.fn();
+    const navigate = mock.fn<(screen: NavigatorScreen) => void>();
+    const addCurrency = mock.fn<AddCurrency>(async () => ok());
+    const showError = mock.fn<NotificationApi['error']>();
     const notification: NotificationApi = {
-        success: vi.fn(),
-        error: vi.fn(),
-        info: vi.fn(),
-        warning: vi.fn(),
-        loading: vi.fn(),
+        success: mock.fn(),
+        error: showError,
+        info: mock.fn(),
+        warning: mock.fn(),
+        loading: mock.fn(),
     };
     const deps = { navigate, addCurrency, notification };
     const rates = createTestRates();
@@ -48,7 +55,7 @@ const createTestComponent = (selectedCurrencies: ReadonlyArray<CurrencyCode> = [
         <>{AddCurrencyScreenPure(deps, { rates, selectedCurrencies })}</>
     );
 
-    return { navigate, addCurrency, notification, AddCurrencyScreen };
+    return { navigate, addCurrency, showError, AddCurrencyScreen };
 };
 
 describe('AddCurrencyScreenPure', () => {
@@ -57,7 +64,10 @@ describe('AddCurrencyScreenPure', () => {
 
         render(<AddCurrencyScreen />);
 
-        expect(screen.getByPlaceholderText('Search currencies...')).toHaveFocus();
+        assert.strictEqual(
+            document.activeElement,
+            screen.getByPlaceholderText('Search currencies...'),
+        );
     });
 
     test('tabs from search input directly to first currency row', async () => {
@@ -68,7 +78,7 @@ describe('AddCurrencyScreenPure', () => {
 
         await user.tab();
 
-        expect(screen.getByRole('button', { name: /Euro/i })).toHaveFocus();
+        assert.strictEqual(document.activeElement, screen.getByRole('button', { name: /Euro/i }));
     });
 
     test('displays flag emojis for each currency', () => {
@@ -77,8 +87,8 @@ describe('AddCurrencyScreenPure', () => {
         render(<AddCurrencyScreen />);
 
         // USD has 🇺🇸, JPY has 🇯🇵
-        expect(screen.getByText(/🇺🇸/)).toBeInTheDocument();
-        expect(screen.getByText(/🇯🇵/)).toBeInTheDocument();
+        assert.ok(document.body.contains(screen.getByText(/🇺🇸/)));
+        assert.ok(document.body.contains(screen.getByText(/🇯🇵/)));
     });
 
     test('displays currency name and code', () => {
@@ -86,10 +96,10 @@ describe('AddCurrencyScreenPure', () => {
 
         render(<AddCurrencyScreen />);
 
-        expect(screen.getByText('United States dollar')).toBeInTheDocument();
-        expect(screen.getByText('USD')).toBeInTheDocument();
-        expect(screen.getByText('Japanese yen')).toBeInTheDocument();
-        expect(screen.getByText('JPY')).toBeInTheDocument();
+        assert.ok(document.body.contains(screen.getByText('United States dollar')));
+        assert.ok(document.body.contains(screen.getByText('USD')));
+        assert.ok(document.body.contains(screen.getByText('Japanese yen')));
+        assert.ok(document.body.contains(screen.getByText('JPY')));
     });
 
     test('excludes already selected currencies', () => {
@@ -97,8 +107,8 @@ describe('AddCurrencyScreenPure', () => {
 
         render(<AddCurrencyScreen />);
 
-        expect(screen.queryByText('United States dollar')).not.toBeInTheDocument();
-        expect(screen.getByText('Euro')).toBeInTheDocument();
+        assert.strictEqual(screen.queryByText('United States dollar'), null);
+        assert.ok(document.body.contains(screen.getByText('Euro')));
     });
 
     test('navigates back when back button clicked', async () => {
@@ -108,32 +118,34 @@ describe('AddCurrencyScreenPure', () => {
         render(<AddCurrencyScreen />);
         await user.click(screen.getByText('← Back'));
 
-        expect(navigate).toHaveBeenCalledWith('Converter');
+        assert.deepStrictEqual(navigate.mock.calls.at(-1)?.arguments, ['Converter']);
     });
 
     test('adds currency and navigates on item click', async () => {
         const user = userEvent.setup();
         const { addCurrency, navigate, AddCurrencyScreen } = createTestComponent();
 
-        addCurrency.mockResolvedValueOnce({ ok: true });
+        addCurrency.mock.mockImplementationOnce(async () => ok());
 
         render(<AddCurrencyScreen />);
         await user.click(screen.getByText('Japanese yen'));
 
-        expect(addCurrency).toHaveBeenCalledWith({ code: 'JPY' });
-        expect(navigate).toHaveBeenCalledWith('Converter');
+        assert.deepStrictEqual(addCurrency.mock.calls.at(-1)?.arguments, [{ code: 'JPY' }]);
+        assert.deepStrictEqual(navigate.mock.calls.at(-1)?.arguments, ['Converter']);
     });
 
     test('shows error notification when adding currency fails', async () => {
         const user = userEvent.setup();
-        const { addCurrency, navigate, notification, AddCurrencyScreen } = createTestComponent();
+        const { addCurrency, navigate, showError, AddCurrencyScreen } = createTestComponent();
 
-        addCurrency.mockResolvedValueOnce({ ok: false });
+        addCurrency.mock.mockImplementationOnce(async () =>
+            err(AddCurrencyUpdateError({ caused: new Error('test error') })),
+        );
 
         render(<AddCurrencyScreen />);
         await user.click(screen.getByText('Japanese yen'));
 
-        expect(notification.error).toHaveBeenCalledWith('Failed to add currency.');
-        expect(navigate).not.toHaveBeenCalledWith('Converter');
+        assert.deepStrictEqual(showError.mock.calls.at(-1)?.arguments, ['Failed to add currency.']);
+        assert.notDeepStrictEqual(navigate.mock.calls.at(-1)?.arguments, ['Converter']);
     });
 });

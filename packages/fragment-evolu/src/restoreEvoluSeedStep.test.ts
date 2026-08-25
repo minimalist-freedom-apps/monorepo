@@ -1,66 +1,100 @@
-import type { E2ESession } from '@minimalist-apps/android-e2e';
-import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
-
-const actionMocks = vi.hoisted(() => ({
-    clickElementByTestId: vi.fn(),
-    getElementAttributeByTestId: vi.fn(),
-    isElementExistingByTestId: vi.fn(),
-    runWebViewFlow: vi.fn(),
-    typeIntoElementByTestId: vi.fn(),
-    waitForElementByTestId: vi.fn(),
-    waitForElementTextByTestIdContains: vi.fn(),
-}));
-
-vi.mock('@minimalist-apps/android-e2e', () => actionMocks);
-
-const { restoreEvoluSeedStep } = await import('../e2e/restoreEvoluSeedStep');
+import assert from 'node:assert/strict';
+import { describe, type TestContext, test } from 'node:test';
+import type {
+    clickElementByTestId as ClickElementByTestId,
+    E2ESession,
+    typeIntoElementByTestId as TypeIntoElementByTestId,
+    waitForElementByTestId as WaitForElementByTestId,
+} from '@minimalist-apps/android-e2e';
+import { createRestoreEvoluSeedStep } from '../e2e/restoreEvoluSeedStep';
 
 const session: E2ESession = {
     serverUrl: 'http://localhost:4723',
     sessionId: 'session-id',
-    [Symbol.asyncDispose]: vi.fn(),
+    [Symbol.asyncDispose]: async () => undefined,
 };
 
-beforeEach(() => {
-    actionMocks.runWebViewFlow.mockImplementation(
-        ({ flow }: { readonly flow: () => Promise<void> }) => flow(),
+interface TestCreateRestoreEvoluSeedStepProps {
+    readonly getElementAttributeByTestId: () => Promise<string | null>;
+    readonly isElementExistingByTestId: () => Promise<boolean>;
+    readonly testContext: TestContext;
+}
+
+const testCreateRestoreEvoluSeedStep = ({
+    getElementAttributeByTestId,
+    isElementExistingByTestId,
+    testContext,
+}: TestCreateRestoreEvoluSeedStepProps) => {
+    const clickElementByTestId = testContext.mock.fn<typeof ClickElementByTestId>(
+        async () => undefined,
     );
-});
-
-afterEach(() => {
-    vi.resetAllMocks();
-});
-
-describe(restoreEvoluSeedStep.name, () => {
-    it('does not repeat the restore when the expected owner is already active', async () => {
-        actionMocks.isElementExistingByTestId
-            .mockResolvedValueOnce(false)
-            .mockResolvedValueOnce(true);
-        actionMocks.getElementAttributeByTestId.mockResolvedValue('🐛tGENww');
-
-        await restoreEvoluSeedStep({ session });
-
-        expect(actionMocks.clickElementByTestId).not.toHaveBeenCalled();
-        expect(actionMocks.typeIntoElementByTestId).not.toHaveBeenCalled();
+    const typeIntoElementByTestId = testContext.mock.fn<typeof TypeIntoElementByTestId>(
+        async () => undefined,
+    );
+    const restoreEvoluSeedStep = createRestoreEvoluSeedStep({
+        clickElementByTestId,
+        getElementAttributeByTestId: testContext.mock.fn(getElementAttributeByTestId) as never,
+        isElementExistingByTestId: testContext.mock.fn(isElementExistingByTestId) as never,
+        runWebViewFlow: ({ flow }) => flow(),
+        typeIntoElementByTestId,
+        waitForElementByTestId: testContext.mock.fn<typeof WaitForElementByTestId>(
+            async () => 'element-id',
+        ),
+        waitForElementTextByTestIdContains: testContext.mock.fn(async () => undefined),
     });
 
-    it('restores the seed from a known home-screen state', async () => {
-        actionMocks.isElementExistingByTestId.mockResolvedValue(false);
-        actionMocks.getElementAttributeByTestId.mockResolvedValue('false');
+    return {
+        clickElementByTestId,
+        restoreEvoluSeedStep,
+        typeIntoElementByTestId,
+    };
+};
 
-        await restoreEvoluSeedStep({ session });
+describe(createRestoreEvoluSeedStep.name, () => {
+    test('does not repeat the restore when the expected owner is already active', async testContext => {
+        let existenceCheck = 0;
+        const deps = testCreateRestoreEvoluSeedStep({
+            getElementAttributeByTestId: async () => '🐛tGENww',
+            isElementExistingByTestId: () => {
+                existenceCheck += 1;
 
-        expect(actionMocks.clickElementByTestId.mock.calls.map(([props]) => props.testId)).toEqual([
-            'open-settings-button',
-            'debug-mode-switch',
-            'restore-backup-button',
-            'restore-modal-ok',
-            'settings-back-button',
-        ]);
-        expect(actionMocks.typeIntoElementByTestId).toHaveBeenCalledExactlyOnceWith({
-            session,
-            testId: 'restore-seed-input',
-            text: 'abandon abandon abandon abandon abandon abandon abandon abandon abandon abandon abandon about',
+                return Promise.resolve(existenceCheck === 2);
+            },
+            testContext,
         });
+
+        await deps.restoreEvoluSeedStep({ session });
+
+        assert.strictEqual(deps.clickElementByTestId.mock.callCount(), 0);
+        assert.strictEqual(deps.typeIntoElementByTestId.mock.callCount(), 0);
+    });
+
+    test('restores the seed from a known home-screen state', async testContext => {
+        const deps = testCreateRestoreEvoluSeedStep({
+            getElementAttributeByTestId: async () => 'false',
+            isElementExistingByTestId: async () => false,
+            testContext,
+        });
+
+        await deps.restoreEvoluSeedStep({ session });
+
+        assert.deepStrictEqual(
+            deps.clickElementByTestId.mock.calls.map(call => call.arguments[0].testId),
+            [
+                'open-settings-button',
+                'debug-mode-switch',
+                'restore-backup-button',
+                'restore-modal-ok',
+                'settings-back-button',
+            ],
+        );
+        assert.strictEqual(deps.typeIntoElementByTestId.mock.callCount(), 1);
+        assert.deepStrictEqual(deps.typeIntoElementByTestId.mock.calls[0]?.arguments, [
+            {
+                session,
+                testId: 'restore-seed-input',
+                text: 'abandon abandon abandon abandon abandon abandon abandon abandon abandon abandon abandon about',
+            },
+        ]);
     });
 });

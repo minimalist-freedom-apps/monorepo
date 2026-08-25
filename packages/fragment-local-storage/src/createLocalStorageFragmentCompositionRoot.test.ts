@@ -1,6 +1,7 @@
+import assert from 'node:assert/strict';
+import { describe, test } from 'node:test';
 import { createStore } from '@minimalist-apps/mini-store';
 import { typedObjectEntries } from '@minimalist-apps/type-utils';
-import { describe, expect, test } from 'vitest';
 import {
     createLocalStorageFragmentCompositionRoot,
     type MapLocalStorageToState,
@@ -142,7 +143,7 @@ describe(createLocalStorageFragmentCompositionRoot.name, () => {
 
         const stop = localStorageInit();
 
-        expect(store.getState()).toEqual({
+        assert.deepStrictEqual(store.getState(), {
             name: 'Alice',
             age: 31,
             tags: { role: 'admin' },
@@ -162,9 +163,10 @@ describe(createLocalStorageFragmentCompositionRoot.name, () => {
             tags: { team: 'core' },
         });
 
-        expect(globalThis.localStorage.getItem('test-app:name')).toBe(JSON.stringify('Bob'));
-        expect(globalThis.localStorage.getItem('test-app:age')).toBe(JSON.stringify('42'));
-        expect(globalThis.localStorage.getItem('test-app:tags')).toBe(
+        assert.strictEqual(globalThis.localStorage.getItem('test-app:name'), JSON.stringify('Bob'));
+        assert.strictEqual(globalThis.localStorage.getItem('test-app:age'), JSON.stringify('42'));
+        assert.strictEqual(
+            globalThis.localStorage.getItem('test-app:tags'),
             JSON.stringify(JSON.stringify({ team: 'core' })),
         );
 
@@ -183,12 +185,12 @@ describe(createLocalStorageFragmentCompositionRoot.name, () => {
 
         const stop = localStorageInit();
 
-        expect(store.getState()).toEqual({
+        assert.deepStrictEqual(store.getState(), {
             name: 'Alice',
             age: 31,
             tags: { role: 'admin' },
         });
-        expect(settingsStore.getState()).toEqual({
+        assert.deepStrictEqual(settingsStore.getState(), {
             theme: 'dark',
         });
 
@@ -209,12 +211,22 @@ describe(createLocalStorageFragmentCompositionRoot.name, () => {
             theme: 'dark',
         });
 
-        expect(globalThis.localStorage.getItem('test-profile:name')).toBe(JSON.stringify('Bob'));
-        expect(globalThis.localStorage.getItem('test-profile:age')).toBe(JSON.stringify('42'));
-        expect(globalThis.localStorage.getItem('test-profile:tags')).toBe(
+        assert.strictEqual(
+            globalThis.localStorage.getItem('test-profile:name'),
+            JSON.stringify('Bob'),
+        );
+        assert.strictEqual(
+            globalThis.localStorage.getItem('test-profile:age'),
+            JSON.stringify('42'),
+        );
+        assert.strictEqual(
+            globalThis.localStorage.getItem('test-profile:tags'),
             JSON.stringify(JSON.stringify({ team: 'core' })),
         );
-        expect(globalThis.localStorage.getItem('test-settings:theme')).toBe(JSON.stringify('dark'));
+        assert.strictEqual(
+            globalThis.localStorage.getItem('test-settings:theme'),
+            JSON.stringify('dark'),
+        );
 
         stop();
     });

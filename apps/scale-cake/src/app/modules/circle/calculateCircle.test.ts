@@ -1,4 +1,5 @@
-import { describe, expect, test } from 'vitest';
+import assert from 'node:assert/strict';
+import { describe, test } from 'node:test';
 import { calculateCircle } from './calculateCircle';
 
 describe(calculateCircle.name, () => {
@@ -53,13 +54,19 @@ describe(calculateCircle.name, () => {
         },
     ];
 
-    test.each(testCases)('$description', ({ amount, originalDiameter, newDiameter, expected }) => {
-        const result = calculateCircle({ amount, originalDiameter, newDiameter });
+    for (const testCase of testCases) {
+        test('$description' + ': ' + JSON.stringify(testCase), () => {
+            const { amount, originalDiameter, newDiameter, expected } = testCase;
+            const result = calculateCircle({ amount, originalDiameter, newDiameter });
 
-        if (expected === null) {
-            expect(result).toBeNull();
-        } else {
-            expect(result).toBeCloseTo(expected, 1);
-        }
-    });
+            if (expected === null) {
+                assert.strictEqual(result, null);
+            } else {
+                if (result === null) {
+                    assert.fail('Expected a calculated result.');
+                }
+                assert.ok(Math.abs(result - expected) < 10 ** -1 / 2);
+            }
+        });
+    }
 });

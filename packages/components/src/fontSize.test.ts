@@ -1,4 +1,5 @@
-import { describe, expect, test } from 'vitest';
+import assert from 'node:assert/strict';
+import { describe, test } from 'node:test';
 import { decreaseFontSize } from './fontSize';
 
 describe(decreaseFontSize.name, () => {
@@ -17,7 +18,13 @@ describe(decreaseFontSize.name, () => {
         { fontSize: 'large', steps: 0, expected: 'large' },
     ] as const;
 
-    test.each(dataProvider)('returns $expected for $fontSize decreased by $steps', value => {
-        expect(decreaseFontSize(value.fontSize, value.steps)).toBe(value.expected);
-    });
+    for (const testCase of dataProvider) {
+        test(
+            'returns $expected for $fontSize decreased by $steps' + ': ' + JSON.stringify(testCase),
+            () => {
+                const value = testCase;
+                assert.strictEqual(decreaseFontSize(value.fontSize, value.steps), value.expected);
+            },
+        );
+    }
 });

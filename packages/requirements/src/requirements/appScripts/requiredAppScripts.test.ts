@@ -1,8 +1,9 @@
+import assert from 'node:assert/strict';
 import { mkdirSync, mkdtempSync, readFileSync, rmSync, writeFileSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
+import { afterEach, beforeEach, describe, test } from 'node:test';
 import { typedObjectKeys } from '@minimalist-apps/type-utils';
-import { afterEach, beforeEach, describe, expect, test } from 'vitest';
 import { requiredAppScripts } from './requiredAppScripts';
 
 const createTempDir = (): string => mkdtempSync(join(tmpdir(), 'req-scripts-'));
@@ -39,15 +40,16 @@ describe(requiredAppScripts.name, () => {
 
     describe('fix', () => {
         test('does not apply to tsconfig package', () => {
-            expect(
+            assert.strictEqual(
                 requiredAppScripts.applies({ projectType: 'package', dirName: 'tsconfig' }),
-            ).toBe(false);
+                false,
+            );
         });
 
         test('returns error when package.json is missing', async () => {
             const errors = await requiredAppScripts.fix({ appDir });
 
-            expect(errors).toEqual(['missing package.json']);
+            assert.deepStrictEqual(errors, ['missing package.json']);
         });
 
         test('writes all expected scripts', async () => {
@@ -55,9 +57,9 @@ describe(requiredAppScripts.name, () => {
 
             const errors = await requiredAppScripts.fix({ appDir });
 
-            expect(errors).toEqual([]);
+            assert.deepStrictEqual(errors, []);
             const pkg = readPackageJson({ dir: appDir });
-            expect(pkg.scripts).toEqual({
+            assert.deepStrictEqual(pkg.scripts, {
                 dev: 'vite',
                 'dev:android': 'APP_DIR=$PWD pnpm --filter @minimalist-apps/android-build dev',
                 build: 'vite build',
@@ -67,7 +69,7 @@ describe(requiredAppScripts.name, () => {
                 'build:android:sign':
                     'APP_DIR=$PWD pnpm --filter @minimalist-apps/android-build sign',
                 preview: 'vite preview',
-                test: 'vitest run --config ../../vitest.config.ts --root .',
+                test: 'node --import=tsx --import=../../test.setup.ts --test --test-concurrency=1 --test-force-exit "src/**/*.test.ts" "src/**/*.test.tsx"',
                 typecheck: 'tsc --noEmit',
             });
         });
@@ -95,16 +97,16 @@ describe(requiredAppScripts.name, () => {
             await requiredAppScripts.fix({ appDir });
 
             const pkg = readPackageJson({ dir: appDir });
-            expect(pkg.name).toBe('@minimalist-apps/my-app');
-            expect(pkg.version).toBe('2.3.1');
-            expect(pkg.description).toBe('My cool app');
-            expect(pkg.private).toBe(true);
-            expect(pkg.type).toBe('module');
-            expect(pkg.dependencies).toEqual({
+            assert.strictEqual(pkg.name, '@minimalist-apps/my-app');
+            assert.strictEqual(pkg.version, '2.3.1');
+            assert.strictEqual(pkg.description, 'My cool app');
+            assert.strictEqual(pkg.private, true);
+            assert.strictEqual(pkg.type, 'module');
+            assert.deepStrictEqual(pkg.dependencies, {
                 react: '^19.0.0',
                 'react-dom': '^19.0.0',
             });
-            expect(pkg.devDependencies).toEqual({
+            assert.deepStrictEqual(pkg.devDependencies, {
                 typescript: '^5.3.0',
                 vite: '^7.3.1',
             });
@@ -129,12 +131,13 @@ describe(requiredAppScripts.name, () => {
 
             const pkg = readPackageJson({ dir: appDir });
             const scriptKeys = typedObjectKeys(pkg.scripts as Record<string, string>);
-            expect((pkg.scripts as Record<string, string>).e2e).toBe('custom-e2e-command');
-            expect((pkg.scripts as Record<string, string>)['e2e:appium']).toBe(
+            assert.strictEqual((pkg.scripts as Record<string, string>).e2e, 'custom-e2e-command');
+            assert.strictEqual(
+                (pkg.scripts as Record<string, string>)['e2e:appium'],
                 'custom-appium-command',
             );
-            expect(scriptKeys).not.toContain('custom:script');
-            expect(scriptKeys).not.toContain('lint');
+            assert.ok(!scriptKeys.includes('custom:script'));
+            assert.ok(!scriptKeys.includes('lint'));
         });
 
         test('produces valid JSON with trailing newline', async () => {
@@ -143,8 +146,8 @@ describe(requiredAppScripts.name, () => {
             await requiredAppScripts.fix({ appDir });
 
             const raw = readFileSync(join(appDir, 'package.json'), 'utf-8');
-            expect(raw.endsWith('\n')).toBe(true);
-            expect(() => JSON.parse(raw)).not.toThrow();
+            assert.strictEqual(raw.endsWith('\n'), true);
+            assert.doesNotThrow(() => JSON.parse(raw));
         });
 
         test('uses 4-space indentation', async () => {
@@ -153,7 +156,7 @@ describe(requiredAppScripts.name, () => {
             await requiredAppScripts.fix({ appDir });
 
             const raw = readFileSync(join(appDir, 'package.json'), 'utf-8');
-            expect(raw).toContain('    "scripts"');
+            assert.ok(raw.includes('    "scripts"'));
         });
 
         test('fix result passes verify', async () => {
@@ -162,7 +165,7 @@ describe(requiredAppScripts.name, () => {
             await requiredAppScripts.fix({ appDir });
 
             const errors = requiredAppScripts.verify({ appDir });
-            expect(errors).toEqual([]);
+            assert.deepStrictEqual(errors, []);
         });
 
         test('fix on a real-shaped package.json preserves structure', async () => {
@@ -195,14 +198,14 @@ describe(requiredAppScripts.name, () => {
             await requiredAppScripts.fix({ appDir });
 
             const pkg = readPackageJson({ dir: appDir });
-            expect(pkg.name).toBe('@minimalist-apps/price-converter');
-            expect(pkg.version).toBe('1.0.0');
-            expect(pkg.dependencies).toEqual({
+            assert.strictEqual(pkg.name, '@minimalist-apps/price-converter');
+            assert.strictEqual(pkg.version, '1.0.0');
+            assert.deepStrictEqual(pkg.dependencies, {
                 '@capacitor/core': '^7.2.0',
                 react: '^19.0.0',
                 'react-dom': '^19.0.0',
             });
-            expect(pkg.devDependencies).toEqual({
+            assert.deepStrictEqual(pkg.devDependencies, {
                 '@capacitor/android': '^7.2.0',
                 '@capacitor/cli': '^7.2.0',
                 typescript: '^5.3.0',
@@ -210,7 +213,7 @@ describe(requiredAppScripts.name, () => {
             });
 
             const errors = requiredAppScripts.verify({ appDir });
-            expect(errors).toEqual([]);
+            assert.deepStrictEqual(errors, []);
         });
 
         test('package fix enforces required test and typecheck scripts and keeps other scripts', async () => {
@@ -225,12 +228,12 @@ describe(requiredAppScripts.name, () => {
             });
 
             const errors = await requiredAppScripts.fix({ appDir: packageDir });
-            expect(errors).toEqual([]);
+            assert.deepStrictEqual(errors, []);
 
             const pkg = readPackageJson({ dir: packageDir });
-            expect(pkg.scripts).toEqual({
+            assert.deepStrictEqual(pkg.scripts, {
                 lint: 'eslint .',
-                test: 'vitest run',
+                test: 'node --import=tsx --import=../../test.setup.ts --test --test-concurrency=1 --test-force-exit "src/**/*.test.ts" "src/**/*.test.tsx"',
                 typecheck: 'tsc --noEmit',
             });
         });
@@ -261,7 +264,7 @@ describe(requiredAppScripts.name, () => {
 
             const errors = requiredAppScripts.verify({ appDir });
 
-            expect(errors).toEqual(['missing script "test"']);
+            assert.deepStrictEqual(errors, ['missing script "test"']);
         });
 
         test('package verify requires test script', () => {
@@ -277,7 +280,7 @@ describe(requiredAppScripts.name, () => {
             });
 
             const errors = requiredAppScripts.verify({ appDir: packageDir });
-            expect(errors).toEqual(['missing script "test"']);
+            assert.deepStrictEqual(errors, ['missing script "test"']);
         });
 
         test('package verify requires typecheck script', () => {
@@ -286,14 +289,14 @@ describe(requiredAppScripts.name, () => {
                 content: {
                     name: '@minimalist-apps/demo-package',
                     scripts: {
-                        test: 'vitest run',
+                        test: 'node --import=tsx --import=../../test.setup.ts --test --test-concurrency=1 --test-force-exit "src/**/*.test.ts" "src/**/*.test.tsx"',
                         lint: 'eslint .',
                     },
                 },
             });
 
             const errors = requiredAppScripts.verify({ appDir: packageDir });
-            expect(errors).toEqual(['missing script "typecheck"']);
+            assert.deepStrictEqual(errors, ['missing script "typecheck"']);
         });
 
         test('package verify checks typecheck script value', () => {
@@ -302,14 +305,14 @@ describe(requiredAppScripts.name, () => {
                 content: {
                     name: '@minimalist-apps/demo-package',
                     scripts: {
-                        test: 'vitest run',
+                        test: 'node --import=tsx --import=../../test.setup.ts --test --test-concurrency=1 --test-force-exit "src/**/*.test.ts" "src/**/*.test.tsx"',
                         typecheck: 'tsc --pretty --noEmit',
                     },
                 },
             });
 
             const errors = requiredAppScripts.verify({ appDir: packageDir });
-            expect(errors).toEqual([
+            assert.deepStrictEqual(errors, [
                 'script "typecheck" value mismatch — expected "tsc --noEmit", found "tsc --pretty --noEmit"',
             ]);
         });
@@ -320,15 +323,15 @@ describe(requiredAppScripts.name, () => {
                 content: {
                     name: '@minimalist-apps/demo-package',
                     scripts: {
-                        test: 'node --test',
+                        test: 'jest',
                         typecheck: 'tsc --noEmit',
                     },
                 },
             });
 
             const errors = requiredAppScripts.verify({ appDir: packageDir });
-            expect(errors).toEqual([
-                'script "test" value mismatch — expected "vitest run", found "node --test"',
+            assert.deepStrictEqual(errors, [
+                'script "test" value mismatch — expected "node --import=tsx --import=../../test.setup.ts --test --test-concurrency=1 --test-force-exit "src/**/*.test.ts" "src/**/*.test.tsx"", found "jest"',
             ]);
         });
 
@@ -338,7 +341,7 @@ describe(requiredAppScripts.name, () => {
                 content: {
                     name: '@minimalist-apps/demo-package',
                     scripts: {
-                        test: 'vitest run',
+                        test: 'node --import=tsx --import=../../test.setup.ts --test --test-concurrency=1 --test-force-exit "src/**/*.test.ts" "src/**/*.test.tsx"',
                         typecheck: 'tsc --noEmit',
                         lint: 'eslint .',
                     },
@@ -346,7 +349,7 @@ describe(requiredAppScripts.name, () => {
             });
 
             const errors = requiredAppScripts.verify({ appDir: packageDir });
-            expect(errors).toEqual([]);
+            assert.deepStrictEqual(errors, []);
         });
     });
 });

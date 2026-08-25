@@ -1,10 +1,13 @@
+import assert from 'node:assert/strict';
+import { afterEach, describe, mock, test } from 'node:test';
 import { DebugSettingsPure } from '@minimalist-apps/fragment-debug';
-import { render, screen } from '@testing-library/react';
+import { cleanup, render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
-import { describe, expect, test, vi } from 'vitest';
+
+afterEach(cleanup);
 
 const createTestComponent = (debugMode: boolean) => {
-    const setDebugMode = vi.fn();
+    const setDebugMode = mock.fn();
     const deps = { setDebugMode };
     const DebugSettings = () => <>{DebugSettingsPure(deps, { debugMode })}</>;
 
@@ -17,7 +20,7 @@ describe(DebugSettingsPure.name, () => {
 
         render(<DebugSettings />);
 
-        expect(screen.getByText('Debug')).toBeInTheDocument();
+        assert.ok(document.body.contains(screen.getByText('Debug')));
     });
 
     test('switch is checked when debug mode is on', () => {
@@ -25,7 +28,7 @@ describe(DebugSettingsPure.name, () => {
 
         render(<DebugSettings />);
 
-        expect(screen.getByRole('switch')).toBeChecked();
+        assert.strictEqual(screen.getByRole('switch').getAttribute('aria-checked'), 'true');
     });
 
     test('switch is unchecked when debug mode is off', () => {
@@ -33,7 +36,7 @@ describe(DebugSettingsPure.name, () => {
 
         render(<DebugSettings />);
 
-        expect(screen.getByRole('switch')).not.toBeChecked();
+        assert.strictEqual(screen.getByRole('switch').getAttribute('aria-checked'), 'false');
     });
 
     test('does not show runtime debug info when debug mode is off', () => {
@@ -41,7 +44,7 @@ describe(DebugSettingsPure.name, () => {
 
         render(<DebugSettings />);
 
-        expect(screen.queryByText(/Environment Debug Info/i)).not.toBeInTheDocument();
+        assert.strictEqual(screen.queryByText(/Environment Debug Info/i), null);
     });
 
     test('shows runtime debug info when debug mode is on', () => {
@@ -49,8 +52,8 @@ describe(DebugSettingsPure.name, () => {
 
         render(<DebugSettings />);
 
-        expect(screen.getByText(/runtime: browser/i)).toBeInTheDocument();
-        expect(screen.getByText(/userAgent:/i)).toBeInTheDocument();
+        assert.ok(document.body.contains(screen.getByText(/runtime: browser/i)));
+        assert.ok(document.body.contains(screen.getByText(/userAgent:/i)));
     });
 
     test('calls setDebugMode with true when toggling from off', async () => {
@@ -60,7 +63,7 @@ describe(DebugSettingsPure.name, () => {
         render(<DebugSettings />);
         await user.click(screen.getByRole('switch'));
 
-        expect(setDebugMode).toHaveBeenCalledWith(true);
+        assert.deepStrictEqual(setDebugMode.mock.calls.at(-1)?.arguments, [true]);
     });
 
     test('calls setDebugMode with false when toggling from on', async () => {
@@ -70,6 +73,6 @@ describe(DebugSettingsPure.name, () => {
         render(<DebugSettings />);
         await user.click(screen.getByRole('switch'));
 
-        expect(setDebugMode).toHaveBeenCalledWith(false);
+        assert.deepStrictEqual(setDebugMode.mock.calls.at(-1)?.arguments, [false]);
     });
 });

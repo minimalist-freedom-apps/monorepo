@@ -1,4 +1,5 @@
-import { describe, expect, test } from 'vitest';
+import assert from 'node:assert/strict';
+import { describe, test } from 'node:test';
 import type { GameState, Player } from '../../../game';
 import { buildPlayerLineScore } from './buildPlayerLineScore';
 
@@ -197,10 +198,12 @@ describe(buildPlayerLineScore.name, () => {
         },
     ] as const;
 
-    test.each(dataProvider)('scores $description as $expected', ({ asciiArt, expected }) => {
-        const snapshot = createSnapshotFromAsciiArt(asciiArt);
-        const score = buildPlayerLineScore({ snapshot, player: 'cross' });
-
-        expect(score).toBe(expected);
-    });
+    for (const testCase of dataProvider) {
+        test('scores $description as $expected' + ': ' + JSON.stringify(testCase), () => {
+            const { asciiArt, expected } = testCase;
+            const snapshot = createSnapshotFromAsciiArt(asciiArt);
+            const score = buildPlayerLineScore({ snapshot, player: 'cross' });
+            assert.strictEqual(score, expected);
+        });
+    }
 });
