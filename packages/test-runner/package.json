@@ -4,6 +4,7 @@
     "private": true,
     "type": "module",
     "exports": {
+        "./css-loader": "./src/cssLoader.ts",
         "./setup": "./src/testSetup.ts"
     },
     "dependencies": {
