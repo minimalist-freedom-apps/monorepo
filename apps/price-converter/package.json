@@ -12,10 +12,10 @@
         "build:android:debug": "APP_DIR=$PWD pnpm --filter @minimalist-apps/android-build build:debug",
         "build:android:sign": "APP_DIR=$PWD pnpm --filter @minimalist-apps/android-build sign",
         "preview": "vite preview",
-        "test": "minimalist-test",
+        "test": "node --import=tsx --import=@minimalist-apps/test-runner/setup --test --test-concurrency=1 --test-force-exit \"src/**/*.test.ts\" \"src/**/*.test.tsx\"",
         "typecheck": "tsc --noEmit",
-        "e2e": "pnpm build:android:debug && minimalist-test --e2e",
-        "e2e-ci": "pnpm build:android:debug && minimalist-test --e2e",
+        "e2e": "pnpm build:android:debug && node --import=tsx --test --test-concurrency=1 --test-global-setup=./e2e/globalSetup.ts \"e2e/*.e2e.ts\"",
+        "e2e-ci": "pnpm build:android:debug && node --import=tsx --test --test-concurrency=1 --test-global-setup=./e2e/globalSetup.ts \"e2e/*.e2e.ts\"",
         "e2e:appium": "APPIUM_HOME=${APPIUM_HOME:-$HOME/.appium} pnpm exec appium --base-path / --allow-insecure '*:chromedriver_autodownload'",
         "e2e:emulator": "pnpm --filter @minimalist-apps/android-e2e e2e:emulator"
     },

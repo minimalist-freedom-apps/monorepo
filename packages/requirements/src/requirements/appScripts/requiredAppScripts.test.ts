@@ -4,7 +4,7 @@ import { tmpdir } from 'node:os';
 import { join } from 'node:path';
 import { afterEach, beforeEach, describe, test } from 'node:test';
 import { typedObjectKeys } from '@minimalist-apps/type-utils';
-import { requiredAppScripts } from './requiredAppScripts';
+import { nodeTestCommand, requiredAppScripts } from './requiredAppScripts';
 
 const createTempDir = (): string => mkdtempSync(join(tmpdir(), 'req-scripts-'));
 
@@ -69,7 +69,7 @@ describe(requiredAppScripts.name, () => {
                 'build:android:sign':
                     'APP_DIR=$PWD pnpm --filter @minimalist-apps/android-build sign',
                 preview: 'vite preview',
-                test: 'minimalist-test',
+                test: nodeTestCommand,
                 typecheck: 'tsc --noEmit',
             });
         });
@@ -233,7 +233,7 @@ describe(requiredAppScripts.name, () => {
             const pkg = readPackageJson({ dir: packageDir });
             assert.deepStrictEqual(pkg.scripts, {
                 lint: 'eslint .',
-                test: 'minimalist-test',
+                test: nodeTestCommand,
                 typecheck: 'tsc --noEmit',
             });
         });
@@ -289,7 +289,7 @@ describe(requiredAppScripts.name, () => {
                 content: {
                     name: '@minimalist-apps/demo-package',
                     scripts: {
-                        test: 'minimalist-test',
+                        test: nodeTestCommand,
                         lint: 'eslint .',
                     },
                 },
@@ -305,7 +305,7 @@ describe(requiredAppScripts.name, () => {
                 content: {
                     name: '@minimalist-apps/demo-package',
                     scripts: {
-                        test: 'minimalist-test',
+                        test: nodeTestCommand,
                         typecheck: 'tsc --pretty --noEmit',
                     },
                 },
@@ -331,7 +331,7 @@ describe(requiredAppScripts.name, () => {
 
             const errors = requiredAppScripts.verify({ appDir: packageDir });
             assert.deepStrictEqual(errors, [
-                'script "test" value mismatch — expected "minimalist-test", found "jest"',
+                `script "test" value mismatch — expected "${nodeTestCommand}", found "jest"`,
             ]);
         });
 
@@ -341,7 +341,7 @@ describe(requiredAppScripts.name, () => {
                 content: {
                     name: '@minimalist-apps/demo-package',
                     scripts: {
-                        test: 'minimalist-test',
+                        test: nodeTestCommand,
                         typecheck: 'tsc --noEmit',
                         lint: 'eslint .',
                     },

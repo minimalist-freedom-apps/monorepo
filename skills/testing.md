@@ -64,8 +64,16 @@ export const testCreateTime = (options?: {
 # Run all tests in a package
 pnpm --filter @evolu/common test
 
-# Run a single test by name (-t flag)
-pnpm --filter @evolu/common test -- --test-name-pattern="yields and returns ok"
+# Run a single test by name. Node options must precede test-file globs.
+pnpm --filter @evolu/common exec node \
+    --import=tsx \
+    --import=@minimalist-apps/test-runner/setup \
+    --test \
+    --test-name-pattern="yields and returns ok" \
+    --test-concurrency=1 \
+    --test-force-exit \
+    "src/**/*.test.ts" \
+    "src/**/*.test.tsx"
 ```
 
 ### Data-provider pattern for simple tests
