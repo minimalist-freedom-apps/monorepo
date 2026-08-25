@@ -1,18 +1,7 @@
-import { registerHooks } from 'node:module';
 import { afterEach } from 'node:test';
 import { JSDOM } from 'jsdom';
 import { createElement, Fragment } from 'react';
-
-registerHooks({
-    load: (url, context, nextLoad) =>
-        url.endsWith('.css')
-            ? {
-                  format: 'module',
-                  shortCircuit: true,
-                  source: 'export default {};',
-              }
-            : nextLoad(url, context),
-});
+import './cssLoader';
 
 const dom = new JSDOM('<!doctype html><html><body></body></html>', {
     url: 'http://localhost',
