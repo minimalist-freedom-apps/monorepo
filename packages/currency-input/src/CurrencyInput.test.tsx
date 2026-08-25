@@ -1,14 +1,12 @@
 import assert from 'node:assert/strict';
-import { afterEach, describe, mock, test } from 'node:test';
+import { describe, mock, test } from 'node:test';
 import type { CurrencyCode } from '@minimalist-apps/fiat';
-import { cleanup, fireEvent, render, screen } from '@testing-library/react';
+import { fireEvent, render, screen } from '@testing-library/react';
 import {
     type CurrencyInputProps,
     CurrencyInputPure,
     type CurrencyInputPureDeps,
 } from './CurrencyInput.js';
-
-afterEach(cleanup);
 
 const createCurrencyInput = (
     props: Partial<CurrencyInputProps> = {},

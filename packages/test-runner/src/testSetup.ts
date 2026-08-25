@@ -1,4 +1,5 @@
 import { registerHooks } from 'node:module';
+import { afterEach } from 'node:test';
 import { JSDOM } from 'jsdom';
 import { createElement, Fragment } from 'react';
 
@@ -74,3 +75,7 @@ class TestResizeObserver implements ResizeObserver {
 }
 
 installGlobal({ name: 'ResizeObserver', value: TestResizeObserver });
+
+const { cleanup } = await import('@testing-library/react');
+
+afterEach(cleanup);
