@@ -11,10 +11,12 @@
         }
     },
     "devDependencies": {
-        "@minimalist-apps/tsconfig": "workspace:*"
+        "@minimalist-apps/tsconfig": "workspace:*",
+        "jsdom": "^30.0.1",
+        "vitest": "^4.1.11"
     },
     "scripts": {
-        "test": "minimalist-test",
+        "test": "vitest run --environment=jsdom src/createWindow.spec.ts",
         "typecheck": "tsc --noEmit"
     }
 }

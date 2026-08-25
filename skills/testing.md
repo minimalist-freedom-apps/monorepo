@@ -5,6 +5,15 @@
 - Mock dependencies using the same interfaces
 - Never rely on global state or shared mutable deps between tests
 
+### Test runner selection
+
+- Use `node:test`, `node:assert/strict`, and Node mocks by default
+- Use Node assertions even inside tests that require another runner when Node provides an equivalent assertion
+- Vitest is allowed only when a required capability cannot be expressed cleanly with the Node runner, such as fake timers that must patch a JSDOM `window` as one environment
+- Do not use Vitest merely for familiar assertions, spies, component rendering, or ordinary mocks
+- A Vitest exception must avoid production changes, environment-specific adapters, and unsafe casts that exist only to accommodate the Node runner
+- Scope Vitest exceptions to explicitly named `*.spec.ts` or `*.spec.tsx` files and document the reason beside the test
+
 ### Test deps pattern
 
 Create fresh deps at the start of each test for isolation. Each call creates independent instances, preventing shared state between tests.
