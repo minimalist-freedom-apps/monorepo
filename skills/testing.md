@@ -14,6 +14,12 @@
 - A Vitest exception must avoid production changes, environment-specific adapters, and unsafe casts that exist only to accommodate the Node runner
 - Scope Vitest exceptions to explicitly named `*.spec.ts` or `*.spec.tsx` files and document the reason beside the test
 
+### Type-only modules
+
+- For modules that export only types and interfaces, use compile-time assertions in a `*.type.test.ts` file
+- Do not add runtime test-runner imports or runtime assertions when there is no runtime behavior to execute
+- Compile-time assertions are verified by `pnpm typecheck`; keep the file matched by the shared test glob so package test commands remain consistent
+
 ### Test deps pattern
 
 Create fresh deps at the start of each test for isolation. Each call creates independent instances, preventing shared state between tests.
